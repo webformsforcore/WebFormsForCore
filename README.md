@@ -1,2 +1,3 @@
 # WebFormsCore
-A port of WebForms for .NET 8
+
+A library to port WebForms apps to ASP.NET Core.

@@ -1,0 +1,1386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="WebMethodMissingParams" xml:space="preserve">
+    <value>The last two parameters of method {0}.{1} must be of type {2} and {3}.</value>
+  </data>
+  <data name="MessageHasNoParts1" xml:space="preserve">
+    <value>Message '{0}' has no parts.</value>
+  </data>
+  <data name="OnlyOperationInputOrOperationOutputTypes" xml:space="preserve">
+    <value>Only objects of type OperationInput or OperationOutput may be added.</value>
+  </data>
+  <data name="CodegenWarningDetails" xml:space="preserve">
+    <value>CODEGEN: {0}</value>
+  </data>
+  <data name="CodeGenSupportReturnTypeAttributes" xml:space="preserve">
+    <value>Custom attributes on return value are not supported by {0}.</value>
+  </data>
+  <data name="HelpGeneratorStyletd" xml:space="preserve">
+    <value>color: #000000; font-family: Verdana; font-size: .7em;</value>
+  </data>
+  <data name="HelpGeneratorStyleul" xml:space="preserve">
+    <value>margin-top: 10px; margin-left: 20px;</value>
+  </data>
+  <data name="HelpGeneratorStyleh2" xml:space="preserve">
+    <value>font-size: 1.5em; font-weight: bold; margin-top: 25px; margin-bottom: 10px; border-top: 1px solid #003366; margin-left: -15px; color: #003366;</value>
+  </data>
+  <data name="HelpGeneratorStyleh3" xml:space="preserve">
+    <value>font-size: 1.1em; color: #000000; margin-left: -15px; margin-top: 10px; margin-bottom: 10px;</value>
+  </data>
+  <data name="HelpGeneratorStyleli" xml:space="preserve">
+    <value>margin-top: 10px; color: #000000;</value>
+  </data>
+  <data name="HelpGeneratorStyleol" xml:space="preserve">
+    <value>margin-top: 10px; margin-left: 20px;</value>
+  </data>
+  <data name="MissingSoapBodyOutputBinding0" xml:space="preserve">
+    <value>Missing soap:body output binding.</value>
+  </data>
+  <data name="WebHeaderInvalidRelay" xml:space="preserve">
+    <value>'{0}' is not a valid value for the 'relay' attribute. Valid values are '0', '1', 'true', and 'false'.</value>
+  </data>
+  <data name="WebServiceSession" xml:space="preserve">
+    <value>The ASP.NET session object for the current request.</value>
+  </data>
+  <data name="HelpGeneratorParameter" xml:space="preserve">
+    <value>Parameter</value>
+  </data>
+  <data name="WebInvalidEnvelopeNamespace" xml:space="preserve">
+    <value>Possible SOAP version mismatch: Envelope namespace {0} was unexpected. Expecting {1}.</value>
+  </data>
+  <data name="WebCannotUnderstandHeader" xml:space="preserve">
+    <value>SOAP header {0} was not understood.</value>
+  </data>
+  <data name="WebDescriptionMissingItem" xml:space="preserve">
+    <value>Element {0} named {1} from namespace {2} is missing.</value>
+  </data>
+  <data name="TheEncodingIsNotSupported1" xml:space="preserve">
+    <value>The encoding '{0}' is not supported.</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>Operation '{0}' on portType '{1}' from namespace '{2}'.</value>
+  </data>
+  <data name="HeaderFault" xml:space="preserve">
+    <value>{0} on operation '{1}' on portType '{2}' from namespace '{3}'. {4}</value>
+  </data>
+  <data name="HelpGeneratorStyleAvisited" xml:space="preserve">
+    <value>color: #6699cc; font-weight: bold; text-decoration: underline;</value>
+  </data>
+  <data name="HelpGeneratorSoapTitle" xml:space="preserve">
+    <value>SOAP 1.1</value>
+  </data>
+  <data name="WebServiceServer" xml:space="preserve">
+    <value>The ASP.NET utility object for the current request.</value>
+  </data>
+  <data name="TheOperation0FromNamespace1WasIgnored2" xml:space="preserve">
+    <value>The operation '{0}' from namespace '{1}' was ignored.  {2}</value>
+  </data>
+  <data name="MissingMessagePartForMessageFromNamespace3" xml:space="preserve">
+    <value>Missing message part '{0}' for message '{1}' from namespace '{2}'.</value>
+  </data>
+  <data name="UnableToImportBindingFromNamespace2" xml:space="preserve">
+    <value>Unable to import binding '{0}' from namespace '{1}'.</value>
+  </data>
+  <data name="WsdlGenRpcLitAnonimousType" xml:space="preserve">
+    <value>Method {0}.{1} can not be reflected. Parameter '{2}' may not be used with Rpc\Literal SOAP messages because it is declared using an anonymous schema type, only top-level named types can be used with rpc\literal SOAP messages.</value>
+  </data>
+  <data name="StackTraceEnd" xml:space="preserve">
+    <value>--- End of inner exception stack trace ---</value>
+  </data>
+  <data name="DiscoveryIsNotPossibleBecauseTypeIsMissing1" xml:space="preserve">
+    <value>Discovery is not possible because type '{0}' is missing a WebServiceBinding attribute.</value>
+  </data>
+  <data name="WebTextMatchMissingPattern" xml:space="preserve">
+    <value>Each match element must have a pattern attribute containing a valid regular expression.</value>
+  </data>
+  <data name="TraceWriteHeaders" xml:space="preserve">
+    <value>XmlSerializer [Write SOAP Headers]</value>
+  </data>
+  <data name="WebMissingClientProtocol" xml:space="preserve">
+    <value>ClientProtocol must be set first.</value>
+  </data>
+  <data name="MissingSoapBodyInputBinding0" xml:space="preserve">
+    <value>Missing soap:body input binding.</value>
+  </data>
+  <data name="ClientProtocolUrl" xml:space="preserve">
+    <value>The base URL to the server to use for requests.</value>
+  </data>
+  <data name="WebMultiDimArray" xml:space="preserve">
+    <value>Multi-dimensional arrays are not supported. Use a jagged array instead.</value>
+  </data>
+  <data name="HelpGeneratorInternalError" xml:space="preserve">
+    <value>The XML Web service help page encountered an internal error.</value>
+  </data>
+  <data name="RequestResponseIsNotSupported0" xml:space="preserve">
+    <value>RequestResponse is not supported.</value>
+  </data>
+  <data name="ElementEncodedExtension" xml:space="preserve">
+    <value>Element '{0}' on Binding '{1}' from namespace '{2}' has invalid attribute {3}='{4}'.</value>
+  </data>
+  <data name="TheHTMLDocumentDoesNotContainDiscoveryInformation" xml:space="preserve">
+    <value>The HTML document does not contain Web service discovery information.</value>
+  </data>
+  <data name="Binding" xml:space="preserve">
+    <value>Binding '{0}' from namespace '{1}'.</value>
+  </data>
+  <data name="WsdlGenRpcLitAccessorNamespace" xml:space="preserve">
+    <value>Method {0}.{1} can not be reflected. Parameter '{2}' has invalid accessor: If you are using the Rpc\Literal method, you can set the part's namespace.</value>
+  </data>
+  <data name="WebServiceContext" xml:space="preserve">
+    <value>The ASP.NET context object for the current request.</value>
+  </data>
+  <data name="WebInvalidRequestFormat" xml:space="preserve">
+    <value>Request format is invalid.</value>
+  </data>
+  <data name="WebDiscoRefReport" xml:space="preserve">
+    <value>Report from '{0}' is '{1}'.</value>
+  </data>
+  <data name="WebBadHex" xml:space="preserve">
+    <value>Invalid hex digit: '{0}'.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceDetails" xml:space="preserve">
+    <value>Please examine each of the normative statement violations below. Follow the recommendations to remedy it, or add setting to the &amp;lt;webServices&amp;gt; config section to turn off BP 1.1 conformance warnings for the entire vroot.</value>
+  </data>
+  <data name="TheOperationBindingFromNamespaceHadInvalid3" xml:space="preserve">
+    <value>The operation binding '{0}' from namespace '{1}' had invalid syntax.  {2}</value>
+  </data>
+  <data name="WebInvalidFormat" xml:space="preserve">
+    <value>The document format is not recognized.</value>
+  </data>
+  <data name="WebPathNotFound" xml:space="preserve">
+    <value>Path:{0} could not be found.</value>
+  </data>
+  <data name="WebTextMatchIgnoredTypeWarning" xml:space="preserve">
+    <value>Optional attribute 'type' was ignored because the match does not contain sub-matches.</value>
+  </data>
+  <data name="CanTMergeService" xml:space="preserve">
+    <value>Cannot add service description with targetNamespace='{0}': service with name='{1}' already present in the description collection.</value>
+  </data>
+  <data name="CannotRunInPartialTrustOutsideAspNet" xml:space="preserve">
+    <value>Cannot run in partial trust outside the ASP.NET environment.</value>
+  </data>
+  <data name="HelpGeneratorNoHttpGetTest" xml:space="preserve">
+    <value>No test form is available as this service or method does not support the HTTP GET protocol.</value>
+  </data>
+  <data name="WebSuppressedExceptionMessage" xml:space="preserve">
+    <value>An error occurred on the server.</value>
+  </data>
+  <data name="TheWSDLDocumentContainsLinksThatCouldNotBeResolved" xml:space="preserve">
+    <value>The WSDL document contains links that could not be resolved.</value>
+  </data>
+  <data name="OutputElement" xml:space="preserve">
+    <value>Output element {0} of operation '{1}' on portType '{2}' from namespace '{3}'. {4}</value>
+  </data>
+  <data name="WebTextMatchBadCaptureIndex" xml:space="preserve">
+    <value>{0} is not a valid capture index for match '{1}'. The highest valid capture index for this match is {2}.</value>
+  </data>
+  <data name="WebUnrecognizedRequestFormat" xml:space="preserve">
+    <value>Request format is unrecognized.</value>
+  </data>
+  <data name="ElementTypeMustBeObjectOrSoapReflectedException" xml:space="preserve">
+    <value>The elementType must be one of SoapReflectedExtension or Object.</value>
+  </data>
+  <data name="WebShemaReferenceName" xml:space="preserve">
+    <value>XML Schema</value>
+  </data>
+  <data name="UnableToHandleRequest0" xml:space="preserve">
+    <value>Unable to handle request.</value>
+  </data>
+  <data name="ConfigKeyNotFoundInElementCollection" xml:space="preserve">
+    <value>No elements matching the key {0} were found in the ConfigurationElementCollection.</value>
+  </data>
+  <data name="CanTMergeMessage" xml:space="preserve">
+    <value>Cannot add service description with targetNamespace='{0}': message with name='{1}' already present in the description collection.</value>
+  </data>
+  <data name="WebBadOutParameter" xml:space="preserve">
+    <value>The {0} parameter of the {1}.{2} method must be an input-only parameter.</value>
+  </data>
+  <data name="TheRootElementForTheRequestCouldNotBeDetermined0" xml:space="preserve">
+    <value>The root element for the request could not be determined. When RoutingStyle is set to RequestElement, SoapExtensions configured via an attribute on the method cannot modify the request stream before it is read. The extension must be configured via the SoapExtensionTypes element in web.config, or the request must arrive at the server as clear text.</value>
+  </data>
+  <data name="WebAsyncTransaction" xml:space="preserve">
+    <value>Transactions are not supported for asynchronous method calls. Provide a synchronous version of the method or unset the TransactionOption property of the WebMethodAttribute.</value>
+  </data>
+  <data name="WebMissingCustomAttribute" xml:space="preserve">
+    <value>{0} must have the {1} custom attribute.</value>
+  </data>
+  <data name="UnknownWebServicesProtocolInConfigFile1" xml:space="preserve">
+    <value>Unknown XML Web services protocol '{0}' in config file.</value>
+  </data>
+  <data name="WireSignatureEmpty" xml:space="preserve">
+    <value>Input message '{0}' from namespace '{1}' has no elements (empty wire signature)</value>
+  </data>
+  <data name="TheRequestElementXmlnsWasNotRecognized2" xml:space="preserve">
+    <value>The request element &lt;{0} xmlns='{1}'&gt; was not recognized.</value>
+  </data>
+  <data name="WebRefInvalidAttribute" xml:space="preserve">
+    <value>Invalid web reference encountered. Missing required '{0}' attribute.</value>
+  </data>
+  <data name="ClientProtocolProxyName" xml:space="preserve">
+    <value>The name of the proxy server to use for requests.</value>
+  </data>
+  <data name="ClientProtocolProxyPort" xml:space="preserve">
+    <value>The port number of the proxy server to use for requests.</value>
+  </data>
+  <data name="WebDuplicateImport" xml:space="preserve">
+    <value>More than one import named '{0}' was specified. Each import must have a unique name.</value>
+  </data>
+  <data name="WebServiceDescriptionIgnoredRequired" xml:space="preserve">
+    <value>The required WSDL extension element '{0}' from namespace '{1}' was not handled.</value>
+  </data>
+  <data name="WebUnrecognizedRequestFormatUrl" xml:space="preserve">
+    <value>Request format is unrecognized for URL unexpectedly ending in '{0}'.</value>
+  </data>
+  <data name="HelpGeneratorNoTestNonPrimitive" xml:space="preserve">
+    <value>The test form is only available for methods with primitive types as parameters.</value>
+  </data>
+  <data name="BindingMultipleParts" xml:space="preserve">
+    <value>One of the extensibility elements on Binding '{0}' from namespace '{1}' has more then one part listed in the '{2}' attribute.</value>
+  </data>
+  <data name="WebDuplicateOperationFault" xml:space="preserve">
+    <value>More than one operation fault named '{0}' was specified. Each operation fault must have a unique name.</value>
+  </data>
+  <data name="TheSchemaDocumentContainsLinksThatCouldNotBeResolved" xml:space="preserve">
+    <value>The XML schema document contains links that could not be resolved.</value>
+  </data>
+  <data name="NoMethodsWereFoundInTheWSDLForThisProtocol" xml:space="preserve">
+    <value>No methods were found in the WSDL for this protocol.</value>
+  </data>
+  <data name="MissingOutputBinding0" xml:space="preserve">
+    <value>Missing output binding.</value>
+  </data>
+  <data name="WebDuplicatePortType" xml:space="preserve">
+    <value>More than one port type named '{0}' was specified. Each port type must have a unique name.</value>
+  </data>
+  <data name="WebWsiViolation" xml:space="preserve">
+    <value>Service '{0}' does not conform to WS-I Basic Profile v1.1. Please examine each of the normative statement violations below. To turn off conformance check set the ConformanceClaims property on corresponding WebServiceBinding attribute to WsiClaims.None.
+{1}</value>
+  </data>
+  <data name="NotificationIsNotSupported0" xml:space="preserve">
+    <value>Notification is not supported.</value>
+  </data>
+  <data name="MissingBinding0" xml:space="preserve">
+    <value>The operation has no matching binding. Check if the operation, input and output names in the Binding section match with the corresponding names in the PortType section.</value>
+  </data>
+  <data name="WebClientBindingAttributeRequired" xml:space="preserve">
+    <value>WebServiceBindingAttribute is required on proxy classes.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceConfig" xml:space="preserve">
+    <value>To turn off BP 1.1 conformance warnings for the entire vroot remove the 'BP1.1' value from the &amp;lt;conformanceWarnings&amp;gt; section of the configuration file of your application:</value>
+  </data>
+  <data name="TheDocumentWasUnderstoodButContainsErrors" xml:space="preserve">
+    <value>The document was understood, but it could not be processed.</value>
+  </data>
+  <data name="TypeIsMissingWebServiceBindingAttributeThat2" xml:space="preserve">
+    <value>Type '{0}' is missing WebServiceBinding attribute that defines a binding named '{1}'.</value>
+  </data>
+  <data name="NonClsCompliantException" xml:space="preserve">
+    <value>A non-CLS Compliant Exception (i.e. an object that does not derive from System.Exception) was thrown.</value>
+  </data>
+  <data name="WebResponseBadXml" xml:space="preserve">
+    <value>Response is not well-formed XML.</value>
+  </data>
+  <data name="WebNegativeValue" xml:space="preserve">
+    <value>The value for '{0}' cannot be negative.</value>
+  </data>
+  <data name="WsdlInstanceValidation" xml:space="preserve">
+    <value>Warning: {0}</value>
+  </data>
+  <data name="WebExtensionError" xml:space="preserve">
+    <value>There was an exception running the extensions specified in the config file (or via an attribute).</value>
+  </data>
+  <data name="WebNullWriterForMessage" xml:space="preserve">
+    <value>The GetWriterForMessage method cannot return null.</value>
+  </data>
+  <data name="WebRefDuplicateService" xml:space="preserve">
+    <value>Ignoring duplicate service description with TargetNamespace='{0}' from '{1}'.</value>
+  </data>
+  <data name="WebMissingHelpContext" xml:space="preserve">
+    <value>HttpContext is not available.   This class can only be used in the context of an ASP.NET request.</value>
+  </data>
+  <data name="ThereWasAnErrorDuringAsyncProcessing" xml:space="preserve">
+    <value>There was an error during async processing.</value>
+  </data>
+  <data name="CanTMergePortType" xml:space="preserve">
+    <value>Cannot add service description with targetNamespace='{0}': portType with name='{1}' already present in the description collection.</value>
+  </data>
+  <data name="OneWayIsNotSupported0" xml:space="preserve">
+    <value>OneWay is not supported.</value>
+  </data>
+  <data name="TracePostWorkItemOut" xml:space="preserve">
+    <value>Return from WorkItem.Post({0})</value>
+  </data>
+  <data name="CanTSpecifyElementOnEncodedMessagePartsPart" xml:space="preserve">
+    <value>The element attribute is not allowed on encoded message parts. The erroneous part is named '{0}' in message '{1}'.</value>
+  </data>
+  <data name="WebMissingDocument" xml:space="preserve">
+    <value>Discovery document at the URL {0} could not be found.</value>
+  </data>
+  <data name="OperationOverload" xml:space="preserve">
+    <value>Binding '{0}' from namespace '{1}' contains operations with matching wire signatures. Wire signature of message '{2}' matches message '{3}'.</value>
+  </data>
+  <data name="WebResponseContent" xml:space="preserve">
+    <value>Client found response content type of '{0}', but expected '{1}'.</value>
+  </data>
+  <data name="WebWsiContentTypeEncoding" xml:space="preserve">
+    <value>Input message does not conform to Simple SOAP Binding Profile Version 1.0. Requirement R1012: A MESSAGE MUST serialize the envelope using either UTF-8 or UTF-16 character encoding.</value>
+  </data>
+  <data name="XmlSchema" xml:space="preserve">
+    <value>Schema with targetNamespace='{0}' has invalid syntax. {1}</value>
+  </data>
+  <data name="OperationFlowNotification" xml:space="preserve">
+    <value>Operation '{0}' on portType '{1}' from namespace '{2}' defined as Notification.</value>
+  </data>
+  <data name="Missing2" xml:space="preserve">
+    <value>Missing {0}.{1}</value>
+  </data>
+  <data name="HelpGeneratorEnableHttpPostInstructions" xml:space="preserve">
+    <value>To enable the http post protocol add the following to the web.config file in your application or site root directory.</value>
+  </data>
+  <data name="WebUnknownAttribute" xml:space="preserve">
+    <value>An unexpected attribute was encountered: {0}='{1}'.</value>
+  </data>
+  <data name="CodeGenSupportReferenceParameters" xml:space="preserve">
+    <value>Declaring parameters to be 'out' or 'ref' is not supported by {0}.</value>
+  </data>
+  <data name="HelpGeneratorSoapText" xml:space="preserve">
+    <value>The following is a sample SOAP 1.1 request and response.  The &lt;font class=value&gt;placeholders&lt;/font&gt; shown need to be replaced with actual values.</value>
+  </data>
+  <data name="ValidationError" xml:space="preserve">
+    <value>Error: {0} Line {1}, position {2}.</value>
+  </data>
+  <data name="BindingMissingAttribute" xml:space="preserve">
+    <value>Binding '{0}' from namespace '{1}' missing required '{2}' attribute.</value>
+  </data>
+  <data name="HelpGeneratorTestHeader" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="TheBinding0FromNamespace1WasIgnored2" xml:space="preserve">
+    <value>The binding '{0}' from namespace '{1}' was ignored.  {2}</value>
+  </data>
+  <data name="BindingInvalidAttribute" xml:space="preserve">
+    <value>Binding '{0}' from namespace '{1}' has invalid attribute: {2}='{3}'.</value>
+  </data>
+  <data name="TraceExceptionDetails" xml:space="preserve">
+    <value>Exception Details:
+{0}</value>
+  </data>
+  <data name="WebConfigInvalidExtensionPriority" xml:space="preserve">
+    <value>{0} is an invalid value for the extension priority. The priority must be nonnegative.</value>
+  </data>
+  <data name="TheBindingNamedFromNamespaceWasNotFoundIn3" xml:space="preserve">
+    <value>The binding named '{0}' from namespace '{1}' was not found in the discovery document found at '{2}'.</value>
+  </data>
+  <data name="HelpGeneratorTestText" xml:space="preserve">
+    <value>To test the operation using the HTTP POST protocol, click the 'Invoke' button.</value>
+  </data>
+  <data name="UnexpectedFlush" xml:space="preserve">
+    <value>Unexpected flush</value>
+  </data>
+  <data name="ThereWasAnErrorDownloading0" xml:space="preserve">
+    <value>There was an error downloading '{0}'.</value>
+  </data>
+  <data name="WebInvalidMethodNameCase" xml:space="preserve">
+    <value>Invalid method name '{0}',  method names are case sensitive.   The method name '{1}' with the same name but different casing was found.</value>
+  </data>
+  <data name="WebRequestUnableToRead" xml:space="preserve">
+    <value>Server was unable to read request.</value>
+  </data>
+  <data name="WebDuplicateBinding" xml:space="preserve">
+    <value>More than one binding named '{0}' was specified. Each binding must have a unique name.</value>
+  </data>
+  <data name="WebHeaderStatic" xml:space="preserve">
+    <value>The header property/field {0}.{1} cannot be static.</value>
+  </data>
+  <data name="XmlSchemaItem" xml:space="preserve">
+    <value>Schema item '{1}' from namespace '{0}'. {2}</value>
+  </data>
+  <data name="WebDuplicateOperationMessage" xml:space="preserve">
+    <value>More than one operation message named '{0}' was specified. Each operation message must have a unique name.</value>
+  </data>
+  <data name="WebDuplicateMessage" xml:space="preserve">
+    <value>More than one message named '{0}' was specified. Each message must have a unique name.</value>
+  </data>
+  <data name="NeedConcreteType" xml:space="preserve">
+    <value>Cannot create an instance of an interface {0}. Please specify a concrete implementation of the interface instead.</value>
+  </data>
+  <data name="WebDescriptionPartTypeRequired" xml:space="preserve">
+    <value>Part '{0}' from message '{1}' in namespace '{2}' is missing the type attribute. The type attribute is required for headers when Use=Encoded.</value>
+  </data>
+  <data name="WsdlInstanceValidationDetails" xml:space="preserve">
+    <value>Warning: {0} Line {1}, position {2}.</value>
+  </data>
+  <data name="WebQNamePrefixUndefined" xml:space="preserve">
+    <value>Namespace prefix '{0}' not defined</value>
+  </data>
+  <data name="TheMethodsAndUseTheSameRequestElementXmlns4" xml:space="preserve">
+    <value>The methods {0} and {1} use the same request element &lt;{2} xmlns='{3}'&gt;. When the RoutingStyle of the XML Web service is RequestElement, request elements must be unique across methods on the XML Web service. If you are using the Rpc style, you can change the message name with the RequestElementName and RequestElementNamespace parameters to SoapRpcMethodAttribute. For document style using wrapped parameter style, use the RequestElementName and RequestElementNamespace parameters to SoapDocumentMethodAttribute. For the bare parameter style, you must change the element that represents the parameter. Alternatively, you can specify a RoutingStyle of SoapAction on the XML Web service.</value>
+  </data>
+  <data name="WebHeaderMissing" xml:space="preserve">
+    <value>The header property/field {0}.{1} is missing or not public.</value>
+  </data>
+  <data name="TraceUrlReferrer" xml:space="preserve">
+    <value>Http referrer: {0}</value>
+  </data>
+  <data name="ClientProtocolClientCertificates" xml:space="preserve">
+    <value>The client certificates that will be sent to the server, if the server requests them.</value>
+  </data>
+  <data name="HelpGeneratorStyleAhover" xml:space="preserve">
+    <value>color: cc3300; font-weight: bold; text-decoration: underline;</value>
+  </data>
+  <data name="XmlSchemaAttributeReference" xml:space="preserve">
+    <value>Attribute reference '{0}' declared in schema type '{1}' from namespace '{2}'.</value>
+  </data>
+  <data name="CanTMergeTypes" xml:space="preserve">
+    <value>Cannot add service description with targetNamespace='{0}': schema with targetNamespace='{1}' already present in the description collection.</value>
+  </data>
+  <data name="WebUnknownElement" xml:space="preserve">
+    <value>The element was not expected in this context: {0}.</value>
+  </data>
+  <data name="WebOneWayReturnValue" xml:space="preserve">
+    <value>One-way methods cannot have return values.</value>
+  </data>
+  <data name="HelpGeneratorStylecontent" xml:space="preserve">
+    <value>margin-left: 30px; font-size: .70em; padding-bottom: 2em;</value>
+  </data>
+  <data name="TraceReadResponse" xml:space="preserve">
+    <value>XmlSerializer [Read Response]</value>
+  </data>
+  <data name="TraceExceptionThrown" xml:space="preserve">
+    <value>Exception thrown in {0}.
+    {1}: {2}</value>
+  </data>
+  <data name="HelpGeneratorImplementation" xml:space="preserve">
+    <value>implementation</value>
+  </data>
+  <data name="TraceWriteRequest" xml:space="preserve">
+    <value>XmlSerializer [Write Request]</value>
+  </data>
+  <data name="ClientProtocolDomain" xml:space="preserve">
+    <value>The domain to be used for basic and digest authentication.</value>
+  </data>
+  <data name="TraceCreateSerializer" xml:space="preserve">
+    <value>XmlSerializer [Create XmlSerializer]</value>
+  </data>
+  <data name="HelpGeneratorOperationsIntro" xml:space="preserve">
+    <value>The following operations are supported.  For a formal definition, please review the &lt;a href="{0}"&gt;Service Description&lt;/a&gt;.</value>
+  </data>
+  <data name="NoInputHTTPFormatsWereRecognized0" xml:space="preserve">
+    <value>No input HTTP formats were recognized.</value>
+  </data>
+  <data name="TraceUrl" xml:space="preserve">
+    <value>Request Url: [{0}] {1}</value>
+  </data>
+  <data name="ClientProtocolUsername" xml:space="preserve">
+    <value>The user name to be sent for basic and digest authentication.</value>
+  </data>
+  <data name="SchemaSyntaxErrorDetails" xml:space="preserve">
+    <value>Schema with targetNamespace='{0}' has invalid syntax. {1} Line {2}, position {3}.</value>
+  </data>
+  <data name="NoInputMIMEFormatsWereRecognized0" xml:space="preserve">
+    <value>No input MIME formats were recognized.</value>
+  </data>
+  <data name="WebDuplicatePort" xml:space="preserve">
+    <value>More than one port named '{0}' was specified. Each port must have a unique name.</value>
+  </data>
+  <data name="WebChangeTypeFailed" xml:space="preserve">
+    <value>Cannot convert {0} to {1}.</value>
+  </data>
+  <data name="MissingInputBinding0" xml:space="preserve">
+    <value>Missing input binding.</value>
+  </data>
+  <data name="WebServiceUser" xml:space="preserve">
+    <value>The ASP.NET user object for the current request.  The object is used for authorization.</value>
+  </data>
+  <data name="WhenUsingAMessageStyleOfParametersAsDocument0" xml:space="preserve">
+    <value>When using a Bare parameter style and a service RoutingStyle of RequestElement, the method must have exactly one parameter.</value>
+  </data>
+  <data name="WebInvalidRequestFormatDetails" xml:space="preserve">
+    <value>Request format is invalid: {0}.</value>
+  </data>
+  <data name="WebInvalidBindingPlacement" xml:space="preserve">
+    <value>The Binding property of {0} may not be specified in this context.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformance" xml:space="preserve">
+    <value>This web service does not conform to WS-I Basic Profile v1.1.</value>
+  </data>
+  <data name="ThereIsNoSoapTransportImporterThatUnderstands1" xml:space="preserve">
+    <value>There is no SoapTransportImporter that understands the transport '{0}'.</value>
+  </data>
+  <data name="CanTMergeBinding" xml:space="preserve">
+    <value>Cannot add service description with targetNamespace='{0}': binding with name='{1}' already present in the description collection.</value>
+  </data>
+  <data name="HelpGeneratorInvokeButton" xml:space="preserve">
+    <value>Invoke</value>
+  </data>
+  <data name="MultipleBindingsWithSameName2" xml:space="preserve">
+    <value>Type '{0}' has multiple WebServiceBinding attributes that define a binding named '{1}'.</value>
+  </data>
+  <data name="BothAndUseTheMessageNameUseTheMessageName3" xml:space="preserve">
+    <value>Both {0} and {1} use the message name '{2}'.  Use the MessageName property of the WebMethod custom attribute to specify unique message names for the methods.</value>
+  </data>
+  <data name="TraceExceptionCought" xml:space="preserve">
+    <value>Exception caught in {0}.
+    {1}: {2}</value>
+  </data>
+  <data name="WebNullAsyncResultInEnd" xml:space="preserve">
+    <value>For asynchronous method calls, you must supply a non-null IAsyncResult instance when you call the End method.</value>
+  </data>
+  <data name="Element" xml:space="preserve">
+    <value>{0} from service description with targetNamespace='{1}'.</value>
+  </data>
+  <data name="WebDuplicateOperationBinding" xml:space="preserve">
+    <value>More than one operation binding named '{0}' was specified. Each operation binding must have a unique name.</value>
+  </data>
+  <data name="WebNullAsyncResultInBegin" xml:space="preserve">
+    <value>For server-side asynchronous method calls, your Begin method must return a valid IAsyncResult. Your Begin method cannot return null.</value>
+  </data>
+  <data name="TracePostWorkItemIn" xml:space="preserve">
+    <value>Calling WorkItem.Post({0})</value>
+  </data>
+  <data name="WebRefDuplicateSchema" xml:space="preserve">
+    <value>Ignoring duplicate schema with TargetNamespace='{0}' from '{1}'.</value>
+  </data>
+  <data name="SpecifyingATypeForUseLiteralMessagesIs0" xml:space="preserve">
+    <value>Specifying a type for use=literal messages is not supported.</value>
+  </data>
+  <data name="Invalid_priority_group_value" xml:space="preserve">
+    <value>The Group attribute must be set to a valid PriorityGroup value.</value>
+  </data>
+  <data name="HelpGeneratorHttpGetText" xml:space="preserve">
+    <value>The following is a sample HTTP GET request and response.  The &lt;font class=value&gt;placeholders&lt;/font&gt; shown need to be replaced with actual values.</value>
+  </data>
+  <data name="WebMissingHeader" xml:space="preserve">
+    <value>Missing required header '{0}'.</value>
+  </data>
+  <data name="HelpGeneratorSoap1_2Title" xml:space="preserve">
+    <value>SOAP 1.2</value>
+  </data>
+  <data name="WebDiscoveryDocumentReferenceName" xml:space="preserve">
+    <value>DISCO Document</value>
+  </data>
+  <data name="XmlSchemaNamedItem" xml:space="preserve">
+    <value>Schema item '{1}' named '{2}' from namespace '{0}' is invalid. {3}</value>
+  </data>
+  <data name="IfAppSettingBaseUrlArgumentIsSpecifiedThen0" xml:space="preserve">
+    <value>If 'appSettingBaseUrl' argument is specified then 'url' argument must also be specified.</value>
+  </data>
+  <data name="Fault" xml:space="preserve">
+    <value>soapbind:fault '{0}' on operation '{1}' on portType '{2}' from namespace '{3}'. {4}</value>
+  </data>
+  <data name="ElementTypeMustBeObjectOrSoapExtensionOrSoapReflectedException" xml:space="preserve">
+    <value>The elementType must be one of SoapExtension, SoapReflectedExtension, or Object.</value>
+  </data>
+  <data name="InputElement" xml:space="preserve">
+    <value>Input element {0} of operation '{1}' on portType '{2}' from namespace '{3}'. {4}</value>
+  </data>
+  <data name="Rxxxx" xml:space="preserve">
+    <value>SOAP 1.1 binding was not found</value>
+  </data>
+  <data name="WebResponseUnknownError" xml:space="preserve">
+    <value>The request failed with the error message:</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR1014" xml:space="preserve">
+    <value>The children of the soap:Body element in a ENVELOPE MUST be namespace qualified. The use of unqualified element names may cause naming conflicts, therefore qualified names must be used for the children of soap:Body.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2701" xml:space="preserve">
+    <value>The wsdl:binding element in a DESCRIPTION MUST be constructed so that its soapbind:binding child element specifies the transport attribute. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2702" xml:space="preserve">
+    <value>A wsdl:binding element in a DESCRIPTION MUST specify the HTTP transport protocol with SOAP binding. Specifically, the transport attribute of its soapbind:binding child MUST have the value "http://schemas.xmlsoap.org/soap/http". Note that this requirement does not prohibit the use of HTTPS; See R5000.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2705" xml:space="preserve">
+    <value>A DESCRIPTION MUST use the same value of, either 'rpc' or 'document' for the style attribute for all of its operations in a portType, in the SOAP Binding description. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2706" xml:space="preserve">
+    <value>A wsdl:binding in a DESCRIPTION MUST use the value of "literal" for the use attribute in all soapbind:body, soapbind:fault, soapbind:header and soapbind:headerfault elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2720" xml:space="preserve">
+    <value>A wsdl:binding in a DESCRIPTION MUST use the attribute named part with a schema type of "NMTOKEN" on all contained soapbind:header and soapbind:headerfault elements.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2721" xml:space="preserve">
+    <value>A wsdl:binding in a DESCRIPTION MUST have the name attribute specified on all contained soapbind:fault elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2726" xml:space="preserve">
+    <value>An rpc-literal binding in a DESCRIPTION MUST NOT have the namespace attribute specified on contained soapbind:header, soapbind:headerfault and soapbind:fault elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2710" xml:space="preserve">
+    <value>The operations in a wsdl:binding in a DESCRIPTION MUST result in wire signatures that are different from one another. An endpoint that supports multiple operations must unambiguously identify the operation being invoked based on the input message that it receives. This is only possible if all the operations specified in the wsdl:binding associated with an endpoint have a unique wire signature. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2717" xml:space="preserve">
+    <value>An rpc-literal binding in a DESCRIPTION MUST have the namespace attribute specified, the value of which MUST be an absolute URI, on contained soapbind:body elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2716" xml:space="preserve">
+    <value>A document-literal binding in a DESCRIPTION MUST NOT have the namespace attribute specified on contained soapbind:body, soapbind:header, soapbind:headerfault and soapbind:fault elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2718" xml:space="preserve">
+    <value>A wsdl:binding in a DESCRIPTION MUST have the same set of wsdl:operations as the wsdl:portType to which it refers.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2749" xml:space="preserve">
+    <value>A wsdl:binding in a DESCRIPTION MUST NOT use the attribute named parts on contained soapbind:header and soapbind:headerfault elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2754" xml:space="preserve">
+    <value>In a DESCRIPTION, the value of the name attribute on a soapbind:fault element MUST match the value of the name attribute on its parent wsdl:fault element. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2205" xml:space="preserve">
+    <value>A wsdl:binding in a DESCRIPTION MUST refer, in each of its soapbind:header, soapbind:headerfault and soapbind:fault elements, only to wsdl:part element(s) that have been defined using the element attribute. Because faults and headers do not contain parameters, soapbind:fault, soapbind:header and soapbind:headerfault assume, per WSDL 1.1, that the value of the style attribute is 'document'. R2204 requires that all wsdl:part elements with a style attribute whose value is 'document' that are bound to soapbind:body be defined using the element attribute. This requirement does the same for soapbind:fault, soapbind:header and soapbind:headerfault elements. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2204" xml:space="preserve">
+    <value>A document-literal binding in a DESCRIPTION MUST refer, in each of its soapbind:body element(s), only to wsdl:part element(s) that have been defined using the element attribute. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2201" xml:space="preserve">
+    <value>A document-literal binding in a DESCRIPTION MUST, in each of its soapbind:body element(s), have at most one part listed in the parts attribute, if the parts attribute is specified.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2203" xml:space="preserve">
+    <value>An rpc-literal binding in a DESCRIPTION MUST refer, in its soapbind:body element(s), only to wsdl:part element(s) that have been defined using the type attribute. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2210" xml:space="preserve">
+    <value>If a document-literal binding in a DESCRIPTION does not specify the parts attribute on a soapbind:body element, the corresponding abstract wsdl:message MUST define zero or one wsdl:parts.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2304" xml:space="preserve">
+    <value>Operation name overloading in a wsdl:portType is disallowed by the Profile. A wsdl:portType in a DESCRIPTION MUST have operations with distinct values for their name attributes. Note that this requirement applies only to the wsdl:operations within a given wsdl:portType. A wsdl:portType may have wsdl:operations with names that are the same as those found in other wsdl:portTypes.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2306" xml:space="preserve">
+    <value>A wsdl:message in a DESCRIPTION MUST NOT specify both type and element attributes on the same wsdl:part.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2303" xml:space="preserve">
+    <value>A DESCRIPTION MUST NOT use Solicit-Response and Notification type operations in a wsdl:portType definition. Solicit-Response and Notification operations are not well defined by WSDL 1.1; furthermore, WSDL 1.1 does not define bindings for them. </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2026" xml:space="preserve">
+    <value>A DESCRIPTION SHOULD NOT include extension elements with a wsdl:required attribute value of "true" on any WSDL construct (wsdl:binding, wsdl:portType, wsdl:message, wsdl:types or wsdl:import) that claims conformance to the Profile.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2028" xml:space="preserve">
+    <value>A DESCRIPTION using the WSDL namespace and the WSDL SOAP binding namespace MUST be valid according to the XML Schemas found at http://schemas.xmlsoap.org/wsdl/2003-02-11.xsd and http://schemas.xmlsoap.org/wsdl/soap/2003-02-11.xsd.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2007" xml:space="preserve">
+    <value>A DESCRIPTION MUST specify a non-empty location attribute on the wsdl:import element. Although the wsdl:import statement is modeled after the xsd:import statement, the location attribute is required by wsdl:import while the corresponding attribute on xsd:import, schemaLocation is optional. Consistent with location being required, its content is not intended to be empty.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2105" xml:space="preserve">
+    <value>All xsd:schema elements contained in a wsdl:types element of a DESCRIPTION MUST have a targetNamespace attribute with a valid and non-null value, UNLESS the xsd:schema element has xsd:import and/or xsd:annotation as its only child element(s). </value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2803" xml:space="preserve">
+    <value>In a DESCRIPTION, the namespace attribute of the wsdl:import MUST NOT be a relative URI.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceRxxxx" xml:space="preserve">
+    <value>WS-I's Basic Profile 1.1 consists of implementation guidelines that recommend how a set of core Web services specifications should be used together to develop interoperable Web services. For the 1.1 Profile, those specifications are SOAP 1.1, WSDL 1.1, UDDI 2.0, XML 1.0 and XML Schema.</value>
+  </data>
+  <data name="HelpGeneratorStyleAactive" xml:space="preserve">
+    <value>color: #336699; font-weight: bold; text-decoration: underline;</value>
+  </data>
+  <data name="WebRequestContent" xml:space="preserve">
+    <value>Server found request content type to be '{0}', but expected '{1}'.</value>
+  </data>
+  <data name="TraceReadHeaders" xml:space="preserve">
+    <value>XmlSerializer [Read SOAP Headers]</value>
+  </data>
+  <data name="TraceExceptionIgnored" xml:space="preserve">
+    <value>Exception ignored in {0}.
+    {1}: {2}</value>
+  </data>
+  <data name="ClientProtocolEnableDecompression" xml:space="preserve">
+    <value>This allows user to easily leverage HTTP compression that's built into IIS 6.</value>
+  </data>
+  <data name="DuplicateInputOutputNames0" xml:space="preserve">
+    <value>Duplicate input/output names.</value>
+  </data>
+  <data name="SpecifyingATypeForUseLiteralMessagesIsAny" xml:space="preserve">
+    <value>Specifying a type for use=literal messages is not supported. Type name='{0}' from targetNamespace='{1}' cannot be used as top-level any element.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceRxxxx_r" xml:space="preserve">
+    <value>Consider changing config settings in web.config file in your application or site root directory to enable SOAP 1.1 protocol for your Web service.</value>
+  </data>
+  <data name="WebCannotAccessValue" xml:space="preserve">
+    <value>The value can not be accessed because there was an exception during message processing.</value>
+  </data>
+  <data name="internalError0" xml:space="preserve">
+    <value>An internal error occurred.</value>
+  </data>
+  <data name="FaultBinding" xml:space="preserve">
+    <value>Fault '{0}' on operation '{1}' on binding '{2}' from namespace '{3}'.</value>
+  </data>
+  <data name="BindingOperationMissing" xml:space="preserve">
+    <value>Binding '{0}' from namespace '{1}' missing some operations defined on portType '{2}' from namespace '{3}'.</value>
+  </data>
+  <data name="WebInOutParameter" xml:space="preserve">
+    <value>The {0} parameter of the {1}.{2} method must be an output-only parameter.</value>
+  </data>
+  <data name="TraceReadRequest" xml:space="preserve">
+    <value>XmlSerializer [Read Request]</value>
+  </data>
+  <data name="WebRequestUnableToProcess" xml:space="preserve">
+    <value>Server was unable to process request.</value>
+  </data>
+  <data name="HelpGeneratorStylefrmheader" xml:space="preserve">
+    <value>color: #000000; background: #dcdcdc; font-family: Verdana; font-size: .7em; font-weight: normal; border-bottom: 1px solid #dcdcdc; padding-top: 2px; padding-bottom: 2px;</value>
+  </data>
+  <data name="WebServiceSoapVersion" xml:space="preserve">
+    <value>The version of the SOAP protocol used for the request.</value>
+  </data>
+  <data name="ContractOverride" xml:space="preserve">
+    <value>Method {0} on type {1} is an implementation of the service contract interface {2}. Service Description altering attributes cannot be specified on service implementation.  Please place custom attribute on the interface declaration: interface: {2}, method: {3}, attribute: {4}.</value>
+  </data>
+  <data name="WebEmptyRef" xml:space="preserve">
+    <value>Invalid empty reference of type '{0}' encountered in the document at URI '{1}'.</value>
+  </data>
+  <data name="HelpGeneratorEnableHttpPostHeader" xml:space="preserve">
+    <value>Enabling http post protocol in configuration</value>
+  </data>
+  <data name="HelpGeneratorHttpGetTitle" xml:space="preserve">
+    <value>HTTP GET</value>
+  </data>
+  <data name="TheMethodsAndUseTheSameSoapActionWhenTheService3" xml:space="preserve">
+    <value>The methods {0} and {1} use the same SOAPAction '{2}'. When the RoutingStyle of the XML Web service is SoapAction, SOAPAction values must be unique across methods on the XML Web service. You can change the SOAPAction with the Action parameter to the SoapDocumentMethod or SoapRpcMethod attributes, or you can specify a RoutingStyle of RequestElement on the XML Web service.</value>
+  </data>
+  <data name="WebHeaderWrite" xml:space="preserve">
+    <value>The header property/field {0}.{1} could not be written to.</value>
+  </data>
+  <data name="WebDuplicateOperation" xml:space="preserve">
+    <value>More than one operation named '{0}' was specified. Each operation must have a unique name.</value>
+  </data>
+  <data name="CodeGenSupportParameterAttributes" xml:space="preserve">
+    <value>Custom attributes on parameter declarations are not supported by {0}.</value>
+  </data>
+  <data name="InitFailed" xml:space="preserve">
+    <value>Initialization failure. Please review input options and documents for validity.</value>
+  </data>
+  <data name="HelpGeneratorLinkBack" xml:space="preserve">
+    <value>Click &lt;a href="{0}"&gt;here&lt;/a&gt; for a complete list of operations.</value>
+  </data>
+  <data name="TraceCallExit" xml:space="preserve">
+    <value>Return from {0}
+    Caller: {1}</value>
+  </data>
+  <data name="ClientProtocolPreAuthenticate" xml:space="preserve">
+    <value>Enables pre authentication of the request.</value>
+  </data>
+  <data name="BPConformanceHeaderFault" xml:space="preserve">
+    <value>WebMethod {0} on WebService {1} claims conformance. Using SOAP header with {2}={3}.{4} is not allowed on conformant methods. </value>
+  </data>
+  <data name="HelpGeneratorStyleP" xml:space="preserve">
+    <value>color: #000000; margin-top: 0px; margin-bottom: 12px; font-family: Verdana;</value>
+  </data>
+  <data name="EachMessagePartInAnUseEncodedMessageMustSpecify0" xml:space="preserve">
+    <value>Each message part in an use=encoded message must specify a type.</value>
+  </data>
+  <data name="HelpGeneratorStyleheading1" xml:space="preserve">
+    <value>color: #ffffff; font-family: Tahoma; font-size: 26px; font-weight: normal; background-color: #003366; margin-top: 0px; margin-bottom: 0px; margin-left: -30px; padding-top: 10px; padding-bottom: 3px; padding-left: 15px; width: 105%;</value>
+  </data>
+  <data name="XmlSchemaContentDef" xml:space="preserve">
+    <value>Check content definition of schema type '{0}' from namespace '{1}'. {2}</value>
+  </data>
+  <data name="OperationBinding" xml:space="preserve">
+    <value>Operation '{0}' on binding '{1}' from namespace '{2}'.</value>
+  </data>
+  <data name="CanTCallTheEndMethodOfAnAsyncCallMoreThan" xml:space="preserve">
+    <value>Can't call the end method of an async call more than once.</value>
+  </data>
+  <data name="WebDescriptionPartElementWarning" xml:space="preserve">
+    <value>Part '{0}' from message '{1}' in namespace '{2}' defines both the element and type attributes. Only the element attribute is used for headers when Use=Literal.</value>
+  </data>
+  <data name="SpecifyingAnElementForUseEncodedMessageParts0" xml:space="preserve">
+    <value>Specifying an element for use=encoded message parts is not supported.</value>
+  </data>
+  <data name="TraceCallEnter" xml:space="preserve">
+    <value>Calling {0}
+    Caller: {1}</value>
+  </data>
+  <data name="MissingMessage2" xml:space="preserve">
+    <value>Missing message '{0}' from namespace '{1}'.</value>
+  </data>
+  <data name="ClientProtocolTimeout" xml:space="preserve">
+    <value>Sets the timeout in milliseconds to be used for synchronous calls.  The default of -1 means infinite.</value>
+  </data>
+  <data name="SchemaValidationWarning" xml:space="preserve">
+    <value>Schema validation warning: {0}</value>
+  </data>
+  <data name="ClientProtocolSoapVersion" xml:space="preserve">
+    <value>The version of the SOAP protocol to use for requests. By default, SOAP 1.1 will be used.</value>
+  </data>
+  <data name="UnableToHandleRequestActionRequired0" xml:space="preserve">
+    <value>Unable to handle request without a valid action parameter. Please supply a valid soap action.</value>
+  </data>
+  <data name="ProtocolWithNameIsNotRecognized1" xml:space="preserve">
+    <value>Protocol with name '{0}' is not recognized.</value>
+  </data>
+  <data name="HelpGeneratorStylefrmtext" xml:space="preserve">
+    <value>font-family: Verdana; font-size: .7em; margin-top: 8px; margin-bottom: 0px; margin-left: 32px;</value>
+  </data>
+  <data name="HelpGeneratorWebService" xml:space="preserve">
+    <value>Web Service</value>
+  </data>
+  <data name="WebResponseKnownError" xml:space="preserve">
+    <value>The request failed with HTTP status {0}: {1}.</value>
+  </data>
+  <data name="WebResultNotXml" xml:space="preserve">
+    <value>Result was not XML.</value>
+  </data>
+  <data name="AsyncDuplicateUserState" xml:space="preserve">
+    <value>There was an error during asynchronous processing. Unique state object is required for multiple asynchronous simultaneous operations to be outstanding.</value>
+  </data>
+  <data name="SolicitResponseIsNotSupported0" xml:space="preserve">
+    <value>SolicitResponse is not supported.</value>
+  </data>
+  <data name="WebMultiplyDeclaredHeaderTypes" xml:space="preserve">
+    <value>An operation can have only one in or out header of a given type. {0}.{1} conflicts with another header field of the same type and direction.</value>
+  </data>
+  <data name="WebBadEnum" xml:space="preserve">
+    <value>The value '{0}' was not found in the enum type '{1}'.</value>
+  </data>
+  <data name="MissingSoapOperationBinding0" xml:space="preserve">
+    <value>Missing soap:operation binding.</value>
+  </data>
+  <data name="WebDescriptionTooManyMessages" xml:space="preserve">
+    <value>No more than one input and one output message may be specified.</value>
+  </data>
+  <data name="HelpGeneratorSoap1_2Text" xml:space="preserve">
+    <value>The following is a sample SOAP 1.2 request and response.  The &lt;font class=value&gt;placeholders&lt;/font&gt; shown need to be replaced with actual values.</value>
+  </data>
+  <data name="WebDuplicateFormatExtension" xml:space="preserve">
+    <value>More than one format extension named '{0}' was specified. Each format extension must have a unique name.</value>
+  </data>
+  <data name="TheSyntaxOfTypeMayNotBeExtended1" xml:space="preserve">
+    <value>The syntax of type {0} may not be extended.</value>
+  </data>
+  <data name="SyntaxErrorInWSDLDocumentMessageDoesNotHave1" xml:space="preserve">
+    <value>Syntax error in WSDL document: Message '{0}' does not have an operation associated with it in the portType.</value>
+  </data>
+  <data name="TheMethodsAndUseTheSameRequestElementAndSoapActionXmlns6" xml:space="preserve">
+    <value>The methods {0} and {1} use the same request element &lt;{2} xmlns='{3}'&gt; and the methods {0} and {4} use the same SOAPAction '{5}'. Each method on the XML Web service must have a unique SOAPAction or request element. If you are using the Rpc style, you can change the message name with the RequestElementName and RequestElementNamespace parameters to SoapRpcMethodAttribute. For document style using wrapped parameter style, use the RequestElementName and RequestElementNamespace parameters to SoapDocumentMethodAttribute. For the bare parameter style, you must change the element that represents the parameter. Alternatively, you can specify a unique SoapAction for each method using the Action parameter to SoapRpcMethodAttribute or SoapDocumentMethodAttribute.</value>
+  </data>
+  <data name="WebBothMethodAttrs" xml:space="preserve">
+    <value>A web service method can't have both a SoapDocumentMethodAttribute and a SoapRpcMethodAttribute. Use one or the other.</value>
+  </data>
+  <data name="InternalConfigurationError0" xml:space="preserve">
+    <value>Internal configuration error.</value>
+  </data>
+  <data name="XmlLang" xml:space="preserve">
+    <value>en</value>
+  </data>
+  <data name="HelpGeneratorRecommendation" xml:space="preserve">
+    <value>Recommendation</value>
+  </data>
+  <data name="WebSoap11EncodingStyleNotSupported1" xml:space="preserve">
+    <value>The SOAP 1.1 encoding style is not supported for operations that use SOAP 1.2. Use the URI '{0}' to refer to the SOAP 1.2 encoding style.</value>
+  </data>
+  <data name="OperationMissingBinding" xml:space="preserve">
+    <value>Operation '{0}' on portType '{1}' from namespace '{2}' has no matching binding.</value>
+  </data>
+  <data name="TheOperationStyleRpcButBothMessagesAreNot0" xml:space="preserve">
+    <value>The operation style=rpc but both messages are not use=encoded.</value>
+  </data>
+  <data name="TraceUserHostName" xml:space="preserve">
+    <value>Request Host Name: {0}</value>
+  </data>
+  <data name="ConfigKeysDoNotMatch" xml:space="preserve">
+    <value>The key does not match the indexer key. Key on element (expected value): {0}. Key provided to indexer: {1}.</value>
+  </data>
+  <data name="MissingHttpOperationElement0" xml:space="preserve">
+    <value>Missing http:operation element.</value>
+  </data>
+  <data name="HelpGeneratorStylebutton" xml:space="preserve">
+    <value>background-color: #dcdcdc; font-family: Verdana; font-size: 1em; border-top: #cccccc 1px solid; border-bottom: #666666 1px solid; border-left: #cccccc 1px solid; border-right: #666666 1px solid;</value>
+  </data>
+  <data name="FailedToHandleRequest0" xml:space="preserve">
+    <value>Failed to handle request.</value>
+  </data>
+  <data name="WebInvalidMethodName" xml:space="preserve">
+    <value>{0} Web Service method name is not valid.</value>
+  </data>
+  <data name="WebNoReturnValue" xml:space="preserve">
+    <value>There is no return value.</value>
+  </data>
+  <data name="TraceWriteResponse" xml:space="preserve">
+    <value>XmlSerializer [Write Response]</value>
+  </data>
+  <data name="SchemaSyntaxErrorItemDetails" xml:space="preserve">
+    <value>Schema with targetNamespace='{0}' has invalid syntax. Check schema item '{1}' named '{2}': {3}</value>
+  </data>
+  <data name="WebNullRef" xml:space="preserve">
+    <value>Invalid null web reference encountered in the discovery document.</value>
+  </data>
+  <data name="ProtocolDoesNotAsyncSerialize" xml:space="preserve">
+    <value>The protocol does not support async serialization.</value>
+  </data>
+  <data name="WebMissingPath" xml:space="preserve">
+    <value>Path property must be set before calling the Send method.</value>
+  </data>
+  <data name="WebDescriptionPartTypeWarning" xml:space="preserve">
+    <value>Part '{0}' from message '{1}' in namespace '{2}' defines both the element and type attributes. Only the type attribute is used for headers when Use=Encoded.</value>
+  </data>
+  <data name="HelpGeneratorHttpPostTitle" xml:space="preserve">
+    <value>HTTP POST</value>
+  </data>
+  <data name="UnableToImportOperation1" xml:space="preserve">
+    <value>Unable to import operation '{0}'.</value>
+  </data>
+  <data name="StreamDoesNotRead" xml:space="preserve">
+    <value>This stream does not support read operations.</value>
+  </data>
+  <data name="StreamDoesNotSeek" xml:space="preserve">
+    <value>This stream does not support seeking operations.</value>
+  </data>
+  <data name="RequiredXmlFormatExtensionAttributeIsMissing1" xml:space="preserve">
+    <value>Required XmlFormatExtension attribute is missing on class {0}.</value>
+  </data>
+  <data name="WebMissingParameter" xml:space="preserve">
+    <value>Missing parameter: {0}.</value>
+  </data>
+  <data name="WebOneWayOutParameters" xml:space="preserve">
+    <value>One-way methods cannot have out or ref parameters.</value>
+  </data>
+  <data name="WebInvalidContentType" xml:space="preserve">
+    <value>The document format is not recognized (the content type is '{0}').</value>
+  </data>
+  <data name="WebHttpHeader" xml:space="preserve">
+    <value>Server did not recognize the value of HTTP Header {0}: {1}.</value>
+  </data>
+  <data name="EachMessagePartInRpcUseLiteralMessageMustSpecify0" xml:space="preserve">
+    <value>Each message part in a use=literal style=rpc message must specify a type.</value>
+  </data>
+  <data name="ClientProtocolAllowAutoRedirect" xml:space="preserve">
+    <value>Enable automatic handling of server redirects.</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceWarning1" xml:space="preserve">
+    <value>This web service is using http://tempuri.org/ as its default namespace.</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceWarning2" xml:space="preserve">
+    <value>Recommendation: Change the default namespace before the XML Web service is made public.</value>
+  </data>
+  <data name="TraceUserHostAddress" xml:space="preserve">
+    <value>Request Host Address: {0}</value>
+  </data>
+  <data name="WebMissingBodyElement" xml:space="preserve">
+    <value>Request format is invalid: Missing required soap:Body element.</value>
+  </data>
+  <data name="HelpGeneratorNoHttpPostTest" xml:space="preserve">
+    <value>No test form is available as this service or method does not support the HTTP POST protocol.</value>
+  </data>
+  <data name="WebHeaderRead" xml:space="preserve">
+    <value>The header property/field {0}.{1} could not be  read.</value>
+  </data>
+  <data name="WebHeaderType" xml:space="preserve">
+    <value>The header property/field {0}.{1} must be of type SoapHeader or a derived type, or an array of SoapHeader or SoapUnknownHeader.</value>
+  </data>
+  <data name="EachMessagePartInAUseLiteralMessageMustSpecify0" xml:space="preserve">
+    <value>Each message part in a use=literal message must specify an element.</value>
+  </data>
+  <data name="TheDocumentWasNotRecognizedAsAKnownDocumentType" xml:space="preserve">
+    <value>The document was not recognized as a known document type (WSDL, XML Schema, or Discovery document) for the following reason: 
+  - {0}</value>
+  </data>
+  <data name="TheOperationFromNamespaceHadInvalidSyntax3" xml:space="preserve">
+    <value>The operation '{0}' on portType '{1}' from namespace '{2}' had the following syntax error:  {3}</value>
+  </data>
+  <data name="WireSignature" xml:space="preserve">
+    <value>Input message '{0}' from namespace '{1}' has wire signature '{2}:{3}'.</value>
+  </data>
+  <data name="TheMethodDoesNotHaveARequestElementEither1" xml:space="preserve">
+    <value>The method {0} does not have a request element. You can use a RoutingStyle of SoapAction on the XML Web service, use the Wrapped parameter style on the method, or add a parameter to the method.</value>
+  </data>
+  <data name="TheCombinationOfStyleRpcWithUseLiteralIsNot0" xml:space="preserve">
+    <value>The combination of style=rpc with use=literal is not supported.</value>
+  </data>
+  <data name="HelpGeneratorMethodNotFound" xml:space="preserve">
+    <value>Method Not Found</value>
+  </data>
+  <data name="HelpGeneratorStylefrmInput" xml:space="preserve">
+    <value>font-family: Verdana; font-size: 1em;</value>
+  </data>
+  <data name="MissingMatchElement0" xml:space="preserve">
+    <value>Missing match element.</value>
+  </data>
+  <data name="WebResolveMissingClientProtocol" xml:space="preserve">
+    <value>ClientProtocol property must be set before calling Resolve.</value>
+  </data>
+  <data name="PortTypeOperationMissing" xml:space="preserve">
+    <value>Operation '{0}' on binding '{1}' from namespace '{2}' has no matching operation on portType '{3}' from namespace '{4}'.</value>
+  </data>
+  <data name="HelpGeneratorStylefontkey" xml:space="preserve">
+    <value>color: darkgreen; font: bold;</value>
+  </data>
+  <data name="CodeRemarks" xml:space="preserve">
+    <value>&lt;remarks/&gt;</value>
+  </data>
+  <data name="WebInvalidBindingName" xml:space="preserve">
+    <value>The Binding property '{0}' does not match interface binding '{1}'.</value>
+  </data>
+  <data name="HelpGeneratorHttpPostText" xml:space="preserve">
+    <value>The following is a sample HTTP POST request and response.  The &lt;font class=value&gt;placeholders&lt;/font&gt; shown need to be replaced with actual values.</value>
+  </data>
+  <data name="OnlyXmlElementsOrTypesDerivingFromServiceDescriptionFormatExtension0" xml:space="preserve">
+    <value>Only XmlElements or types deriving from ServiceDescriptionFormatExtension may be added.</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message '{0}' from service description with targetNamespace='{1}'.</value>
+  </data>
+  <data name="WebBadStreamState" xml:space="preserve">
+    <value>Properties and methods of the stream can't be accessed in the BeforeSerialize stage.</value>
+  </data>
+  <data name="WebAsyncMissingEnd" xml:space="preserve">
+    <value>Asynchronous method {0}.{1} does not have a corresponding {2} method.</value>
+  </data>
+  <data name="WebVirtualDisoRoot" xml:space="preserve">
+    <value>Web Directory '{0}' must be same or below to '{1}'.</value>
+  </data>
+  <data name="indexMustBeBetweenAnd0Inclusive" xml:space="preserve">
+    <value>index must be between 0 and {0}, inclusive.</value>
+  </data>
+  <data name="TheOperationBinding0FromNamespace1WasIgnored" xml:space="preserve">
+    <value>The operation binding '{0}' from namespace '{1}' was ignored.  {2}</value>
+  </data>
+  <data name="ClientProtocolCookieContainer" xml:space="preserve">
+    <value>A container for all cookies received from servers in the current session.</value>
+  </data>
+  <data name="WebConfigExtensionError" xml:space="preserve">
+    <value>There was an exception running the extensions specified in the config file.</value>
+  </data>
+  <data name="NoOutputMIMEFormatsWereRecognized0" xml:space="preserve">
+    <value>No output MIME formats were recognized.</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Service description with targetNamespace='{0}'.</value>
+  </data>
+  <data name="ServiceDescriptionWasNotFound0" xml:space="preserve">
+    <value>XML Web service description was not found.</value>
+  </data>
+  <data name="WebDuplicateService" xml:space="preserve">
+    <value>More than one service named '{0}' was specified. Each service must have a unique name.</value>
+  </data>
+  <data name="WebMissingEnvelopeElement" xml:space="preserve">
+    <value>Request format is invalid: Missing required soap:Envelope element.</value>
+  </data>
+  <data name="WebMethodStatic" xml:space="preserve">
+    <value>Web Service methods cannot be static.</value>
+  </data>
+  <data name="WebDescriptionHeaderAndBodyUseMismatch" xml:space="preserve">
+    <value>The value of use defined on the soap:header element must match that defined on the soap:body element.</value>
+  </data>
+  <data name="WebSchemaNotFound" xml:space="preserve">
+    <value>Schema not found.</value>
+  </data>
+  <data name="WebTextMatchBadGroupIndex" xml:space="preserve">
+    <value>{0} is not a valid group index for match '{1}'. The highest valid group index for this match is {2}.</value>
+  </data>
+  <data name="WebUnknownEncodingStyle" xml:space="preserve">
+    <value>The encoding style '{0}' is not supported.</value>
+  </data>
+  <data name="WebUnknownAttribute3" xml:space="preserve">
+    <value>The attribute was not expected in this context: {0}='{1}'. Expected attributes: {2}.</value>
+  </data>
+  <data name="WebUnknownAttribute2" xml:space="preserve">
+    <value>An unexpected attribute was encountered: {0}='{1}'. No attributes were expected in this scope.</value>
+  </data>
+  <data name="WebReflectionError" xml:space="preserve">
+    <value>Error reflecting {0}.{1}.</value>
+  </data>
+  <data name="UriValueRelative" xml:space="preserve">
+    <value>Value '{0}' is not an absolute URI.</value>
+  </data>
+  <data name="WebContractReferenceName" xml:space="preserve">
+    <value>WSDL Document</value>
+  </data>
+  <data name="HelpGeneratorMethodNotFoundText" xml:space="preserve">
+    <value>Method '{0}' was not found in service {1}.</value>
+  </data>
+  <data name="HelpGeneratorStylepre" xml:space="preserve">
+    <value>background-color: #e5e5cc; padding: 5px; font-family: Courier New; font-size: x-small; margin-top: -5px; border: 1px #f0f0e0 solid;</value>
+  </data>
+  <data name="WebDuplicateFaultBinding" xml:space="preserve">
+    <value>More than one fault binding named '{0}' was specified. Each fault binding must have a unique name.</value>
+  </data>
+  <data name="WebDuplicateUnknownElement" xml:space="preserve">
+    <value>More than one {0} named '{1}' was specified. Each {0} must have a unique name.</value>
+  </data>
+  <data name="WebMissingResource" xml:space="preserve">
+    <value>The document at the url {0} was not recognized as a known document type.
+The error message from each known type may help you fix the problem:</value>
+  </data>
+  <data name="HelpGeneratorNoTestFormRemote" xml:space="preserve">
+    <value>The test form is only available for requests from the local machine.</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceHelp6" xml:space="preserve">
+    <value>For more details on URIs, see &lt;a href="http://www.ietf.org/rfc/rfc2396.txt"&gt;RFC 2396&lt;/a&gt;.</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceHelp4" xml:space="preserve">
+    <value>For more details on XML namespaces, see the W3C recommendation on &lt;a href="http://www.w3.org/TR/REC-xml-names/"&gt;Namespaces in XML&lt;/A&gt;.</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceHelp5" xml:space="preserve">
+    <value>For more details on WSDL, see the &lt;a href="http://www.w3.org/TR/wsdl"&gt;WSDL Specification&lt;/a&gt;.</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceHelp2" xml:space="preserve">
+    <value>Your XML Web service should be identified by a namespace that you control. For example, you can use your company's Internet domain name as part of the namespace. Although many XML Web service namespaces look like URLs, they need not point to actual resources on the Web. (XML Web service namespaces are URIs.)</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceHelp3" xml:space="preserve">
+    <value>For XML Web services creating using ASP.NET, the default namespace can be changed using the WebService attribute's Namespace property. The WebService attribute is an attribute applied to the class that contains the XML Web service methods. Below is a code example that sets the namespace to "http://microsoft.com/webservices/":</value>
+  </data>
+  <data name="HelpGeneratorDefaultNamespaceHelp1" xml:space="preserve">
+    <value>Each XML Web service needs a unique namespace in order for client applications to distinguish it from other services on the Web. http://tempuri.org/ is available for XML Web services that are under development, but published XML Web services should use a more permanent namespace.</value>
+  </data>
+  <data name="HelpGeneratorStylefontvalue" xml:space="preserve">
+    <value>color: darkblue; font: bold;</value>
+  </data>
+  <data name="WebInvalidDocType" xml:space="preserve">
+    <value>Invalid Document type. Expecting '{0}', got '{1}'.
+Document URI is '{2}'.</value>
+  </data>
+  <data name="WebHeaderOneWayOut" xml:space="preserve">
+    <value>The header property/field {0}.{1} cannot be an out header because the method is one-way.</value>
+  </data>
+  <data name="WebUnreferencedObject" xml:space="preserve">
+    <value>Item id='{0}' was not referenced: {1}.</value>
+  </data>
+  <data name="HelpGeneratorStylefontError" xml:space="preserve">
+    <value>color: darkred; font: bold;</value>
+  </data>
+  <data name="WebDuplicateServiceDescription" xml:space="preserve">
+    <value>More than one service description with targetNamespace '{0}' was specified.</value>
+  </data>
+  <data name="XmlSchemaElementReference" xml:space="preserve">
+    <value>Element reference '{0}' declared in schema type '{1}' from namespace '{2}'.</value>
+  </data>
+  <data name="WebHeaderInvalidMustUnderstand" xml:space="preserve">
+    <value>'{0}' is not a valid value for the field EncodedMustUnderstand. Valid values are '0', '1', 'true', and 'false'.</value>
+  </data>
+  <data name="UnsupportedMessageStyle1" xml:space="preserve">
+    <value>Message style {0} is not supported.</value>
+  </data>
+  <data name="WebCannotAccessValueStage" xml:space="preserve">
+    <value>The value may not be accessed in message stage {0}.</value>
+  </data>
+  <data name="OnlyOneWebServiceBindingAttributeMayBeSpecified1" xml:space="preserve">
+    <value>Only one WebServiceBinding attribute may be specified on type '{0}'.</value>
+  </data>
+  <data name="ClientProtocolUserAgent" xml:space="preserve">
+    <value>Sets the user agent http header for the request.</value>
+  </data>
+  <data name="WebReflectionErrorMethod" xml:space="preserve">
+    <value>Method {0}.{1} can not be reflected.</value>
+  </data>
+  <data name="WebServiceDescriptionIgnoredOptional" xml:space="preserve">
+    <value>The optional WSDL extension element '{0}' from namespace '{1}' was not handled.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR1014_r" xml:space="preserve">
+    <value>To make binding conformant make sure that all response and request elements are namespace qualified. Use RequestNamespace and ResponseNamespace properties on the SoapDocumentMethod or SoapRpcMethod attribute to control the namespace.</value>
+  </data>
+  <data name="OperationFlowSolicitResponse" xml:space="preserve">
+    <value>Operation '{0}' on portType '{1}' from namespace '{2}' defined as Solicit-Response.</value>
+  </data>
+  <data name="WebDescriptionPartElementRequired" xml:space="preserve">
+    <value>Part '{0}' from message '{1}' in namespace '{2}' is missing the element attribute. The element attribute is required for headers when Use=Literal.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceHelp" xml:space="preserve">
+    <value>For more details on Basic Profile Version 1.1, see the &lt;a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html"&gt; Basic Profile Specification&lt;/a&gt;.</value>
+  </data>
+  <data name="WebDescriptionMissingBodyUseAttribute" xml:space="preserve">
+    <value>Missing required 'use' attribute on 'soap:body' element.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2705_r" xml:space="preserve">
+    <value>To make binding conformant add explicit SoapRpcMethod or SoapDocumentMethod attribute to all WebMethods of this binding.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2706_r" xml:space="preserve">
+    <value>To make it conformant change the implementation of the service to use 'rpc-literal' or 'document-literal' SOAP messages. You need to add explicit &lt;font class=value&gt;Use=SoapBindingUse.Literal&lt;/font&gt; property to all service and method level attributes: SoapRpcService, SoapRpcMethod, SoapDocumentService, SoapDocumentMethod.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2710_r" xml:space="preserve">
+    <value>The Profile defines the "wire signature" of an operation in a wsdl:binding to be the fully qualified name of the child element of the soap:Body of the SOAP input message it describes. For the case of an empty soap:Body this name is an empty string. In the case of rpc-literal binding, the operation name is used as a wrapper for the part accessors. In the document-literal case, since a wrapper with the operation name is not present, the message signatures must be correctly designed so that they meet this requirement.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2210_r" xml:space="preserve">
+    <value>For Document-literal bindings, the Profile requires that at most one part, abstractly defined with the element attribute, be serialized into the soap:Body element. When using a Bare parameter style, a conformant method must have at most one parameter.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2304_r" xml:space="preserve">
+    <value>To make service conformant please make sure that all web methods belonging to the same binding have unique names.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2007_r" xml:space="preserve">
+    <value>To make it conformant modify all import statements to include a non-empty location attribute.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2105_r" xml:space="preserve">
+    <value>Please examine your schema definitions and add explicit targetNamespace attribute. Requiring a targetNamespace on all xsd:schema elements that are children of wsdl:types is a good practice, places a minimal burden on authors of WSDL documents, and avoids the cases that are not as clearly defined as they might be.</value>
+  </data>
+  <data name="HelpGeneratorServiceConformanceR2803_r" xml:space="preserve">
+    <value>To make it conformant modify all import statements to use an absolute URI for namespace attribute value.</value>
+  </data>
+  <data name="SchemaValidationError" xml:space="preserve">
+    <value>Schema validation error: {0}</value>
+  </data>
+  <data name="TraceCallEnterDetails" xml:space="preserve">
+    <value>Calling {0}
+    Method: {2}
+    Caller: {1}</value>
+  </data>
+  <data name="WebTimeout" xml:space="preserve">
+    <value>The timeout period expired before the response was received.</value>
+  </data>
+  <data name="WebNullReaderForMessage" xml:space="preserve">
+    <value>The GetReaderForMessage method cannot return null.</value>
+  </data>
+  <data name="HelpGeneratorStyleBODY" xml:space="preserve">
+    <value>color: #000000; background-color: white; font-family: Verdana; margin-left: 0px; margin-top: 0px;</value>
+  </data>
+  <data name="WebResponseUnknownErrorEmptyBody" xml:space="preserve">
+    <value>The request failed with an empty response.</value>
+  </data>
+  <data name="ClientProtocolEncoding" xml:space="preserve">
+    <value>The encoding to use for requests.</value>
+  </data>
+  <data name="HelpGeneratorLanguageConfig" xml:space="preserve">
+    <value>There is no CodeDom provider defined for the language '{0}'.</value>
+  </data>
+  <data name="HelpGeneratorStyleAlink" xml:space="preserve">
+    <value>color: #336699; font-weight: bold; text-decoration: underline;</value>
+  </data>
+  <data name="BPConformanceSoapEncodedMethod" xml:space="preserve">
+    <value>WebMethod {0} on WebService {1} claims conformance, but use=encoded is non-conformant according to WS-I Basic Profile v1.1.</value>
+  </data>
+  <data name="UnableToHandleRequestActionNotRecognized1" xml:space="preserve">
+    <value>Unable to handle request. The action '{0}' was not recognized.</value>
+  </data>
+  <data name="Part" xml:space="preserve">
+    <value>Part '{0}' of message '{1}' from service description with targetNamespace='{2}'.</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port '{0}' on service {1} from namespace='{2}'.</value>
+  </data>
+  <data name="HelpGeneratorValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="WebRefInvalidAttribute2" xml:space="preserve">
+    <value>Invalid empty reference of type '{0}' encountered. Missing required '{1}' attribute.</value>
+  </data>
+  <data name="ClientProtocolPassword" xml:space="preserve">
+    <value>The password to be used for basic and digest authentication.</value>
+  </data>
+  <data name="WebBothServiceAttrs" xml:space="preserve">
+    <value>A web service can't have both a SoapDocumentServiceAttribute and a SoapRpcServiceAttribute. Use one or the other.</value>
+  </data>
+  <data name="WebDuplicateMessagePart" xml:space="preserve">
+    <value>More than one message part named '{0}' was specified. Each message part must have a unique name.</value>
+  </data>
+  <data name="WebDescriptionMissing" xml:space="preserve">
+    <value>Cannot find definition for {0}.  Service Description with namespace {1} is missing.</value>
+  </data>
+  <data name="HelpGeneratorStyleintro" xml:space="preserve">
+    <value>margin-left: -15px;</value>
+  </data>
+  <data name="WebUnknownElement2" xml:space="preserve">
+    <value>The element was not expected in this context: {0}. Expected elements: {1}.</value>
+  </data>
+  <data name="WebUnknownElement1" xml:space="preserve">
+    <value>An unexpected element was encountered: {0}. No elements were expected in this scope.</value>
+  </data>
+</root>

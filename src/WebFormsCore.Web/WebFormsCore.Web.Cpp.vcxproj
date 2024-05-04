@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{BDA467EC-0D77-4686-8C27-B00EC28F6B1C}</ProjectGuid>
+    <Keyword>NetCoreCProj</Keyword>
+    <RootNamespace>SystemWebCppCore</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <ResolveNuGetPackages>false</ResolveNuGetPackages>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <ItemGroup>
+    <ClCompile Include="*.cspp">
+      <FileType>CppCode</FileType>
+      <AdditionalOptions>/P %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemGroup>
+
+  <Target Name="RenameIFiles">
+   <ItemGroup>
+      <RenameFile Include="*.i" />
+    </ItemGroup>
+    <Move SourceFiles="@(RenameFile)" DestinationFiles="%(RenameFile.Filename).cs" />
+  </Target>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+  <PropertyGroup>
+    <BuildDependsOn>BuildCompile;RenameIFiles</BuildDependsOn>  
+  </PropertyGroup>
+
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
