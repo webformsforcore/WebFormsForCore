@@ -35,7 +35,11 @@ namespace System.Web.Hosting {
         /// <param name="loadAppDataSize">The size (in bytes) of the structure pointed to by pLoadAppData.</param>
         /// <returns>An ICustomRuntime instance wrapped inside an ObjectHandle.</returns>
         [return: MarshalAs(UnmanagedType.Interface)]
+#if NETFRAMEWORK
         IObjectHandle LoadApplication(
+#else
+		ObjectHandle LoadApplication(
+#endif
             [In, MarshalAs(UnmanagedType.LPWStr)] string appId,
             [In, MarshalAs(UnmanagedType.LPWStr)] string appConfigPath,
             [In, MarshalAs(UnmanagedType.Interface)] IProcessHostSupportFunctions supportFunctions,

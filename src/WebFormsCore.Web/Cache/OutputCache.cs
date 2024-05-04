@@ -13,8 +13,11 @@ using System.Web.Management;
 using System.Web.UI;
 using System.Web.Util;
 using System.IO;
+#if NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
-
+#else
+using WebFormsCore.Serialization.BinaryFormatter;
+#endif
 namespace System.Web.Caching {
 
     /*
