@@ -1,0 +1,9 @@
+[submodule "src/referencesource"]
+	path = src/referencesource
+	url = https://github.com/simonegli8/WebFormsCoreReferenceSource
+[submodule "src/dotnet"]
+	path = src/dotnet
+	url = https://github.com/dotnet/runtime.git
+[submodule "src/mono"]
+	path = src/mono
+	url = https://github.com/mono/mono.git
