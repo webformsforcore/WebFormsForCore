@@ -127,10 +127,14 @@ namespace System.Web.UI.WebControls {
             _identityTransform = new XslTransform();
 #pragma warning restore 0618
 
+#if NETFRAMEWORK
             _identityTransform.Load(reader, null /*resolver*/, null /*evidence*/);
+#else
+            _identityTransform.Load(reader, null);
+#endif
         }
 
-        [
+		[
         EditorBrowsable(EditorBrowsableState.Never),
         ]
         public override string ClientID {

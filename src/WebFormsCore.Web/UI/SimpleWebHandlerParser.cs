@@ -40,9 +40,13 @@ using System.Security.Permissions;
 ///    <para>[To be supplied.]</para>
 /// </devdoc>
 public abstract class SimpleWebHandlerParser  : IAssemblyDependencyParser {
-    private readonly static Regex directiveRegex = new SimpleDirectiveRegex();
+#if NETFRAMEWORK
+        private readonly static Regex directiveRegex = new SimpleDirectiveRegex();
+#else
+        private readonly static Regex directiveRegex = NetCoreRegexes.SimpleDirectiveRegex();
+#endif
 
-    private SimpleHandlerBuildProvider _buildProvider;
+        private SimpleHandlerBuildProvider _buildProvider;
 
     private TextReader _reader;
 

@@ -10221,4 +10221,37 @@ Detailed error message: {1}</value>
   <data name="Cryptography_Data_unprotection_failed" xml:space="preserve">
     <value>Data unprotection failed.</value>
   </data>
+  <data name="Invalid_ResX_No_Type" xml:space="preserve">
+    <value>Invalid ResX no type.</value>
+  </data>
+  <data name="Not_Serializable_Type" xml:space="preserve">
+    <value>Not serializable type {0} {1}.</value>
+  </data>
+  <data name="Type_Load_Exception" xml:space="preserve">
+    <value>Exception loading type from resource {0} at ({1},{2})</value>
+  </data>
+  <data name="Type_Load_Exception_Short" xml:space="preserve">
+    <value>Type {0} could not be loaded.</value>
+  </data>
+  <data name="InvalidResXFile" xml:space="preserve">
+    <value>Invalid Resx file.</value>
+  </data>
+  <data name="InvalidResXFileReaderWriterTypes" xml:space="preserve">
+    <value>Invalid ResX file reader/writer types.</value>
+  </data>
+  <data name="InvalidResXResourceNoName" xml:space="preserve">
+    <value>Invalid ResX resource no name.</value>
+  </data>
+  <data name="Invalid_ResX_BasePath_Operation" xml:space="preserve">
+    <value>Invalid ResX BasePath operation.</value>
+  </data>
+  <data name="InvocationException" xml:space="preserve">
+    <value>Exception invoking method of type {0} at ({1},{2}): {3}.</value>
+  </data>
+  <data name="ResXResourceWriterSaved" xml:space="preserve">
+    <value>ResX resource writer saved.</value>
+  </data>
+  <data name="SerializationException" xml:space="preserve">
+    <value>Exception serializing {0} at ({1},{2}): {3}.</value>
+  </data>
 </root>

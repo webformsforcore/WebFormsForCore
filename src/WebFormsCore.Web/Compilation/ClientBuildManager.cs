@@ -492,9 +492,11 @@ public sealed class ClientBuildManager : MarshalByRefObject, IDisposable {
         finally {
             // DevDiv 180798. We are returning null in ClientBuildManagerCallback.InitializeLifetimeService,
             // so we need to manually disconnect the instance so that it will be released.
+#if NETFRAMEWORK
             if (callback != null) {
                 RemotingServices.Disconnect(callback);
             }
+#endif
         }
     }
 
@@ -577,9 +579,11 @@ public sealed class ClientBuildManager : MarshalByRefObject, IDisposable {
             }
             // DevDiv 180798. We are returning null in ClientBuildManagerCallback.InitializeLifetimeService,
             // so we need to manually disconnect the instance so that it will be released.
+#if NETFRAMEWORK
             if (callback != null) {
                 RemotingServices.Disconnect(callback);
             }
+#endif
         }
     }
 

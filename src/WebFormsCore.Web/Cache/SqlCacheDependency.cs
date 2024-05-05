@@ -117,7 +117,11 @@ namespace System.Web.Caching {
             // SQL9 SqlCacheDependency at the same time.  See VSWhidey 396429 and
             // the attached email in the bug.
             if (context != null && context.SqlDependencyCookie != null &&  // That means We have already setup SQL9 dependency for output cache
+#if NETFRAMEWORK
                 sqlCmd.NotificationAutoEnlist) {    // This command will auto-enlist in that output cache dependency
+#else
+                false) {
+#endif
                 throw new HttpException(SR.GetString(SR.SqlCacheDependency_OutputCache_Conflict));
             }
             
@@ -140,7 +144,7 @@ namespace System.Web.Caching {
             else {
                 _uniqueID = _sql7DepInfo._database + ":" + _sql7DepInfo._table + ":" + _sql7ChangeId.ToString(CultureInfo.InvariantCulture);
             }
-#if DBG            
+#if DBG
             _isUniqueIDInitialized = true;
 #endif
         }
@@ -153,6 +157,7 @@ namespace System.Web.Caching {
         }
         
         private static void CheckPermission() {
+#if !WebFormsCore
             if (!s_hasSqlClientPermissionInited) {
                 if (!System.Web.Hosting.HostingEnvironment.IsHosted) {
                     try {
@@ -171,6 +176,7 @@ namespace System.Web.Caching {
             if (!s_hasSqlClientPermission) {
                 throw new HttpException(SR.GetString(SR.SqlCacheDependency_permission_denied));
             }
+#endif
         }
 
         void OnSQL9SqlDependencyChanged(Object sender, SqlNotificationEventArgs e) {
@@ -1166,7 +1172,7 @@ namespace System.Web.Caching {
 
 #if DBG
             int res = 
-#endif            
+#endif
             Interlocked.Increment(ref dbState._refCount);
 #if DBG
             Debug.Trace("SqlCacheDependencyManager", "AddRef called for " + database + "; res=" + res);
@@ -1178,7 +1184,7 @@ namespace System.Web.Caching {
         internal static void Release(DatabaseNotifState dbState) {
 #if DBG
             int res = 
-#endif            
+#endif
             Interlocked.Decrement(ref dbState._refCount);
 #if DBG
             Debug.Trace("SqlCacheDependencyManager", "Release called for " + dbState._database + "; res=" + res);

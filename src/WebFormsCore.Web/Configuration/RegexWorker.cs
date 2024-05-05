@@ -28,8 +28,12 @@ namespace System.Web.Configuration {
 
     //
     public class RegexWorker {
+#if NETFRAMEWORK
         internal static readonly Regex RefPat = new BrowserCapsRefRegex();
-        private Hashtable _groups;
+#else
+		internal static readonly Regex RefPat = NetCoreRegexes.BrowserCapsRefRegex();
+#endif
+		private Hashtable _groups;
         private HttpBrowserCapabilities _browserCaps;
 
         public RegexWorker(HttpBrowserCapabilities browserCaps) {

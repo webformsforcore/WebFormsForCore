@@ -10,7 +10,11 @@ namespace System.Web.UI.WebControls {
     using System.Collections;
     using System.ComponentModel;
     using System.Data.Common;
+#if !WebFormsCore
     using System.Data.SqlClient;
+#else
+    using Microsoft.Data.SqlClient;
+#endif
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Design;

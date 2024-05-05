@@ -16,9 +16,14 @@ namespace System.Web.Util {
     using System.Collections;
     using System.Collections.Specialized;
     using System.Data;
+#if !WebFormsCore
     using System.Data.SqlClient;
     using System.Data.SqlTypes;
-    using System.Configuration.Provider;
+#else
+	using Microsoft.Data.SqlClient;
+    using Microsoft.Data.SqlTypes;
+#endif
+	using System.Configuration.Provider;
     using System.Configuration;
     using System.Text.RegularExpressions;
     using System.Web.DataAccess;

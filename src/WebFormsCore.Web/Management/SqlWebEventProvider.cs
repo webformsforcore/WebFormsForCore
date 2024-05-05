@@ -11,8 +11,12 @@ namespace System.Web.Management {
     using System.Configuration;
     using System.Globalization;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Security.Permissions;
+#if !WebFormsCore
+    using  System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
+	using System.Security.Permissions;
     using System.Security.Principal;
     using System.Text;
     using System.Threading;
@@ -170,7 +174,9 @@ namespace System.Web.Management {
         }
 
         [PermissionSet(SecurityAction.InheritanceDemand, Unrestricted = true)]
+#if NETFRAMEWORK
         [SqlClientPermission(SecurityAction.Assert, Unrestricted = true)]
+#endif
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         void WriteToSQL(WebBaseEventCollection events, int eventsDiscardedByBuffer, DateTime lastNotificationUtc) {
             // We don't want to send any more events until we've waited until the _retryDate (which defaults to minValue)

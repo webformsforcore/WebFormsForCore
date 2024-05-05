@@ -37,8 +37,12 @@ using System.Collections;
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.Reflection;
+#if NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security;
+#else
+using WebFormsCore.Serialization.Formatters.Binary;
+#endif
+    using System.Security;
 using System.Security.Permissions;
 using System.Threading;
 using System.Web.Caching;
@@ -71,9 +75,9 @@ internal abstract class BuildResult {
     private const int noMemoryCache                 = 0x00040000;
     protected const int hasAppOrSessionObjects      = 0x00080000;
     protected const int dependenciesHashComputed    = 0x00100000;
-    #pragma warning disable 0649
+#pragma warning disable 0649
     protected SimpleBitVector32 _flags;
-    #pragma warning restore 0649
+#pragma warning restore 0649
 
     internal static BuildResult CreateBuildResultFromCode(BuildResultTypeCode code,
         VirtualPath virtualPath) {

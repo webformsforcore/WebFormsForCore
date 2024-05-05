@@ -1170,7 +1170,7 @@ namespace System.Web {
         [DllImport(ModName.MSCORWKS_FULL_NAME, CharSet=CharSet.Unicode)]
         internal static extern int GetCachePath(int dwCacheFlags, StringBuilder pwzCachePath, ref int pcchPath);
 
-#if !FEATURE_PAL
+#if !FEATURE_PAL && !WebFormsCore
         [DllImport(ModName.MSCORWKS_FULL_NAME, CharSet=CharSet.Unicode)]
         internal static extern int DeleteShadowCache(string pwzCachePath, string pwzAppName);
 #else // !FEATURE_PAL

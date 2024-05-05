@@ -1531,6 +1531,16 @@ internal sealed class SR
 
 	internal const string Invalid_non_zero_hexadecimal_attribute = "Invalid_non_zero_hexadecimal_attribute";
 
+	internal const string Invalid_ResX_No_Type = "Invalid_ResX_No_Type";
+
+	internal const string Not_Serializable_Type = "Not_Serializable_Type";
+
+	internal const string Not_Supported = "Not_Supported";
+
+	internal const string Type_Load_Exception = "Type_Load_Exception";
+
+	internal const string Type_Load_Exception_Short = "Type_Load_Exception_Short";
+
 	internal const string Invalid_hash_algorithm_type = "Invalid_hash_algorithm_type";
 
 	internal const string Invalid_enum_attribute = "Invalid_enum_attribute";
@@ -6430,6 +6440,20 @@ internal sealed class SR
 	internal const string Invoke_before_pipeline_event = "Invoke_before_pipeline_event";
 
 	internal const string Invalid_queue_limit = "Invalid_queue_limit";
+
+	internal const string Invalid_ResX_BasePath_Operation = "Invalid_ResX_BasePath_Operation";
+
+	internal const string SerializationException = "SerializationException";
+
+	internal const string InvocationException = "InvocationException";
+
+	internal const string InvalidResXFile = "InvalidResXFile";
+
+	internal const string InvalidResXResourceNoName = "InvalidResXResourceNoName";
+
+	internal const string InvalidResXFileReaderWriterTypes = "InvalidResXFileReaderWriterTypes";
+
+	internal const string ResXResourceWriterSaved = "ResXResourceWriterSaved";
 
 	internal const string Queue_limit_is_zero = "Queue_limit_is_zero";
 

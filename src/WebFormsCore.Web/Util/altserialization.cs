@@ -16,8 +16,11 @@ namespace System.Web.Util {
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters;
+#if NETFRAMEWORK
     using System.Runtime.Serialization.Formatters.Binary;
+#else
+	using WebFormsCore.Serialization.Formatters.Binary;
+#endif
     using System.Web.SessionState;
     
     internal static class AltSerialization {

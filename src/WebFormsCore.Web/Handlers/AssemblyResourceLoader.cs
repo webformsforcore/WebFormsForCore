@@ -30,9 +30,12 @@ namespace System.Web.Handlers {
     public sealed class AssemblyResourceLoader : IHttpHandler {
         private const string _webResourceUrl = "WebResource.axd";
 
+#if NETFRAMEWORK
         private readonly static Regex webResourceRegex = new WebResourceRegex();
-
-        private static IDictionary _urlCache = Hashtable.Synchronized(new Hashtable());
+#else
+		private readonly static Regex webResourceRegex = NetCoreRegexes.WebResourceRegex();
+#endif
+		private static IDictionary _urlCache = Hashtable.Synchronized(new Hashtable());
         private static IDictionary _assemblyInfoCache = Hashtable.Synchronized(new Hashtable());
         private static IDictionary _webResourceCache = Hashtable.Synchronized(new Hashtable());
         private static IDictionary _typeAssemblyCache = Hashtable.Synchronized(new Hashtable());

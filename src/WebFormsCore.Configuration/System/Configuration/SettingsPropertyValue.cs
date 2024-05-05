@@ -12,7 +12,7 @@ using System.Reflection;
 #if NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
-using WebFormsCore.Serialization.BinaryFormatter;
+using WebFormsCore.Serialization.Formatters.Binary;
 #endif
 using System.Security.Permissions;
 using System.Xml.Serialization;

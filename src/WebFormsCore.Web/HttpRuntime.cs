@@ -10,68 +10,70 @@
  * Copyright (c) 1998 Microsoft Corporation
  */
 
-namespace System.Web {
-    using System;
-    using System.Collections;
-    using System.Configuration;
-    using System.Data;
-    using System.Data.Common;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
-    using System.Net;
-    using System.Reflection;
-    using System.Resources;
-    using System.Runtime;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Remoting.Messaging;
-    using System.Security;
-    using System.Security.Cryptography;
-    using System.Security.Permissions;
-    using System.Security.Policy;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Threading;
-    using System.Web;
-    using System.Web.Caching;
-    using System.Web.Compilation;
-    using System.Web.Configuration;
-    using System.Web.Hosting;
-    using System.Web.Management;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.Util;
-    using System.Xml;
-    using Microsoft.Win32;
+namespace System.Web
+{
+	using System;
+	using System.Collections;
+	using System.Configuration;
+	using System.Data;
+	using System.Data.Common;
+	using System.Diagnostics.CodeAnalysis;
+	using System.Globalization;
+	using System.IO;
+	using System.Net;
+	using System.Reflection;
+	using System.Resources;
+	using System.Runtime;
+	using System.Runtime.InteropServices;
+	using System.Runtime.Remoting.Messaging;
+	using System.Security;
+	using System.Security.Cryptography;
+	using System.Security.Permissions;
+	using System.Security.Policy;
+	using System.Security.Principal;
+	using System.Text;
+	using System.Threading;
+	using System.Web;
+	using System.Web.Caching;
+	using System.Web.Compilation;
+	using System.Web.Configuration;
+	using System.Web.Hosting;
+	using System.Web.Management;
+	using System.Web.Security;
+	using System.Web.UI;
+	using System.Web.Util;
+	using System.Xml;
+	using Microsoft.Win32;
 
-    /// <devdoc>
-    ///    <para>Provides a set of ASP.NET runtime services.</para>
-    /// </devdoc>
-    public sealed class HttpRuntime {
+	/// <devdoc>
+	///    <para>Provides a set of ASP.NET runtime services.</para>
+	/// </devdoc>
+	public sealed class HttpRuntime
+	{
 
-        internal const string codegenDirName = "Temporary ASP.NET Files";
-        internal const string profileFileName = "profileoptimization.prof";
+		internal const string codegenDirName = "Temporary ASP.NET Files";
+		internal const string profileFileName = "profileoptimization.prof";
 
-        private static HttpRuntime _theRuntime;   // single instance of the class
-        internal static byte[] s_autogenKeys = new byte[1024];
+		private static HttpRuntime _theRuntime;   // single instance of the class
+		internal static byte[] s_autogenKeys = new byte[1024];
 
-        //
-        // Names of special ASP.NET directories
-        //
+		//
+		// Names of special ASP.NET directories
+		//
 
-        internal const string BinDirectoryName = "bin";
-        internal const string CodeDirectoryName = "App_Code";
-        internal const string WebRefDirectoryName = "App_WebReferences";
-        internal const string ResourcesDirectoryName = "App_GlobalResources";
-        internal const string LocalResourcesDirectoryName = "App_LocalResources";
-        internal const string DataDirectoryName = "App_Data";
-        internal const string ThemesDirectoryName = "App_Themes";
-        internal const string GlobalThemesDirectoryName = "Themes";
-        internal const string BrowsersDirectoryName = "App_Browsers";
+		internal const string BinDirectoryName = "bin";
+		internal const string CodeDirectoryName = "App_Code";
+		internal const string WebRefDirectoryName = "App_WebReferences";
+		internal const string ResourcesDirectoryName = "App_GlobalResources";
+		internal const string LocalResourcesDirectoryName = "App_LocalResources";
+		internal const string DataDirectoryName = "App_Data";
+		internal const string ThemesDirectoryName = "App_Themes";
+		internal const string GlobalThemesDirectoryName = "Themes";
+		internal const string BrowsersDirectoryName = "App_Browsers";
 
-        private static string DirectorySeparatorString = new string(Path.DirectorySeparatorChar, 1);
-        private static string DoubleDirectorySeparatorString = new string(Path.DirectorySeparatorChar, 2);
-        private static char[] s_InvalidPhysicalPathChars = { '/', '?', '*', '<', '>', '|', '"' };
+		private static string DirectorySeparatorString = new string(Path.DirectorySeparatorChar, 1);
+		private static string DoubleDirectorySeparatorString = new string(Path.DirectorySeparatorChar, 2);
+		private static char[] s_InvalidPhysicalPathChars = { '/', '?', '*', '<', '>', '|', '"' };
 
 
 
@@ -96,262 +98,281 @@ namespace System.Web {
                                     };
 #endif
 
-        static HttpRuntime() {
-            AddAppDomainTraceMessage("*HttpRuntime::cctor");
+		static HttpRuntime()
+		{
+			AddAppDomainTraceMessage("*HttpRuntime::cctor");
 
-            StaticInit();
+			StaticInit();
 
-            _theRuntime = new HttpRuntime();
+			_theRuntime = new HttpRuntime();
 
-            _theRuntime.Init();
+			_theRuntime.Init();
 
-            AddAppDomainTraceMessage("HttpRuntime::cctor*");
-        }
+			AddAppDomainTraceMessage("HttpRuntime::cctor*");
+		}
 
-        [SecurityPermission(SecurityAction.LinkDemand, Unrestricted = true)]
-        public HttpRuntime() {
-        }
+		[SecurityPermission(SecurityAction.LinkDemand, Unrestricted = true)]
+		public HttpRuntime()
+		{
+		}
 
-        //
-        // static initialization to get hooked up to the unmanaged code
-        // get installation directory, etc.
-        //
+		//
+		// static initialization to get hooked up to the unmanaged code
+		// get installation directory, etc.
+		//
 
-        private static bool s_initialized = false;
-        private static String s_installDirectory;
-        private static bool s_isEngineLoaded = false;
+		private static bool s_initialized = false;
+		private static String s_installDirectory;
+		private static bool s_isEngineLoaded = false;
 
-        // Force the static initialization of this class.
-        internal static void ForceStaticInit() { }
+		// Force the static initialization of this class.
+		internal static void ForceStaticInit() { }
 
-        private static void StaticInit() {
-            if (s_initialized) {
-                // already initialized
-                return;
-            }
+		private static void StaticInit()
+		{
+			if (s_initialized)
+			{
+				// already initialized
+				return;
+			}
 
-            bool isEngineLoaded = false;
-            bool wasEngineLoadedHere = false;
-            String installDir = null;
+			bool isEngineLoaded = false;
+			bool wasEngineLoadedHere = false;
+			String installDir = null;
 
-            // load webengine.dll if it is not loaded already
+			// load webengine.dll if it is not loaded already
 
 #if !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
 
-            installDir = RuntimeEnvironment.GetRuntimeDirectory();
+			installDir = RuntimeEnvironment.GetRuntimeDirectory();
 
-            if (UnsafeNativeMethods.GetModuleHandle(ModName.ENGINE_FULL_NAME) != IntPtr.Zero) {
-                isEngineLoaded = true;
-            }
+			if (UnsafeNativeMethods.GetModuleHandle(ModName.ENGINE_FULL_NAME) != IntPtr.Zero)
+			{
+				isEngineLoaded = true;
+			}
 
-            // Load webengine.dll if not loaded already
+			// Load webengine.dll if not loaded already
 
-            if (!isEngineLoaded) {
-                String fullPath = installDir + Path.DirectorySeparatorChar + ModName.ENGINE_FULL_NAME;
+			if (!isEngineLoaded)
+			{
+				String fullPath = installDir + Path.DirectorySeparatorChar + ModName.ENGINE_FULL_NAME;
 
-                if (UnsafeNativeMethods.LoadLibrary(fullPath) != IntPtr.Zero) {
-                    isEngineLoaded = true;
-                    wasEngineLoadedHere = true;
-                }
-            }
+				if (UnsafeNativeMethods.LoadLibrary(fullPath) != IntPtr.Zero)
+				{
+					isEngineLoaded = true;
+					wasEngineLoadedHere = true;
+				}
+			}
 
-            if (isEngineLoaded) {
-                UnsafeNativeMethods.InitializeLibrary(false);
+			if (isEngineLoaded)
+			{
+				UnsafeNativeMethods.InitializeLibrary(false);
 
-                if (wasEngineLoadedHere) {
-                    UnsafeNativeMethods.PerfCounterInitialize();
-                }
-            }
+				if (wasEngineLoadedHere)
+				{
+					UnsafeNativeMethods.PerfCounterInitialize();
+				}
+			}
 
 #else // !FEATURE_PAL
             string p = typeof(object).Module.FullyQualifiedName;
             installDir = Path.GetDirectoryName(p);
 #endif // !FEATURE_PAL
 
-            s_installDirectory = installDir;
-            s_isEngineLoaded = isEngineLoaded;
-            s_initialized = true;
+			s_installDirectory = installDir;
+			s_isEngineLoaded = isEngineLoaded;
+			s_initialized = true;
 
-            PopulateIISVersionInformation();
+			PopulateIISVersionInformation();
 
-            AddAppDomainTraceMessage("Initialize");
-        }
+			AddAppDomainTraceMessage("Initialize");
+		}
 
-        //
-        // Runtime services
-        //
+		//
+		// Runtime services
+		//
 
-        private NamedPermissionSet _namedPermissionSet;
-        private PolicyLevel _policyLevel;
-        private string _hostSecurityPolicyResolverType = null;
-        private FileChangesMonitor _fcm;
-        private Cache _cachePublic;
-        private bool _isOnUNCShare;
-        private Profiler _profiler;
-        private RequestTimeoutManager _timeoutManager;
-        private RequestQueue _requestQueue;
-        private bool _apartmentThreading;
+		private NamedPermissionSet _namedPermissionSet;
+		private PolicyLevel _policyLevel;
+		private string _hostSecurityPolicyResolverType = null;
+		private FileChangesMonitor _fcm;
+		private Cache _cachePublic;
+		private bool _isOnUNCShare;
+		private Profiler _profiler;
+		private RequestTimeoutManager _timeoutManager;
+		private RequestQueue _requestQueue;
+		private bool _apartmentThreading;
 
-        private bool _processRequestInApplicationTrust;
-        private bool _disableProcessRequestInApplicationTrust;
-        private bool _isLegacyCas;
-        //
-        // Counters
-        //
+		private bool _processRequestInApplicationTrust;
+		private bool _disableProcessRequestInApplicationTrust;
+		private bool _isLegacyCas;
+		//
+		// Counters
+		//
 
-        private bool _beforeFirstRequest = true;
-        private DateTime _firstRequestStartTime;
-        private bool _firstRequestCompleted;
-        private bool _userForcedShutdown;
-        private bool _configInited;
-        private bool _fusionInited;
-        private int _activeRequestCount;
-        private volatile bool _disposingHttpRuntime;
-        private DateTime _lastShutdownAttemptTime;
-        private bool _shutdownInProgress;
-        private String _shutDownStack;
-        private String _shutDownMessage;
-        private ApplicationShutdownReason _shutdownReason = ApplicationShutdownReason.None;
-        private string _trustLevel;
-        private string _wpUserId;
-        private bool _shutdownWebEventRaised;
+		private bool _beforeFirstRequest = true;
+		private DateTime _firstRequestStartTime;
+		private bool _firstRequestCompleted;
+		private bool _userForcedShutdown;
+		private bool _configInited;
+		private bool _fusionInited;
+		private int _activeRequestCount;
+		private volatile bool _disposingHttpRuntime;
+		private DateTime _lastShutdownAttemptTime;
+		private bool _shutdownInProgress;
+		private String _shutDownStack;
+		private String _shutDownMessage;
+		private ApplicationShutdownReason _shutdownReason = ApplicationShutdownReason.None;
+		private string _trustLevel;
+		private string _wpUserId;
+		private bool _shutdownWebEventRaised;
 
-        //
-        // Header Newlines
-        //
-        private bool _enableHeaderChecking;
+		//
+		// Header Newlines
+		//
+		private bool _enableHeaderChecking;
 
-        //
-        // Callbacks
-        //
+		//
+		// Callbacks
+		//
 
-        private AsyncCallback _requestNotificationCompletionCallback;
-        private AsyncCallback _handlerCompletionCallback;
-        private HttpWorkerRequest.EndOfSendNotification _asyncEndOfSendCallback;
-        private WaitCallback _appDomainUnloadallback;
+		private AsyncCallback _requestNotificationCompletionCallback;
+		private AsyncCallback _handlerCompletionCallback;
+		private HttpWorkerRequest.EndOfSendNotification _asyncEndOfSendCallback;
+		private WaitCallback _appDomainUnloadallback;
 
-        //
-        // Initialization error (to be reported on subsequent requests)
-        //
+		//
+		// Initialization error (to be reported on subsequent requests)
+		//
 
-        private Exception _initializationError;
-        private bool _hostingInitFailed; // make such errors non-sticky
-        private Timer _appDomainShutdownTimer = null;
+		private Exception _initializationError;
+		private bool _hostingInitFailed; // make such errors non-sticky
+		private Timer _appDomainShutdownTimer = null;
 
 
-        //
-        // App domain related
-        //
+		//
+		// App domain related
+		//
 
-        private String _tempDir;
-        private String _codegenDir;
-        private String _appDomainAppId;
-        private String _appDomainAppPath;
-        private VirtualPath _appDomainAppVPath;
-        private String _appDomainId;
+		private String _tempDir;
+		private String _codegenDir;
+		private String _appDomainAppId;
+		private String _appDomainAppPath;
+		private VirtualPath _appDomainAppVPath;
+		private String _appDomainId;
 
-        //
-        // Debugging support
-        //
+		//
+		// Debugging support
+		//
 
-        private bool _debuggingEnabled = false;
+		private bool _debuggingEnabled = false;
 
-        //
-        // App_Offline.htm support
-        //
+		//
+		// App_Offline.htm support
+		//
 
-        private const string AppOfflineFileName = "App_Offline.htm";
-        private const long MaxAppOfflineFileLength = 1024 * 1024;
-        private byte[] _appOfflineMessage;
+		private const string AppOfflineFileName = "App_Offline.htm";
+		private const long MaxAppOfflineFileLength = 1024 * 1024;
+		private byte[] _appOfflineMessage;
 
-        //
-        // Client script support
-        //
+		//
+		// Client script support
+		//
 
-        private const string AspNetClientFilesSubDirectory = "asp.netclientfiles";
-        private const string AspNetClientFilesParentVirtualPath = "/aspnet_client/system_web/";
-        private string _clientScriptVirtualPath;
-        private string _clientScriptPhysicalPath;
+		private const string AspNetClientFilesSubDirectory = "asp.netclientfiles";
+		private const string AspNetClientFilesParentVirtualPath = "/aspnet_client/system_web/";
+		private string _clientScriptVirtualPath;
+		private string _clientScriptPhysicalPath;
 
-        //
-        // IIS version and whether we're using the integrated pipeline
-        //
-        private static Version _iisVersion;
-        private static bool _useIntegratedPipeline;
+		//
+		// IIS version and whether we're using the integrated pipeline
+		//
+		private static Version _iisVersion;
+		private static bool _useIntegratedPipeline;
 
-        //
-        // Prefetch
-        //
-        private static bool _enablePrefetchOptimization;
+		//
+		// Prefetch
+		//
+		private static bool _enablePrefetchOptimization;
 
-        /////////////////////////////////////////////////////////////////////////
-        // 3 steps of initialization:
-        //     Init() is called from HttpRuntime cctor
-        //     HostingInit() is called by the Hosting Environment
-        //     FirstRequestInit() is called on first HTTP request
-        //
+		/////////////////////////////////////////////////////////////////////////
+		// 3 steps of initialization:
+		//     Init() is called from HttpRuntime cctor
+		//     HostingInit() is called by the Hosting Environment
+		//     FirstRequestInit() is called on first HTTP request
+		//
 
-        /*
+		/*
          * Context-less initialization (on app domain creation)
          */
-        private void Init() {
-            try {
+		private void Init()
+		{
+			try
+			{
 #if !FEATURE_PAL
-                if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-                    throw new PlatformNotSupportedException(SR.GetString(SR.RequiresNT));
+				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+					throw new PlatformNotSupportedException(SR.GetString(SR.RequiresNT));
 #else // !FEATURE_PAL
                 // ROTORTODO
                 // Do nothing: FEATURE_PAL environment will always support ASP.NET hosting
 #endif // !FEATURE_PAL
 
-                _profiler = new Profiler();
-                _timeoutManager = new RequestTimeoutManager();
-                _wpUserId = GetCurrentUserName();
+				_profiler = new Profiler();
+				_timeoutManager = new RequestTimeoutManager();
+				_wpUserId = GetCurrentUserName();
 
-                _requestNotificationCompletionCallback = new AsyncCallback(this.OnRequestNotificationCompletion);
-                _handlerCompletionCallback = new AsyncCallback(this.OnHandlerCompletion);
-                _asyncEndOfSendCallback = new HttpWorkerRequest.EndOfSendNotification(this.EndOfSendCallback);
-                _appDomainUnloadallback = new WaitCallback(this.ReleaseResourcesAndUnloadAppDomain);
+				_requestNotificationCompletionCallback = new AsyncCallback(this.OnRequestNotificationCompletion);
+				_handlerCompletionCallback = new AsyncCallback(this.OnHandlerCompletion);
+				_asyncEndOfSendCallback = new HttpWorkerRequest.EndOfSendNotification(this.EndOfSendCallback);
+				_appDomainUnloadallback = new WaitCallback(this.ReleaseResourcesAndUnloadAppDomain);
 
 
-                // appdomain values
-                if (GetAppDomainString(".appDomain") != null) {
+				// appdomain values
+				if (GetAppDomainString(".appDomain") != null)
+				{
 
-                    Debug.Assert(HostingEnvironment.IsHosted);
+					Debug.Assert(HostingEnvironment.IsHosted);
 
-                    _appDomainAppId = GetAppDomainString(".appId");
-                    _appDomainAppPath = GetAppDomainString(".appPath");
-                    _appDomainAppVPath = VirtualPath.CreateNonRelativeTrailingSlash(GetAppDomainString(".appVPath"));
-                    _appDomainId = GetAppDomainString(".domainId");
+					_appDomainAppId = GetAppDomainString(".appId");
+					_appDomainAppPath = GetAppDomainString(".appPath");
+					_appDomainAppVPath = VirtualPath.CreateNonRelativeTrailingSlash(GetAppDomainString(".appVPath"));
+					_appDomainId = GetAppDomainString(".domainId");
 
-                    _isOnUNCShare = StringUtil.StringStartsWith(_appDomainAppPath, "\\\\");
+					_isOnUNCShare = StringUtil.StringStartsWith(_appDomainAppPath, "\\\\");
 
-                    // init perf counters for this appdomain
-                    PerfCounters.Open(_appDomainAppId);
-                }
-                else {
-                    Debug.Assert(!HostingEnvironment.IsHosted);
-                }
+					// init perf counters for this appdomain
+					PerfCounters.Open(_appDomainAppId);
+				}
+				else
+				{
+					Debug.Assert(!HostingEnvironment.IsHosted);
+				}
 
-                // _appDomainAppPath should be set before file change notifications are initialized
-                // DevDiv 248126: Check httpRuntime fcnMode first before we use the registry key
-                _fcm = new FileChangesMonitor(HostingEnvironment.FcnMode);
-            }
-            catch (Exception e) {
-                // remember static initalization error
-                InitializationException = e;
-            }
-        }
+				// _appDomainAppPath should be set before file change notifications are initialized
+				// DevDiv 248126: Check httpRuntime fcnMode first before we use the registry key
+				_fcm = new FileChangesMonitor(HostingEnvironment.FcnMode);
+			}
+			catch (Exception e)
+			{
+				// remember static initalization error
+				InitializationException = e;
+			}
+		}
 
-        private void SetUpDataDirectory() {
+		private void SetUpDataDirectory()
+		{
 
-            // Set the DataDirectory (see VSWhidbey 226834) with permission (DevDiv 29614)
-            string dataDirectory = Path.Combine(_appDomainAppPath, DataDirectoryName);
+			// Set the DataDirectory (see VSWhidbey 226834) with permission (DevDiv 29614)
+			string dataDirectory = Path.Combine(_appDomainAppPath, DataDirectoryName);
+#if NETFRAMEWORK
             AppDomain.CurrentDomain.SetData("DataDirectory", dataDirectory,
-                    new FileIOPermission(FileIOPermissionAccess.PathDiscovery, dataDirectory));
-        }
+                new FileIOPermission(FileIOPermissionAccess.PathDiscovery, dataDirectory));
+#else
+            AppDomain.CurrentDomain.SetData("DataDirectory", dataDirectory);
+#endif
+		}
 
-        private void DisposeAppDomainShutdownTimer() {
+		private void DisposeAppDomainShutdownTimer() {
             Timer timer = _appDomainShutdownTimer;
             if (timer != null && Interlocked.CompareExchange(ref _appDomainShutdownTimer, null, timer) == timer) {
                 timer.Dispose();
@@ -2602,7 +2623,6 @@ namespace System.Web {
         }
 
         internal static bool HasDbPermission(DbProviderFactory factory) {
-
             // Make sure we have already initialized the trust level
             Debug.Assert(TrustLevel != null || !HostingEnvironment.IsHosted);
 
@@ -2610,8 +2630,9 @@ namespace System.Web {
             if (NamedPermissionSet == null)
                 return true;
 
-            bool fAccess = false;
+			bool fAccess = false;
 
+#if NETFRAMEWORK
             // Check that the user has permission to the provider
             CodeAccessPermission askedPermission = factory.CreatePermission(PermissionState.Unrestricted);
             if (askedPermission != null) {
@@ -2620,6 +2641,9 @@ namespace System.Web {
                     fAccess = askedPermission.IsSubsetOf(allowedPermission);
                 }
             }
+#else
+			fAccess = true;
+#endif
 
             return fAccess;
         }
@@ -3228,7 +3252,9 @@ namespace System.Web {
 
 
 #pragma warning disable 618
+#if NETFRAMEWORK
             AppDomain.CurrentDomain.SetAppDomainPolicy(policyLevel);
+#endif
             _namedPermissionSet = policyLevel.GetNamedPermissionSet(trustSection.PermissionSetName);
 #pragma warning restore 618
 

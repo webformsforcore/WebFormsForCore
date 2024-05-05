@@ -31,54 +31,63 @@ BaseParser
 
 **********************************/
 
-namespace System.Web.UI {
-using System;
-using System.Collections;
-using System.Reflection;
-using System.Web.Compilation;
-using System.Web.Hosting;
-using System.Web.Util;
-using System.Text.RegularExpressions;
-using System.Web.RegularExpressions;
-using System.Security.Permissions;
+namespace System.Web.UI
+{
+	using System;
+	using System.Collections;
+	using System.Reflection;
+	using System.Web.Compilation;
+	using System.Web.Hosting;
+	using System.Web.Util;
+	using System.Text.RegularExpressions;
+	using System.Web.RegularExpressions;
+	using System.Security.Permissions;
 
-// Internal interface for Parser that have exteranl assembly dependency.
-internal interface IAssemblyDependencyParser {
-    ICollection AssemblyDependencies { get; }
-}
+	// Internal interface for Parser that have exteranl assembly dependency.
+	internal interface IAssemblyDependencyParser
+	{
+		ICollection AssemblyDependencies { get; }
+	}
 
 
-/// <devdoc>
-///    <para>[To be supplied.]</para>
-/// </devdoc>
-public class BaseParser {
+	/// <devdoc>
+	///    <para>[To be supplied.]</para>
+	/// </devdoc>
+	public class BaseParser
+	{
 
-    // The directory used for relative path calculations
-    private VirtualPath _baseVirtualDir;
-    internal VirtualPath BaseVirtualDir {
-        get { return _baseVirtualDir; }
+		// The directory used for relative path calculations
+		private VirtualPath _baseVirtualDir;
+		internal VirtualPath BaseVirtualDir
+		{
+			get { return _baseVirtualDir; }
 
-    }
+		}
 
-    // The virtual path to the file currently being processed
-    private VirtualPath _currentVirtualPath;
-    internal VirtualPath CurrentVirtualPath {
-        get { return _currentVirtualPath; }
-        set {
-            _currentVirtualPath = value;
+		// The virtual path to the file currently being processed
+		private VirtualPath _currentVirtualPath;
+		internal VirtualPath CurrentVirtualPath
+		{
+			get { return _currentVirtualPath; }
+			set
+			{
+				_currentVirtualPath = value;
 
-            // Can happen in the designer
-            if (value == null) return;
+				// Can happen in the designer
+				if (value == null) return;
 
-            _baseVirtualDir = value.Parent;
-        }
-    }
+				_baseVirtualDir = value.Parent;
+			}
+		}
 
-    internal string CurrentVirtualPathString {
-        get { return System.Web.VirtualPath.GetVirtualPathString(CurrentVirtualPath); }
-    }
+		internal string CurrentVirtualPathString
+		{
+			get { return System.Web.VirtualPath.GetVirtualPathString(CurrentVirtualPath); }
+		}
 
-    private Regex _tagRegex;
+		private Regex _tagRegex;
+
+#if NETFRAMEWORK
     // The 3.5 regex is used only when targeting 2.0/3.5 for backward compatibility (Dev10 bug 830783).
     private readonly static Regex tagRegex35 = new TagRegex35();
     // The 4.0 regex is used for web sites targeting 4.0 and above. 
@@ -99,35 +108,63 @@ public class BaseParser {
     internal readonly static Regex ltRegex = new LTRegex();
     internal readonly static Regex serverTagsRegex = new ServerTagsRegex();
     internal readonly static Regex runatServerRegex = new RunatServerRegex();
+#else
+		// The 3.5 regex is used only when targeting 2.0/3.5 for backward compatibility (Dev10 bug 830783).
+		private readonly static Regex tagRegex35 = NetCoreRegexes.TagRegex35();
+		// The 4.0 regex is used for web sites targeting 4.0 and above. 
+		private readonly static Regex tagRegex40  = NetCoreRegexes.TagRegex();
 
-    /*
-     * Turns relative virtual path into absolute ones
-     */
-    internal VirtualPath ResolveVirtualPath(VirtualPath virtualPath) {
-        return VirtualPathProvider.CombineVirtualPathsInternal(CurrentVirtualPath, virtualPath);
-    }
+		internal readonly static Regex directiveRegex  = NetCoreRegexes.DirectiveRegex();
+		internal readonly static Regex endtagRegex  = NetCoreRegexes.EndTagRegex();
+		internal readonly static Regex aspCodeRegex  = NetCoreRegexes.AspCodeRegex();
+		internal readonly static Regex aspExprRegex  = NetCoreRegexes.AspExprRegex();
+		internal readonly static Regex aspEncodedExprRegex  = NetCoreRegexes.AspEncodedExprRegex();
+		internal readonly static Regex databindExprRegex  = NetCoreRegexes.DatabindExprRegex();
+		internal readonly static Regex commentRegex  = NetCoreRegexes.CommentRegex();
+		internal readonly static Regex includeRegex  = NetCoreRegexes.IncludeRegex();
+		internal readonly static Regex textRegex  = NetCoreRegexes.TextRegex();
 
-    private bool IsVersion40OrAbove() {
-        if (HostingEnvironment.IsHosted) {
-            // If we are running in a hosted environment, then we can simply check the target version.
-            return MultiTargetingUtil.IsTargetFramework40OrAbove;
-        }
-        else {
-            // Otherwise, we are in the designer, and thus should check using the type description provider.
-            // The new type TagRegex35 only exists when targeting 4.0 and above.
-            return TargetFrameworkUtil.IsSupportedType(typeof(TagRegex35));
-        }
-    }
+		// Regexes used in DetectSpecialServerTagError
+		internal readonly static Regex gtRegex  = NetCoreRegexes.GTRegex();
+		internal readonly static Regex ltRegex  = NetCoreRegexes.LTRegex();
+		internal readonly static Regex serverTagsRegex  = NetCoreRegexes.ServerTagsRegex();
+		internal readonly static Regex runatServerRegex  = NetCoreRegexes.RunatServerRegex();
+#endif
+		/*
+         * Turns relative virtual path into absolute ones
+         */
+		internal VirtualPath ResolveVirtualPath(VirtualPath virtualPath)
+		{
+			return VirtualPathProvider.CombineVirtualPathsInternal(CurrentVirtualPath, virtualPath);
+		}
 
-    internal Regex TagRegex {
-        get {
-            if (_tagRegex == null) {
-                _tagRegex = IsVersion40OrAbove() ? tagRegex40 : tagRegex35;
-            }
-            return _tagRegex;
-        }
-    }
-}
+		private bool IsVersion40OrAbove()
+		{
+			if (HostingEnvironment.IsHosted)
+			{
+				// If we are running in a hosted environment, then we can simply check the target version.
+				return MultiTargetingUtil.IsTargetFramework40OrAbove;
+			}
+			else
+			{
+				// Otherwise, we are in the designer, and thus should check using the type description provider.
+				// The new type TagRegex35 only exists when targeting 4.0 and above.
+				return TargetFrameworkUtil.IsSupportedType(typeof(TagRegex35));
+			}
+		}
+
+		internal Regex TagRegex
+		{
+			get
+			{
+				if (_tagRegex == null)
+				{
+					_tagRegex = IsVersion40OrAbove() ? tagRegex40 : tagRegex35;
+				}
+				return _tagRegex;
+			}
+		}
+	}
 
 
 }

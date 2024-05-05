@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace System.Web.RegularExpressions
 {
-	public partial class NetCoreRegExes
+	public partial class NetCoreRegexes
 	{
 
 		const string directiveRegexString = @"<%\s*@" +
@@ -34,75 +34,76 @@ namespace System.Web.RegularExpressions
 		    @")" +
 		    @")*" +
 		    @"\s*(?<empty>/)?>", regexOptions)]
-        public partial Regex TagRegex();
+        public static partial Regex TagRegex();
+
         [GeneratedRegex(@"\G" + directiveRegexString, regexOptions)]
-        public partial Regex DirectiveRegex();
+        public static partial Regex DirectiveRegex();
 
         [GeneratedRegex(@"\G</(?<tagname>[\w:\.]+)\s*>", regexOptions)]
-        public partial Regex EndTagRegex();
+        public static partial Regex EndTagRegex();
 
         [GeneratedRegex(@"\G<%(?!@)(?<code>.*?)%>", regexOptions)]
-        public partial Regex AspCodeRegex();
+        public static partial Regex AspCodeRegex();
 
         [GeneratedRegex(@"\G<%\s*?=(?<code>.*?)?%>", regexOptions)]
-        public partial Regex AspExprRegex();
+        public static partial Regex AspExprRegex();
 
         [GeneratedRegex(@"\G<%#(?<encode>:)?(?<code>.*?)?%>", regexOptions)]
-        public partial Regex DatabindExprRegex();
+        public static partial Regex DatabindExprRegex();
 
         [GeneratedRegex(@"\G<%--(([^-]*)-)*?-%>", regexOptions)]
-        public partial Regex CommentRegex();
+        public static partial Regex CommentRegex();
 
         [GeneratedRegex(@"\G<!--\s*#(?i:include)\s*(?<pathtype>[\w]+)\s*=\s*[""']?(?<filename>[^\""']*?)[""']?\s*-->", regexOptions)]
-        public partial Regex IncludeRegex();
+        public static partial Regex IncludeRegex();
 
         [GeneratedRegex(@"\G[^<]+", regexOptions)]
-        public partial Regex TextRegex();
+        public static partial Regex TextRegex();
 
         [GeneratedRegex("[^%]>", regexOptions)]
-        public partial Regex GTRegex();
+        public static partial Regex GTRegex();
 
         [GeneratedRegex("<[^%]", regexOptions)]
-        public partial Regex LTRegex();
+        public static partial Regex LTRegex();
 
         [GeneratedRegex("<%(?![#$])(([^%]*)%)*?>", regexOptions)]
-        public partial Regex ServerTagsRegex();
+        public static partial Regex ServerTagsRegex();
 
         [GeneratedRegex(@"runat\W*server", regexOptions | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-        public partial Regex RunatServerRegex();
+        public static partial Regex RunatServerRegex();
 
         [GeneratedRegex(directiveRegexString, regexOptions)]
-        public partial Regex SimpleDirectiveRegex();
+        public static partial Regex SimpleDirectiveRegex();
 
         [GeneratedRegex(@"\G\s*<%\s*?#(?<encode>:)?(?<code>.*?)?%>\s*\z", regexOptions)]
-        public partial Regex DataBindRegex();
+        public static partial Regex DataBindRegex();
 
         [GeneratedRegex(@"\G\s*<%\s*\$\s*(?<code>.*)?%>\s*\z", regexOptions)]
-        public partial Regex ExpressionBuilderRegex();
+        public static partial Regex ExpressionBuilderRegex();
 
         [GeneratedRegex(@"^\s*bind\s*\((?<params>.*)\)\s*\z", regexOptions | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-        public partial Regex BindExpressionRegex();
+        public static partial Regex BindExpressionRegex();
 
         [GeneratedRegex(@"\s*((""(?<fieldName>(([\w\.]+)|(\[.+\])))"")|('(?<fieldName>(([\w\.]+)|(\[.+\])))'))\s*(,\s*((""(?<formatString>.*)"")|('(?<formatString>.*)'))\s*)?\s*\z", regexOptions)]
-        public partial Regex BindParametersRegex();
+        public static partial Regex BindParametersRegex();
 
         [GeneratedRegex(@"^(([^""]*("""")?)*)$", regexOptions)]
-        public partial Regex FormatStringRegex();
+        public static partial Regex FormatStringRegex();
 
         [GeneratedRegex(@"<%\s*=\s*WebResource\(""(?<resourceName>[^""]*)""\)\s*%>", regexOptions)]
-        public partial Regex WebResourceRegex();
+        public static partial Regex WebResourceRegex();
 
         [GeneratedRegex(@"\W", regexOptions)]
-        public partial Regex NonWordRegex();
+        public static partial Regex NonWordRegex();
 
         [GeneratedRegex(@"^\s*eval\s*\((?<params>.*)\)\s*\z", regexOptions | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-        public partial Regex EvalExpressionRegex();
+        public static partial Regex EvalExpressionRegex();
         
         [GeneratedRegex(@"\$(?:\{(?<name>\w+)\})", regexOptions)]
-        public partial Regex BrowserCapsRefRegex();
+        public static partial Regex BrowserCapsRefRegex();
 
         [GeneratedRegex(@"\G<%:(?<code>.*?)?%>", regexOptions)]
-        public partial Regex AspEncodedExprRegex();
+        public static partial Regex AspEncodedExprRegex();
 
 		// Note that this string is slightly different from TagRegex above
 		// at the "=bar attribute" line. 
@@ -120,13 +121,13 @@ namespace System.Web.RegularExpressions
                                                   @")*" +
                                                   @"\s*(?<empty>/)?>",
                                             regexOptions)]
-        public partial Regex TagRegex35();
+        public static partial Regex TagRegex35();
 
         [GeneratedRegex(@"^\s*BindItem\.(?<params>.*)\s*\z", regexOptions | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-        public partial Regex BindItemExpressionRegex();
+        public static partial Regex BindItemExpressionRegex();
 
         [GeneratedRegex(@"(?<fieldName>([\w\.]+))\s*\z", regexOptions)]
-        public partial Regex BindItemParametersRegex();
+        public static partial Regex BindItemParametersRegex();
 
 	}
 }

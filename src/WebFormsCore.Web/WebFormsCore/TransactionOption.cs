@@ -1,4 +1,6 @@
-﻿namespace System.EnterpriseServices;
+﻿#if !NETFRAMEWORK
+
+namespace System.EnterpriseServices;
 
 //
 // Summary:
@@ -28,3 +30,4 @@ public enum TransactionOption
 	//     current context.
 	RequiresNew
 }
+#endif

@@ -12,7 +12,11 @@ namespace System.Web.UI.WebControls {
     using System.ComponentModel;
     using System.Data;
     using System.Data.Common;
+#if !WebFormsCore
     using System.Data.SqlClient;
+#else
+    using Microsoft.Data.SqlClient;
+#endif
     using System.Drawing.Design;
     using System.Globalization;
     using System.IO;
@@ -676,7 +680,7 @@ namespace System.Web.UI.WebControls {
         /// to rethrow the original exception or throw the new custom exception.
         /// </devdoc>
         private Exception BuildCustomException(Exception ex, DataSourceOperation operation, DbCommand command, out bool isCustomException) {
-            System.Data.SqlClient.SqlException sqlException = ex as System.Data.SqlClient.SqlException;
+            SqlException sqlException = ex as SqlException;
             if (sqlException != null) {
                 if ((sqlException.Number == MustDeclareVariableSqlExceptionNumber) ||
                     (sqlException.Number == ProcedureExpectsParameterSqlExceptionNumber)) {
@@ -1013,10 +1017,10 @@ namespace System.Web.UI.WebControls {
                     if (cacheEnabled && cache is SqlDataSourceCache) {
                         SqlDataSourceCache sqlCache = (SqlDataSourceCache)cache;
                         if (String.Equals(sqlCache.SqlCacheDependency, SqlDataSourceCache.Sql9CacheDependencyDirective, StringComparison.OrdinalIgnoreCase)) {
-                            if (!(command is System.Data.SqlClient.SqlCommand)) {
+                            if (!(command is SqlCommand)) {
                                 throw new InvalidOperationException(SR.GetString(SR.SqlDataSourceView_CommandNotificationNotSupported, _owner.ID));
                             }
-                            cacheDependency = new SqlCacheDependency((System.Data.SqlClient.SqlCommand)command);
+                            cacheDependency = new SqlCacheDependency((SqlCommand)command);
                         }
                     }
 

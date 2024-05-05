@@ -92,12 +92,16 @@ namespace System.Web.Util {
 
                         // Create a new assembly.
                         AssemblyBuilder newAssembly =
+#if NETFRAMEWORK
                            Thread.GetDomain().DefineDynamicAssembly(assemblyName,
                                                                     AssemblyBuilderAccess.Run,
                                                                     null, //directory to persist assembly
                                                                     true, //isSynchronized
                                                                     null  //assembly attributes
                                                                     );
+#else
+                            AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#endif
 
                         // Create a single module in the assembly.
                         _dynamicModule = newAssembly.DefineDynamicModule("M_" + name);

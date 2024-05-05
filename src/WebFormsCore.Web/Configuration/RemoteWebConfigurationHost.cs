@@ -75,7 +75,7 @@ namespace System.Web.Configuration {
 
             _PathMap = new Hashtable(StringComparer.OrdinalIgnoreCase);
 
-#if !FEATURE_PAL // FEATURE_PAL does not have WindowsImpersonationContext, COM objects
+#if !FEATURE_PAL && !WebFormsCore // FEATURE_PAL does not have WindowsImpersonationContext, COM objects
             //
             // Send the path arguments to the server for parsing,
             // and retreive the normalized paths and path mapping
@@ -175,10 +175,13 @@ namespace System.Web.Configuration {
 #else // !FEATURE_PAL: set dummy config path
             string appPath = null;
             _ConfigPath = configPath;
+			WebConfigurationFileMap configFileMap = new WebConfigurationFileMap();
+            string appSiteName = "";
+            string appSiteID = "";
 #endif // !FEATURE_PAL
 
-            // Delegate to a WebConfigurationHost for unhandled methods.
-            WebConfigurationHost webConfigurationHost = new WebConfigurationHost();
+			// Delegate to a WebConfigurationHost for unhandled methods.
+			WebConfigurationHost webConfigurationHost = new WebConfigurationHost();
             webConfigurationHost.Init(root, true, new UserMapPath(configFileMap, /*pathsAreLocal*/ false), null, appPath, appSiteName, appSiteID);
             Host = webConfigurationHost;
         }
@@ -199,8 +202,8 @@ namespace System.Web.Configuration {
         /////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////
         public override object GetStreamVersion(string streamName) {
-#if FEATURE_PAL // FEATURE_PAL: singelton version
-	return s_version;
+#if FEATURE_PAL || WebFormsCore // FEATURE_PAL: singelton version
+	        return s_version;
 #else 
             // for now, assume it is the same
             // return s_version;
@@ -321,7 +324,7 @@ namespace System.Web.Configuration {
 
         private string CallEncryptOrDecrypt(bool doEncrypt, string xmlString, ProtectedConfigurationProvider protectionProvider, ProtectedConfigurationSection protectedConfigSection)
         {
-#if !FEATURE_PAL // FEATURE_PAL has no COM objects => no encryption
+#if !FEATURE_PAL && !WebFormsCore // FEATURE_PAL has no COM objects => no encryption
             // ROTORTODO: COM Objects are not implemented.
             // CORIOLISTODO: COM Objects are not implemented.
             ProviderSettings                   ps;

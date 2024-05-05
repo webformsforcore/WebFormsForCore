@@ -8,6 +8,7 @@ namespace System.Web.Security.Cryptography {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Security.Cryptography;
+    using System.Runtime.InteropServices;
 
     // Utility class to provide the "one true way" of getting instances of
     // cryptographic algorithms, like SymmetricAlgorithm and HashAlgorithm.
@@ -68,25 +69,25 @@ namespace System.Web.Security.Cryptography {
         [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5350:MD5CannotBeUsed", Justification = @"This is only used by legacy code; new features do not use this algorithm.")]
         [Obsolete("MD5 is deprecated and MUST NOT be used by new features. Consider using a SHA-2 algorithm instead.")]
         internal static MD5 CreateMD5() {
-            return new MD5Cng();
-        }
+            return MD5.Create();
+		}
 
         [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5354:SHA1CannotBeUsed", Justification = @"This is only used by legacy code; new features do not use this algorithm.")]
         [Obsolete("SHA1 is deprecated and MUST NOT be used by new features. Consider using a SHA-2 algorithm instead.")]
         internal static SHA1 CreateSHA1() {
-            return new SHA1Cng();
+            return SHA1.Create(); 
         }
 
         internal static SHA256 CreateSHA256() {
-            return new SHA256Cng();
+			return SHA256.Create();
         }
 
         internal static SHA384 CreateSHA384() {
-            return new SHA384Cng();
+		    return SHA384.Create();
         }
 
         internal static SHA512 CreateSHA512() {
-            return new SHA512Cng();
+            return SHA512.Create();
         }
 
         [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5353:TripleDESCannotBeUsed", Justification = @"This is only used by legacy code; new features do not use this algorithm.")]

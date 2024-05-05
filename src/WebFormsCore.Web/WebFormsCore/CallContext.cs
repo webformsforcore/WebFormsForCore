@@ -1,9 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: System.Runtime.Remoting.Messaging.CallContext
-// Assembly: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-// MVID: 7114F06D-16F1-436A-B84F-F423F37F3652
-// Assembly location: C:\Windows\Microsoft.NET\assembly\GAC_64\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll
-// XML documentation location: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1\mscorlib.xml
+﻿#if !NETFRAMEWORK
 
 using System.Runtime.InteropServices;
 using System.Security;
@@ -212,3 +207,5 @@ namespace System.Runtime.Remoting.Messaging
 #endif
 	}
 }
+
+#endif

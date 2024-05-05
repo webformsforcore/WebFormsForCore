@@ -15,8 +15,13 @@ namespace System.Web.UI {
     using System.IO;
     using System.Globalization;
     using System.Reflection;
-    using System.Runtime.Serialization;
+	using System.Runtime.Serialization;
+#if NETFRAMEWORK
     using System.Runtime.Serialization.Formatters.Binary;
+#else
+    using IFormatter = WebFormsCore.Serialization.Formatters.IFormatter; 
+    using WebFormsCore.Serialization.Formatters.Binary;
+#endif
     using System.Security;
     using System.Security.Permissions;
     using System.Text;
@@ -42,8 +47,8 @@ namespace System.Web.UI {
     /// binary serialization as a fallback mechanism. The formatter is also able to compress
     /// IndexedStrings contained in the object graph.
     /// </devdoc>
-    public sealed class ObjectStateFormatter : IStateFormatter, IStateFormatter2, IFormatter {
-
+    public sealed class ObjectStateFormatter : IStateFormatter, IStateFormatter2, IFormatter 
+    { 
         // Optimized type tokens
         private const byte Token_Int16 = 1;
         private const byte Token_Int32 = 2;

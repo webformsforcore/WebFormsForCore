@@ -209,7 +209,11 @@ namespace System.Web.Util {
             if (!AppSettings.RestrictXmlControls)
             {
                 XslTransform xform = new XslTransform();
+#if NETFRAMEWORK
                 xform.Load(reader, resolver, null);
+#else
+                xform.Load(reader, resolver);
+#endif
                 return xform;
             }
             return null;

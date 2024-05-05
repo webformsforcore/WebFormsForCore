@@ -113,7 +113,7 @@ namespace System.Web.UI {
                 return type;
             }
 
-#if !FEATURE_PAL
+#if !FEATURE_PAL && !WebFormsCore
             // If we're in the designer, check the WebFormsReferenceManager and ITypeResolutionService first.
             if (_parser.FInDesigner && (_parser.DesignerHost != null)) {
                 // If we are in the DesignTimeThemes Host, we can't actually go down this code path, let the TypeResolutionService try instead

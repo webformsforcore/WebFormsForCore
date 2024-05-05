@@ -35,7 +35,8 @@ namespace System.Web.UI {
         private bool _initCalled;
 #endif
 
-        // Parses a databinding expression (e.g. <%# i+1 %>
+		// Parses a databinding expression (e.g. <%# i+1 %>
+#if NETFRAMEWORK
         private readonly static Regex databindRegex = new DataBindRegex();
         internal readonly static Regex expressionBuilderRegex = new ExpressionBuilderRegex();
         private readonly static Regex bindExpressionRegex = new BindExpressionRegex();
@@ -44,8 +45,18 @@ namespace System.Web.UI {
         private readonly static Regex bindItemParametersRegex = new BindItemParametersRegex();
         private readonly static Regex evalExpressionRegex = new EvalExpressionRegex();
         private readonly static Regex formatStringRegex = new FormatStringRegex();
+#else
+		private readonly static Regex databindRegex = NetCoreRegexes.DataBindRegex();
+		internal readonly static Regex expressionBuilderRegex = NetCoreRegexes.ExpressionBuilderRegex();
+		private readonly static Regex bindExpressionRegex = NetCoreRegexes.BindExpressionRegex();
+		private readonly static Regex bindParametersRegex = NetCoreRegexes.BindParametersRegex();
+		private readonly static Regex bindItemExpressionRegex = NetCoreRegexes.BindItemExpressionRegex();
+		private readonly static Regex bindItemParametersRegex = NetCoreRegexes.BindItemParametersRegex();
+		private readonly static Regex evalExpressionRegex = NetCoreRegexes.EvalExpressionRegex();
+		private readonly static Regex formatStringRegex = NetCoreRegexes.FormatStringRegex();
+#endif
 
-        private Type _controlType;
+		private Type _controlType;
         private string _tagName;
         private string _skinID;
         private ArrayList _subBuilders;
@@ -84,9 +95,9 @@ namespace System.Web.UI {
         private const int controlTypeIsControl          = 0x00002000; // Indicates that the type specified in _controlType derives from Control
         private const int entriesSorted                 = 0x00004000;
         private const int applyTheme                    = 0x00008000;
-        #pragma warning disable 0649
+#pragma warning disable 0649
         private SimpleBitVector32 flags;
-        #pragma warning restore 0649
+#pragma warning restore 0649
 
 
         /// <devdoc>
@@ -3181,9 +3192,9 @@ namespace System.Web.UI {
             private const int isGeneratedID = 0x00000040;
             private const int localize = 0x00000080;
             private const int ignoreControlProperties = 0x00000100;
-            #pragma warning disable 0649
+#pragma warning disable 0649
             private SimpleBitVector32 flags;
-            #pragma warning restore 0649
+#pragma warning restore 0649
 
             internal bool ChildrenAsProperties {
                 get { return flags[childrenAsProperties]; }

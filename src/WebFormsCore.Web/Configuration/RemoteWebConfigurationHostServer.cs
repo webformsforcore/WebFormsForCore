@@ -290,20 +290,18 @@ namespace System.Web.Configuration {
             // If we don't have the privelege to get the Audit information,
             // then just persist the DACL
             try {
-                fileSecurity = File.GetAccessControl(oldFileName,
-                                                      AccessControlSections.Access |
-                                                      AccessControlSections.Audit);
+                fileSecurity = new FileInfo(oldFileName).GetAccessControl(
+                    AccessControlSections.Access | AccessControlSections.Audit);
 
                 // Mark dirty, so effective for write
                 fileSecurity.SetAuditRuleProtection(fileSecurity.AreAuditRulesProtected, true);
             } catch (UnauthorizedAccessException) {
-                fileSecurity = File.GetAccessControl(oldFileName,
-                                                      AccessControlSections.Access);
+                fileSecurity = new FileInfo(oldFileName).GetAccessControl(AccessControlSections.Access);
             }
 
             // Mark dirty, so effective for write
             fileSecurity.SetAccessRuleProtection(fileSecurity.AreAccessRulesProtected, true);
-            File.SetAccessControl(newFileName, fileSecurity);
+            new FileInfo(newFileName).SetAccessControl(fileSecurity);
 #endif // !FEATURE_PAL
         }
         const int MOVEFILE_REPLACE_EXISTING = 0x00000001;

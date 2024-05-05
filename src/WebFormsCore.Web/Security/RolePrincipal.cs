@@ -19,8 +19,12 @@ namespace System.Web.Security {
     using System.IO;
     using System.Reflection;
     using System.Runtime.Serialization;
+#if NETFRAMEWORK
     using System.Runtime.Serialization.Formatters.Binary;
-    using System.Security;
+#else
+	using WebFormsCore.Serialization.Formatters.Binary;
+#endif
+	using System.Security;
     using System.Security.Claims;
     using System.Security.Permissions;
     using System.Security.Principal;
@@ -199,12 +203,16 @@ namespace System.Web.Security {
         {
             RoleClaimProvider claimProvider = new RoleClaimProvider(this, claimsIdentity);
 
+#if NETFRAMEWORK
             if (s_type == null)
             {
                 s_type = typeof(DynamicRoleClaimProvider);
             }
 
             s_type.InvokeMember("AddDynamicRoleClaims", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null, new object[] { claimsIdentity, claimProvider.Claims }, CultureInfo.InvariantCulture);
+#else
+            claimsIdentity.AddClaims(claimProvider.Claims);
+#endif
         }
 
 

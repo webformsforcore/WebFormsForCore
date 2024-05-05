@@ -149,10 +149,13 @@ namespace System.Web.Hosting {
                     if (_defaultDomainSingleton == null) {
                         AppDomain defaultDomain = appManager.GetDefaultAppDomain();
                         defaultDomain.SetData(_pbLimit, AspNetMemoryMonitor.ProcessPrivateBytesLimit);
+#if NETFRAMEWORK
                         defaultDomain.DoCallBack(new CrossAppDomainDelegate(RecycleLimitMonitorSingleton.EnsureCreated));
-
-                        // Keep a proxy reference for later use
-                        _defaultDomainSingleton = (RecycleLimitMonitorSingleton)defaultDomain.GetData(_name);
+#else
+						RecycleLimitMonitorSingleton.EnsureCreated();
+#endif
+						// Keep a proxy reference for later use
+						_defaultDomainSingleton = (RecycleLimitMonitorSingleton)defaultDomain.GetData(_name);
                     }
                 }
             }

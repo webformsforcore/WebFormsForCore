@@ -19,9 +19,7 @@ namespace System.Web.Compilation {
     using System.IO;
     using System.Linq;
     using System.Reflection;
-#if NETFRAMEWORK
     using System.Runtime.Remoting.Messaging;
-#endif
     using System.Runtime.Versioning;
     using System.Security;
     using System.Security.Permissions;

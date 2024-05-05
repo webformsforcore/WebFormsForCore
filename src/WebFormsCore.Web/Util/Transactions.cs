@@ -142,7 +142,9 @@ public class Transactions {
                 bool inTransaction = false;
 
                 try {
-                    inTransaction = ContextUtil.IsInTransaction;
+#if !WebFormsCore
+                        inTransaction = ContextUtil.IsInTransaction;
+#endif
                 }
                 catch {
                 }
@@ -156,8 +158,10 @@ public class Transactions {
                 bool aborted = false;
 
                 try {
-                    if (ContextUtil.MyTransactionVote == TransactionVote.Abort)
+#if !WebFormsCore
+                        if (ContextUtil.MyTransactionVote == TransactionVote.Abort)
                         aborted = true;
+#endif
                 }
                 catch {
                 }

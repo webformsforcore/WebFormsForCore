@@ -30,6 +30,7 @@
 	  <Compile Remove="System\Configuration\ApplicationSettingsBase.cs" />
 	  <Compile Remove="System\Configuration\TypeUtil.cs" />
 	  <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationPermission.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -40,7 +41,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<ProjectReference Include="..\WebFormsCore.Serialization.BinaryFormatter\WebFormsCore.Serialization.BinaryFormatter.csproj" />
+		<ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -51,6 +52,7 @@
 	  <None Include="System\Configuration\ApplicationSettingsBase.cs" />
 	  <None Include="System\Configuration\TypeUtil.cs" />
 	  <None Include="System\System.Configuration\ConfigurationException.cs" />
+	  <None Include="System\System.Configuration\ConfigurationPermission.cs" />
 	</ItemGroup>
 
 	<!--

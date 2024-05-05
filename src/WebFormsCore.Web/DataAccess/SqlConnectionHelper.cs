@@ -11,8 +11,12 @@ namespace System.Web.DataAccess {
     using System.Configuration;
     using System.Configuration.Provider;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Diagnostics;
+#if !WebFormsCore
+    using  System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
+	using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Security.Permissions;
@@ -116,10 +120,14 @@ namespace System.Web.DataAccess {
                     appPath = Environment.CurrentDirectory;
 
                 dataDir = Path.Combine(appPath, HttpRuntime.DataDirectoryName);
+#if NETFRAMEWORK
                 AppDomain.CurrentDomain.SetData(s_strDataDir, dataDir, new FileIOPermission(FileIOPermissionAccess.PathDiscovery, dataDir));
-            }
+#else
+				AppDomain.CurrentDomain.SetData(s_strDataDir, dataDir);
+#endif
+			}
 
-            return dataDir;
+			return dataDir;
         }
 
         private static void EnsureDBFile(string connectionString) {

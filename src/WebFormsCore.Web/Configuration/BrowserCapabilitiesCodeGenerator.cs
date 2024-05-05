@@ -233,7 +233,7 @@ namespace System.Web.Configuration {
         }
 
         private void RestartW3SVCIfNecessary() {
-#if !FEATURE_PAL
+#if !FEATURE_PAL && !WebFormsCore
             try {
                 // Dev10 bug 734918
                 // We should not fail when the w3svc service is not installed.

@@ -16,7 +16,7 @@ using System.IO;
 #if NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
-using WebFormsCore.Serialization.BinaryFormatter;
+using WebFormsCore.Serialization.Formatters.Binary;
 #endif
 namespace System.Web.Caching {
 
