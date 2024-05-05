@@ -6,7 +6,7 @@
 		<Nullable>disable</Nullable>
 		<LangVersion>11</LangVersion>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;TRACE;RETAIL;WIN32</DefineConstants>
+		<DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;TRACE;RETAIL;WIN32</DefineConstants>
 		<DefineConstants>$(DefineConstants);WebFormsCore</DefineConstants>
 		<SignAssembly>True</SignAssembly>
 	</PropertyGroup>

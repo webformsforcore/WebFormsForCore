@@ -23,8 +23,12 @@ namespace System.Web.Caching {
     using System.Web.Configuration;
     using System.Xml;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Globalization;
+#if !WebFormsCore
+    using  System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
+	using System.Globalization;
     using System.Security.Permissions;
     using System.Text;
     using System.Runtime.InteropServices;

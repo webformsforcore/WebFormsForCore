@@ -300,7 +300,7 @@ namespace Mono.Security.Cryptography
 					}
 					return machine;
 				default:
-					throw new CryptographicException(SR.GetString((SR.Cryptography_Invalid_scope));
+					throw new CryptographicException(SR.GetString(SR.Cryptography_Invalid_scope));
 			}
 		}
 	}

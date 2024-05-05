@@ -14,9 +14,14 @@ namespace System.Web.Security {
     using  System.Collections;
     using  System.Collections.Specialized;
     using  System.Data;
+#if !WebFormsCore
     using  System.Data.SqlClient;
     using  System.Data.SqlTypes;
-    using  System.Text;
+#else
+	using Microsoft.Data.SqlClient;
+	using Microsoft.Data.SqlTypes;
+#endif
+	using System.Text;
     using  System.Configuration.Provider;
     using  System.Configuration;
     using  System.Web.DataAccess;

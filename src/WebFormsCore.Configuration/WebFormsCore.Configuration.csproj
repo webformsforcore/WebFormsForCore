@@ -6,7 +6,7 @@
 		<Nullable>disable</Nullable>
 		<LangVersion>11</LangVersion>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
+		<DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
 		<DefineConstants>$(DefineConstants);WebFormsCore</DefineConstants>
 		<SignAssembly>True</SignAssembly>
 	</PropertyGroup>
@@ -27,7 +27,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="System\Configuration\ApplicationSettingsBase.cs" />
+	  <Compile Remove="System\Configuration\TypeUtil.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />
+		<!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />-->
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.Security.Permissions" Version="8.0.0" />
 	</ItemGroup>
@@ -37,7 +44,75 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="System\Net\Configuration\" />
+		<Folder Include="System\Net\Configuration\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include="System\Configuration\ApplicationSettingsBase.cs" />
+	  <None Include="System\Configuration\TypeUtil.cs" />
+	  <None Include="System\System.Configuration\ConfigurationException.cs" />
+	</ItemGroup>
+
+	<!--
+	<ItemGroup>
+	  <Compile Remove="System\System.Configuration\Configuration.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationCollectionAttribute.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationConverterBase.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElement.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElementCollection.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElementCollectionType.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElementProperty.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationErrorsException.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationFileMap.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLocation.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLocationCollection.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLockCollection.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLockCollectionType.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationManager.cs" />
+	  <Compile Remove="System\System.Configuration\IgnoreSectionHandler.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\DelegatingConfigHost.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigErrorInfo.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigSystem.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigurationManagerHelper.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigurationManagerInternal.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigClientHost.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigConfigurationFactory.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigHost.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigRecord.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigRoot.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigSettingsFactory.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigSystem.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\InternalConfigEventArgs.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\InternalConfigEventHandler.cs" />
+	  <None Include="System\System.Configuration\Configuration.cs" />
+	  <None Include="System\System.Configuration\ConfigurationCollectionAttribute.cs" />
+	  <None Include="System\System.Configuration\ConfigurationConverterBase.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElement.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElementCollection.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElementCollectionType.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElementProperty.cs" />
+	  <None Include="System\System.Configuration\ConfigurationErrorsException.cs" />
+	  <None Include="System\System.Configuration\ConfigurationFileMap.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLocation.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLocationCollection.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLockCollection.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLockCollectionType.cs" />
+	  <None Include="System\System.Configuration\ConfigurationManager.cs" />
+	  <None Include="System\System.Configuration\IgnoreSectionHandler.cs" />
+	  <None Include="System\System.Configuration\Internal\DelegatingConfigHost.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigErrorInfo.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigSystem.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigurationManagerHelper.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigurationManagerInternal.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigClientHost.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigConfigurationFactory.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigRecord.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigRoot.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigSettingsFactory.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigSystem.cs" />
+	  <None Include="System\System.Configuration\Internal\InternalConfigEventArgs.cs" />
+	  <None Include="System\System.Configuration\Internal\InternalConfigEventHandler.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigHost.cs" />
+	</ItemGroup>
+	-->
 </Project>

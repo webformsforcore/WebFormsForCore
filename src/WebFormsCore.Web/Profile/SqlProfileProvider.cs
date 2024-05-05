@@ -14,8 +14,13 @@ namespace System.Web.Profile {
     using  System.Collections;
     using  System.Collections.Specialized;
     using  System.Data;
+#if !WebFormsCore
     using  System.Data.SqlClient;
     using  System.Data.SqlTypes;
+#else
+    using Microsoft.Data.SqlClient;
+    using Microsoft.Data.SqlTypes;
+#endif
     using  System.Runtime.Serialization.Formatters.Binary;
     using  System.IO;
     using  System.Reflection;

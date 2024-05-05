@@ -1,39 +1,47 @@
-//------------------------------------------------------------------------------
-// <copyright file="ConfigXmlElement.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
+﻿// Decompiled with JetBrains decompiler
+// Type: System.Configuration.ConfigXmlElement
+// Assembly: System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+// MVID: 84F5A18A-F2B1-435C-B86E-09CE162E61E4
+// Assembly location: C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll
+// XML documentation location: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1\System.xml
 
+using System.Configuration.Internal;
+using System.Xml;
+
+#nullable disable
 namespace System.Configuration
 {
-    using System.Configuration.Internal;
-    using System.IO;
-    using System.Xml;
-    using System.Security.Permissions;
+  internal sealed class ConfigXmlElement : XmlElement, IConfigErrorInfo
+  {
+    private int _line;
+    private string _filename;
 
-    internal sealed class ConfigXmlElement : XmlElement, IConfigErrorInfo {
-        int _line;
-        string _filename;
-
-        public ConfigXmlElement( string filename, int line, string prefix, string localName, string namespaceUri, XmlDocument doc )
-            : base( prefix, localName, namespaceUri, doc) {
-            _line = line;
-            _filename = filename;
-        }
-        int IConfigErrorInfo.LineNumber {
-            get { return _line; }
-        }
-        string IConfigErrorInfo.Filename {
-            get { return _filename; }
-        }
-        public override XmlNode CloneNode(bool deep) {
-            XmlNode cloneNode = base.CloneNode(deep);
-            ConfigXmlElement clone = cloneNode as ConfigXmlElement;
-            if (clone != null) {
-                clone._line = _line;
-                clone._filename = _filename;
-            }
-            return cloneNode;
-        }
+    public ConfigXmlElement(
+      string filename,
+      int line,
+      string prefix,
+      string localName,
+      string namespaceUri,
+      XmlDocument doc)
+      : base(prefix, localName, namespaceUri, doc)
+    {
+      this._line = line;
+      this._filename = filename;
     }
+
+    int IConfigErrorInfo.LineNumber => this._line;
+
+    string IConfigErrorInfo.Filename => this._filename;
+
+    public override XmlNode CloneNode(bool deep)
+    {
+      XmlNode xmlNode = base.CloneNode(deep);
+      if (xmlNode is ConfigXmlElement configXmlElement)
+      {
+        configXmlElement._line = this._line;
+        configXmlElement._filename = this._filename;
+      }
+      return xmlNode;
+    }
+  }
 }

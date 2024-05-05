@@ -1,4 +1,9 @@
-﻿#if WebFormsCore && NETCOREAPP
+﻿// Decompiled with JetBrains decompiler
+// Type: System.Configuration.ConfigurationException
+// Assembly: System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+// MVID: 84F5A18A-F2B1-435C-B86E-09CE162E61E4
+// Assembly location: C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll
+// XML documentation location: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1\System.xml
 
 using System.Configuration.Internal;
 using System.Globalization;
@@ -8,374 +13,210 @@ using System.Security;
 using System.Security.Permissions;
 using System.Xml;
 
-namespace System.Configuration;
-
-//
-// Summary:
-//     The exception that is thrown when a configuration system error has occurred.
-[Serializable]
-public class ConfigurationException : SystemException
+#nullable disable
+namespace System.Configuration
 {
-	private const string HTTP_PREFIX = "http:";
+  /// <summary>The exception that is thrown when a configuration system error has occurred.</summary>
+  [Serializable]
+  public class ConfigurationException : SystemException
+  {
+    private const string HTTP_PREFIX = "http:";
+    private string _filename;
+    private int _line;
 
-	private string _filename;
+    private void Init(string filename, int line)
+    {
+      this.HResult = -2146232062;
+      this._filename = filename;
+      this._line = line;
+    }
 
-	private int _line;
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="info">The object that holds the information to deserialize.</param>
+    /// <param name="context">Contextual information about the source or destination.</param>
+    protected ConfigurationException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
+    {
+      this.Init(info.GetString("filename"), info.GetInt32("line"));
+    }
 
-	//
-	// Summary:
-	//     Gets an extended description of why this configuration exception was thrown.
-	//
-	//
-	// Returns:
-	//     An extended description of why this System.Configuration.ConfigurationException
-	//     exception was thrown.
-	public override string Message
-	{
-		get
-		{
-			string filename = Filename;
-			if (!string.IsNullOrEmpty(filename))
-			{
-				if (Line != 0)
-				{
-					return BareMessage + " (" + filename + " line " + Line.ToString(CultureInfo.InvariantCulture) + ")";
-				}
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException()
+      : this((string) null, (Exception) null, (string) null, 0)
+    {
+    }
 
-				return BareMessage + " (" + filename + ")";
-			}
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="message">A message describing why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</param>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException(string message)
+      : this(message, (Exception) null, (string) null, 0)
+    {
+    }
 
-			if (Line != 0)
-			{
-				return BareMessage + " (line " + Line.ToString("G", CultureInfo.InvariantCulture) + ")";
-			}
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="message">A message describing why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</param>
+    /// <param name="inner">The inner exception that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown, if any.</param>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException(string message, Exception inner)
+      : this(message, inner, (string) null, 0)
+    {
+    }
 
-			return BareMessage;
-		}
-	}
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="message">A message describing why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</param>
+    /// <param name="node">The <see cref="T:System.Xml.XmlNode" /> that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown.</param>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException(string message, XmlNode node)
+      : this(message, (Exception) null, ConfigurationException.GetUnsafeXmlNodeFilename(node), ConfigurationException.GetXmlNodeLineNumber(node))
+    {
+    }
 
-	//
-	// Summary:
-	//     Gets a description of why this configuration exception was thrown.
-	//
-	// Returns:
-	//     A description of why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	public virtual string BareMessage => base.Message;
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="message">A message describing why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</param>
+    /// <param name="inner">The inner exception that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown, if any.</param>
+    /// <param name="node">The <see cref="T:System.Xml.XmlNode" /> that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown.</param>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException(string message, Exception inner, XmlNode node)
+      : this(message, inner, ConfigurationException.GetUnsafeXmlNodeFilename(node), ConfigurationException.GetXmlNodeLineNumber(node))
+    {
+    }
 
-	//
-	// Summary:
-	//     Gets the path to the configuration file that caused this configuration exception
-	//     to be thrown.
-	//
-	// Returns:
-	//     The path to the configuration file that caused this System.Configuration.ConfigurationException
-	//     exception to be thrown.
-	public virtual string Filename => SafeFilename(_filename);
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="message">A message describing why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</param>
+    /// <param name="filename">The path to the configuration file that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown.</param>
+    /// <param name="line">The line number within the configuration file at which this <see cref="T:System.Configuration.ConfigurationException" /> was thrown.</param>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException(string message, string filename, int line)
+      : this(message, (Exception) null, filename, line)
+    {
+    }
 
-	//
-	// Summary:
-	//     Gets the line number within the configuration file at which this configuration
-	//     exception was thrown.
-	//
-	// Returns:
-	//     The line number within the configuration file at which this System.Configuration.ConfigurationException
-	//     exception was thrown.
-	public virtual int Line => _line;
+    /// <summary>Initializes a new instance of the <see cref="T:System.Configuration.ConfigurationException" /> class.</summary>
+    /// <param name="message">A message describing why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</param>
+    /// <param name="inner">The inner exception that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown, if any.</param>
+    /// <param name="filename">The path to the configuration file that caused this <see cref="T:System.Configuration.ConfigurationException" /> to be thrown.</param>
+    /// <param name="line">The line number within the configuration file at which this <see cref="T:System.Configuration.ConfigurationException" /> was thrown.</param>
+    [Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
+    public ConfigurationException(string message, Exception inner, string filename, int line)
+      : base(message, inner)
+    {
+      this.Init(filename, line);
+    }
 
-	private void Init(string filename, int line)
-	{
-		base.HResult = -2146232062;
-		_filename = filename;
-		_line = line;
-	}
+    /// <summary>Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo" /> object with the file name and line number at which this configuration exception occurred.</summary>
+    /// <param name="info">The object that holds the information to be serialized.</param>
+    /// <param name="context">The contextual information about the source or destination.</param>
+    [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+      base.GetObjectData(info, context);
+      info.AddValue("filename", (object) this._filename);
+      info.AddValue("line", this._line);
+    }
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   info:
-	//     The object that holds the information to deserialize.
-	//
-	//   context:
-	//     Contextual information about the source or destination.
-	protected ConfigurationException(SerializationInfo info, StreamingContext context)
-		: base(info, context)
-	{
-		Init(info.GetString("filename"), info.GetInt32("line"));
-	}
+    /// <summary>Gets an extended description of why this configuration exception was thrown.</summary>
+    /// <returns>An extended description of why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</returns>
+    public override string Message
+    {
+      get
+      {
+        string filename = this.Filename;
+        if (!string.IsNullOrEmpty(filename))
+        {
+          if (this.Line == 0)
+            return this.BareMessage + " (" + filename + ")";
+          return this.BareMessage + " (" + filename + " line " + this.Line.ToString((IFormatProvider) CultureInfo.InvariantCulture) + ")";
+        }
+        return this.Line != 0 ? this.BareMessage + " (line " + this.Line.ToString("G", (IFormatProvider) CultureInfo.InvariantCulture) + ")" : this.BareMessage;
+      }
+    }
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException()
-		: this(null, null, null, 0)
-	{
-	}
+    /// <summary>Gets a description of why this configuration exception was thrown.</summary>
+    /// <returns>A description of why this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</returns>
+    public virtual string BareMessage => base.Message;
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   message:
-	//     A message describing why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException(string message)
-		: this(message, null, null, 0)
-	{
-	}
+    /// <summary>Gets the path to the configuration file that caused this configuration exception to be thrown.</summary>
+    /// <returns>The path to the configuration file that caused this <see cref="T:System.Configuration.ConfigurationException" /> exception to be thrown.</returns>
+    public virtual string Filename => ConfigurationException.SafeFilename(this._filename);
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   message:
-	//     A message describing why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	//
-	//   inner:
-	//     The inner exception that caused this System.Configuration.ConfigurationException
-	//     to be thrown, if any.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException(string message, Exception inner)
-		: this(message, inner, null, 0)
-	{
-	}
+    /// <summary>Gets the line number within the configuration file at which this configuration exception was thrown.</summary>
+    /// <returns>The line number within the configuration file at which this <see cref="T:System.Configuration.ConfigurationException" /> exception was thrown.</returns>
+    public virtual int Line => this._line;
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   message:
-	//     A message describing why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	//
-	//   node:
-	//     The System.Xml.XmlNode that caused this System.Configuration.ConfigurationException
-	//     to be thrown.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException(string message, XmlNode node)
-		: this(message, null, GetUnsafeXmlNodeFilename(node), GetXmlNodeLineNumber(node))
-	{
-	}
+    /// <summary>Gets the path to the configuration file from which the internal <see cref="T:System.Xml.XmlNode" /> object was loaded when this configuration exception was thrown.</summary>
+    /// <param name="node">The <see cref="T:System.Xml.XmlNode" /> that caused this <see cref="T:System.Configuration.ConfigurationException" /> exception to be thrown.</param>
+    /// <returns>A <see langword="string" /> representing the node file name.</returns>
+    [Obsolete("This class is obsolete, use System.Configuration!System.Configuration.ConfigurationErrorsException.GetFilename instead")]
+    public static string GetXmlNodeFilename(XmlNode node)
+    {
+      return ConfigurationException.SafeFilename(ConfigurationException.GetUnsafeXmlNodeFilename(node));
+    }
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   message:
-	//     A message describing why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	//
-	//   inner:
-	//     The inner exception that caused this System.Configuration.ConfigurationException
-	//     to be thrown, if any.
-	//
-	//   node:
-	//     The System.Xml.XmlNode that caused this System.Configuration.ConfigurationException
-	//     to be thrown.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException(string message, Exception inner, XmlNode node)
-		: this(message, inner, GetUnsafeXmlNodeFilename(node), GetXmlNodeLineNumber(node))
-	{
-	}
+    /// <summary>Gets the line number within the configuration file that the internal <see cref="T:System.Xml.XmlNode" /> object represented when this configuration exception was thrown.</summary>
+    /// <param name="node">The <see cref="T:System.Xml.XmlNode" /> that caused this <see cref="T:System.Configuration.ConfigurationException" /> exception to be thrown.</param>
+    /// <returns>An <see langword="int" /> representing the node line number.</returns>
+    [Obsolete("This class is obsolete, use System.Configuration!System.Configuration.ConfigurationErrorsException.GetLinenumber instead")]
+    public static int GetXmlNodeLineNumber(XmlNode node)
+    {
+      return node is IConfigErrorInfo configErrorInfo ? configErrorInfo.LineNumber : 0;
+    }
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   message:
-	//     A message describing why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	//
-	//   filename:
-	//     The path to the configuration file that caused this System.Configuration.ConfigurationException
-	//     to be thrown.
-	//
-	//   line:
-	//     The line number within the configuration file at which this System.Configuration.ConfigurationException
-	//     was thrown.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException(string message, string filename, int line)
-		: this(message, null, filename, line)
-	{
-	}
+    [FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
+    private static string FullPathWithAssert(string filename)
+    {
+      string str = (string) null;
+      try
+      {
+        str = Path.GetFullPath(filename);
+      }
+      catch
+      {
+      }
+      return str;
+    }
 
-	//
-	// Summary:
-	//     Initializes a new instance of the System.Configuration.ConfigurationException
-	//     class.
-	//
-	// Parameters:
-	//   message:
-	//     A message describing why this System.Configuration.ConfigurationException exception
-	//     was thrown.
-	//
-	//   inner:
-	//     The inner exception that caused this System.Configuration.ConfigurationException
-	//     to be thrown, if any.
-	//
-	//   filename:
-	//     The path to the configuration file that caused this System.Configuration.ConfigurationException
-	//     to be thrown.
-	//
-	//   line:
-	//     The line number within the configuration file at which this System.Configuration.ConfigurationException
-	//     was thrown.
-	[Obsolete("This class is obsolete, to create a new exception create a System.Configuration!System.Configuration.ConfigurationErrorsException")]
-	public ConfigurationException(string message, Exception inner, string filename, int line)
-		: base(message, inner)
-	{
-		Init(filename, line);
-	}
+    internal static string SafeFilename(string filename)
+    {
+      if (string.IsNullOrEmpty(filename))
+        return filename;
+      if (filename.StartsWith("http:", StringComparison.OrdinalIgnoreCase))
+        return filename;
+      try
+      {
+        if (!Path.IsPathRooted(filename))
+          return filename;
+      }
+      catch
+      {
+        return (string) null;
+      }
+      try
+      {
+        Path.GetFullPath(filename);
+      }
+      catch (SecurityException ex)
+      {
+        try
+        {
+          filename = Path.GetFileName(ConfigurationException.FullPathWithAssert(filename));
+        }
+        catch
+        {
+          filename = (string) null;
+        }
+      }
+      catch
+      {
+        filename = (string) null;
+      }
+      return filename;
+    }
 
-	//
-	// Summary:
-	//     Sets the System.Runtime.Serialization.SerializationInfo object with the file
-	//     name and line number at which this configuration exception occurred.
-	//
-	// Parameters:
-	//   info:
-	//     The object that holds the information to be serialized.
-	//
-	//   context:
-	//     The contextual information about the source or destination.
-	[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-	public override void GetObjectData(SerializationInfo info, StreamingContext context)
-	{
-		base.GetObjectData(info, context);
-		info.AddValue("filename", _filename);
-		info.AddValue("line", _line);
-	}
-
-	//
-	// Summary:
-	//     Gets the path to the configuration file from which the internal System.Xml.XmlNode
-	//     object was loaded when this configuration exception was thrown.
-	//
-	// Parameters:
-	//   node:
-	//     The System.Xml.XmlNode that caused this System.Configuration.ConfigurationException
-	//     exception to be thrown.
-	//
-	// Returns:
-	//     A string representing the node file name.
-	[Obsolete("This class is obsolete, use System.Configuration!System.Configuration.ConfigurationErrorsException.GetFilename instead")]
-	public static string GetXmlNodeFilename(XmlNode node)
-	{
-		return SafeFilename(GetUnsafeXmlNodeFilename(node));
-	}
-
-	//
-	// Summary:
-	//     Gets the line number within the configuration file that the internal System.Xml.XmlNode
-	//     object represented when this configuration exception was thrown.
-	//
-	// Parameters:
-	//   node:
-	//     The System.Xml.XmlNode that caused this System.Configuration.ConfigurationException
-	//     exception to be thrown.
-	//
-	// Returns:
-	//     An int representing the node line number.
-	[Obsolete("This class is obsolete, use System.Configuration!System.Configuration.ConfigurationErrorsException.GetLinenumber instead")]
-	public static int GetXmlNodeLineNumber(XmlNode node)
-	{
-		if (node is IConfigErrorInfo configErrorInfo)
-		{
-			return configErrorInfo.LineNumber;
-		}
-
-		return 0;
-	}
-
-	[FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
-	private static string FullPathWithAssert(string filename)
-	{
-		string result = null;
-		try
-		{
-			result = Path.GetFullPath(filename);
-		}
-		catch
-		{
-		}
-
-		return result;
-	}
-
-	internal static string SafeFilename(string filename)
-	{
-		if (string.IsNullOrEmpty(filename))
-		{
-			return filename;
-		}
-
-		if (filename.StartsWith("http:", StringComparison.OrdinalIgnoreCase))
-		{
-			return filename;
-		}
-
-		try
-		{
-			if (!Path.IsPathRooted(filename))
-			{
-				return filename;
-			}
-		}
-		catch
-		{
-			return null;
-		}
-
-		try
-		{
-			string fullPath = Path.GetFullPath(filename);
-		}
-		catch (SecurityException)
-		{
-			try
-			{
-				string path = FullPathWithAssert(filename);
-				filename = Path.GetFileName(path);
-			}
-			catch
-			{
-				filename = null;
-			}
-		}
-		catch
-		{
-			filename = null;
-		}
-
-		return filename;
-	}
-
-	private static string GetUnsafeXmlNodeFilename(XmlNode node)
-	{
-		if (node is IConfigErrorInfo configErrorInfo)
-		{
-			return configErrorInfo.Filename;
-		}
-
-		return string.Empty;
-	}
+    private static string GetUnsafeXmlNodeFilename(XmlNode node)
+    {
+      return node is IConfigErrorInfo configErrorInfo ? configErrorInfo.Filename : string.Empty;
+    }
+  }
 }
-
-#endif

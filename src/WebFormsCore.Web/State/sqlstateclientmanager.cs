@@ -22,8 +22,12 @@ namespace System.Web.SessionState {
     using System.Web.Caching;
     using System.Web.Util;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Data.Common;
+#if !WebFormsCore
+    using  System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
+	using System.Data.Common;
     using System.Text;
     using System.Security.Principal;
     using System.Xml;

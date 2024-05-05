@@ -9,8 +9,12 @@ namespace System.Web.Management {
     using System.Web.Util;
     using System.IO;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Threading;
+#if !WebFormsCore
+    using  System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
+	using System.Threading;
     using System.Text.RegularExpressions;
     using System.Text;
     using System.Security;

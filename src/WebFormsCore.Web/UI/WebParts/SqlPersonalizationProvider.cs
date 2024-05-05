@@ -12,8 +12,12 @@ namespace System.Web.UI.WebControls.WebParts {
     using System.Configuration.Provider;
     using System.ComponentModel;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Globalization;
+#if !WebFormsCore
+    using  System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
+	using System.Globalization;
     using System.Web;
     using System.Web.DataAccess;
     using System.Web.Util;
