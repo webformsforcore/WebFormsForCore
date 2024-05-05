@@ -726,4 +726,7 @@
   <data name="Config_source_parent_conflict" xml:space="preserve">
     <value>The configSource file '{0}' is also used in a parent, this is not allowed. </value>
   </data>
+  <data name="net_requestaborted" xml:space="preserve">
+    <value>Net request aborted.</value>
+  </data>
 </root>

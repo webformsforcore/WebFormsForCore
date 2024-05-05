@@ -10206,4 +10206,19 @@ Detailed error message: {1}</value>
   <data name="SqlDataSourceView_CommandNotificationNotSupported" xml:space="preserve">
     <value>SQL Server command notification for caching is only supported with the System.Data.SqlClient provider in SqlDataSource '{0}'.</value>
   </data>
+  <data name="Cryptography_DataProtector_InvalidAppNameOrPurpose" xml:space="preserve">
+    <value>The app name or the purpose is invalid for this cryptographic operation</value>
+  </data>
+  <data name="Cryptography_DataProtector_InvalidPurpose" xml:space="preserve">
+    <value>The purpose is invalid for this cryptographic operation.</value>
+  </data>
+  <data name="Cryptography_Data_protection_failed" xml:space="preserve">
+    <value>Data protection failed.</value>
+  </data>
+  <data name="Cryptography_Invalid_scope" xml:space="preserve">
+    <value>Invalid scope for data protection.</value>
+  </data>
+  <data name="Cryptography_Data_unprotection_failed" xml:space="preserve">
+    <value>Data unprotection failed.</value>
+  </data>
 </root>

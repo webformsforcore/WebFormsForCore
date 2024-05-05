@@ -14,7 +14,7 @@ namespace System.Web.Compilation {
     using System.Reflection;
     using System.Web;
     using System.Web.Hosting;
-#if !FEATURE_PAL
+#if !FEATURE_PAL && !WebFormsCore
     using System.Web.UI.Design;
 #endif // !FEATURE_PAL
     using System.Web.UI;
@@ -52,7 +52,7 @@ namespace System.Web.Compilation {
             CompilationSection config = null;
 
             // If we are in the designer, we need to access IWebApplication config instead
-#if !FEATURE_PAL // FEATURE_PAL does not support designer-based features
+#if !FEATURE_PAL && !WebFormsCore // FEATURE_PAL does not support designer-based features
             if (host != null) {
                 IWebApplication webapp = (IWebApplication)host.GetService(typeof(IWebApplication));
                 if (webapp != null) {

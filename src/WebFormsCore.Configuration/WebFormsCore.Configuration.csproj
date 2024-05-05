@@ -36,4 +36,8 @@
 		<ProjectReference Include="..\WebFormsCore.Serialization.BinaryFormatter\WebFormsCore.Serialization.BinaryFormatter.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="System\Net\Configuration\" />
+	</ItemGroup>
+
 </Project>

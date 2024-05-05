@@ -25,9 +25,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\WebFormsCore.Configuration\WebFormsCore.Configuration.csproj" Condition="'$(TargetFramework)' != 'net48'" />
 		<ProjectReference Include="..\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj" />
 		<ProjectReference Include="..\WebFormsCore.Web.RegularExpressions\WebFormsCore.Web.RegularExpressions.csproj" />
@@ -61,6 +58,7 @@
 			<Aliases>NET</Aliases>
 		</PackageReference>
 		<PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
 	</ItemGroup>
 
 	<Target Name="Preprocess">

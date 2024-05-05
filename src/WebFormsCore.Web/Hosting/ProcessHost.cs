@@ -45,7 +45,11 @@ namespace System.Web.Hosting {
     [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("E2A1F244-70EB-483A-ACC8-DE6ACE5BF8B1")]
     internal interface IProcessHostLite {
         [return: MarshalAs(UnmanagedType.Interface)]
+#if NETFRAMEWORK
         IObjectHandle GetCustomLoader(
+#else
+        ObjectHandle GetCustomLoader(
+#endif
             [In, MarshalAs(UnmanagedType.LPWStr)] string appId,
             [In, MarshalAs(UnmanagedType.LPWStr)] string appConfigPath,
             [Out, MarshalAs(UnmanagedType.Interface)] out IProcessHostSupportFunctions supportFunctions,
@@ -1187,7 +1191,11 @@ namespace System.Web.Hosting {
             _customLoaderStartupError = new KeyValuePair<string, ExceptionDispatchInfo>(appId, error);
         }
 
+#if NETFRAMEWORK
         IObjectHandle IProcessHostLite.GetCustomLoader(string appId, string appConfigPath, out IProcessHostSupportFunctions supportFunctions, out AppDomain newlyCreatedAppDomain) {
+#else
+        ObjectHandle IProcessHostLite.GetCustomLoader(string appId, string appConfigPath, out IProcessHostSupportFunctions supportFunctions, out AppDomain newlyCreatedAppDomain) {
+#endif
             supportFunctions = null;
             newlyCreatedAppDomain = null;
             CustomLoaderHelperFunctions helperFunctions = new CustomLoaderHelperFunctions(_functions, appId);

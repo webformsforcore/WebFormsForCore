@@ -3157,6 +3157,16 @@ internal sealed class SR
 
 	internal const string CreateUserWizardStep_OnlyAllowedInCreateUserWizard = "CreateUserWizardStep_OnlyAllowedInCreateUserWizard";
 
+	internal const string Cryptography_DataProtector_InvalidAppNameOrPurpose = "Cryptography_DataProtector_InvalidAppNameOrPurpose";
+
+	internal const string Cryptography_DataProtector_InvalidPurpose = "Cryptography_DataProtector_InvalidPurpose";
+
+	internal const string Cryptography_Data_protection_failed = "Cryptography_Data_protection_failed";
+
+	internal const string Cryptography_Data_unprotection_failed = "Cryptography_Data_unprotection_failed";
+
+	internal const string Cryptography_Invalid_scope = "Cryptography_Invalid_scope";
+
 	internal const string CompleteWizardStep_OnlyAllowedInCreateUserWizard = "CompleteWizardStep_OnlyAllowedInCreateUserWizard";
 
 	internal const string CustomValidator_ClientValidationFunction = "CustomValidator_ClientValidationFunction";

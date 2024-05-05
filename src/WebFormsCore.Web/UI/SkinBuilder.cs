@@ -23,7 +23,7 @@ namespace System.Web.UI {
     using System.Web.Compilation;
     using System.Web.UI.WebControls;
     using System.Web.Util;
-#if !FEATURE_PAL
+#if !FEATURE_PAL && !WebFormsCore
     using System.Web.UI.Design;
 #endif // !FEATURE_PAL
 

@@ -9,7 +9,9 @@ namespace System.Web.Compilation {
 using System;
 using System.IO;
 using System.Data;
+#if !WebFormsCore
 using System.Data.Design;
+#endif
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
@@ -22,7 +24,7 @@ using System.Web.Configuration;
 using System.Collections;
 
 using Util=System.Web.UI.Util;
-#if !FEATURE_PAL // FEATURE_PAL does not support System.Data.Design
+#if !FEATURE_PAL && !WebFormsCore // FEATURE_PAL does not support System.Data.Design
 using TypedDataSetGenerator=System.Data.Design.TypedDataSetGenerator;
 #endif // !FEATURE_PAL 
 
@@ -32,7 +34,7 @@ internal class XsdBuildProvider: BuildProvider {
     [SuppressMessage("Microsoft.Security", "MSEC1207:UseXmlReaderForLoad", Justification = "Developer-controlled .xsd files in application directory are implicitly trusted by ASP.Net.")]
     [SuppressMessage("Microsoft.Security.Xml", "CA3056:UseXmlReaderForLoad", Justification = "Developer-controlled .xml files in application directory are implicitly trusted by ASP.Net.")]
     public override void GenerateCode(AssemblyBuilder assemblyBuilder)  {
-#if !FEATURE_PAL // FEATURE_PAL does not support System.Data.Design
+#if !FEATURE_PAL && !WebFormsCore // FEATURE_PAL does not support System.Data.Design
         // Get the namespace that we will use
         string ns = Util.GetNamespaceFromVirtualPath(VirtualPathObject);
 
