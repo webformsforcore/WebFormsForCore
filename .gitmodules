@@ -7,3 +7,6 @@
 [submodule "src/mono"]
 	path = src/mono
 	url = https://github.com/mono/mono.git
+[submodule "src/SoapFormatter"]
+	path = src/SoapFormatter
+	url = https://github.com/novotnyllc/SoapFormatter.git
