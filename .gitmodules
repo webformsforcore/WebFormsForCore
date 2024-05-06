@@ -10,3 +10,6 @@
 [submodule "src/SoapFormatter"]
 	path = src/SoapFormatter
 	url = https://github.com/novotnyllc/SoapFormatter.git
+[submodule "src/CassiniDev"]
+	path = src/CassiniDev
+	url = https://github.com/adriancs2/CassiniDev.git
