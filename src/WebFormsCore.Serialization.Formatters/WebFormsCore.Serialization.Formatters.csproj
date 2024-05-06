@@ -5,6 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 		<DefineConstants>$(DefineConstants);Legacy;WebFormsCore</DefineConstants>
 		<NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0050;SYSLIB0051</NoWarn>
 		<SignAssembly>True</SignAssembly>

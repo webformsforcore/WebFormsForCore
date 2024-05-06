@@ -18,6 +18,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	</PropertyGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<EmbeddedResource Include="*.js" />
 		<EmbeddedResource Include="*.gif" />
