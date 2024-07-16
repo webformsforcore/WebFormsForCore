@@ -378,8 +378,10 @@ namespace System.Web.Hosting {
 
             ExtractPagePathInfo();
 
+#if NETFRAMEWORK
             _appPhysPath = Thread.GetDomain().GetData(".appPath").ToString();
             _appVirtPath = Thread.GetDomain().GetData(".appVPath").ToString();
+#endif
             _installDir  = HttpRuntime.AspInstallDirectoryInternal;
 
             _hasRuntimeInfo = true;
@@ -396,9 +398,12 @@ namespace System.Web.Hosting {
         ///    <para>[To be supplied.]</para>
         /// </devdoc>
         public SimpleWorkerRequest(String appVirtualDir, String appPhysicalDir, String page, String query, TextWriter output): this() {
+
+#if NETFRAMEWORK
             if (Thread.GetDomain().GetData(".appPath") != null) {
                 throw new HttpException(SR.GetString(SR.Wrong_SimpleWorkerRequest));
             }
+#endif
 
             _appVirtPath = appVirtualDir;
             _appPhysPath = appPhysicalDir;

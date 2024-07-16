@@ -51,11 +51,16 @@ namespace System.Web.Hosting {
 
             String appId = StringUtil.GetNonRandomizedHashCode(String.Concat(virtualDir, physicalDir)).ToString("x");
 
-
+#if NETFRAMEWORK
             ObjectHandle h = appManager.CreateInstanceInNewWorkerAppDomain(
                                 hostType, appId, VirtualPath.CreateNonRelative(virtualDir), physicalDir);
 
             return h.Unwrap();
+#else
+            var host = appManager.CreateInstanceInNewWorkerLoadContext(hostType, appId,
+                VirtualPath.CreateNonRelative(virtualDir), physicalDir);
+            return host;
+#endif
         }
     }
 }

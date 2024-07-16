@@ -29,10 +29,21 @@ namespace Microsoft.AspNetCore.Builder
 			host.Configure("/", path);
 		}
 
+		public async Task AllowSynchronousIO(Core.HttpContext context)
+		{
+			var syncIoFeature = context.Features.Get<Core.Features.IHttpBodyControlFeature>();
+			if (syncIoFeature != null)
+			{
+				syncIoFeature.AllowSynchronousIO = true;
+			}
+		}
+
 		public async Task Invoke(Core.HttpContext context)
 		{
 			if (HandleExtensions.Any(ext => context.Request.Path.ToString().EndsWith(ext)))
 			{
+				AllowSynchronousIO(context);
+
 				host.ProcessRequest(context);
 			} else {
 				await next.Invoke(context);

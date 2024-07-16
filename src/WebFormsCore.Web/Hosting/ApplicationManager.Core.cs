@@ -18,6 +18,7 @@ namespace System.Web.Hosting {
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime;
     using System.Runtime.ExceptionServices;
     using System.Runtime.InteropServices;
     using System.Runtime.Remoting;
@@ -32,6 +33,7 @@ namespace System.Web.Hosting {
     using System.Web.Compilation;
     using System.Web.Configuration;
     using System.Web.Util;
+    using System.Runtime.Loader;
 
     public enum HostSecurityPolicyResults {
         DefaultPolicy = 0,
@@ -47,12 +49,11 @@ namespace System.Web.Hosting {
         }
     }
 
-
-
     internal class LockableAppDomainContext {
         internal HostingEnvironment HostEnv { get; set; }
         internal string PreloadContext { get; set; }
         internal bool RetryingPreload { get; set; }
+        internal AssemblyLoadContext LoadContext { get; set; }
 
         internal LockableAppDomainContext() {
         }
@@ -74,7 +75,8 @@ namespace System.Web.Hosting {
         // table of app domains (LockableAppDomainContext objects) by app id
         // To simplify per-appdomain synchronization we will never remove LockableAppDomainContext objects from this table even when the AD is unloaded
         // We may need to fix it if profiling shows a noticeable impact on performance
-        private Dictionary <string, LockableAppDomainContext> _appDomains = new Dictionary<string, LockableAppDomainContext>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, LockableAppDomainContext> _appDomains = new Dictionary<string, LockableAppDomainContext>(StringComparer.OrdinalIgnoreCase);
+        
         // count of HostingEnvironment instances that is referenced in _appDomains collection
         private int _accessibleHostingEnvCount;
 
@@ -844,10 +846,35 @@ namespace System.Web.Hosting {
             return env.CreateInstance(type.AssemblyQualifiedName);
         }
 
+		//
+		// helper to support legacy APIs (AppHost.CreateAppHost)
+		//
+
+		internal ObjectHandle CreateInstanceInNewWorkerLoadContext(
+								Type type,
+								String appId,
+								VirtualPath virtualPath,
+								String physicalPath)
+		{
+
+			Debug.Trace("AppManager", "CreateObjectInNewWorkerAppDomain, type=" + type.FullName);
+
+			IApplicationHost appHost = new SimpleApplicationHost(virtualPath, physicalPath);
+
+			HostingEnvironmentParameters hostingParameters = new HostingEnvironmentParameters();
+			hostingParameters.HostingFlags = HostingEnvironmentFlags.HideFromAppManager;
+
+			HostingEnvironment env = CreateAppDomainWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters);
+			// When marshaling Type, the AppDomain must have FileIoPermission to the assembly, which is not
+			// always the case, so we marshal the assembly qualified name instead
+			return env.CreateInstance(type.AssemblyQualifiedName);
+		}
+
+		
         //
-        // helpers to facilitate app domain creation
-        //
-        private HostingEnvironment GetAppDomainWithHostingEnvironment(String appId, IApplicationHost appHost, HostingEnvironmentParameters hostingParameters) {
+		// helpers to facilitate app domain creation
+		//
+		private HostingEnvironment GetAppDomainWithHostingEnvironment(String appId, IApplicationHost appHost, HostingEnvironmentParameters hostingParameters) {
             LockableAppDomainContext ac = GetLockableAppDomainContext (appId);
 
             lock (ac) {

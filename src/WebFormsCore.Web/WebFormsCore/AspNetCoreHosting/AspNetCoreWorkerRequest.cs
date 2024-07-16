@@ -101,7 +101,7 @@ namespace System.Web.Hosting
 
 		Core.HttpContext Context;
 		public AspNetCoreWorkerRequest(AspNetCoreHost host, Core.HttpContext context)
-			: base(String.Empty, String.Empty, null)
+			: base(host.VirtualPath, host.PhysicalPath,  String.Empty, String.Empty, null)
 		{
 			this.Host = host;
 			Context = context;
@@ -122,8 +122,16 @@ namespace System.Web.Hosting
 
 		public override string GetAppPath() => Host.VirtualPath;
 		public override string GetAppPathTranslated() => Host.PhysicalPath;
-		public override string GetFilePath() => filePath;
-		public override string GetFilePathTranslated() => pathTranslated;
+		public override string GetFilePath()
+		{
+			ParseRequest();
+			return filePath;
+		}
+		public override string GetFilePathTranslated()
+		{
+			ParseRequest();
+			return pathTranslated;
+		}
 		public override string GetHttpVerbName() => Context.Request.Method;
 		public override string GetHttpVersion() => Context.Request.Protocol;
 		public override string GetKnownRequestHeader(int index) => knownRequestHeaders[index];
@@ -451,6 +459,8 @@ namespace System.Web.Hosting
 
 		private bool IsBadPath()
 		{
+			ParseRequest();
+
 			if (path.IndexOfAny(BadPathChars) >= 0)
 			{
 				return true;
@@ -551,6 +561,7 @@ namespace System.Web.Hosting
 				}
 			}
 
+			/*
 			if (headerBytes.Length > endHeadersOffset)
 			{
 				bodyLength = headerBytes.Length - endHeadersOffset;
@@ -566,29 +577,35 @@ namespace System.Web.Hosting
 					Buffer.BlockCopy(headerBytes, endHeadersOffset, body, 0, bodyLength);
 					//connection.LogRequestBody(body);
 				}
-			}
+			} */
 		}
 
+		bool requestParsed = false;
 		private void ParseRequest()
 		{
-			string path = $"{Context.Request.PathBase}/{Context.Request.Path}";
-
-			int lastDot = path.LastIndexOf('.');
-			int lastSlh = path.LastIndexOf('/');
-
-			if (lastDot >= 0 && lastSlh >= 0 && lastDot < lastSlh)
+			if (!requestParsed)
 			{
-				int ipi = path.LastIndexOf('/', lastDot);
-				filePath = path.Substring(0, ipi);
-				pathInfo = path.Substring(ipi);
-			}
-			else
-			{
-				filePath = path;
-				pathInfo = String.Empty;
-			}
+				path = $"{Context.Request.PathBase}{Context.Request.Path}";
 
-			pathTranslated = MapPath(filePath);
+				int lastDot = path.LastIndexOf('.');
+				int lastSlh = path.LastIndexOf('/');
+
+				if (lastDot >= 0 && lastSlh >= 0 && lastDot < lastSlh)
+				{
+					int ipi = path.LastIndexOf('/', lastDot);
+					filePath = path.Substring(0, ipi);
+					pathInfo = path.Substring(ipi);
+				}
+				else
+				{
+					filePath = path;
+					pathInfo = String.Empty;
+				}
+
+				pathTranslated = MapPath(filePath);
+
+				requestParsed = true;
+			}
 		}
 
 		private void PrepareResponse()
@@ -695,6 +712,8 @@ namespace System.Web.Hosting
 		private bool TryParseRequest()
 		{
 			Reset();
+
+			ParseRequest();
 
 			// Check for bad path
 			if (IsBadPath())

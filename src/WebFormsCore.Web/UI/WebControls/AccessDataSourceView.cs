@@ -4,8 +4,6 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-#if NETFRAMEWORK
-
 namespace System.Web.UI.WebControls {
 
     using System;
@@ -45,4 +43,3 @@ namespace System.Web.UI.WebControls {
     }
 }
 
-#endif

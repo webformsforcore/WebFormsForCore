@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿#if NETCOREAPP
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Web;
@@ -31,3 +33,5 @@ namespace WebFormsCore.Test
 		}
 	}
 }
+
+#endif

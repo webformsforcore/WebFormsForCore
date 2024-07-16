@@ -744,8 +744,16 @@ namespace System.Web.Hosting {
             return new ObjectHandle(Activator.CreateInstance(type));
         }
 
-        // start well known object
-        [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
+		// helper for app manager to implement AppHost.CreateAppHost
+		[PermissionSet(SecurityAction.Assert, Unrestricted = true)]
+		internal object CreateInstanceInLoadContext(String assemblyQualifiedName)
+		{
+			Type type = Type.GetType(assemblyQualifiedName, true);
+			return Activator.CreateInstance(type);
+		}
+
+		// start well known object
+		[PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         internal ObjectHandle CreateWellKnownObjectInstance(String assemblyQualifiedName, bool failIfExists) {
             Type type = Type.GetType(assemblyQualifiedName, true);
             IRegisteredObject obj = null;
@@ -771,8 +779,40 @@ namespace System.Web.Hosting {
             return new ObjectHandle(obj);
         }
 
-        // check if well known object
-        private bool IsWellKnownObject(Object obj) {
+		// start well known object
+		[PermissionSet(SecurityAction.Assert, Unrestricted = true)]
+		internal IRegisteredObject CreateWellKnownObjectInstanceInLoadContext(String assemblyQualifiedName, bool failIfExists)
+		{
+			Type type = Type.GetType(assemblyQualifiedName, true);
+			IRegisteredObject obj = null;
+			String key = type.FullName;
+			bool exists = false;
+
+			lock (this)
+			{
+				obj = _wellKnownObjects[key] as IRegisteredObject;
+
+				if (obj == null)
+				{
+					obj = (IRegisteredObject)Activator.CreateInstance(type);
+					_wellKnownObjects[key] = obj;
+				}
+				else
+				{
+					exists = true;
+				}
+			}
+
+			if (exists && failIfExists)
+			{
+				throw new InvalidOperationException(SR.GetString(SR.Wellknown_object_already_exists, key));
+			}
+
+			return obj;
+		}
+
+		// check if well known object
+		private bool IsWellKnownObject(Object obj) {
             bool found = false;
             String key = obj.GetType().FullName;
 

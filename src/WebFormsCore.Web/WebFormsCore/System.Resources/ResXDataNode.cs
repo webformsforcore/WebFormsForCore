@@ -8,7 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-#if !WebFormsCore
+#if !WebFormsCore || NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
 using IFormatter = WebFormsCore.Serialization.Formatters.IFormatter;
@@ -244,7 +244,6 @@ namespace System.Resources
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		private IFormatter CreateSoapFormatter() => new SoapFormatter();
-
 		private static string ToBase64WrappedString(byte[] data)
 		{
 			string base64String = Convert.ToBase64String(data);

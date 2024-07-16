@@ -1,27 +1,43 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>disable</Nullable>
-		<LangVersion>11</LangVersion>
-		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<OutputType>Exe</OutputType>
-		<StartupObject>WebFormsCore.Test.Program</StartupObject>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net48;net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>11</LangVersion>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <StartupObject Condition="'$(TargetFramework)' != 'net48'">WebFormsCore.Test.Program</StartupObject>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    </PropertyGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\WebFormsCore.Configuration\WebFormsCore.Configuration.csproj" />
-	  <ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj" />
-	  <ProjectReference Include="..\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj" />
-	  <ProjectReference Include="..\WebFormsCore.Web.RegularExpressions\WebFormsCore.Web.RegularExpressions.csproj" />
-	  <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
+        <OutputType>Exe</OutputType>
+        <OutputPath>bin_dotnet</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+        <OutputType>Library</OutputType>
+        <OutputPath>bin</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WebFormsCore.Configuration\WebFormsCore.Configuration.csproj" />
+        <ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj"
+		    Condition="'$(TargetFramework)' != 'net48'" />
+        <ProjectReference Include="..\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj" />
+        <ProjectReference Include="..\WebFormsCore.Web.RegularExpressions\WebFormsCore.Web.RegularExpressions.csproj" />
+        <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" />
+    </ItemGroup>
 
 </Project>
