@@ -1480,7 +1480,11 @@ namespace System.Web.Hosting {
         // information we determined in that method. Defaults to 'false' if our AppDomain data isn't present.
         public static bool IsDevelopmentEnvironment {
             get {
+#if NETFRAMEWORK
                 return (AppDomain.CurrentDomain.GetData(".devEnvironment") as bool?) == true;
+#else
+                return (HttpRuntime.GetLoadContextData(".devEnvironment") as bool?) == true;
+#endif
             }
         }
 
@@ -1518,8 +1522,12 @@ namespace System.Web.Hosting {
                         }
                     }
                     else {
+#if NETFRAMEWORK
                         _cacheProviderSettings = AppDomain.CurrentDomain.GetData(".defaultObjectCacheProvider") as NameValueCollection;
-                    }
+#else
+                        _cacheProviderSettings = HttpRuntime.GetLoadContextData(".defaultObjectCacheProvider") as NameValueCollection;
+#endif
+					}
                 }
 
                 // Return a copy, so the consumer can't mess with our copy of the settings

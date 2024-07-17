@@ -101,7 +101,11 @@ namespace System.Configuration
 			new FileIOPermission(PermissionState.Unrestricted).Assert();
 			try
 			{
+#if NETFRAMEWORK
 				path1 = RuntimeEnvironment.GetRuntimeDirectory();
+#else
+				path1 = AppDomain.CurrentDomain.BaseDirectory;
+#endif
 			}
 			finally
 			{

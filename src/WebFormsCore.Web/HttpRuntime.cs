@@ -14,6 +14,8 @@ namespace System.Web
 {
 	using System;
 	using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.Concurrent;
 	using System.Configuration;
 	using System.Data;
 	using System.Data.Common;
@@ -24,7 +26,10 @@ namespace System.Web
 	using System.Reflection;
 	using System.Resources;
 	using System.Runtime;
-	using System.Runtime.InteropServices;
+#if NETCOREAPP
+    using System.Runtime.Loader;
+#endif
+    using System.Runtime.InteropServices;
 	using System.Runtime.Remoting.Messaging;
 	using System.Security;
 	using System.Security.Cryptography;
@@ -75,7 +80,29 @@ namespace System.Web
 		private static string DoubleDirectorySeparatorString = new string(Path.DirectorySeparatorChar, 2);
 		private static char[] s_InvalidPhysicalPathChars = { '/', '?', '*', '<', '>', '|', '"' };
 
+#if NETCOREAPP
+        public static ConcurrentDictionary<AssemblyLoadContext, ConcurrentDictionary<string, object>> ContextData = new ConcurrentDictionary<AssemblyLoadContext, ConcurrentDictionary<string, object>>(); 
 
+        public static void SetLoadContextData(string key, object data, Assembly assembly = null)
+        {
+            if (assembly == null) assembly = Assembly.GetCallingAssembly();
+			var context = AssemblyLoadContext.GetLoadContext(assembly);
+            ConcurrentDictionary<string, object> dataContainer;
+            dataContainer = ContextData.GetOrAdd(context, context => new ConcurrentDictionary<string, object>());
+            dataContainer[key] = data;
+        }
+
+        public static object GetLoadContextData(string key, Assembly assembly = null)
+        {
+			if (assembly == null) assembly = Assembly.GetCallingAssembly();
+			var context = AssemblyLoadContext.GetLoadContext(assembly);
+			ConcurrentDictionary<string, object> dataContainer;
+			dataContainer = ContextData.GetOrAdd(context, context => new ConcurrentDictionary<string, object>());
+            object data;
+            dataContainer.TryGetValue(key, out data);
+            return data;
+		}
+#endif
 
 #if OLD
         // For s_forbiddenDirs and s_forbiddenDirsConstant, see
@@ -98,7 +125,7 @@ namespace System.Web
                                     };
 #endif
 
-		static HttpRuntime()
+        static HttpRuntime()
 		{
 			AddAppDomainTraceMessage("*HttpRuntime::cctor");
 
@@ -141,8 +168,7 @@ namespace System.Web
 			String installDir = null;
 
 			// load webengine.dll if it is not loaded already
-
-#if !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
+#if !WebFormsCore && !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
 
 			installDir = RuntimeEnvironment.GetRuntimeDirectory();
 
@@ -3090,8 +3116,11 @@ namespace System.Web
         //
 
         private static String GetAppDomainString(String key) {
+#if NETFRAMEWORK
             Object x = Thread.GetDomain().GetData(key);
-
+#else
+            object x = HttpRuntime.GetLoadContextData(key);
+#endif
             return x as String;
         }
 

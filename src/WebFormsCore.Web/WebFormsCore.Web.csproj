@@ -23,10 +23,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="*.js" />
-		<EmbeddedResource Include="*.gif" />
-		<EmbeddedResource Include="*.htm" />
-	</ItemGroup>
+        <EmbeddedResource Remove="*.resx" />
+        <EmbeddedResource Include="*.js">
+            <LogicalName>%(FileName)%(Extension)</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="*.gif">
+            <LogicalName>%(FileName)%(Extension)</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="*.htm">
+            <LogicalName>%(FileName)%(Extension)</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="*.bmp">
+            <LogicalName>%(FileName)%(Extension)</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="*.resx">
+            <LogicalName>%(FileName).resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\System\Web\UI\**\*.*" Exclude="Resources\System\Web\UI\**\TreeView_*.*">
+            <LogicalName>$([System.String]::new('%(RelativeDir)%(FileName)%(Extension)').Replace('Resources\', '').Replace('\','.'))</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\System\Web\Exceptions\**\*.*">
+            <LogicalName>%(FileName)%(Extension)</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
 
 	<ItemGroup>
 	  <Compile Remove="WebFormsCore\ToolboxBitmapAttribute.cs" />

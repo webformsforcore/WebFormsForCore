@@ -1521,7 +1521,11 @@ namespace System.Web {
             switch (mode) {
                 case FcnMode.NotSet:
                     // If the mode is not set, we use the registry key's value
+#if !WebFormsCore
                     UnsafeNativeMethods.GetDirMonConfiguration(out _FCNMode);
+#else
+                    _FCNMode = 0;
+#endif
                     break;
                 case FcnMode.Disabled:
                     _FCNMode = 1;

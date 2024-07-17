@@ -1,61 +1,69 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net48;net8.0</TargetFrameworks>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>disable</Nullable>
-		<LangVersion>11</LangVersion>
-		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
-		<DefineConstants>$(DefineConstants);WebFormsCore</DefineConstants>
-		<SignAssembly>True</SignAssembly>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net48;net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>11</LangVersion>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
+        <DefineConstants>$(DefineConstants);WebFormsCore</DefineConstants>
+        <SignAssembly>True</SignAssembly>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    </PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-		<Reference Include="System.Xml" />
-		<Reference Include="System.Security" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Security" />
+    </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <Compile Remove="System\Configuration\ApplicationSettingsBase.cs" />
-	  <Compile Remove="System\Configuration\TypeUtil.cs" />
-	  <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
-	  <Compile Remove="System\System.Configuration\ConfigurationPermission.cs" />
-	</ItemGroup>
+    <ItemGroup>
+        <Compile Remove="System\Configuration\ApplicationSettingsBase.cs" />
+        <Compile Remove="System\Configuration\TypeUtil.cs" />
+        <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
+        <Compile Remove="System\System.Configuration\ConfigurationPermission.cs" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="System.CodeDom" Version="8.0.0" />
-		<!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />-->
-		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-		<PackageReference Include="System.Security.Permissions" Version="8.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="System\Configuration.resx" />
+        <EmbeddedResource Include="System\Configuration.resx">
+            <LogicalName>System.Configuration.resources</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.CodeDom" Version="8.0.0" />
+        <!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />-->
+        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+        <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="System\Net\Configuration\" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <None Include="System\Configuration\ApplicationSettingsBase.cs" />
-	  <None Include="System\Configuration\TypeUtil.cs" />
-	  <None Include="System\System.Configuration\ConfigurationException.cs" />
-	  <None Include="System\System.Configuration\ConfigurationPermission.cs" />
-	</ItemGroup>
+    <ItemGroup>
+        <Folder Include="System\Net\Configuration\" />
+    </ItemGroup>
 
-	<!--
+    <ItemGroup>
+        <None Include="System\Configuration.resx" />
+        <None Include="System\Configuration\ApplicationSettingsBase.cs" />
+        <None Include="System\Configuration\TypeUtil.cs" />
+        <None Include="System\System.Configuration\ConfigurationException.cs" />
+        <None Include="System\System.Configuration\ConfigurationPermission.cs" />
+    </ItemGroup>
+
+    <!--
 	<ItemGroup>
 	  <Compile Remove="System\System.Configuration\Configuration.cs" />
 	  <Compile Remove="System\System.Configuration\ConfigurationCollectionAttribute.cs" />

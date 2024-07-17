@@ -153,11 +153,11 @@ namespace System.Web.Hosting {
                         defaultDomain.DoCallBack(new CrossAppDomainDelegate(RecycleLimitMonitorSingleton.EnsureCreated));
 #else
 						RecycleLimitMonitorSingleton.EnsureCreated();
-#endif
 						// Keep a proxy reference for later use
 						_defaultDomainSingleton = (RecycleLimitMonitorSingleton)defaultDomain.GetData(_name);
-                    }
-                }
+#endif
+					}
+				}
             }
         }
 
@@ -217,12 +217,20 @@ namespace System.Web.Hosting {
                 if (AppDomain.CurrentDomain.IsDefaultAppDomain() && _singleton == null) {
                     lock (_singletonLock) {
                         if (_singleton == null) {
+#if NETFRAMEWORK
                             var pbLimit = AppDomain.CurrentDomain.GetData(RecycleLimitMonitor._pbLimit);
-                            if (pbLimit == null) {
+#else
+                            var pbLimit = HttpRuntime.GetLoadContextData(RecycleLimitMonitor._pbLimit);
+#endif
+							if (pbLimit == null) {
                                 return;
                             }
                             _singleton = new RecycleLimitMonitorSingleton((long)pbLimit);
+#if NETFRAMEWORK
                             AppDomain.CurrentDomain.SetData(RecycleLimitMonitor._name, _singleton);
+#else
+                            HttpRuntime.SetLoadContextData(RecycleLimitMonitor._name, _singleton);
+#endif                        
                         }
                     }
                 }

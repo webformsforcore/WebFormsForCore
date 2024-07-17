@@ -975,9 +975,11 @@ namespace System.Web.Hosting {
             try {
                 bool requireHostExecutionContextManager = false;
                 bool requireHostSecurityManager = false;
-
+#if NETFRAMEWORK
                 AppDomain.CurrentDomain.SetData(_configBuildersIgnoreLoadFailuresSwitch, true);
-
+#else
+                HttpRuntime.SetLoadContextData(_configBuildersIgnoreLoadFailuresSwitch, true);
+#endif
                 uncTokenConfig = appHost.GetConfigToken();
                 if (uncTokenConfig != IntPtr.Zero) {
                     ictxConfig = new ImpersonationContext(uncTokenConfig);
@@ -1267,11 +1269,19 @@ setup,
 
                     // TODO
                     foreach (DictionaryEntry e in bindings)
+#if NETFRAMEWORK
                         appDomain.SetData((String)e.Key, (String)e.Value);
+#else
+                        HttpRuntime.SetLoadContextData((String)e.Key, (String)e.Value);                        
+#endif
                     foreach (var entry in appDomainAdditionalData)
+#if NETFRAMEWORK
                         appDomain.SetData(entry.Key, entry.Value);
-                }
-                catch (Exception e) {
+#else
+						HttpRuntime.SetLoadContextData(entry.Key, entry.Value);
+#endif
+				}
+				catch (Exception e) {
                     Debug.Trace("AppManager", "AppDomain.CreateDomain failed", e);
                     appDomainCreationException = e;
                 }

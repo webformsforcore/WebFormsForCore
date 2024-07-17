@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.Hosting;
 using Microsoft.Win32.SafeHandles;
 using System.Security.Principal;
+using Microsoft.AspNetCore;
 using Core = Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 
@@ -114,10 +115,12 @@ namespace System.Web.Hosting
 
 		public override void EndOfRequest()
 		{
+			Context.Response.CompleteAsync();
 		}
 
 		public override void FlushResponse(bool finalFlush)
 		{
+		
 		}
 
 		public override string GetAppPath() => Host.VirtualPath;
@@ -141,7 +144,7 @@ namespace System.Web.Hosting
 		public override byte[] GetPreloadedEntityBody() => body;
 		public override string GetQueryString() => Context.Request.QueryString.ToString();
 		public override byte[] GetQueryStringRawBytes() => Encoding.UTF8.GetBytes(GetQueryString());
-		public override string GetRawUrl() => Context.Request.GetEncodedUrl();
+		public override string GetRawUrl() => path;
 		public override string GetRemoteAddress() => Context.Connection.RemoteIpAddress.ToString();
 		public override int GetRemotePort() => Context.Connection.RemotePort;
 		public override string GetServerName()
@@ -389,12 +392,12 @@ namespace System.Web.Hosting
 					break;
 			}
 
-			Context.Response.Headers.Add(GetKnownResponseHeaderName(index), value);
+			Context.Response.Headers[GetKnownResponseHeaderName(index)] = value;
 		}
 
 		public void SetResponseHeader(string name, string value)
 		{
-			Context.Response.Headers.Add(name, value);
+			Context.Response.Headers[name] = value;
 		}
 
 		public override void SendResponseFromFile(string filename, long offset, long length)
@@ -454,7 +457,7 @@ namespace System.Web.Hosting
 			if (headersSent)
 				return;
 
-			Context.Response.Headers.Add(name, value);
+			Context.Response.Headers[name] = value;
 		}
 
 		private bool IsBadPath()

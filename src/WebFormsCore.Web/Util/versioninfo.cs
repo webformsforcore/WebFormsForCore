@@ -90,7 +90,7 @@ namespace System.Web.Util {
 
         internal static string EngineVersion {
             get {
-#if !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
+#if !WebFormsCore && !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
                 if (_engineVersion == null) {
                     lock(_lock) {
                         if (_engineVersion == null)

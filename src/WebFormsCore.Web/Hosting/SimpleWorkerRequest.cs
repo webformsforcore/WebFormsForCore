@@ -381,8 +381,11 @@ namespace System.Web.Hosting {
 #if NETFRAMEWORK
             _appPhysPath = Thread.GetDomain().GetData(".appPath").ToString();
             _appVirtPath = Thread.GetDomain().GetData(".appVPath").ToString();
+#else
+			_appPhysPath = HttpRuntime.GetLoadContextData(".appPath").ToString();
+			_appVirtPath = HttpRuntime.GetLoadContextData(".appVPath").ToString();
 #endif
-            _installDir  = HttpRuntime.AspInstallDirectoryInternal;
+			_installDir = HttpRuntime.AspInstallDirectoryInternal;
 
             _hasRuntimeInfo = true;
         }
@@ -403,9 +406,14 @@ namespace System.Web.Hosting {
             if (Thread.GetDomain().GetData(".appPath") != null) {
                 throw new HttpException(SR.GetString(SR.Wrong_SimpleWorkerRequest));
             }
+#else
+			if (HttpRuntime.GetLoadContextData(".appPath") != null)
+			{
+				throw new HttpException(SR.GetString(SR.Wrong_SimpleWorkerRequest));
+			}
 #endif
 
-            _appVirtPath = appVirtualDir;
+			_appVirtPath = appVirtualDir;
             _appPhysPath = appPhysicalDir;
             _queryString = query;
             _output = output;

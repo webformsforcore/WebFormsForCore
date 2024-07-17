@@ -19,8 +19,9 @@ namespace System.Runtime.Remoting.Messaging
 		{
 		}
 
-		static AsyncLocal<ConcurrentDictionary<string, object?>> data = null;
-		public static AsyncLocal<ConcurrentDictionary<string, object?>> Data => data ??= new();
+		static AsyncLocal<ConcurrentDictionary<string, object?>> data = new();
+		public static ConcurrentDictionary<string, object?> Data => data.Value ??= new ConcurrentDictionary<string, object?>();
+
 
 #if !WebFormsCore
         internal static LogicalCallContext SetLogicalCallContext(LogicalCallContext callCtx)
@@ -43,7 +44,7 @@ namespace System.Runtime.Remoting.Messaging
         executionContext.IllogicalCallContext.FreeNamedDataSlot(name);
 #else
 			object? value;
-			Data.Value.TryRemove(name, out value);
+			Data.TryRemove(name, out value);
 #endif
 		}
 
@@ -58,7 +59,7 @@ namespace System.Runtime.Remoting.Messaging
 			return Thread.CurrentThread.ExecutionContext.GetExecutionContextReader().LogicalCallContext.GetData(name);
 #else
 			object value;
-			if (Data.Value.TryGetValue(name, out value)) return value;
+			if (Data.TryGetValue(name, out value)) return value;
 			return null;
 #endif
 		}
@@ -96,7 +97,7 @@ namespace System.Runtime.Remoting.Messaging
 			[SecurityCritical]
 			set
 			{
-				Data.Value.AddOrUpdate("CallContext.Principal", value, (key, obj) => value);
+				Data.AddOrUpdate("CallContext.Principal", value, (key, obj) => value);
 			}
 #endif
 		}
@@ -132,7 +133,7 @@ namespace System.Runtime.Remoting.Messaging
 					executionContext.LogicalCallContext.HostContext = (object)null;
 				}
 #else
-				Data.Value.AddOrUpdate("CallContext.HostContext", value, (key, obj) => value);
+				Data.AddOrUpdate("CallContext.HostContext", value, (key, obj) => value);
 #endif
 			}
 		}
@@ -166,7 +167,7 @@ namespace System.Runtime.Remoting.Messaging
 				executionContext.IllogicalCallContext.SetData(name, data);
 			}
 #else
-			Data.Value.AddOrUpdate(name, data, (key, obj) => data);
+			Data.AddOrUpdate(name, data, (key, obj) => data);
 #endif
 		}
 
@@ -182,7 +183,7 @@ namespace System.Runtime.Remoting.Messaging
 			executionContext.IllogicalCallContext.FreeNamedDataSlot(name);
 			executionContext.LogicalCallContext.SetData(name, data);
 #else
-			Data.Value.AddOrUpdate(name, data, (key, obj) => data);
+			Data.AddOrUpdate(name, data, (key, obj) => data);
 #endif
 		}
 

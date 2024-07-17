@@ -31,13 +31,24 @@
         <OutputPath>bin</OutputPath>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
         <ProjectReference Include="..\WebFormsCore.Configuration\WebFormsCore.Configuration.csproj" />
-        <ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj"
-		    Condition="'$(TargetFramework)' != 'net48'" />
+        <ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj" />
         <ProjectReference Include="..\WebFormsCore.Web.RegularExpressions\WebFormsCore.Web.RegularExpressions.csproj" />
         <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+        <Reference Include="System.Configuration" />
+        <Reference Include="System.Runtime.Serializtion" />
+        <Reference Include="System.Web" />
+        <Reference Include="System.Web.ApplicationServices" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+        <None Remove="Config\machine.config" />
+        <Content Include="Config\machine.config" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

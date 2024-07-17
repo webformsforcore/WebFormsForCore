@@ -20,16 +20,27 @@ namespace WebFormsCore.Build
 
         static readonly HashSet<string> destinationAssemblyNames = mappings.Values.ToHashSet();
 
-        class DestinationAssemblies : KeyedCollection<string, AssemblyNameReference>
+        class DestinationAssemblies : KeyedCollection<string, AssemblyDefinition>
         {
-            protected override string GetKeyForItem(AssemblyNameReference item) => item.Name;
+            protected override string GetKeyForItem(AssemblyDefinition a) => a.Name.Name;
 
-            public void AddIfWebFormsCore(AssemblyDefinition item)
-            {
-                if (destinationAssemblyNames.Contains(item.Name.Name)) Add(item.Name);
-            }
+            public bool IsWebFormsCore(AssemblyDefinition a) => destinationAssemblyNames.Contains(a.Name.Name);
 
-        }
+			protected override void InsertItem(int index, AssemblyDefinition item)
+			{
+				if (IsWebFormsCore(item)) base.InsertItem(index, item);
+			}
+
+			protected override void RemoveItem(int index)
+			{
+				base.RemoveItem(index);
+			}
+
+			protected override void SetItem(int index, AssemblyDefinition item)
+			{
+				if (IsWebFormsCore(item)) base.SetItem(index, item);
+			}
+		}
 
         static readonly DestinationAssemblies destinations = new DestinationAssemblies();
 
@@ -50,18 +61,21 @@ namespace WebFormsCore.Build
             if (mappings.TryGetValue(r.Name, out mappedName!))
             {
                 modified = true;
+                
                 return destinations[mappedName];
             }
             else return r;
         }
 
-        public void ModifyAssemblies(IEnumerable<string> files, string signWithKeyFile)
+        public void CreateForwarderAssemblies(IEnumerable<string> files, string signWithKeyFile)
         {
             var assemblies = files.Select(file => new { File = file, Assembly = AssemblyDefinition.ReadAssembly(file) })
                 .ToArray();
-
-            foreach (var ad in assemblies) destinations.AddIfWebFormsCore(new AssemblyNameReference(;
-
+            /*
+            foreach (var ad in assemblies) {
+                if (mappings.ContainsKey(ad.Assembly.Name)) {
+                    destinations.AddIfWebFormsCore(new AssemblyNameReference(mappings[ad.Assembly.Name];
+            */
             foreach (var ad in assemblies)
             {
                 if (ad.Assembly.Name.HasPublicKey &&
@@ -70,7 +84,6 @@ namespace WebFormsCore.Build
                         .Any(r => NeedsPatch(r)))
                     // re-sign the assmbly
                     ad.Assembly.Name.HashAlgorithm = AssemblyHashAlgorithm.SHA256;
-                ad.
                 }
             // re-sign Assembly
 
@@ -91,7 +104,7 @@ namespace WebFormsCore.Build
             }
         }
 
-        public static CreateForwarderAssembly(string source, string destination)
+        public static void CreateForwarderAssembly(string source, string destination)
         {
             var src = AssemblyDefinition.ReadAssembly(source);
             var dest = AssemblyDefinition.ReadAssembly(destination);
@@ -111,8 +124,7 @@ namespace WebFormsCore.Build
                 .Select(d =>
                 {
                     var constructor = mod.ImportReference(typeof(TypeForwardedToAttribute).GetConstructors().FirstOrDefault());
-                    var corlib = mod.AssemblyResolver.Resolve((AssemblyNameReference)mod.TypeSystem.Corlib);
-                    var systemTypeRef = mod.Import(corlib.GetType("System.Type"));
+                    var systemTypeRef = mod.ImportReference(typeof(Type));
                     var customAttribute = new CustomAttribute(constructor);
                     customAttribute.ConstructorArguments.Add(new CustomAttributeArgument(systemTypeRef, mod.ImportReference(d)));
                     return customAttribute;
