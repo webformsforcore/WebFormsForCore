@@ -49,7 +49,7 @@ namespace System.Web.Hosting {
 
             ApplicationManager appManager = ApplicationManager.GetApplicationManager();
 
-            String appId = StringUtil.GetNonRandomizedHashCode(String.Concat(virtualDir, physicalDir)).ToString("x");
+            String appId = ApplicationManager.CreateApplicationId(virtualDir, physicalDir);
 
 #if NETFRAMEWORK
             ObjectHandle h = appManager.CreateInstanceInNewWorkerAppDomain(

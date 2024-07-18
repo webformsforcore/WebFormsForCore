@@ -136,6 +136,12 @@ namespace System.Web.Hosting {
             }
         }
 
+        public static string CreateApplicationId(string virtualPath, string physicalPath)
+        {
+			return StringUtil.GetStringHashCode(String.Concat(virtualPath, physicalPath)).ToString("x");
+		}
+
+
         internal static void OnUnhandledException(Object sender, UnhandledExceptionEventArgs eventArgs) {
             // if the CLR is not terminating, ignore the notification
             if (!eventArgs.IsTerminating) {

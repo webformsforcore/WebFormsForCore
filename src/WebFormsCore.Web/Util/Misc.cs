@@ -11,7 +11,11 @@ namespace System.Web.Util {
     using System.Runtime.InteropServices;
     using System.Security.Permissions;
     using System.Text;
+    using System.Reflection;
     using System.Web.Hosting;
+#if NETCOREAPP
+    using System.Runtime.Loader;
+#endif
     using Microsoft.Win32;
 
     internal sealed class Misc {
@@ -45,10 +49,19 @@ namespace System.Web.Util {
             ProcessImpersonationContext imperContext = null;
             try {
                 imperContext = new ProcessImpersonationContext();
+#if NETFRAMEWORK
                 String appId = appDomain.GetData(".appId") as String;
                 if (appId == null) {
                     appId = appDomain.FriendlyName;
                 }
+#else
+                string appId = ApplicationManager.GetLoadContextData(".appId", Assembly.GetCallingAssembly()) as string;
+                if (appId == null)
+                {
+                    var ctx = AssemblyLoadContext.GetLoadContext(Assembly.GetCallingAssembly());
+                    appId = ctx.Name;
+                }
+#endif
                 string pid = SafeNativeMethods.GetCurrentProcessId().ToString(CultureInfo.InstalledUICulture);
                 string description = SR.Resources.GetString(SR.Unhandled_Exception, CultureInfo.InstalledUICulture);
                 Misc.ReportUnhandledException(exception, new string[5] {description, APPLICATION_ID, appId, PROCESS_ID, pid});
@@ -64,7 +77,9 @@ namespace System.Web.Util {
         }
 
         internal static void ReportUnhandledException(Exception e, String[] strings) {
+#if NETFRAMEWORK
             UnsafeNativeMethods.ReportUnhandledException(FormatExceptionMessage(e, strings));
+#endif
         }
 
         internal static String FormatExceptionMessage(Exception e, String[] strings) {

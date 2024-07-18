@@ -81,7 +81,9 @@ namespace System.Configuration {
             try {
                 PermissionSet permissionSet = GetRestrictedPermissions();
                 if (permissionSet != null) {
+#if NETFRAMEWORK
                     permissionSet.PermitOnly();
+#endif
                     revertPermitOnly = true;
                 }
 
@@ -89,7 +91,9 @@ namespace System.Configuration {
             }
             finally {
                 if (revertPermitOnly) {
+#if NETFRAMEWORK
                     CodeAccessPermission.RevertPermitOnly();
+#endif
                 }
             }
         }
@@ -178,7 +182,9 @@ namespace System.Configuration {
                 try {
                     PermissionSet permissionSet = configRecord.GetRestrictedPermissions();
                     if (permissionSet != null) {
+#if NETFRAMEWORK
                         permissionSet.PermitOnly();
+#endif
                         revertPermitOnly = true;
                     }
 
@@ -186,7 +192,9 @@ namespace System.Configuration {
                 }
                 finally {
                     if (revertPermitOnly) {
+#if NETFRAMEWORK
                         CodeAccessPermission.RevertPermitOnly();
+#endif
                     }
                 }
             }
@@ -289,7 +297,9 @@ namespace System.Configuration {
                 try {
                     PermissionSet permissionSet = configRecord.GetRestrictedPermissions();
                     if (permissionSet != null) {
+#if NETFRAMEWORK
                         permissionSet.PermitOnly();
+#endif 
                         revertPermitOnly = true;
                     }
 
@@ -297,7 +307,9 @@ namespace System.Configuration {
                 }
                 finally {
                     if (revertPermitOnly) {
+#if NETFRAMEWORK
                         CodeAccessPermission.RevertPermitOnly();
+#endif
                     }
                 }
             }

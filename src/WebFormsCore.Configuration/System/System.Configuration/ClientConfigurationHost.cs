@@ -72,8 +72,12 @@ namespace System.Configuration {
             [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "The callers do not expose this information without performing the appropriate demands themselves.")]
             get {
                 if (s_machineConfigFilePath == null) {
+#if NETFRAMEWORK
                     string directory = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
-                    s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectory), MachineConfigFilename);
+#else
+					string directory = AppDomain.CurrentDomain.BaseDirectory;
+#endif
+					s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectory), MachineConfigFilename);
                 }
 
                 return s_machineConfigFilePath;

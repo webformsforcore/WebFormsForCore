@@ -284,7 +284,11 @@ namespace System.Web.Configuration {
             get {
                 if (s_MachineConfigurationDirectory == null) {
 #if !FEATURE_PAL
+#if NETFRAMEWORK
                     s_MachineConfigurationDirectory = Path.Combine(MsCorLibDirectory, MachineConfigSubdirectory);
+#else
+					s_MachineConfigurationDirectory = Path.Combine(HttpRuntime.AppDomainAppPath, MachineConfigSubdirectory);
+#endif
 #else // !FEATURE_PAL
                     System.UInt32 length = 0;
 

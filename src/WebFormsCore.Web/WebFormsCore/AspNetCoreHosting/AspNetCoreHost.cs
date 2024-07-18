@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Security.Permissions;
 using System.Security.Principal;
 using System.Threading;
+using System.Runtime.Loader;
+using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using Core = Microsoft.AspNetCore.Http;
@@ -33,8 +35,6 @@ namespace System.Web.Hosting
 
         private bool requireAuthentication;
 
-		public readonly ApplicationManager ApplicationManager;
-
 		private IntPtr processToken;
 
 		private string processUser;
@@ -45,8 +45,12 @@ namespace System.Web.Hosting
         {
             get { return AppDomain.CurrentDomain; }
         }
+		public AssemblyLoadContext LoadContext
+		{
+			get { return ApplicationManager.GetLoadContext(Assembly.GetCallingAssembly()); }
+		}
 
-        public AspNetCoreHost()
+		public AspNetCoreHost()
         {
             HostingEnvironment.RegisterObject(this);
         }
@@ -96,6 +100,8 @@ namespace System.Web.Hosting
             get { return virtualPath; }
         }
 
+        public HostingEnvironment HostingEnvironment { get; set; }
+
         #region IRegisteredObject Members
 
         void IRegisteredObject.Stop(bool immediate)
@@ -140,6 +146,7 @@ namespace System.Web.Hosting
             physicalClientScriptPath = HttpRuntime.AspClientScriptPhysicalPath + "\\";
             lowerCasedClientScriptPathWithTrailingSlash =
                 CultureInfo.InvariantCulture.TextInfo.ToLower(HttpRuntime.AspClientScriptVirtualPath + "/");
+
         }
 
 		private void ObtainProcessToken()

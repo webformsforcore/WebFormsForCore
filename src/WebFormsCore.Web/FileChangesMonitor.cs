@@ -442,12 +442,13 @@ namespace System.Web {
                     // If I don't do this, myCallback will be collected by GC since its only reference is
                     // from the native code.
                     _rootCallback = GCHandle.Alloc(myCallback);
-
+#if NETFRAMEWORK
                     hr = UnsafeNativeMethods.DirMonOpen(dir, HttpRuntime.AppDomainAppId, watchSubtree, notifyFilter, dirMon.FcnMode, myCallback, out _ndirMonCompletionPtr);
                     if (hr != HResults.S_OK) {
                         _rootCallback.Free();
                         throw FileChangesMonitor.CreateFileMonitoringException(hr, dir);
                     }
+#endif
                     
                     _ndirMonCompletionHandle = new HandleRef(this, _ndirMonCompletionPtr);
                     Interlocked.Increment(ref _activeDirMonCompletions);
@@ -1390,10 +1391,10 @@ namespace System.Web {
     }
 #endif // !FEATURE_PAL
 
-    //
-    // Manager for directory monitors.                       
-    // Provides file change notification services in ASP.NET 
-    //
+                    //
+                    // Manager for directory monitors.                       
+                    // Provides file change notification services in ASP.NET 
+                    //
     sealed class FileChangesMonitor {
 #if !FEATURE_PAL // FEATURE_PAL does not enable file change notification
         internal static string[] s_dirsToMonitor = new string[] {

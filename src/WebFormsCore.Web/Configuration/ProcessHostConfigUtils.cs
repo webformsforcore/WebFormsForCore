@@ -95,17 +95,21 @@ namespace System.Web.Configuration {
 
         private class NativeConfigWrapper : CriticalFinalizerObject {
             internal NativeConfigWrapper() {
+#if NETFRAMEWORK
                 int result = UnsafeIISMethods.MgdInitNativeConfig();
 
                 if (result < 0) {
                     s_InitedExternalConfig = 0;
                     throw new InvalidOperationException(SR.GetString(SR.Cant_Init_Native_Config, result.ToString("X8", CultureInfo.InvariantCulture)));
-                }                
+                }
+#endif
             }
 
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
             ~NativeConfigWrapper() {
+#if NETFRAMEWORK
                 UnsafeIISMethods.MgdTerminateNativeConfig();                    
+#endif            
             }
         }        
     }    

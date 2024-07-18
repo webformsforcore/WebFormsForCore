@@ -26,6 +26,7 @@ namespace System.Web
 	using System.Reflection;
 	using System.Resources;
 	using System.Runtime;
+    using System.Web.Hosting;
 #if NETCOREAPP
     using System.Runtime.Loader;
 #endif
@@ -80,30 +81,6 @@ namespace System.Web
 		private static string DoubleDirectorySeparatorString = new string(Path.DirectorySeparatorChar, 2);
 		private static char[] s_InvalidPhysicalPathChars = { '/', '?', '*', '<', '>', '|', '"' };
 
-#if NETCOREAPP
-        public static ConcurrentDictionary<AssemblyLoadContext, ConcurrentDictionary<string, object>> ContextData = new ConcurrentDictionary<AssemblyLoadContext, ConcurrentDictionary<string, object>>(); 
-
-        public static void SetLoadContextData(string key, object data, Assembly assembly = null)
-        {
-            if (assembly == null) assembly = Assembly.GetCallingAssembly();
-			var context = AssemblyLoadContext.GetLoadContext(assembly);
-            ConcurrentDictionary<string, object> dataContainer;
-            dataContainer = ContextData.GetOrAdd(context, context => new ConcurrentDictionary<string, object>());
-            dataContainer[key] = data;
-        }
-
-        public static object GetLoadContextData(string key, Assembly assembly = null)
-        {
-			if (assembly == null) assembly = Assembly.GetCallingAssembly();
-			var context = AssemblyLoadContext.GetLoadContext(assembly);
-			ConcurrentDictionary<string, object> dataContainer;
-			dataContainer = ContextData.GetOrAdd(context, context => new ConcurrentDictionary<string, object>());
-            object data;
-            dataContainer.TryGetValue(key, out data);
-            return data;
-		}
-#endif
-
 #if OLD
         // For s_forbiddenDirs and s_forbiddenDirsConstant, see
         // ndll.h, and RestrictIISFolders in regiis.cxx
@@ -125,7 +102,7 @@ namespace System.Web
                                     };
 #endif
 
-        static HttpRuntime()
+		static HttpRuntime()
 		{
 			AddAppDomainTraceMessage("*HttpRuntime::cctor");
 
@@ -265,7 +242,7 @@ namespace System.Web
 		private AsyncCallback _requestNotificationCompletionCallback;
 		private AsyncCallback _handlerCompletionCallback;
 		private HttpWorkerRequest.EndOfSendNotification _asyncEndOfSendCallback;
-		private WaitCallback _appDomainUnloadallback;
+		private WaitCallback _appDomainUnloadCallback;
 
 		//
 		// Initialization error (to be reported on subsequent requests)
@@ -350,7 +327,7 @@ namespace System.Web
 				_requestNotificationCompletionCallback = new AsyncCallback(this.OnRequestNotificationCompletion);
 				_handlerCompletionCallback = new AsyncCallback(this.OnHandlerCompletion);
 				_asyncEndOfSendCallback = new HttpWorkerRequest.EndOfSendNotification(this.EndOfSendCallback);
-				_appDomainUnloadallback = new WaitCallback(this.ReleaseResourcesAndUnloadAppDomain);
+				_appDomainUnloadCallback = new WaitCallback(this.ReleaseResourcesAndUnloadAppDomain);
 
 
 				// appdomain values
@@ -394,7 +371,7 @@ namespace System.Web
             AppDomain.CurrentDomain.SetData("DataDirectory", dataDirectory,
                 new FileIOPermission(FileIOPermissionAccess.PathDiscovery, dataDirectory));
 #else
-            AppDomain.CurrentDomain.SetData("DataDirectory", dataDirectory);
+            ApplicationManager.SetLoadContextData("DataDirectory", dataDirectory);
 #endif
 		}
 
@@ -498,7 +475,11 @@ namespace System.Web
                     if(compilationSection != null) {
                         _enablePrefetchOptimization = compilationSection.EnablePrefetchOptimization;
                         if(_enablePrefetchOptimization) {
+#if NETFRAMEWORK
                             UnsafeNativeMethods.StartPrefetchActivity((uint)StringUtil.GetStringHashCode(_appDomainAppId));
+#else 
+                            throw new NotSupportedException("Prefetch optimization not supported in WebFormsCore.");
+#endif
                         }
                     }
 
@@ -1005,12 +986,12 @@ namespace System.Web
             }
             else {
                 tempDirectory = Path.Combine(s_installDirectory, codegenDirName);
-            }
+			}
 #endif // !FEATURE_PAL
 
-            // If we don't have write access to the codegen dir, use the TEMP dir instead.
-            // This will allow non-admin users to work in hosting scenarios (e.g. Venus, aspnet_compiler)
-            if (!System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory)) {
+			// If we don't have write access to the codegen dir, use the TEMP dir instead.
+			// This will allow non-admin users to work in hosting scenarios (e.g. Venus, aspnet_compiler)
+			if (!System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory)) {
 
                 // Don't do this if we are not in a CBM scenario and we're in a service (!UserInteractive), 
                 // as TEMP could point to unwanted places.
@@ -1032,11 +1013,15 @@ namespace System.Web
 
             codegenBase = Path.Combine(tempDirectory, simpleAppName);
 
+#if NETFRAMEWORK
 #pragma warning disable 0618    // To avoid deprecation warning
             appDomain.SetDynamicBase(codegenBase);
 #pragma warning restore 0618
 
             _codegenDir = Thread.GetDomain().DynamicDirectory;
+#else
+            _codegenDir = codegenBase;
+#endif
 
             // Create the codegen directory if needed
             Directory.CreateDirectory(_codegenDir);
@@ -1405,11 +1390,12 @@ namespace System.Web
             // Gernerate random keys
             randgen.GetBytes(bKeysRandom);
 
+#if NETFRAMEWORK
             // If getting stored keys via WorkerRequest object failed, get it directly
             if (!fGetStoredKeys)
                 fGetStoredKeys = (UnsafeNativeMethods.EcbCallISAPI(IntPtr.Zero, UnsafeNativeMethods.CallISAPIFunc.GetAutogenKeys,
                                                                    bKeysRandom, bKeysRandom.Length, bKeysStored, bKeysStored.Length) == 1);
-
+#endif
             // If we managed to get stored keys, copy them in; else use random keys
             if (fGetStoredKeys)
                 Buffer.BlockCopy(bKeysStored, 0, s_autogenKeys, 0, s_autogenKeys.Length);
@@ -1936,7 +1922,12 @@ namespace System.Web
 
             for (; ; ) {
                 try {
+#if NETFRAMEWORK
                     AppDomain.Unload(Thread.GetDomain());
+#else
+                    var context = ApplicationManager.GetLoadContext(Assembly.GetCallingAssembly());
+					if (context != AssemblyLoadContext.Default) context.Unload();
+#endif
                 }
                 catch (CannotUnloadAppDomainException) {
                     Debug.Assert(false);
@@ -2342,7 +2333,7 @@ namespace System.Web
             OnAppDomainShutdown(new BuildManagerHostUnloadEventArgs(_theRuntime._shutdownReason));
 
             // unload app domain from another CLR thread
-            ThreadPool.QueueUserWorkItem(_theRuntime._appDomainUnloadallback);
+            ThreadPool.QueueUserWorkItem(_theRuntime._appDomainUnloadCallback);
 
             return true;
         }
@@ -3079,9 +3070,17 @@ namespace System.Web
         }
 
         internal static string BinDirectoryInternal {
-            get { return Path.Combine(_theRuntime._appDomainAppPath, BinDirectoryName) + Path.DirectorySeparatorChar; }
+            get {
+#if NETFRAMEWORK
+                return Path.Combine(_theRuntime._appDomainAppPath, BinDirectoryName) + Path.DirectorySeparatorChar;
+#else
+				var path = AppDomain.CurrentDomain.BaseDirectory;
+				if (path.EndsWith(Path.DirectorySeparatorChar.ToString())) path = path.Substring(0, path.Length - 1);
+                return path + Path.DirectorySeparatorChar;
+#endif
+			}
 
-        }
+		}
 
         internal static VirtualPath CodeDirectoryVirtualPath {
             get { return _theRuntime._appDomainAppVPath.SimpleCombineWithDir(CodeDirectoryName); }
@@ -3119,22 +3118,27 @@ namespace System.Web
 #if NETFRAMEWORK
             Object x = Thread.GetDomain().GetData(key);
 #else
-            object x = HttpRuntime.GetLoadContextData(key);
+            object x = ApplicationManager.GetLoadContextData(key);
 #endif
             return x as String;
         }
 
         internal static void AddAppDomainTraceMessage(String message) {
             const String appDomainTraceKey = "ASP.NET Domain Trace";
+#if NETFRAMEWORK
             AppDomain d = Thread.GetDomain();
             String m = d.GetData(appDomainTraceKey) as String;
             d.SetData(appDomainTraceKey, (m != null) ? m + " ... " + message : message);
-        }
+#else
+            string m = ApplicationManager.GetLoadContextData(appDomainTraceKey) as string;
+            ApplicationManager.SetLoadContextData(appDomainTraceKey, (m != null) ? m + " ... " + message : message);
+#endif
+		}
 
-        // Gets the version of the ASP.NET framework the current web applications is targeting.
-        // This property is normally set via the <httpRuntime> element's "targetFramework"
-        // attribute. The property is not guaranteed to return a correct value if the current
-        // AppDomain is not an ASP.NET web application AppDomain.
+            // Gets the version of the ASP.NET framework the current web applications is targeting.
+            // This property is normally set via the <httpRuntime> element's "targetFramework"
+            // attribute. The property is not guaranteed to return a correct value if the current
+            // AppDomain is not an ASP.NET web application AppDomain.
         public static Version TargetFramework {
             get {
                 return BinaryCompatibility.Current.TargetFramework;

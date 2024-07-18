@@ -4,6 +4,8 @@
 // </copyright>                                                                
 //------------------------------------------------------------------------------
 
+using System.Web.Hosting;
+
 namespace System.Web.Util {
     using System;
     using System.Runtime.Versioning;
@@ -20,15 +22,20 @@ namespace System.Web.Util {
         public static readonly BinaryCompatibility Current;
 
         static BinaryCompatibility() {
+#if NETCOREAPP
+            var targetFramework = ApplicationManager.GetLoadContextData(TargetFrameworkKey) as FrameworkName;
+            Current = new BinaryCompatibility(targetFramework);
+#else
             Current = new BinaryCompatibility(AppDomain.CurrentDomain.GetData(TargetFrameworkKey) as FrameworkName);
-
+#endif
             TelemetryLogger.LogTargetFramework(Current.TargetFramework);
         }
 
         public BinaryCompatibility(FrameworkName frameworkName) {
             // parse version from FrameworkName, otherwise use a default value
             Version version = VersionUtil.FrameworkDefault;
-            if (frameworkName != null && frameworkName.Identifier == ".NETFramework") {
+            if (frameworkName != null &&
+                (frameworkName.Identifier == ".NETFramework" || frameworkName.Identifier.Contains(".NET"))) {
                 version = frameworkName.Version;
             }
 
@@ -40,19 +47,27 @@ namespace System.Web.Util {
             TargetsAtLeastFramework461 = (version >= VersionUtil.Framework461);
             TargetsAtLeastFramework463 = (version >= VersionUtil.Framework463);
             TargetsAtLeastFramework472 = (version >= VersionUtil.Framework472);
-            TargetsAtLeastFramework48 = (version >= VersionUtil.Framework48);
-        }
+			TargetsAtLeastFramework48 = (version >= VersionUtil.Framework48);
+			TargetsAtLeastNet5 = (version >= VersionUtil.Net5);
+			TargetsAtLeastNet6 = (version >= VersionUtil.Net6);
+			TargetsAtLeastNet7 = (version >= VersionUtil.Net7);
+			TargetsAtLeastNet8 = (version >= VersionUtil.Net8);
+		}
 
-        public bool TargetsAtLeastFramework45 { get; private set; }
+		public bool TargetsAtLeastFramework45 { get; private set; }
         public bool TargetsAtLeastFramework451 { get; private set; }
         public bool TargetsAtLeastFramework452 { get; private set; }
         public bool TargetsAtLeastFramework46 { get; private set; }
         public bool TargetsAtLeastFramework461 { get; private set; }
         public bool TargetsAtLeastFramework463 { get; private set; }
         public bool TargetsAtLeastFramework472 { get; private set; }
-        public bool TargetsAtLeastFramework48 { get; private set; }
+		public bool TargetsAtLeastFramework48 { get; private set; }
+		public bool TargetsAtLeastNet5 { get; private set; }
+		public bool TargetsAtLeastNet6 { get; private set; }
+		public bool TargetsAtLeastNet7 { get; private set; }
+		public bool TargetsAtLeastNet8 { get; private set; }
 
-        public Version TargetFramework { get; private set; }
+		public Version TargetFramework { get; private set; }
 
     }
 }

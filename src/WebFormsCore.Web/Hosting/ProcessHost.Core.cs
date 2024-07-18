@@ -1236,9 +1236,11 @@ namespace System.Web.Hosting {
                 return null;
             }
         }
-
-        void IProcessHostLite.ReportCustomLoaderError(string appId, int hr, AppDomain newlyCreatedAppDomain) {
-            try {
+        
+		void IProcessHostLite.ReportCustomLoaderError(string appId, int hr, AppDomain newlyCreatedAppDomain)
+		{
+			try
+			{
                 try {
                     // If the failure originated in managed code (GetCustomLoader), this will actually
                     // result in the original managed exception being rethrown, which is convenient
@@ -1247,7 +1249,9 @@ namespace System.Web.Hosting {
                 }
                 finally {
                     // AD wasn't unloaded by CustomLoaderHelper, so kill it here.
+#if NETFRAMEWORK
                     AppDomain.Unload(newlyCreatedAppDomain);
+#endif
                 }
             }
             catch (Exception ex) {

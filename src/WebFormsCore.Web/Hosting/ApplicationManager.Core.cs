@@ -9,6 +9,7 @@
 namespace System.Web.Hosting {
     using System;
     using System.Collections;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Configuration;
@@ -34,6 +35,7 @@ namespace System.Web.Hosting {
     using System.Web.Configuration;
     using System.Web.Util;
     using System.Runtime.Loader;
+
 
     public enum HostSecurityPolicyResults {
         DefaultPolicy = 0,
@@ -138,7 +140,41 @@ namespace System.Web.Hosting {
             }
         }
 
-        internal static void OnUnhandledException(Object sender, UnhandledExceptionEventArgs eventArgs) {
+		public static ConcurrentDictionary<AssemblyLoadContext, ConcurrentDictionary<string, object>> ContextData = new ConcurrentDictionary<AssemblyLoadContext, ConcurrentDictionary<string, object>>();
+
+		public static void SetLoadContextData(string key, object data, AssemblyLoadContext context = null)
+		{
+			//if (assembly == null) assembly = Assembly.GetCallingAssembly();
+			//var context = AssemblyLoadContext.GetLoadContext(assembly);
+			if (context == null) context = AssemblyLoadContext.GetLoadContext(Assembly.GetCallingAssembly());
+			ConcurrentDictionary<string, object> dataContainer;
+			dataContainer = ContextData.GetOrAdd(context, context => new ConcurrentDictionary<string, object>());
+			dataContainer[key] = data;
+		}
+		public static void SetLoadContextData(string key, object data, Assembly assembly) =>
+			SetLoadContextData(key, data, AssemblyLoadContext.GetLoadContext(assembly));
+
+		public static object GetLoadContextData(string key, AssemblyLoadContext context = null)
+		{
+			//if (assembly == null) assembly = Assembly.GetCallingAssembly();
+			//var context = AssemblyLoadContext.GetLoadContext(assembly);
+			if (context == null) context = AssemblyLoadContext.GetLoadContext(Assembly.GetCallingAssembly());
+			ConcurrentDictionary<string, object> dataContainer;
+			dataContainer = ContextData.GetOrAdd(context, context => new ConcurrentDictionary<string, object>());
+			object data;
+			dataContainer.TryGetValue(key, out data);
+			return data;
+		}
+		public static object GetLoadContextData(string key, Assembly assembly) =>
+			GetLoadContextData(key, AssemblyLoadContext.GetLoadContext(assembly));
+
+		public static AssemblyLoadContext GetLoadContext(Assembly assembly = null)
+		{
+			if (assembly == null) assembly = Assembly.GetCallingAssembly();
+			return AssemblyLoadContext.GetLoadContext(assembly);
+		}
+
+		internal static void OnUnhandledException(Object sender, UnhandledExceptionEventArgs eventArgs) {
             // if the CLR is not terminating, ignore the notification
             if (!eventArgs.IsTerminating) {
                 return;
@@ -287,7 +323,7 @@ namespace System.Web.Hosting {
                 throw new ArgumentException(SR.GetString(SR.Not_IRegisteredObject, type.FullName), "type");
 
             // get hosting environment
-            HostingEnvironment env = GetAppDomainWithHostingEnvironment(appId, appHost, hostingParameters);
+            HostingEnvironment env = GetAssemblyLoadContextWithHostingEnvironment(appId, appHost, hostingParameters);
 
             // create the managed object in the worker app domain
             // When marshaling Type, the AppDomain must have FileIoPermission to the assembly, which is not
@@ -418,7 +454,32 @@ namespace System.Web.Hosting {
             }
         }
 
-        public AppDomain GetAppDomain(IApplicationHost appHost) {
+#if NETCOREAPP
+        public AssemblyLoadContext GetAssemblyLoadContext(string appId)
+		{
+			if (appId == null)
+			{
+				throw new ArgumentNullException("appId");
+			}
+
+			LockableAppDomainContext ac = GetLockableAppDomainContext(appId);
+			lock (ac)
+			{
+                return ac.LoadContext;
+			}
+		}
+		public AssemblyLoadContext GetAssemblyLoadContext(IApplicationHost appHost)
+		{
+			if (appHost == null)
+			{
+				throw new ArgumentNullException("appHost");
+			}
+			string appID = CreateSimpleAppID(appHost);
+			return GetAssemblyLoadContext(appID);
+		}
+#endif
+
+		public AppDomain GetAppDomain(IApplicationHost appHost) {
             if (appHost == null) {
                 throw new ArgumentNullException("appHost");
             }
@@ -823,6 +884,11 @@ namespace System.Web.Hosting {
             }
         }
 
+        public static string CreateApplicationId(string virtualPath, string physicalPath)
+        {
+			return StringUtil.GetStringHashCode(String.Concat(virtualPath, physicalPath)).ToString("x");
+		}
+
         //
         // helper to support legacy APIs (AppHost.CreateAppHost)
         //
@@ -840,21 +906,22 @@ namespace System.Web.Hosting {
             HostingEnvironmentParameters hostingParameters = new HostingEnvironmentParameters();
             hostingParameters.HostingFlags = HostingEnvironmentFlags.HideFromAppManager;
 
-            HostingEnvironment env = CreateAppDomainWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters);
-            // When marshaling Type, the AppDomain must have FileIoPermission to the assembly, which is not
-            // always the case, so we marshal the assembly qualified name instead
-            return env.CreateInstance(type.AssemblyQualifiedName);
+			HostingEnvironment env = CreateAssemblyLoadContextWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters);
+			// When marshaling Type, the AppDomain must have FileIoPermission to the assembly, which is not
+			// always the case, so we marshal the assembly qualified name instead
+			return env.CreateInstance(type.AssemblyQualifiedName);
         }
 
 		//
 		// helper to support legacy APIs (AppHost.CreateAppHost)
 		//
 
-		internal ObjectHandle CreateInstanceInNewWorkerLoadContext(
+		internal object CreateInstanceInNewWorkerLoadContext(
 								Type type,
 								String appId,
 								VirtualPath virtualPath,
-								String physicalPath)
+								String physicalPath,
+                                bool newLoadContext = true)
 		{
 
 			Debug.Trace("AppManager", "CreateObjectInNewWorkerAppDomain, type=" + type.FullName);
@@ -864,17 +931,17 @@ namespace System.Web.Hosting {
 			HostingEnvironmentParameters hostingParameters = new HostingEnvironmentParameters();
 			hostingParameters.HostingFlags = HostingEnvironmentFlags.HideFromAppManager;
 
-			HostingEnvironment env = CreateAppDomainWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters);
+			HostingEnvironment env = CreateAssemblyLoadContextWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters, newLoadContext);
 			// When marshaling Type, the AppDomain must have FileIoPermission to the assembly, which is not
 			// always the case, so we marshal the assembly qualified name instead
-			return env.CreateInstance(type.AssemblyQualifiedName);
+			return env.CreateInstance(type.AssemblyQualifiedName)?.Unwrap();
 		}
 
 		
         //
 		// helpers to facilitate app domain creation
 		//
-		private HostingEnvironment GetAppDomainWithHostingEnvironment(String appId, IApplicationHost appHost, HostingEnvironmentParameters hostingParameters) {
+		private HostingEnvironment GetAssemblyLoadContextWithHostingEnvironment(String appId, IApplicationHost appHost, HostingEnvironmentParameters hostingParameters) {
             LockableAppDomainContext ac = GetLockableAppDomainContext (appId);
 
             lock (ac) {
@@ -888,8 +955,10 @@ namespace System.Web.Hosting {
                     }
                 }
                 if (env == null) {
-                    env = CreateAppDomainWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters);
+                    env = CreateAssemblyLoadContextWithHostingEnvironmentAndReportErrors(appId, appHost, hostingParameters);
+                    var context = AssemblyLoadContext.GetLoadContext(env.GetType().Assembly);
                     ac.HostEnv = env;
+                    ac.LoadContext = context;
                     Interlocked.Increment(ref _accessibleHostingEnvCount);
                 }
 
@@ -898,12 +967,13 @@ namespace System.Web.Hosting {
            
         }
 
-        private HostingEnvironment CreateAppDomainWithHostingEnvironmentAndReportErrors(
+        private HostingEnvironment CreateAssemblyLoadContextWithHostingEnvironmentAndReportErrors(
                                         String appId,
                                         IApplicationHost appHost,
-                                        HostingEnvironmentParameters hostingParameters) {
+                                        HostingEnvironmentParameters hostingParameters,
+                                        bool newLoadContext = true) {
             try {
-                return CreateAssemblyLoadContextWithHostingEnvironment(appId, appHost, hostingParameters);
+                return CreateAssemblyLoadContextWithHostingEnvironment(appId, appHost, hostingParameters, newLoadContext);
             }
             catch (Exception e) {
                 Misc.ReportUnhandledException(e, new string[] {SR.GetString(SR.Failed_to_initialize_AppDomain), appId});
@@ -916,7 +986,8 @@ namespace System.Web.Hosting {
         private HostingEnvironment CreateAssemblyLoadContextWithHostingEnvironment(
                                                 String appId,
                                                 IApplicationHost appHost,
-                                                HostingEnvironmentParameters hostingParameters) {
+                                                HostingEnvironmentParameters hostingParameters,
+                                                bool newLoadContext = true) {
 
             String physicalPath = appHost.GetPhysicalPath();
             if (!StringUtil.StringEndsWith(physicalPath, Path.DirectorySeparatorChar))
@@ -938,6 +1009,9 @@ namespace System.Web.Hosting {
             //  Create the app domain
 
             AppDomain appDomain = null;
+#if NETCOREAPP
+            AssemblyLoadContext appContext = null;
+#endif
             Dictionary<string, object> appDomainAdditionalData = new Dictionary<string, object>();
             Exception appDomainCreationException = null;
 
@@ -978,9 +1052,10 @@ namespace System.Web.Hosting {
 #if NETFRAMEWORK
                 AppDomain.CurrentDomain.SetData(_configBuildersIgnoreLoadFailuresSwitch, true);
 #else
-                HttpRuntime.SetLoadContextData(_configBuildersIgnoreLoadFailuresSwitch, true);
+                SetLoadContextData(_configBuildersIgnoreLoadFailuresSwitch, true);
+				SetApplicationData(bindings, appDomainAdditionalData, AssemblyLoadContext.Default, AppDomain.CurrentDomain);
 #endif
-                uncTokenConfig = appHost.GetConfigToken();
+				uncTokenConfig = appHost.GetConfigToken();
                 if (uncTokenConfig != IntPtr.Zero) {
                     ictxConfig = new ImpersonationContext(uncTokenConfig);
                 }
@@ -992,12 +1067,14 @@ namespace System.Web.Hosting {
                         customLoaderException.Throw();
                     }
 
+#if NETFRAMEWORK
                     // We support randomized string hash code, but not for the default AppDomain
                     // Don't allow string hash randomization for the defaul AppDomain (i.e. <runtime/UseRandomizedStringHashAlgorithm enabled="1">)
                     // Application should use AppSettings instead to opt-in.
                     if (EnvironmentInfo.IsStringHashCodeRandomizationDetected) {
                         throw new ConfigurationErrorsException(SR.GetString(SR.Require_stable_string_hash_codes));
                     }
+#endif
 
                     bool skipAdditionalConfigChecks = false;
                     if (inClientBuildManager && hostingParameters.IISExpressVersion != null) {
@@ -1063,6 +1140,9 @@ namespace System.Web.Hosting {
                         if (useRandomizedStringHashAlgorithmElement != null && Boolean.TryParse(useRandomizedStringHashAlgorithmElement.Value, out useRandomizedStringHashAlgorithm)) {
                             switches.UseRandomizedStringHashAlgorithm = useRandomizedStringHashAlgorithm;
                         }
+#if NETCOREAPP
+                        switches.UseRandomizedStringHashAlgorithm = true;
+#endif
 
                         // DevDiv #1041102 - Allow specifying quirks via <appSettings> switches
                         // The keys must begin with "AppContext.SetSwitch" and have a non-zero key name length,
@@ -1254,7 +1334,7 @@ setup);
                     }
                     else {
                         appDomain = AppDomain.CreateDomain(domainId,
-#if FEATURE_PAL // FEATURE_PAL: hack to avoid non-supported hosting features
+#if NETCOREAPP || FEATURE_PAL // FEATURE_PAL: hack to avoid non-supported hosting features
                                                            null,
 #else // FEATURE_PAL
 GetDefaultDomainIdentity(),
@@ -1265,21 +1345,13 @@ setup,
                     }
 #else
                     appDomain = AppDomain.CurrentDomain;
+#if NETCOREAPP
+                    if (newLoadContext) appContext = new AssemblyLoadContext(domainId, true); 
+                    else appContext = AssemblyLoadContext.Default;
 #endif
 
-                    // TODO
-                    foreach (DictionaryEntry e in bindings)
-#if NETFRAMEWORK
-                        appDomain.SetData((String)e.Key, (String)e.Value);
-#else
-                        HttpRuntime.SetLoadContextData((String)e.Key, (String)e.Value);                        
 #endif
-                    foreach (var entry in appDomainAdditionalData)
-#if NETFRAMEWORK
-                        appDomain.SetData(entry.Key, entry.Value);
-#else
-						HttpRuntime.SetLoadContextData(entry.Key, entry.Value);
-#endif
+                    SetApplicationData(bindings, appDomainAdditionalData, appContext, appDomain);
 				}
 				catch (Exception e) {
                     Debug.Trace("AppManager", "AppDomain.CreateDomain failed", e);
@@ -1297,7 +1369,7 @@ setup,
                 }
             }
 
-            if (appDomain == null) {
+            if (appDomain == null || appContext == null) {
                 throw new SystemException(SR.GetString(SR.Cannot_create_AppDomain), appDomainCreationException);
             }
 
@@ -1307,6 +1379,7 @@ setup,
             String module = hostType.Module.Assembly.FullName;
             String typeName = hostType.FullName;
             ObjectHandle h = null;
+            HostingEnvironment he = null;
 
             // impersonate UNC identity, if any
             ImpersonationContext ictx = null;
@@ -1346,7 +1419,7 @@ setup,
 
             try {
 
-				// Create the hosting environment in the app domain
+                // Create the hosting environment in the app domain
 #if DBG
                 try {
                     h = Activator.CreateInstance(appDomain, module, typeName);
@@ -1359,7 +1432,9 @@ setup,
 #if NETFRAMEWORK
                 h = Activator.CreateInstance(appDomain, module, typeName);
 #else
-				h = Activator.CreateInstance(module, typeName);
+                var assembly = appContext.LoadFromAssemblyName(new AssemblyName(module));
+                var type = assembly.GetType(typeName);
+				he = Activator.CreateInstance(type) as HostingEnvironment;
 #endif
 #endif
 			}
@@ -1368,14 +1443,23 @@ setup,
                 if (ictx != null)
                     ictx.Undo();
 
+#if NETFRAMEWORK
                 if (h == null) {
                     AppDomain.Unload(appDomain);
+#else
+				if (he == null && appContext != AssemblyLoadContext.Default)
+				{
+					appContext.Unload();
+#endif
                 }
             }
 
+#if NETFRAMEWORK
             HostingEnvironment env = (h != null) ? h.Unwrap() as HostingEnvironment : null;
-
-            if (env == null)
+#else
+			HostingEnvironment env = he;
+#endif
+			if (env == null)
                 throw new SystemException(SR.GetString(SR.Cannot_create_HostEnv));
 
             // initialize the hosting environment
@@ -1389,7 +1473,24 @@ setup,
             return env;
         }
 
-        private static string NormalizePublicKeyBlob(string publicKey) {
+        public void SetApplicationData(IDictionary bindings,
+            Dictionary<string, object> appDomainAdditionalData, AssemblyLoadContext appContext,
+            AppDomain appDomain)
+        {
+			foreach (DictionaryEntry e in bindings)
+#if NETFRAMEWORK
+                        appDomain.SetData((String)e.Key, (String)e.Value);
+#else
+				SetLoadContextData((String)e.Key, (String)e.Value, appContext);
+#endif
+			foreach (var entry in appDomainAdditionalData)
+#if NETFRAMEWORK
+                        appDomain.SetData(entry.Key, entry.Value);
+#else
+				SetLoadContextData(entry.Key, entry.Value, appContext);
+#endif
+		}
+		private static string NormalizePublicKeyBlob(string publicKey) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < publicKey.Length; i++) {
                 if (!Char.IsWhiteSpace(publicKey[i])) {
@@ -1729,7 +1830,7 @@ setup,
             }
         }
 
-        private static void PopulateDomainBindings(String domainId, String appId, String appName,
+        internal static void PopulateDomainBindings(String domainId, String appId, String appName,
                                                     String appPath, VirtualPath appVPath,
                                                     AppDomainSetup setup, IDictionary dict) {
 #if NETFRAMEWORK
@@ -1872,10 +1973,10 @@ setup,
             private static bool GetIsStringHashCodeRandomizationDetected() {
                 // known test vector
                 return (StringComparer.InvariantCultureIgnoreCase.GetHashCode("The quick brown fox jumps over the lazy dog.") != 0x703e662e);
-            }
+			}
 
-            // Visual Studio / WebMatrix will set DEV_ENVIRONMENT=1 when launching an ASP.NET host in a development environment.
-            private static bool GetWasLaunchedFromDevelopmentEnvironmentValue() {
+			// Visual Studio / WebMatrix will set DEV_ENVIRONMENT=1 when launching an ASP.NET host in a development environment.
+			private static bool GetWasLaunchedFromDevelopmentEnvironmentValue() {
                 try {
                     string envVar = Environment.GetEnvironmentVariable("DEV_ENVIRONMENT", EnvironmentVariableTarget.Process);
                     return String.Equals(envVar, "1", StringComparison.Ordinal);

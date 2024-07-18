@@ -34,6 +34,9 @@ namespace System.Web.Hosting {
     using System.Web.Util;
     using System.Web.WebSockets;
     using Microsoft.Win32;
+#if NETCOREAPP
+    using System.Runtime.Loader;
+#endif
 
     [Flags]
     internal enum HostingEnvironmentFlags {
@@ -1483,7 +1486,7 @@ namespace System.Web.Hosting {
 #if NETFRAMEWORK
                 return (AppDomain.CurrentDomain.GetData(".devEnvironment") as bool?) == true;
 #else
-                return (HttpRuntime.GetLoadContextData(".devEnvironment") as bool?) == true;
+                return (ApplicationManager.GetLoadContextData(".devEnvironment") as bool?) == true;
 #endif
             }
         }
@@ -1525,7 +1528,7 @@ namespace System.Web.Hosting {
 #if NETFRAMEWORK
                         _cacheProviderSettings = AppDomain.CurrentDomain.GetData(".defaultObjectCacheProvider") as NameValueCollection;
 #else
-                        _cacheProviderSettings = HttpRuntime.GetLoadContextData(".defaultObjectCacheProvider") as NameValueCollection;
+                        _cacheProviderSettings = ApplicationManager.GetLoadContextData(".defaultObjectCacheProvider") as NameValueCollection;
 #endif
 					}
                 }
@@ -2025,6 +2028,19 @@ namespace System.Web.Hosting {
                 return AppDomain.CurrentDomain;
             }
         }
+
+#if NETCOREAPP
+        /// <summary>
+        /// Returns the ASP.NET hosted AssemblyLoadContext.
+        /// </summary>
+        internal AssemblyLoadContext HostedAssemblyLoadContext
+		{
+			get
+			{
+				return ApplicationManager.GetLoadContext();
+			}
+		}
+#endif
 
     }
 }

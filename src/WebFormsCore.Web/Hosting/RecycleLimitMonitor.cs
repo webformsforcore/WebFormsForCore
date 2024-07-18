@@ -17,6 +17,7 @@ using System.Linq;
 using System.Web.Caching;
 using System.Web.Configuration;
 using System.Web.Util;
+using System.Reflection;
 using System.Web;
 using System.Collections.Generic;
 using System.Threading;
@@ -147,16 +148,20 @@ namespace System.Web.Hosting {
             if (_defaultDomainSingleton == null && appManager != null && !AppDomain.CurrentDomain.IsDefaultAppDomain()) {
                 lock (_singletonLock) {
                     if (_defaultDomainSingleton == null) {
+#if NETFRAMEWORK
                         AppDomain defaultDomain = appManager.GetDefaultAppDomain();
                         defaultDomain.SetData(_pbLimit, AspNetMemoryMonitor.ProcessPrivateBytesLimit);
-#if NETFRAMEWORK
                         defaultDomain.DoCallBack(new CrossAppDomainDelegate(RecycleLimitMonitorSingleton.EnsureCreated));
-#else
-						RecycleLimitMonitorSingleton.EnsureCreated();
 						// Keep a proxy reference for later use
 						_defaultDomainSingleton = (RecycleLimitMonitorSingleton)defaultDomain.GetData(_name);
+#else
+						ApplicationManager.SetLoadContextData(_pbLimit, AspNetMemoryMonitor.ProcessPrivateBytesLimit, Assembly.GetEntryAssembly());
+
+						RecycleLimitMonitorSingleton.EnsureCreated();
+                        // Keep a proxy reference for later use
+                        _defaultDomainSingleton = (RecycleLimitMonitorSingleton)ApplicationManager.GetLoadContextData(_name, Assembly.GetEntryAssembly());
 #endif
-					}
+                    }
 				}
             }
         }
@@ -220,7 +225,7 @@ namespace System.Web.Hosting {
 #if NETFRAMEWORK
                             var pbLimit = AppDomain.CurrentDomain.GetData(RecycleLimitMonitor._pbLimit);
 #else
-                            var pbLimit = HttpRuntime.GetLoadContextData(RecycleLimitMonitor._pbLimit);
+                            var pbLimit = ApplicationManager.GetLoadContextData(RecycleLimitMonitor._pbLimit);
 #endif
 							if (pbLimit == null) {
                                 return;
@@ -229,8 +234,8 @@ namespace System.Web.Hosting {
 #if NETFRAMEWORK
                             AppDomain.CurrentDomain.SetData(RecycleLimitMonitor._name, _singleton);
 #else
-                            HttpRuntime.SetLoadContextData(RecycleLimitMonitor._name, _singleton);
-#endif                        
+                            ApplicationManager.SetLoadContextData(RecycleLimitMonitor._name, _singleton);
+#endif
                         }
                     }
                 }
@@ -638,4 +643,3 @@ namespace System.Web.Hosting {
         }
     }
 }
-

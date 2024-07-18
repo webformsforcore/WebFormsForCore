@@ -106,7 +106,7 @@ namespace System.Web.DataAccess {
 #if NETFRAMEWORK
             string dataDir = AppDomain.CurrentDomain.GetData(s_strDataDir) as string;
 #else
-            string dataDir = HttpRuntime.GetLoadContextData(s_strDataDir) as string;
+            string dataDir = ApplicationManager.GetLoadContextData(s_strDataDir) as string;
 #endif
             if (string.IsNullOrEmpty(dataDir)) {
                 string appPath = null;
