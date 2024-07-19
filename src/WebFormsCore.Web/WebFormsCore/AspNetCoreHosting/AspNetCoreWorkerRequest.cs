@@ -102,7 +102,7 @@ namespace System.Web.Hosting
 
 		Core.HttpContext Context;
 		public AspNetCoreWorkerRequest(AspNetCoreHost host, Core.HttpContext context)
-			: base(host.VirtualPath, host.PhysicalPath,  String.Empty, String.Empty, null)
+			: base(String.Empty, String.Empty, null)
 		{
 			this.Host = host;
 			Context = context;

@@ -30,6 +30,9 @@ namespace System.Web.Compilation
 	using System.Web.Util;
 #if NETCOREAPP
 	using System.Runtime.Loader;
+	using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
 #endif
 	using Debug = System.Web.Util.Debug;
 
@@ -439,7 +442,7 @@ namespace System.Web.Compilation
 
 				if (ccu != null && codeDomProviderType != null)
 				{
-					CodeDomProvider codeProvider = CompilationUtil.CreateCodeDomProvider(codeDomProviderType);
+					W.CodeDomProvider codeProvider = CompilationUtil.CreateCodeDomProvider(codeDomProviderType);
 
 					CodeGeneratorOptions codeGeneratorOptions = new CodeGeneratorOptions();
 					codeGeneratorOptions.BlankLinesBetweenMembers = false;

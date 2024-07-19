@@ -428,8 +428,13 @@ namespace System.Web {
             if (!(dontShowSensitiveInfo || _dontShowVersion)) {  // don't show version for security reasons
                 sb.Append("            <hr width=100% size=1 color=silver>\r\n\r\n");
                 sb.Append("            <b>" + SR.GetString(SR.Error_Formatter_Version) + "</b>&nbsp;" +
-                                       SR.GetString(SR.Error_Formatter_CLR_Build) + VersionInfo.ClrVersion +
-                                       SR.GetString(SR.Error_Formatter_ASPNET_Build) + VersionInfo.EngineVersion + "\r\n\r\n");
+#if NETFRAMEWORK
+                    SR.GetString(SR.Error_Formatter_CLR_Build) +
+#else
+					SR.GetString(SR.Error_Formatter_CLR_Core_Build) +
+#endif
+					VersionInfo.ClrVersion +
+                    SR.GetString(SR.Error_Formatter_ASPNET_Build) + VersionInfo.EngineVersion + "\r\n\r\n");
             }
             sb.Append("            </font>\r\n\r\n");
             sb.Append("    </body>\r\n");

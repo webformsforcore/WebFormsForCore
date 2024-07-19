@@ -11,7 +11,6 @@ namespace System.Configuration.Internal {
     using System.Reflection;
     using System.Threading;
     using System.Security;
-    using System.CodeDom.Compiler;
     using System.Xml;
 
     //

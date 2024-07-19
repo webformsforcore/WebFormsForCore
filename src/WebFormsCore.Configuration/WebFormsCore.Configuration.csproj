@@ -35,6 +35,12 @@
 
     <ItemGroup>
         <EmbeddedResource Remove="System\Configuration.resx" />
+        <None Remove="machine.config" />
+        <EmbeddedResource Include="machine.config">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="System\Configuration.resx">
             <LogicalName>System.Configuration.resources</LogicalName>
         </EmbeddedResource>
@@ -61,6 +67,10 @@
         <None Include="System\Configuration\TypeUtil.cs" />
         <None Include="System\System.Configuration\ConfigurationException.cs" />
         <None Include="System\System.Configuration\ConfigurationPermission.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="System\Configuration\CodeDom\CodeDomProvider.cs" />
     </ItemGroup>
 
     <!--

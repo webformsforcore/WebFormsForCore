@@ -1,9 +1,5 @@
-﻿#region Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-// C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\mscorlib.dll
-// Decompiled with ICSharpCode.Decompiler 8.1.1.7464
-#endregion
-
-internal static class AssemblyRef
+﻿
+static class AssemblyRef
 {
 	internal const string EcmaPublicKey = "b77a5c561934e089";
 

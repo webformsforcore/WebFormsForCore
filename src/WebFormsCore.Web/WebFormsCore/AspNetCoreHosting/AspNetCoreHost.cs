@@ -7,6 +7,8 @@ using System.Security.Principal;
 using System.Threading;
 using System.Runtime.Loader;
 using System.Reflection;
+using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.Hosting;
 using Core = Microsoft.AspNetCore.Http;
@@ -40,8 +42,10 @@ namespace System.Web.Hosting
 		private string processUser;
 
         private string virtualPath;
+        public bool HandleAllRequestsAsLegacy { get; set; } = false;
+		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx", ".asax" };
 
-        public AppDomain AppDomain
+		public AppDomain AppDomain
         {
             get { return AppDomain.CurrentDomain; }
         }
@@ -143,7 +147,12 @@ namespace System.Web.Hosting
             lowerCasedVirtualPathWithTrailingSlash =
                 CultureInfo.InvariantCulture.TextInfo.ToLower(lowerCasedVirtualPathWithTrailingSlash);
             this.physicalPath = physicalPath;
-            physicalClientScriptPath = HttpRuntime.AspClientScriptPhysicalPath + "\\";
+
+            var assembly = GetType().Assembly;
+            ApplicationManager.SetLoadContextData(".appPath", physicalPath, assembly);
+			ApplicationManager.SetLoadContextData(".appVPath", virtualPath, assembly);
+
+			physicalClientScriptPath = HttpRuntime.AspClientScriptPhysicalPath + "\\";
             lowerCasedClientScriptPathWithTrailingSlash =
                 CultureInfo.InvariantCulture.TextInfo.ToLower(HttpRuntime.AspClientScriptVirtualPath + "/");
 
@@ -222,7 +231,17 @@ namespace System.Web.Hosting
             return false;
         }
 
-        public bool IsVirtualPathInApp(String path)
+        public string MapPath(string path) => HostingEnvironment.MapPath(path);
+        public bool IsLegacyRequest(string path)
+        {
+			if (HandleAllRequestsAsLegacy || LegacyExtensions.Any(ext => path.EndsWith(ext))) return true;
+
+            if (Directory.Exists(MapPath(path))) return true;
+
+            return false;
+		}
+
+		public bool IsVirtualPathInApp(String path)
         {
             bool isClientScriptPath;
             return IsVirtualPathInApp(path, out isClientScriptPath);

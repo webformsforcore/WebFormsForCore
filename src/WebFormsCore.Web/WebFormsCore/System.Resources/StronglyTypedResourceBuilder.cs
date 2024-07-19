@@ -1,5 +1,10 @@
 ﻿using System.CodeDom;
 using System.CodeDom.Compiler;
+#if NETCOREAPP
+using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -96,7 +101,7 @@ public static class StronglyTypedResourceBuilder
 	//
 	//   T:System.ArgumentException:
 	//     A resource node name does not match its key in resourceList.
-	public static CodeCompileUnit Create(IDictionary resourceList, string baseName, string generatedCodeNamespace, CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
+	public static CodeCompileUnit Create(IDictionary resourceList, string baseName, string generatedCodeNamespace, W.CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
 	{
 		return Create(resourceList, baseName, generatedCodeNamespace, null, codeProvider, internalClass, out unmatchable);
 	}
@@ -141,7 +146,7 @@ public static class StronglyTypedResourceBuilder
 	//
 	//   T:System.ArgumentException:
 	//     A resource node name does not match its key in resourceList.
-	public static CodeCompileUnit Create(IDictionary resourceList, string baseName, string generatedCodeNamespace, string resourcesNamespace, CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
+	public static CodeCompileUnit Create(IDictionary resourceList, string baseName, string generatedCodeNamespace, string resourcesNamespace, W.CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
 	{
 		if (resourceList == null)
 		{
@@ -177,7 +182,7 @@ public static class StronglyTypedResourceBuilder
 		return InternalCreate(dictionary, baseName, generatedCodeNamespace, resourcesNamespace, codeProvider, internalClass, out unmatchable);
 	}
 
-	private static CodeCompileUnit InternalCreate(Dictionary<string, ResourceData> resourceList, string baseName, string generatedCodeNamespace, string resourcesNamespace, CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
+	private static CodeCompileUnit InternalCreate(Dictionary<string, ResourceData> resourceList, string baseName, string generatedCodeNamespace, string resourcesNamespace, W.CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
 	{
 		if (baseName == null)
 		{
@@ -299,7 +304,7 @@ public static class StronglyTypedResourceBuilder
 	// Exceptions:
 	//   T:System.ArgumentNullException:
 	//     basename or codeProvider is null.
-	public static CodeCompileUnit Create(string resxFile, string baseName, string generatedCodeNamespace, CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
+	public static CodeCompileUnit Create(string resxFile, string baseName, string generatedCodeNamespace, W.CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
 	{
 		return Create(resxFile, baseName, generatedCodeNamespace, null, codeProvider, internalClass, out unmatchable);
 	}
@@ -340,7 +345,7 @@ public static class StronglyTypedResourceBuilder
 	// Exceptions:
 	//   T:System.ArgumentNullException:
 	//     basename or codeProvider is null.
-	public static CodeCompileUnit Create(string resxFile, string baseName, string generatedCodeNamespace, string resourcesNamespace, CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
+	public static CodeCompileUnit Create(string resxFile, string baseName, string generatedCodeNamespace, string resourcesNamespace, W.CodeDomProvider codeProvider, bool internalClass, out string[] unmatchable)
 	{
 		if (resxFile == null)
 		{
@@ -615,12 +620,12 @@ public static class StronglyTypedResourceBuilder
 	// Exceptions:
 	//   T:System.ArgumentNullException:
 	//     key or provider is null.
-	public static string VerifyResourceName(string key, CodeDomProvider provider)
+	public static string VerifyResourceName(string key, W.CodeDomProvider provider)
 	{
 		return VerifyResourceName(key, provider, isNameSpace: false);
 	}
 
-	private static string VerifyResourceName(string key, CodeDomProvider provider, bool isNameSpace)
+	private static string VerifyResourceName(string key, W.CodeDomProvider provider, bool isNameSpace)
 	{
 		if (key == null)
 		{
@@ -661,7 +666,7 @@ public static class StronglyTypedResourceBuilder
 		return null;
 	}
 
-	private static SortedList VerifyResourceNames(Dictionary<string, ResourceData> resourceList, CodeDomProvider codeProvider, ArrayList errors, out Hashtable reverseFixupTable)
+	private static SortedList VerifyResourceNames(Dictionary<string, ResourceData> resourceList, W.CodeDomProvider codeProvider, ArrayList errors, out Hashtable reverseFixupTable)
 	{
 		reverseFixupTable = new Hashtable(0, StringComparer.InvariantCultureIgnoreCase);
 		SortedList sortedList = new SortedList(StringComparer.InvariantCultureIgnoreCase, resourceList.Count);

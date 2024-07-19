@@ -17,8 +17,13 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Web.Util;
 using System.Web.UI;
+#if NETCOREAPP
+	using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
+#endif
 
-internal abstract class BaseTemplateBuildProvider: InternalBuildProvider {
+	internal abstract class BaseTemplateBuildProvider: InternalBuildProvider {
 
     private TemplateParser _parser;
     internal TemplateParser Parser { get { return _parser; } }
@@ -41,7 +46,7 @@ internal abstract class BaseTemplateBuildProvider: InternalBuildProvider {
         Type codeDomProviderType = _parser.CompilerType.CodeDomProviderType;
 
         // Create a code generator for the language
-        CodeDomProvider codeDomProvider = CompilationUtil.CreateCodeDomProviderNonPublic(
+        W.CodeDomProvider codeDomProvider = CompilationUtil.CreateCodeDomProviderNonPublic(
             codeDomProviderType);
 
         // Create a designer mode codedom tree for the page

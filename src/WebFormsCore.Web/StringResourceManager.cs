@@ -72,11 +72,14 @@ internal class StringResourceManager {
                 "LockResource", HttpException.HResultFromLastError(Marshal.GetLastWin32Error()).ToString(CultureInfo.InvariantCulture)));
         }
 
-        // Make sure the end of the resource lies within the module.  this can be an issue
-        // if the resource has been hacked with an invalid length (ASURT 145040)
+        //TODO Unsafe IsValidResource
+            // Make sure the end of the resource lies within the module.  this can be an issue
+            // if the resource has been hacked with an invalid length (ASURT 145040)
+#if NETFRAMEWORK
         if (!UnsafeNativeMethods.IsValidResource(hModule, pv, resSize)) {
             throw new InvalidOperationException();
         }
+#endif
 
         return new SafeStringResource(pv, resSize);
     }
@@ -145,9 +148,9 @@ internal class StringResourceBuilder {
             writer.Write(0x00000000);
             writer.Write(0x00000000);
 
-            #if DEBUG
+#if DEBUG
             long startPos = strm.Position;
-            #endif
+#endif
 
             foreach (string s in _literalStrings) {
                 byte[] data = encoding.GetBytes(s);
@@ -155,9 +158,9 @@ internal class StringResourceBuilder {
             }
 
             // Make sure the stream has the size we expect
-            #if DEBUG
+#if DEBUG
             Debug.Assert(strm.Position-startPos == _offset, "strm.Position-startPos == _offset");
-            #endif
+#endif
         }
     }
 

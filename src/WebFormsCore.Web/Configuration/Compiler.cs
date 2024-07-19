@@ -21,6 +21,11 @@ namespace System.Web.Configuration {
     using System.Web.Util;
     using System.ComponentModel;
     using System.Security.Permissions;
+#if NETCOREAPP
+    using W = WebFormsCore.CodeDom.Compiler;
+#else 
+    using W = System.CodeDom.Compiler;
+#endif
 
     // CompilerCollection
     public sealed class Compiler : ConfigurationElement {
@@ -115,7 +120,7 @@ namespace System.Web.Configuration {
                     lock (this) {
                         if (_compilerType == null) {
                             Type codeDomProviderType = CompilationUtil.LoadTypeWithChecks(
-                            Type, typeof(CodeDomProvider), null, this, "type");
+                            Type, typeof(W.CodeDomProvider), null, this, "type");
 
                             System.CodeDom.Compiler.CompilerParameters compilParams = new CompilerParameters();
                             compilParams.WarningLevel = WarningLevel;

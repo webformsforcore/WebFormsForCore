@@ -1337,7 +1337,7 @@ namespace System.Web
         }
 
         private void InitializeHealthMonitoring() {
-#if !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
+#if NETFRAMEWORK && !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
             ProcessModelSection pmConfig = RuntimeConfig.GetMachineConfig().ProcessModel;
             int deadLockInterval = (int)pmConfig.ResponseDeadlockInterval.TotalSeconds;
             int requestQueueLimit = pmConfig.RequestQueueLimit;

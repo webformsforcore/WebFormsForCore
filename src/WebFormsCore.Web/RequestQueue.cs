@@ -140,10 +140,13 @@ namespace System.Web {
             _timer = new Timer(new TimerCallback(this.TimerCompletionCallback), null, _timerPeriod, _timerPeriod);
             _iis6 = HostingEnvironment.IsUnderIIS6Process;
 
+            //TODO detect deadlock portable
+#if NETFRAMEWORK
             // set the minimum number of requests that must be executing in order to detect a deadlock
             int maxWorkerThreads, maxIoThreads;
             ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxIoThreads);
             UnsafeNativeMethods.SetMinRequestsExecutingToDetectDeadlock(maxWorkerThreads - minExternFreeThreads);
+#endif
         }
 
         // method called from HttpRuntime for incoming requests

@@ -31,10 +31,14 @@ namespace System.Web.Configuration {
     using System.Xml.Schema;
 
     using Microsoft.Build.Utilities;
-    using Microsoft.CSharp;
     using System.Diagnostics.CodeAnalysis;
+#if WebFormsCore
+    using WebFormsCore.CodeDom.Compiler;
+#else
+    using Microsoft.CSharp;
+#endif
 
-    [PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
+	[PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
     [PermissionSet(SecurityAction.InheritanceDemand, Unrestricted = true)]
     public class BrowserCapabilitiesCodeGenerator {
         private static readonly string _browsersDirectory;

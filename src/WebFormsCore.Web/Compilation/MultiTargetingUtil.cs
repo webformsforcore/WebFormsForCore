@@ -9,11 +9,15 @@ using System.Web.Configuration;
 using System.Web.Hosting;
 using System.Web.Util;
 using Microsoft.Build.Utilities;
+using Microsoft.Win32;
+#if WebFormsCore
+using WebFormsCore.CodeDom.Compiler;
+#else
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
-using Microsoft.Win32;
+#endif
 
-using FrameworkName=System.Runtime.Versioning.FrameworkName;
+using FrameworkName =System.Runtime.Versioning.FrameworkName;
 
 namespace System.Web.Compilation {
     internal class MultiTargetingUtil {

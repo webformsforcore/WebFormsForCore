@@ -11,6 +11,12 @@ namespace System.Web;
 
 internal sealed class SR
 {
+	internal const string NotSupported_CodeDomAPI = "NotSupported_CodeDomAPI";
+
+	internal const string Provider_does_not_support_options = "Provider_does_not_support_options";
+
+	internal const string CodeDomProvider_NotDefined = "CodeDomProvider_NotDefined";
+
 	internal const string Parameter_Invalid = "Parameter_Invalid";
 
 	internal const string Parameter_NullOrEmpty = "Parameter_NullOrEmpty";
@@ -1532,6 +1538,8 @@ internal sealed class SR
 	internal const string Invalid_non_zero_hexadecimal_attribute = "Invalid_non_zero_hexadecimal_attribute";
 
 	internal const string Invalid_ResX_No_Type = "Invalid_ResX_No_Type";
+
+	internal const string Unable_To_Locate_Type = "Unable_To_Locate_Type";
 
 	internal const string Not_Serializable_Type = "Not_Serializable_Type";
 
@@ -5819,6 +5827,8 @@ internal sealed class SR
 
 	internal const string Error_Formatter_CLR_Build = "Error_Formatter_CLR_Build";
 
+	internal const string Error_Formatter_CLR_Core_Build = "Error_Formatter_CLR_Core_Build";
+
 	internal const string Error_Formatter_ASPNET_Build = "Error_Formatter_ASPNET_Build";
 
 	internal const string Error_Formatter_Line = "Error_Formatter_Line";
@@ -6376,6 +6386,10 @@ internal sealed class SR
 	internal const string Cant_Read_Native_Modules = "Cant_Read_Native_Modules";
 
 	internal const string Cant_Create_Process_Host = "Cant_Create_Process_Host";
+
+	internal const string Config_invalid_integer_attribute = "Config_invalid_integer_attribute";
+
+	internal const string Config_missing_required_attribute = "Config_missing_required_attribute";
 
 	internal const string Invalid_AppDomain_Prot_Type = "Invalid_AppDomain_Prot_Type";
 

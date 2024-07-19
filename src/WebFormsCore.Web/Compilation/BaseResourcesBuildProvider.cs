@@ -4,169 +4,199 @@
 // </copyright>                                                                
 //------------------------------------------------------------------------------
 
-namespace System.Web.Compilation {
+namespace System.Web.Compilation
+{
 
-using System;
-using System.Resources;
-using System.Resources.Tools;
-using System.Reflection;
-using System.Globalization;
-using System.Collections;
-using System.IO;
-using System.Xml;
-using System.Xml.Schema;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Web.Configuration;
-using System.Web.Hosting;
-using System.Web.Compilation;
-using System.Web.UI;
-using System.Web.Util;
-using Util=System.Web.UI.Util;
+	using System;
+	using System.Resources;
+	using System.Resources.Tools;
+	using System.Reflection;
+	using System.Globalization;
+	using System.Collections;
+	using System.IO;
+	using System.Xml;
+	using System.Xml.Schema;
+	using System.CodeDom;
+	using System.CodeDom.Compiler;
+	using System.Web.Configuration;
+	using System.Web.Hosting;
+	using System.Web.Compilation;
+	using System.Web.UI;
+	using System.Web.Util;
+	using Util = System.Web.UI.Util;
+#if NETCOREAPP
+	using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
+#endif
 
-/// Base class for BuildProviders that generate resources
-[BuildProviderAppliesTo(BuildProviderAppliesTo.Resources)]
-internal abstract class BaseResourcesBuildProvider : BuildProvider {
+	/// Base class for BuildProviders that generate resources
+	[BuildProviderAppliesTo(BuildProviderAppliesTo.Resources)]
+	internal abstract class BaseResourcesBuildProvider : BuildProvider
+	{
 
-    internal const string DefaultResourcesNamespace = "Resources";
+		internal const string DefaultResourcesNamespace = "Resources";
 
-    // The generated namespace and type name
-    private string _ns;
-    private string _typeName;
-    
-    private string _cultureName;
-    private bool _dontGenerateStronglyTypedClass;
+		// The generated namespace and type name
+		private string _ns;
+		private string _typeName;
 
-    internal void DontGenerateStronglyTypedClass() {
-        _dontGenerateStronglyTypedClass = true;
-    }
+		private string _cultureName;
+		private bool _dontGenerateStronglyTypedClass;
 
-    public override void GenerateCode(AssemblyBuilder assemblyBuilder) {
+		internal void DontGenerateStronglyTypedClass()
+		{
+			_dontGenerateStronglyTypedClass = true;
+		}
 
-        _cultureName = GetCultureName();
+		public override void GenerateCode(AssemblyBuilder assemblyBuilder)
+		{
 
-        if (!_dontGenerateStronglyTypedClass) {
-            // Get the namespace and type name that we will use
-            _ns = Util.GetNamespaceAndTypeNameFromVirtualPath(VirtualPathObject,
-                (_cultureName == null) ? 1 : 2 /*chunksToIgnore*/, out _typeName);
+			_cultureName = GetCultureName();
 
-            // Always prepend the namespace with Resources.
-            if (_ns.Length == 0)
-                _ns = DefaultResourcesNamespace;
-            else
-                _ns = DefaultResourcesNamespace + "." + _ns;
-        }
+			if (!_dontGenerateStronglyTypedClass)
+			{
+				// Get the namespace and type name that we will use
+				_ns = Util.GetNamespaceAndTypeNameFromVirtualPath(VirtualPathObject,
+					(_cultureName == null) ? 1 : 2 /*chunksToIgnore*/, out _typeName);
 
-        // Get an input stream for our virtual path, and get a resource reader from it
-        using (Stream inputStream = OpenStream()) {
-            IResourceReader reader = GetResourceReader(inputStream);
+				// Always prepend the namespace with Resources.
+				if (_ns.Length == 0)
+					_ns = DefaultResourcesNamespace;
+				else
+					_ns = DefaultResourcesNamespace + "." + _ns;
+			}
 
-            try {
-                GenerateResourceFile(assemblyBuilder, reader);
-            }
-            catch (ArgumentException e) {
-                // If the inner exception is Xml, throw that instead, as it contains more
-                // useful info
-                if (e.InnerException != null &&
-                    (e.InnerException is XmlException || e.InnerException is XmlSchemaException)) {
-                    throw e.InnerException;
-                }
+			// Get an input stream for our virtual path, and get a resource reader from it
+			using (Stream inputStream = OpenStream())
+			{
+				IResourceReader reader = GetResourceReader(inputStream);
 
-                // Otherwise, so just rethrow
-                throw;
-            }
+				try
+				{
+					GenerateResourceFile(assemblyBuilder, reader);
+				}
+				catch (ArgumentException e)
+				{
+					// If the inner exception is Xml, throw that instead, as it contains more
+					// useful info
+					if (e.InnerException != null &&
+						(e.InnerException is XmlException || e.InnerException is XmlSchemaException))
+					{
+						throw e.InnerException;
+					}
 
-            // Skip the code part for satellite assemblies, or if dontGenerate is set
-            if (_cultureName == null && !_dontGenerateStronglyTypedClass)
-                GenerateStronglyTypedClass(assemblyBuilder, reader);
-        }
-    }
+					// Otherwise, so just rethrow
+					throw;
+				}
 
-    protected abstract IResourceReader GetResourceReader(Stream inputStream);
+				// Skip the code part for satellite assemblies, or if dontGenerate is set
+				if (_cultureName == null && !_dontGenerateStronglyTypedClass)
+					GenerateStronglyTypedClass(assemblyBuilder, reader);
+			}
+		}
 
-    private void GenerateResourceFile(AssemblyBuilder assemblyBuilder, IResourceReader reader) {
+		protected abstract IResourceReader GetResourceReader(Stream inputStream);
 
-        // Get the name of the generated .resource file
-        string resourceFileName;
-        if (_ns == null) {
-            // In the case where we don't generate code, just name the resource file
-            // after the virtual file
-            resourceFileName = UrlPath.GetFileNameWithoutExtension(VirtualPath) + ".resources";
-        }
-        else if (_cultureName == null) {
-            // Name the resource file after the generated class, since that's what the
-            // generated class expects
-            resourceFileName = _ns + "." + _typeName + ".resources";
-        }
-        else {
-            // If it's a non-default resource, include the culture in the name
-            resourceFileName = _ns + "." + _typeName + "." + _cultureName + ".resources";
-        }
+		private void GenerateResourceFile(AssemblyBuilder assemblyBuilder, IResourceReader reader)
+		{
 
-        // Make it lower case, since GetManifestResourceStream (which we use later on) is
-        // case sensitive
-        resourceFileName = resourceFileName.ToLower(CultureInfo.InvariantCulture);
+			// Get the name of the generated .resource file
+			string resourceFileName;
+			if (_ns == null)
+			{
+				// In the case where we don't generate code, just name the resource file
+				// after the virtual file
+				resourceFileName = UrlPath.GetFileNameWithoutExtension(VirtualPath) + ".resources";
+			}
+			else if (_cultureName == null)
+			{
+				// Name the resource file after the generated class, since that's what the
+				// generated class expects
+				resourceFileName = _ns + "." + _typeName + ".resources";
+			}
+			else
+			{
+				// If it's a non-default resource, include the culture in the name
+				resourceFileName = _ns + "." + _typeName + "." + _cultureName + ".resources";
+			}
 
-        Stream outputStream = null;
+			// Make it lower case, since GetManifestResourceStream (which we use later on) is
+			// case sensitive
+			resourceFileName = resourceFileName.ToLower(CultureInfo.InvariantCulture);
 
-        try {
-            try {
-                try {
-                }
-                finally {
-                    // Put the assignment in a finally block to avoid a ThreadAbortException from
-                    // causing the created stream to not get assigned and become leaked (Dev10 bug 844463)
-                    outputStream = assemblyBuilder.CreateEmbeddedResource(this, resourceFileName);
-                }
-            }
-            catch (ArgumentException) {
-                // This throws an ArgumentException if the resource file name was already added.
-                // Catch the situation, and give a better error message (VSWhidbey 87110)
+			Stream outputStream = null;
 
-                throw new HttpException(SR.GetString(SR.Duplicate_Resource_File, VirtualPath));
-            }
+			try
+			{
+				try
+				{
+					try
+					{
+					}
+					finally
+					{
+						// Put the assignment in a finally block to avoid a ThreadAbortException from
+						// causing the created stream to not get assigned and become leaked (Dev10 bug 844463)
+						outputStream = assemblyBuilder.CreateEmbeddedResource(this, resourceFileName);
+					}
+				}
+				catch (ArgumentException)
+				{
+					// This throws an ArgumentException if the resource file name was already added.
+					// Catch the situation, and give a better error message (VSWhidbey 87110)
 
-            // Create an output stream from the .resource file
-            using (outputStream) {
-                using (ResourceWriter writer = new ResourceWriter(outputStream)) {
-                    // Enable resource writer to be target-aware
-                    writer.TypeNameConverter = System.Web.UI.TargetFrameworkUtil.TypeNameConverter;
+					throw new HttpException(SR.GetString(SR.Duplicate_Resource_File, VirtualPath));
+				}
 
-                    // Copy the resources
-                    foreach (DictionaryEntry de in reader) {
-                        writer.AddResource((string)de.Key, de.Value);
-                    }
-                }
-            }
-        }
-        finally {
-            // Always close the stream to avoid a ThreadAbortException from causing the stream
-            // to be leaked (Dev10 bug 844463)
-            if (outputStream != null) {
-                outputStream.Close();
-            }
-        }
-    }
+				// Create an output stream from the .resource file
+				using (outputStream)
+				{
+					using (ResourceWriter writer = new ResourceWriter(outputStream))
+					{
+						// Enable resource writer to be target-aware
+						writer.TypeNameConverter = System.Web.UI.TargetFrameworkUtil.TypeNameConverter;
 
-    private void GenerateStronglyTypedClass(AssemblyBuilder assemblyBuilder, IResourceReader reader) {
+						// Copy the resources
+						foreach (DictionaryEntry de in reader)
+						{
+							writer.AddResource((string)de.Key, de.Value);
+						}
+					}
+				}
+			}
+			finally
+			{
+				// Always close the stream to avoid a ThreadAbortException from causing the stream
+				// to be leaked (Dev10 bug 844463)
+				if (outputStream != null)
+				{
+					outputStream.Close();
+				}
+			}
+		}
 
-        // Copy the resources into an IDictionary
-        IDictionary resourceList;
-        using (reader) {
-            resourceList = GetResourceList(reader);
-        }
+		private void GenerateStronglyTypedClass(AssemblyBuilder assemblyBuilder, IResourceReader reader)
+		{
 
-        // Generate a strongly typed class from the resources
-        CodeDomProvider provider = assemblyBuilder.CodeDomProvider;
-        string[] unmatchable;
-        CodeCompileUnit ccu = StronglyTypedResourceBuilder.Create(
-            resourceList, _typeName, _ns,
-            provider, false /*internalClass*/, out unmatchable);
+			// Copy the resources into an IDictionary
+			IDictionary resourceList;
+			using (reader)
+			{
+				resourceList = GetResourceList(reader);
+			}
 
-        // Ignore the unmatchable items.  We just won't generate code for them,
-        // but they'll still be usable via the ResourceManager (VSWhidbey 248226)
+			// Generate a strongly typed class from the resources
+			W.CodeDomProvider provider = assemblyBuilder.CodeDomProvider;
+			string[] unmatchable;
+			CodeCompileUnit ccu = StronglyTypedResourceBuilder.Create(
+				resourceList, _typeName, _ns,
+				provider, false /*internalClass*/, out unmatchable);
 
-// We decided to cut support for My.Resources (VSWhidbey 358088)
+			// Ignore the unmatchable items.  We just won't generate code for them,
+			// but they'll still be usable via the ResourceManager (VSWhidbey 248226)
+
+			// We decided to cut support for My.Resources (VSWhidbey 358088)
 #if OLD
         // generate a My.Resources.* override (VSWhidbey 251554)
         CodeNamespace ns = new CodeNamespace();
@@ -184,19 +214,20 @@ internal abstract class BaseResourcesBuildProvider : BuildProvider {
         ccu.Namespaces.Add(ns);
 #endif
 
-        // Add the code compile unit to the compilation
-        assemblyBuilder.AddCodeCompileUnit(this, ccu);
-    }
+			// Add the code compile unit to the compilation
+			assemblyBuilder.AddCodeCompileUnit(this, ccu);
+		}
 
-    private IDictionary GetResourceList(IResourceReader reader) {
+		private IDictionary GetResourceList(IResourceReader reader)
+		{
 
-        // Read the resources into a dictionary.
-        IDictionary resourceList = new Hashtable(StringComparer.OrdinalIgnoreCase);
-        foreach(DictionaryEntry de in reader)
-            resourceList.Add(de.Key, de.Value);
+			// Read the resources into a dictionary.
+			IDictionary resourceList = new Hashtable(StringComparer.OrdinalIgnoreCase);
+			foreach (DictionaryEntry de in reader)
+				resourceList.Add(de.Key, de.Value);
 
-        return resourceList;
-    }
-}
+			return resourceList;
+		}
+	}
 
 }

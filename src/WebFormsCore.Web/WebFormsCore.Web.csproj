@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;net8.0</TargetFrameworks>
-		<ImplicitUsings>disable</ImplicitUsings>
+        <TargetFrameworks>net48;net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<LangVersion>11</LangVersion>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
@@ -52,10 +52,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Configuration\machine.config" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Include="WebFormsCore\ToolboxBitmapAttribute.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.10.0" />
 	  <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
 	  <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
 	  <PackageReference Include="System.Drawing.Common" Version="8.0.4" />

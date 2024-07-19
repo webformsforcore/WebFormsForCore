@@ -19,8 +19,6 @@ namespace Microsoft.AspNetCore.Builder
 	{
 		const bool UseSeparateAssemblyLoadContext = false;
 
-		string[] HandleExtensions = new string[] { ".aspx", ".ashx", ".asmx", ".asax" };
-
 		public string VirtualPath { get; set; }
 		public string PhysicalPath { get; set; }
 		public string AppId { get; set; }
@@ -78,7 +76,7 @@ namespace Microsoft.AspNetCore.Builder
 
 		public async Task Invoke(Core.HttpContext context)
 		{
-			if (HandleExtensions.Any(ext => context.Request.Path.ToString().EndsWith(ext)))
+			if (IsLegacyRequest(context))
 			{
 				AllowSynchronousIO(context);
 
@@ -87,8 +85,9 @@ namespace Microsoft.AspNetCore.Builder
 				await next.Invoke(context);
 			}
 		}
-	}
 
+		public virtual bool IsLegacyRequest(Core.HttpContext context) => host.IsLegacyRequest(context.Request.Path.ToString());
+	}
 	public static class WebFormsMiddlewareExtensions
 	{
 		public static IApplicationBuilder UseWebForms(this IApplicationBuilder builder)

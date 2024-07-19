@@ -20,6 +20,7 @@ namespace System.Web {
     using System.Threading;
     using System.Web.Util;
     using System.Web.Hosting;
+    using System.Buffers;
 
     using IIS = System.Web.Hosting.UnsafeIISMethods;
 
@@ -86,12 +87,23 @@ namespace System.Web {
      * Memory response buffer
      */
     internal sealed class HttpResponseBufferElement : HttpBaseMemoryResponseBufferElement, IHttpResponseElement {
+
+        const int BufferSize = BufferingParams.OUTPUT_BUFFER_SIZE;
+        private ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
         private byte[] _data;
 
+        internal HttpResponseBufferElement()
+        {
+            _data = Pool.Rent(BufferSize);
+            _size = _data.Length;
+            _free = _size;
+            _recycle = false;
+        }
+		
         /*
          * Constructor that accepts the data buffer and holds on to it
          */
-        internal HttpResponseBufferElement(byte[] data, int size) {
+		internal HttpResponseBufferElement(byte[] data, int size) {
             _data = data;
             _size = size;
             _free = 0;
@@ -111,7 +123,9 @@ namespace System.Web {
         }
 
         internal override void Recycle() {
-            
+            Pool.Return(_data);
+            _data = null;
+            _free = 0;
         }
 
         internal override int Append(byte[] data, int offset, int size) {
@@ -163,6 +177,8 @@ namespace System.Web {
             if (n > 0)
                 wr.SendResponseFromMemory(_data, n);
         }
+
+        
     }
 
 #if !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
@@ -898,10 +914,14 @@ namespace System.Web {
         }
 
         private HttpBaseMemoryResponseBufferElement CreateNewMemoryBufferElement() {
+#if NETFRAMEWORK
             return new HttpResponseUnmanagedBufferElement(); /* using unmanaged buffers */
+#else
+			return new HttpResponseBufferElement();
+#endif
         }
 
-    internal void DisposeIntegratedBuffers() {
+		internal void DisposeIntegratedBuffers() {
             Debug.Assert(HttpRuntime.UseIntegratedPipeline);
 
             // don't recycle char buffers here (ClearBuffers will)

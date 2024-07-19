@@ -729,4 +729,37 @@
   <data name="net_requestaborted" xml:space="preserve">
     <value>Net request aborted.</value>
   </data>
+  <data name="Cannot_Specify_Both_Compiler_Path_And_Version" xml:space="preserve">
+    <value>Cannot specify both compiler path and version</value>
+  </data>
+  <data name="CodeDomProvider_NotDefined" xml:space="preserve">
+    <value>CodeDom provider not defined</value>
+  </data>
+  <data name="CompilerNotFound" xml:space="preserve">
+    <value>Compiler not found</value>
+  </data>
+  <data name="Config_base_elements_only" xml:space="preserve">
+    <value>Config base elements only</value>
+  </data>
+  <data name="Config_base_no_child_nodes" xml:space="preserve">
+    <value>Config base no child nodes</value>
+  </data>
+  <data name="Config_invalid_integer_attribute" xml:space="preserve">
+    <value>Invalid integer attribute in config.</value>
+  </data>
+  <data name="Extension_Names_Cannot_Be_Empty_Or_Non_Period_Based" xml:space="preserve">
+    <value>Extension names cannot be empty or non period based</value>
+  </data>
+  <data name="Invalid_nonnegative_integer_attribute" xml:space="preserve">
+    <value>Invalid nonnegative integer attribute</value>
+  </data>
+  <data name="Language_Names_Cannot_Be_Empty" xml:space="preserve">
+    <value>Language names cannot be empty</value>
+  </data>
+  <data name="Provider_does_not_support_options" xml:space="preserve">
+    <value>Provider does not support options</value>
+  </data>
+  <data name="Unable_To_Locate_Type" xml:space="preserve">
+    <value>Unable to locate type.</value>
+  </data>
 </root>

@@ -1,4 +1,9 @@
 ﻿using System.CodeDom.Compiler;
+#if NETCOREAPP
+using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
+#endif
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -517,8 +522,8 @@ namespace System.Web.Compilation {
 
                             // Set default value to false
                             s_warnAsError = false;
-                            CompilerInfo[] compilerInfoArray = CodeDomProvider.GetAllCompilerInfo();
-                            foreach (CompilerInfo info in compilerInfoArray) {
+                            W.CompilerInfo[] compilerInfoArray = W.CodeDomProvider.GetAllCompilerInfo();
+                            foreach (W.CompilerInfo info in compilerInfoArray) {
                                 if (info == null || !info.IsCodeDomProviderTypeValid) {
                                     continue;
                                 }

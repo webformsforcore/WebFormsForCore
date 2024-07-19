@@ -23,8 +23,13 @@ namespace System.Web.Configuration {
     using System.Threading;
     using System.ComponentModel;
     using System.Security.Permissions;
+#if NETCOREAPP
+	using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
+#endif
 
-    /*
+	/*
         <!-- compilation Attributes:
           tempDirectory="directory"
           debug="[true|false]"      // Default: false
@@ -95,7 +100,7 @@ namespace System.Web.Configuration {
         </compilation>
 */
 
-    public sealed class CompilationSection : ConfigurationSection {
+	public sealed class CompilationSection : ConfigurationSection {
         private const string tempDirectoryAttributeName = "tempDirectory";
         private const string assemblyPostProcessorTypeAttributeName = "assemblyPostProcessorType";
         private const string controlBuilderInterceptorTypeAttributeName = "controlBuilderInterceptorType";
@@ -574,9 +579,9 @@ namespace System.Web.Configuration {
                 // If not, try the <codedom> section
 
                 if (CodeDomProvider.IsDefinedExtension(extension)) {
-                    string language = CodeDomProvider.GetLanguageFromExtension(extension);
+                    string language = W.CodeDomProvider.GetLanguageFromExtension(extension);
 
-                    CompilerInfo ci = CodeDomProvider.GetCompilerInfo(language);
+                    W.CompilerInfo ci = W.CodeDomProvider.GetCompilerInfo(language);
 
                     compilerType = new CompilerType(
                         ci.CodeDomProviderType, ci.CreateDefaultCompilerParameters());
@@ -625,8 +630,8 @@ namespace System.Web.Configuration {
 
                 // Try the <codedom> section
 
-                if (CodeDomProvider.IsDefinedLanguage(language)) {
-                    CompilerInfo ci = CodeDomProvider.GetCompilerInfo(language);
+                if (W.CodeDomProvider.IsDefinedLanguage(language)) {
+                    W.CompilerInfo ci = W.CodeDomProvider.GetCompilerInfo(language);
 
                     compilerType = new CompilerType(ci.CodeDomProviderType,
                         ci.CreateDefaultCompilerParameters());

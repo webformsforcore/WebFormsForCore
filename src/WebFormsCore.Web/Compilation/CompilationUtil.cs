@@ -29,8 +29,13 @@ namespace System.Web.Compilation {
     using System.Runtime.ExceptionServices;
     using System.Threading;
     using System.Threading.Tasks;
-    
-    internal static class CompilationUtil {
+#if NETCOREAPP
+	using W = WebFormsCore.CodeDom.Compiler;
+#else
+    using W = System.CodeDom.Compiler;
+#endif
+
+	internal static class CompilationUtil {
 
         internal const string CodeDomProviderOptionPath = "system.codedom/compilers/compiler/ProviderOption/";
         private const string CompilerDirectoryPath = "CompilerDirectoryPath";
@@ -50,9 +55,9 @@ namespace System.Web.Compilation {
             CompilationSection config = MTConfigUtil.GetCompilationAppConfig();
             return config.NumRecompilesBeforeAppRestart;
         }
-
+        
         internal static CompilerType GetCodeDefaultLanguageCompilerInfo() {
-            return new CompilerType(typeof(Microsoft.VisualBasic.VBCodeProvider), null);
+            return new CompilerType(typeof(WebFormsCore.CodeDom.Compiler.VBCodeProvider), null);
         }
 
         internal static CompilerType GetDefaultLanguageCompilerInfo(CompilationSection compConfig, VirtualPath configPath) {
@@ -116,7 +121,7 @@ namespace System.Web.Compilation {
             }
 
             if (compConfig.DefaultLanguage == null)
-                return new CompilerType(typeof(Microsoft.CSharp.CSharpCodeProvider), null);
+                return new CompilerType(typeof(WebFormsCore.CodeDom.Compiler.CSharpCodeProvider), null);
 
             return compConfig.GetCompilerInfoFromLanguage("c#");
         }
@@ -227,15 +232,15 @@ namespace System.Web.Compilation {
             }
 
             // Make sure the <system.CodeDom> section is hashed properly.
-            CompilerInfo[] compilerInfoArray = CodeDomProvider.GetAllCompilerInfo();
+            W.CompilerInfo[] compilerInfoArray = W.CodeDomProvider.GetAllCompilerInfo();
             if (compilerInfoArray != null) {
 #if NETFRAMEWORK
-                CompilerInfo cppCodeProvider = CodeDomProvider.GetCompilerInfo("cpp");
+                W.CompilerInfo cppCodeProvider = W.CodeDomProvider.GetCompilerInfo("cpp");
 #else
                 var cppCodeProvider = compilerInfoArray
                     .FirstOrDefault(compiler => compiler.GetLanguages().Any(lang => lang == "cpp"));
 #endif
-                foreach (CompilerInfo info in compilerInfoArray) {
+                foreach (W.CompilerInfo info in compilerInfoArray) {
                     // Skip cpp code provider (Dev11 193323).
                     if (info == cppCodeProvider) {
                         continue;
@@ -454,24 +459,24 @@ namespace System.Web.Compilation {
         // We need to use the constructor with ProviderOptions to get the v3.5/v4.0 compiler that was possibly set in config.
         // We first check if there is any providerOptions and invoke the constructor if so.
         // Otherwise, we fall back to the default constructor.
-        internal static CodeDomProvider CreateCodeDomProvider(Type codeDomProviderType) {
-            CodeDomProvider codeDomProvider = CreateCodeDomProviderWithPropertyOptions(codeDomProviderType);
+        internal static W.CodeDomProvider CreateCodeDomProvider(Type codeDomProviderType) {
+            W.CodeDomProvider codeDomProvider = CreateCodeDomProviderWithPropertyOptions(codeDomProviderType);
             if (codeDomProvider != null) {
                 return codeDomProvider;
             }
-            return (CodeDomProvider)Activator.CreateInstance(codeDomProviderType);
+            return (W.CodeDomProvider)Activator.CreateInstance(codeDomProviderType);
         }
 
-        internal static CodeDomProvider CreateCodeDomProviderNonPublic(Type codeDomProviderType) {
-            CodeDomProvider codeDomProvider = CreateCodeDomProviderWithPropertyOptions(codeDomProviderType);
+        internal static W.CodeDomProvider CreateCodeDomProviderNonPublic(Type codeDomProviderType) {
+            W.CodeDomProvider codeDomProvider = CreateCodeDomProviderWithPropertyOptions(codeDomProviderType);
             if (codeDomProvider != null) {
                 return codeDomProvider;
             }
-            return (CodeDomProvider)HttpRuntime.CreateNonPublicInstance(codeDomProviderType);
+            return (W.CodeDomProvider)HttpRuntime.CreateNonPublicInstance(codeDomProviderType);
         }
 
         [ReflectionPermission(SecurityAction.Assert, Unrestricted = true)]
-        private static CodeDomProvider CreateCodeDomProviderWithPropertyOptions(Type codeDomProviderType) {
+        private static W.CodeDomProvider CreateCodeDomProviderWithPropertyOptions(Type codeDomProviderType) {
             // The following resembles the code in System.CodeDom.CompilerInfo.CreateProvider
 
             // Make a copy to avoid modifying the original.
@@ -518,14 +523,14 @@ namespace System.Web.Compilation {
                 // Check whether the codedom provider supports a constructor that takes in providerOptions.
                 // Currently only VB and C# support providerOptions for sure, while others such as JScript might not.
                 ConstructorInfo ci = codeDomProviderType.GetConstructor(new Type[] { typeof(IDictionary<string, string>) });
-                CodeDomProvider provider = null;
+                W.CodeDomProvider provider = null;
                 if (ci != null) {
                     // First, obtain the language for the given codedom provider type.
-                    CodeDomProvider defaultProvider = (CodeDomProvider)Activator.CreateInstance(codeDomProviderType);
+                    W.CodeDomProvider defaultProvider = (W.CodeDomProvider)Activator.CreateInstance(codeDomProviderType);
                     string extension = defaultProvider.FileExtension;
-                    var language = CodeDomProvider.GetLanguageFromExtension(extension);
+                    var language = W.CodeDomProvider.GetLanguageFromExtension(extension);
                     // Then, use the new createProvider API to create an instance.
-                    provider = CodeDomProvider.CreateProvider(language, providerOptions);
+                    provider = W.CodeDomProvider.CreateProvider(language, providerOptions);
                 }
                 // Restore the provider options if we previously manually added the compilerDirectoryPath.
                 // Otherwise, we might incorrectly invalidate the compilerDirectoryPath in medium trust (Dev10 bug 550299).
@@ -542,17 +547,17 @@ namespace System.Web.Compilation {
         internal static IDictionary<string, string> GetProviderOptions(Type codeDomProviderType) {
             // Using reflection to get the property for the time being.
             // This could simply return CompilerInfo.PropertyOptions if it goes public in future.
-            CodeDomProvider provider = (CodeDomProvider)Activator.CreateInstance(codeDomProviderType);
+            W.CodeDomProvider provider = (W.CodeDomProvider)Activator.CreateInstance(codeDomProviderType);
             string extension = provider.FileExtension;
-            if (CodeDomProvider.IsDefinedExtension(extension)) {
-                CompilerInfo ci = CodeDomProvider.GetCompilerInfo(CodeDomProvider.GetLanguageFromExtension(extension));
+            if (W.CodeDomProvider.IsDefinedExtension(extension)) {
+                W.CompilerInfo ci = W.CodeDomProvider.GetCompilerInfo(W.CodeDomProvider.GetLanguageFromExtension(extension));
                 return GetProviderOptions(ci);
             }
             return null;
         }
 
         [ReflectionPermission(SecurityAction.Assert, Unrestricted = true)]
-        private static IDictionary<string, string> GetProviderOptions(CompilerInfo ci) {
+        private static IDictionary<string, string> GetProviderOptions(W.CompilerInfo ci) {
             Debug.Assert(ci != null, "CompilerInfo ci should not be null");
             PropertyInfo pi = ci.GetType().GetProperty("ProviderOptions",
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance);

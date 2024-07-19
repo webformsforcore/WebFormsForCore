@@ -10254,4 +10254,22 @@ Detailed error message: {1}</value>
   <data name="SerializationException" xml:space="preserve">
     <value>Exception serializing {0} at ({1},{2}): {3}.</value>
   </data>
+  <data name="CodeDomProvider_NotDefined" xml:space="preserve">
+    <value>CodeDom provider not defined</value>
+  </data>
+  <data name="Config_invalid_integer_attribute" xml:space="preserve">
+    <value>Invalid integer attribute in config.</value>
+  </data>
+  <data name="Config_missing_required_attribute" xml:space="preserve">
+    <value>Missing required attribute in config.</value>
+  </data>
+  <data name="Provider_does_not_support_options" xml:space="preserve">
+    <value>Provider does not support options</value>
+  </data>
+  <data name="Unable_To_Locate_Type" xml:space="preserve">
+    <value>Unable to locate type.</value>
+  </data>
+  <data name="Error_Formatter_CLR_Core_Build" xml:space="preserve">
+    <value>Microsoft .NET Version:</value>
+  </data>
 </root>

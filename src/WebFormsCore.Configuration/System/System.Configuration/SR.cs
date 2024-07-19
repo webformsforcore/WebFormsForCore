@@ -14,6 +14,18 @@ namespace System.Configuration
 {
 	internal sealed class SR
 	{
+		internal const string Cannot_Specify_Both_Compiler_Path_And_Version = "Cannot_Specify_Both_Compiler_Path_And_Version";
+		internal const string CompilerNotFound = "CompilerNotFound";
+		internal const string Config_base_no_child_nodes = "Config_base_no_child_nodes";
+		internal const string Config_base_elements_only = "Config_base_elements_only";
+		internal const string Invalid_nonnegative_integer_attribute = "Invalid_nonnegative_integer_attribute";
+		internal const string Extension_Names_Cannot_Be_Empty_Or_Non_Period_Based = "Extension_Names_Cannot_Be_Empty_Or_Non_Period_Based";
+		internal const string Language_Names_Cannot_Be_Empty = "Language_Names_Cannot_Be_Empty";
+		internal const string NotSupported_CodeDomAPI = "NotSupported_CodeDomAPI";
+		internal const string Provider_does_not_support_options = "Provider_does_not_support_options";
+		internal const string CodeDomProvider_NotDefined = "CodeDomProvider_NotDefined";
+		internal const string Config_invalid_integer_attribute = "Config_invalid_integer_attribute";
+		internal const string Unable_To_Locate_Type = "Unable_To_Locate_Type";
 		internal const string Parameter_Invalid = "Parameter_Invalid";
 		internal const string Parameter_NullOrEmpty = "Parameter_NullOrEmpty";
 		internal const string Property_NullOrEmpty = "Property_NullOrEmpty";
