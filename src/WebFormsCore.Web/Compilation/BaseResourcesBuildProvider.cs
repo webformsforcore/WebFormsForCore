@@ -25,9 +25,9 @@ namespace System.Web.Compilation
 	using System.Web.Util;
 	using Util = System.Web.UI.Util;
 #if NETCOREAPP
-	using W = WebFormsCore.CodeDom.Compiler;
+	using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
-    using W = System.CodeDom.Compiler;
+	using W = System.CodeDom.Compiler;
 #endif
 
 	/// Base class for BuildProviders that generate resources

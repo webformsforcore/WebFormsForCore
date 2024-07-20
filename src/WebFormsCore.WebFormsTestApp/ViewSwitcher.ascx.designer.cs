@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebFormsCore.TestApp {
+namespace EstrellasDeEsperanza.WebFormsCore.TestApp {
     
     
     public partial class ViewSwitcher {

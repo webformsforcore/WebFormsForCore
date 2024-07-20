@@ -3,7 +3,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace WebFormsCore.Serialization.Formatters.Binary
+namespace EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary
 {
 
 	internal static partial class LocalAppContextSwitches

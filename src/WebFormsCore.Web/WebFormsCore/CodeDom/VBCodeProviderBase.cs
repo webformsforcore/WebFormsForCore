@@ -11,12 +11,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 #if NETCOREAPP
-using W = WebFormsCore.CodeDom.Compiler;
+using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace WebFormsCore.CodeDom.Compiler;
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 
 //
 // Summary:

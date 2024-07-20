@@ -44,6 +44,7 @@ namespace System.Web.Hosting
         private string virtualPath;
         public bool HandleAllRequestsAsLegacy { get; set; } = false;
 		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx", ".asax" };
+        public string[] DefaultDocuments { get; set; } = new string[] { "default.aspx" };
 
 		public AppDomain AppDomain
         {
@@ -148,7 +149,7 @@ namespace System.Web.Hosting
                 CultureInfo.InvariantCulture.TextInfo.ToLower(lowerCasedVirtualPathWithTrailingSlash);
             this.physicalPath = physicalPath;
 
-            var assembly = GetType().Assembly;
+			var assembly = GetType().Assembly;
             ApplicationManager.SetLoadContextData(".appPath", physicalPath, assembly);
 			ApplicationManager.SetLoadContextData(".appVPath", virtualPath, assembly);
 
@@ -232,12 +233,25 @@ namespace System.Web.Hosting
         }
 
         public string MapPath(string path) => HostingEnvironment.MapPath(path);
-        public bool IsLegacyRequest(string path)
+        public bool IsLegacyRequest(Core.HttpContext context)
         {
+            var path = context.Request.Path.Value;
+
 			if (HandleAllRequestsAsLegacy || LegacyExtensions.Any(ext => path.EndsWith(ext))) return true;
 
-            if (Directory.Exists(MapPath(path))) return true;
-
+            if (Directory.Exists(MapPath(path)))
+            {
+				if (path.EndsWith('/')) path = path.Substring(0, path.Length - 1);
+				var defaultDoc = DefaultDocuments
+                    .Select(doc => path + "/" + doc)
+                    .Where(file => File.Exists(MapPath(file)))
+                    .FirstOrDefault();
+                if (defaultDoc != null)
+                {
+                    context.Request.Path = defaultDoc;
+                    return true;
+                }
+            }
             return false;
 		}
 

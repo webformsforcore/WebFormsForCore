@@ -39,9 +39,9 @@ namespace System.Web.Compilation
 	using System.CodeDom;
 	using System.CodeDom.Compiler;
 #if NETCOREAPP
-	using W = WebFormsCore.CodeDom.Compiler;
+	using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
-    using W = System.CodeDom.Compiler;
+	using W = System.CodeDom.Compiler;
 #endif
 	using Util = System.Web.UI.Util;
 	using System.Web.Hosting;

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace WebFormsCore.TestApp
+namespace EstrellasDeEsperanza.WebFormsCore.TestApp
 {
     public partial class Site_Mobile : System.Web.UI.MasterPage
     {

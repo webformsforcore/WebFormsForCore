@@ -11,7 +11,7 @@ using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace WebFormsCore.Serialization.Formatters.Binary
+namespace EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary
 {
     public static class FormatterServices
     {

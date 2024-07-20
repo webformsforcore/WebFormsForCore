@@ -4,7 +4,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace WebFormsCore.Serialization.Formatters.Binary
+namespace EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary
 {
     // For each object or array being read off the stream, an ObjectProgress object is created. This object
     // keeps track of the progress of the parsing. When an object is being parsed, it keeps track of

@@ -11,12 +11,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 #if NETCOREAPP
-using W = WebFormsCore.CodeDom.Compiler;
+using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace WebFormsCore.CodeDom.Compiler {
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
     internal class VBCompiler : Compiler {
         // Command line string for My.* support
         internal static string MySupport = @"/define:_MYTYPE=\""Web\""";

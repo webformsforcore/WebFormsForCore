@@ -65,8 +65,8 @@ namespace System.Web.Util {
         private static bool IsMacEnforcementEnabledViaRegistry() {
             try {
                 string keyName = String.Format(CultureInfo.InvariantCulture, @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v{0}", Environment.Version.ToString(3));
-                int rawValue = (int)Registry.GetValue(keyName, "AspNetEnforceViewStateMac", defaultValue: 0 /* disabled by default */);
-                return (rawValue != 0);
+                int? rawValue = (int?)Registry.GetValue(keyName, "AspNetEnforceViewStateMac", defaultValue: 0 /* disabled by default */);
+                return (rawValue == null || rawValue != 0);
             }
             catch {
                 // If we cannot read the registry for any reason, fail safe and assume enforcement is enabled.

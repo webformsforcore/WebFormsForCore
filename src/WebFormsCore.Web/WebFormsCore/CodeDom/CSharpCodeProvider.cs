@@ -6,7 +6,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace WebFormsCore.CodeDom.Compiler {
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
     /// <summary>
     /// Provides access to instances of the .NET Compiler Platform C# code generator and code compiler.
     /// </summary>

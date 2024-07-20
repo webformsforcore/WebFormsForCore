@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 
-namespace WebFormsCore.Serialization.Formatters.Binary
+namespace EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary
 {
     internal sealed class SerializationEvents
     {

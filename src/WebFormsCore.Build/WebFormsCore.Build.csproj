@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+        <AssemblyName>EstrellasDeEsperanza.WebFormsCore.Build</AssemblyName>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <OutputType>Exe</OutputType>
+        <StartupObject>EstrellasDeEsperanza.WebFormsCore.Build.Program</StartupObject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="AssemblyPatcher.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="EstrellasDeEsperanza.WebFormsCore.Build.deps.json" />
+        <None Remove="EstrellasDeEsperanza.WebFormsCore.Build.runtimeconfig.json" />
+        <None Remove="EstrellasDeEsperanza.WebFormsCore.Build.targets" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="EstrellasDeEsperanza.WebFormsCore.Build.deps.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="EstrellasDeEsperanza.WebFormsCore.Build.runtimeconfig.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="EstrellasDeEsperanza.WebFormsCore.Build.targets">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="AssemblyPatcher.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
+        <PackageReference Include="Mono.Cecil" Version="0.11.5" />
+    </ItemGroup>
+
+</Project>

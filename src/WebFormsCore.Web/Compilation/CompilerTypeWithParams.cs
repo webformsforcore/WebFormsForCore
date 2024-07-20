@@ -22,7 +22,7 @@ namespace System.Web.Compilation
 	using System.Web.Configuration;
 	using System.Diagnostics.CodeAnalysis;
 #if NETCOREAPP
-	using W = WebFormsCore.CodeDom.Compiler;
+	using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
 	using W = System.CodeDom.Compiler;
 #endif

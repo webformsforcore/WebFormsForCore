@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore", "src\WebFormsCore\WebFormsCore.csproj", "{9950C05D-64D5-4FE1-AA75-E5013042D63F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Signing Key", "Signing Key", "{3B54E767-4CF1-4ABA-B930-2A823F6E8C7D}"
 	ProjectSection(SolutionItems) = preProject
 		src\SigningKey\WebFormsCore.PublicKey = src\SigningKey\WebFormsCore.PublicKey
@@ -28,8 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CassiniDev.Lib4", "src\Cass
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.WebFormsCoreTestApp", "src\WebFormsCore.WebFormsTestApp\WebFormsCore.WebFormsCoreTestApp.csproj", "{5677D31A-EE0A-4954-8913-97A844550666}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Build", "WebFormsCore.Build\WebFormsCore.Build.csproj", "{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CassiniDev.Console4", "src\CassiniDev\source code\CassiniDev\CassiniDev.Console4.csproj", "{539F0304-F14A-413F-A56A-AFB7724EA1A7}"
 EndProject
 Global
@@ -42,18 +38,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Debug|x64.Build.0 = Debug|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Debug|x86.Build.0 = Debug|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Release|x64.ActiveCfg = Release|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Release|x64.Build.0 = Release|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Release|x86.ActiveCfg = Release|Any CPU
-		{9950C05D-64D5-4FE1-AA75-E5013042D63F}.Release|x86.Build.0 = Release|Any CPU
 		{0FC2CE4E-3B61-463B-8889-34E308754FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0FC2CE4E-3B61-463B-8889-34E308754FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FC2CE4E-3B61-463B-8889-34E308754FA7}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -150,18 +134,6 @@ Global
 		{5677D31A-EE0A-4954-8913-97A844550666}.Release|x64.Build.0 = Release|Any CPU
 		{5677D31A-EE0A-4954-8913-97A844550666}.Release|x86.ActiveCfg = Release|Any CPU
 		{5677D31A-EE0A-4954-8913-97A844550666}.Release|x86.Build.0 = Release|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Debug|x64.Build.0 = Debug|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Debug|x86.Build.0 = Debug|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Release|x64.ActiveCfg = Release|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Release|x64.Build.0 = Release|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Release|x86.ActiveCfg = Release|Any CPU
-		{A81D0BE6-8D22-4EA2-9225-3B0651EA6740}.Release|x86.Build.0 = Release|Any CPU
 		{539F0304-F14A-413F-A56A-AFB7724EA1A7}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{539F0304-F14A-413F-A56A-AFB7724EA1A7}.Debug|Any CPU.Build.0 = Debug|x64
 		{539F0304-F14A-413F-A56A-AFB7724EA1A7}.Debug|x64.ActiveCfg = Debug|x64

@@ -12,7 +12,7 @@ namespace System.Web.Compilation {
     using System.CodeDom;
     using System.CodeDom.Compiler;
 #if NETCOREAPP
-    using W = WebFormsCore.CodeDom.Compiler;
+    using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
     using W = System.CodeDom.Compiler;
 #endif
@@ -807,7 +807,7 @@ public class AssemblyBuilder {
         // Also ignore warning that complains about assemblyKeyName and delaysign
         // Also ignore warning about assuming assembly versions matching (CS1701, DevDiv 137847, warning about System.Web.Extensions v1.0 matching v3.5)
         if (codeDomProviderType == typeof(Microsoft.CSharp.CSharpCodeProvider) ||
-            codeDomProviderType == typeof(WebFormsCore.CodeDom.Compiler.CSharpCodeProvider)) {
+            codeDomProviderType == typeof(EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.CSharpCodeProvider)) {
             List<string> noWarnStrings = new List<string>(5);
             noWarnStrings.AddRange(new string[] { "1659", "1699", "1701" });
 
@@ -865,8 +865,8 @@ public class AssemblyBuilder {
         // Only do so for C# and VB.
         if (codeDomProviderType != typeof(Microsoft.CSharp.CSharpCodeProvider) && 
             codeDomProviderType != typeof(Microsoft.VisualBasic.VBCodeProvider) &&
-			codeDomProviderType != typeof(WebFormsCore.CodeDom.Compiler.CSharpCodeProvider) &&
-			codeDomProviderType != typeof(WebFormsCore.CodeDom.Compiler.VBCodeProvider))
+			codeDomProviderType != typeof(EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.CSharpCodeProvider) &&
+			codeDomProviderType != typeof(EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.VBCodeProvider))
             return;
 
         if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(compilParams.CompilerOptions, "/warnaserror", CompareOptions.IgnoreCase) >= 0)
@@ -884,8 +884,8 @@ public class AssemblyBuilder {
         // For C# and VB, check for WarnAsError
         if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider) ||
             codeDomProviderType == typeof(Microsoft.CSharp.CSharpCodeProvider) ||
-			codeDomProviderType == typeof(WebFormsCore.CodeDom.Compiler.VBCodeProvider) ||
-			codeDomProviderType == typeof(WebFormsCore.CodeDom.Compiler.CSharpCodeProvider))
+			codeDomProviderType == typeof(EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.VBCodeProvider) ||
+			codeDomProviderType == typeof(EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.CSharpCodeProvider))
             ProcessBooleanProviderOption("WarnAsError", "/warnaserror+", "/warnaserror-", providerOptions, compilParams);
 
         // Only process OptionInfer for v3.5 compiler (or above)

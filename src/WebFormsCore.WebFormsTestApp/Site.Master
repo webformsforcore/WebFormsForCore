@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebFormsCore.TestApp.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="EstrellasDeEsperanza.WebFormsCore.TestApp.SiteMaster" %>
 
 <!DOCTYPE html>
 

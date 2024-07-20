@@ -7,6 +7,7 @@
 namespace System.Configuration {
     using System.Configuration.Internal;
     using System.IO;
+    using System.Linq;
     using System.Security.Policy;
     using System.Security.Permissions;
     using System.Reflection;
@@ -21,7 +22,7 @@ namespace System.Configuration {
 	{
 		public void Dispose() { }
 	}
-	internal sealed class ClientConfigurationHost : DelegatingConfigHost, IInternalConfigClientHost {
+	public sealed class ClientConfigurationHost : DelegatingConfigHost, IInternalConfigClientHost {
         internal const string MachineConfigName = "MACHINE";
         internal const string ExeConfigName = "EXE";
         internal const string RoamingUserConfigName = "ROAMING_USER";
@@ -33,10 +34,12 @@ namespace System.Configuration {
         internal const string LocalUserConfigPath = RoamingUserConfigPath + "/" + LocalUserConfigName;
 
         private const string ConfigExtension = ".config";
-        private const string MachineConfigFilename = "machine.config";
+        public const string MachineConfigFilename = "machine.config";
         private const string MachineConfigSubdirectory = "Config";
+		public const string MachineConfigSubdirectoryWebFormsCore = "App_Data";
 
-        private static object                   s_init = new object();
+
+		private static object                   s_init = new object();
         private static object                   s_version = new object();
         private static volatile string          s_machineConfigFilePath;
 
@@ -67,22 +70,48 @@ namespace System.Configuration {
             }
         }
 
-        static internal string MachineConfigFilePath {
+        public static string MachineConfigFilePath {
             [FileIOPermissionAttribute(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
             [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "The callers do not expose this information without performing the appropriate demands themselves.")]
             get {
                 if (s_machineConfigFilePath == null) {
 #if NETFRAMEWORK
                     string directory = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+					s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectory), MachineConfigFilename);
 #else
 					string directory = AppDomain.CurrentDomain.BaseDirectory;
+					s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectoryWebFormsCore), MachineConfigFilename);
 #endif
-					s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectory), MachineConfigFilename);
-                }
+				}
 
-                return s_machineConfigFilePath;
+				return s_machineConfigFilePath;
             }
-        }
+            set {
+                if (s_machineConfigFilePath != value)
+                {
+                    s_machineConfigFilePath = value;
+                    var dir = Path.GetDirectoryName(s_machineConfigFilePath);
+
+					if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+                    if (!File.Exists(s_machineConfigFilePath) ||
+                        File.GetLastWriteTimeUtc(s_machineConfigFilePath) <
+                            File.GetLastWriteTimeUtc(Assembly.GetExecutingAssembly().Location))
+                    {
+                        var assembly = Assembly.GetExecutingAssembly();
+						using (var machineConfig = assembly
+                            .GetManifestResourceNames()
+                            .Where(name => name.EndsWith($".{MachineConfigFilename}"))
+                            .Select(name => assembly.GetManifestResourceStream(name))
+                            .FirstOrDefault())
+                        using (var file = new FileStream(s_machineConfigFilePath, FileMode.Create, FileAccess.Write))
+                        {
+                            machineConfig.CopyTo(file);
+                        }
+                    }
+                }
+			}
+		}
 
         internal bool HasRoamingConfig {
             get {

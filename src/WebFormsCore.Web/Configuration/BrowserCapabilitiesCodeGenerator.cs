@@ -33,7 +33,7 @@ namespace System.Web.Configuration {
     using Microsoft.Build.Utilities;
     using System.Diagnostics.CodeAnalysis;
 #if WebFormsCore
-    using WebFormsCore.CodeDom.Compiler;
+    using EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
     using Microsoft.CSharp;
 #endif

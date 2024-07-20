@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 
-namespace WebFormsCore.CodeDom.Compiler;
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 
 /// <summary>
 /// Provides access to instances of the .NET Compiler Platform VB code generator and code compiler.

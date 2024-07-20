@@ -5,7 +5,7 @@ using System.Web;
 //using System.Web.Optimization;
 using System.Web.UI;
 
-namespace WebFormsCore.TestApp
+namespace EstrellasDeEsperanza.WebFormsCore.TestApp
 {
 	public class BundleConfig
 	{

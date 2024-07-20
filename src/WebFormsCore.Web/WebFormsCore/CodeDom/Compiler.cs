@@ -13,12 +13,12 @@ using System.Security.Permissions;
 using System.Security.Principal;
 using System.Text;
 #if NETCOREAPP
-using W = WebFormsCore.CodeDom.Compiler;
+using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace WebFormsCore.CodeDom.Compiler {
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
     internal abstract class Compiler : ICodeCompiler {
         private readonly W.CodeDomProvider _codeDomProvider;
         protected readonly IProviderOptions _providerOptions;

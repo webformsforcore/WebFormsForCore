@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Web;
 
-namespace WebFormsCore.Test
+namespace EstrellasDeEsperanza.WebFormsCore.Test
 {
 	public class Program
 	{

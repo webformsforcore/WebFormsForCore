@@ -18,9 +18,9 @@ using System.CodeDom.Compiler;
 using System.Web.Util;
 using System.Web.UI;
 #if NETCOREAPP
-	using W = WebFormsCore.CodeDom.Compiler;
+	using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
-    using W = System.CodeDom.Compiler;
+	using W = System.CodeDom.Compiler;
 #endif
 
 	internal abstract class BaseTemplateBuildProvider: InternalBuildProvider {

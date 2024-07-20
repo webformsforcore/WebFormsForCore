@@ -993,6 +993,9 @@ namespace System.Web.Hosting {
             if (!StringUtil.StringEndsWith(physicalPath, Path.DirectorySeparatorChar))
                 physicalPath = physicalPath + Path.DirectorySeparatorChar;
 
+#if NETCOREAPP
+            ClientConfigurationHost.MachineConfigFilePath = Path.Combine(physicalPath, ClientConfigurationHost.MachineConfigSubdirectoryWebFormsCore, ClientConfigurationHost.MachineConfigFilename);
+#endif
             String domainId = ConstructAppDomainId(appId);
             String appName = (StringUtil.GetStringHashCode(String.Concat(appId.ToLower(CultureInfo.InvariantCulture),
                 physicalPath.ToLower(CultureInfo.InvariantCulture)))).ToString("x", CultureInfo.InvariantCulture);

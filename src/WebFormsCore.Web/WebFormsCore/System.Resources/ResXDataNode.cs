@@ -11,8 +11,8 @@ using System.Runtime.Serialization;
 #if !WebFormsCore || NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
-using IFormatter = WebFormsCore.Serialization.Formatters.IFormatter;
-using WebFormsCore.Serialization.Formatters.Binary;
+using IFormatter = EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.IFormatter;
+using EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary;
 using System.Web;
 #endif
 using System.Runtime.Serialization.Formatters.Soap;

@@ -1509,9 +1509,13 @@ namespace System.Web.Configuration {
             dictionary["ecmascriptversion"] = "1.0";
             dictionary["tables"] = "true";
             dictionary["type"] = "Downlevel";
+#if NETFRAMEWORK
             browserCaps.Adapters["System.Web.UI.WebControls.Menu, System.Web, Version=4.0.0.0, Culture=neutral, Pub" +
                 "licKeyToken=b03f5f7f11d50a3a"] = "System.Web.UI.WebControls.Adapters.MenuAdapter";
-            browserCaps.AddBrowser("GenericDownlevel");
+#else
+			browserCaps.Adapters["System.Web.UI.WebControls.Menu, EstrellasDeEsperanza.WebFormsCore.Web"] = "System.Web.UI.WebControls.Adapters.MenuAdapter";
+#endif
+			browserCaps.AddBrowser("GenericDownlevel");
             this.GenericdownlevelProcessGateways(headers, browserCaps);
             bool ignoreApplicationBrowsers = false;
             this.GenericdownlevelProcessBrowsers(ignoreApplicationBrowsers, headers, browserCaps);

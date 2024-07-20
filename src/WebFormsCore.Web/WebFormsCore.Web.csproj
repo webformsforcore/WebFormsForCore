@@ -10,7 +10,8 @@
 		<DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_WEB;OBJECTSTATEFORMATTER;CONFIGPATHUTILITY_SYSTEMWEB;SAFESERIALIZATIONMANAGER;TRACE;RETAIL;WIN32</DefineConstants>
 		<DefineConstants>$(DefineConstants);WebFormsCore</DefineConstants>
 		<SignAssembly>True</SignAssembly>
-	</PropertyGroup>
+        <AssemblyName>System.Web</AssemblyName>
+    </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	</PropertyGroup>
@@ -67,15 +68,15 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Microsoft.Build.Framework" Version="17.9.5" />
-		<PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.9.5" />
-		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.9.5" />
+        <!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0">
+            <Aliases>NET</Aliases>
+        </PackageReference>-->
+        <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
+		<PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
+		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
 		<PackageReference Include="System.DirectoryServices" Version="8.0.0" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
+        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
 		<PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
-		<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0">
-			<Aliases>NET</Aliases>
-		</PackageReference>
 		<PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
 		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
 	</ItemGroup>
@@ -108,5 +109,18 @@
 	<Target Name="Preprocess">
 		<MSBuild Projects="WebFormsCore.Web.Cpp.vcxproj" Targets="Build" />
 	</Target>
+
+    <Import Project="..\..\lib\WebFormsCore.Build\EstrellasDeEsperanza.WebFormsCore.Build.targets" />
+
+    <Target Name="FakeStrongName" AfterTargets="CopyFilesToOutputDirectory" Condition="$(TargetFramework) != 'net48'">
+        <ItemGroup>
+            <Assembly Include="$(OutputPath)$(AssemblyName).dll" />
+            <Assembly Include="$(IntermediateOutputPath)ref\$(AssemblyName).dll" />
+        </ItemGroup>
+
+        <FakeStrongName Assemblies="@(Assembly)" Key="..\SigningKey\WebFormsCore.snk"
+            PublicKey="002400000480000094000000060200000024000052534131000400000100010007D1FA57C4AED9F0A32E84AA0FAEFD0DE9E8FD6AEC8F87FB03766C834C99921EB23BE79AD9D5DCC1DD9AD236132102900B723CF980957FC4E177108FC607774F29E8320E92EA05ECE4E821C0A5EFE8F1645C4C0C93C1AB99285D622CAA652C1DFAD63D745D6F2DE5F17E5EAF0FC4963D261C8A12436518206DC093344D5AD293"
+            PublicKeyToken="b03f5f7f11d50a3a" />
+    </Target>
 
 </Project>

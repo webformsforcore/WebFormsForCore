@@ -7,7 +7,7 @@ using System.IO;
 ﻿using System.Collections.Specialized;
 using System.Web.Configuration;
 
-namespace WebFormsCore.CodeDom.Compiler {
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
     static class AppSettings {
         private static volatile bool _settingsInitialized;
         private static object _lock = new object();

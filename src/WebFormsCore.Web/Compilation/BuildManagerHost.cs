@@ -30,9 +30,9 @@ namespace System.Web.Compilation
 	using System.Web.Util;
 #if NETCOREAPP
 	using System.Runtime.Loader;
-	using W = WebFormsCore.CodeDom.Compiler;
+	using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 #else
-    using W = System.CodeDom.Compiler;
+	using W = System.CodeDom.Compiler;
 #endif
 	using Debug = System.Web.Util.Debug;
 

@@ -13,7 +13,7 @@
  * Copyright (c) 1999 Microsoft Corporation
  */
 
-namespace WebFormsCore.CodeDom.Compiler
+namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler
 {
 
 	using System;
@@ -28,7 +28,7 @@ namespace WebFormsCore.CodeDom.Compiler
 	using System.Xml;
 	using System.Globalization;
 	using System.Web;
-	using W = WebFormsCore.CodeDom.Compiler;
+	using W = EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler;
 	using S = System.CodeDom.Compiler;
 
 	public class CodeDomCompilationConfiguration
@@ -71,7 +71,7 @@ namespace WebFormsCore.CodeDom.Compiler
 			// C#
 			compilerParameters = new S.CompilerParameters();
 			compilerParameters.WarningLevel = 4;
-			typeName = "WebFormsCore.CodeDom.Compiler.CSharpCodeProvider, " + AssemblyRef.WebFormsCoreWeb;
+			typeName = "EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.CSharpCodeProvider, " + AssemblyRef.WebFormsCoreWeb;
 			compilerInfo = new W.CompilerInfo(compilerParameters, typeName);
 			compilerInfo._compilerLanguages = new string[] { "c#", "cs", "csharp" };
 			compilerInfo._compilerExtensions = new string[] { ".cs", "cs" };
@@ -82,7 +82,7 @@ namespace WebFormsCore.CodeDom.Compiler
 			// VB
 			compilerParameters = new S.CompilerParameters();
 			compilerParameters.WarningLevel = 4;
-			typeName = "WebFormsCore.CodeDom.Compiler.VBCodeProvider, " + AssemblyRef.WebFormsCoreWeb;
+			typeName = "EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler.VBCodeProvider, " + AssemblyRef.WebFormsCoreWeb;
 			compilerInfo = new W.CompilerInfo(compilerParameters, typeName);
 			compilerInfo._compilerLanguages = new string[] { "vb", "vbs", "visualbasic", "vbscript" };
 			compilerInfo._compilerExtensions = new string[] { ".vb", "vb" };

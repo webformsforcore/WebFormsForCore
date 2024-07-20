@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <LangVersion>11</LangVersion>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-        <StartupObject Condition="'$(TargetFramework)' != 'net48'">WebFormsCore.Test.Program</StartupObject>
+        <StartupObject Condition="'$(TargetFramework)' != 'net48'">EstrellasDeEsperanza.WebFormsCore.Test.Program</StartupObject>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
@@ -50,6 +50,13 @@
     <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
        <!-- <None Remove="Config\machine.config" />
         <Content Include="Config\machine.config" CopyToOutputDirectory="PreserveNewest" />-->
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Config\**" />
+      <Content Remove="Config\**" />
+      <EmbeddedResource Remove="Config\**" />
+      <None Remove="Config\**" />
     </ItemGroup>
 
     <ItemGroup>

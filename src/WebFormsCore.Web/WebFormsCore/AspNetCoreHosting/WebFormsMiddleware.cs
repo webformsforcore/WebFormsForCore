@@ -56,7 +56,7 @@ namespace Microsoft.AspNetCore.Builder
 		public WebFormsMiddleware(Core.RequestDelegate next)
 		{
 			this.next = next;
-			var path = AppDomain.CurrentDomain.BaseDirectory;
+			var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString())) path = path.Substring(0, path.Length - 1);
 			PhysicalPath = Path.GetDirectoryName(path);
 			//PhysicalPath = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(Assembly.GetEntryAssembly().CodeBase).AbsolutePath));
@@ -86,7 +86,7 @@ namespace Microsoft.AspNetCore.Builder
 			}
 		}
 
-		public virtual bool IsLegacyRequest(Core.HttpContext context) => host.IsLegacyRequest(context.Request.Path.ToString());
+		public virtual bool IsLegacyRequest(Core.HttpContext context) => host.IsLegacyRequest(context);
 	}
 	public static class WebFormsMiddlewareExtensions
 	{

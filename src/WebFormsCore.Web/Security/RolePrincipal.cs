@@ -22,7 +22,7 @@ namespace System.Web.Security {
 #if NETFRAMEWORK
     using System.Runtime.Serialization.Formatters.Binary;
 #else
-	using WebFormsCore.Serialization.Formatters.Binary;
+	using EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary;
 #endif
 	using System.Security;
     using System.Security.Claims;

@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-namespace WebFormsCore.Serialization.Formatters.Binary
+namespace EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Binary
 {
     internal sealed class SerializationFieldInfo : FieldInfo
     {

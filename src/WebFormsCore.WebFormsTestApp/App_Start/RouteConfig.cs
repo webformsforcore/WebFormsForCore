@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.Routing;
 //using Microsoft.AspNet.FriendlyUrls;
 
-namespace WebFormsCore.TestApp
+namespace EstrellasDeEsperanza.WebFormsCore.TestApp
 {
     public static class RouteConfig
     {

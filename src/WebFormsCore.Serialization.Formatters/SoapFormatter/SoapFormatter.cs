@@ -45,7 +45,7 @@ namespace System.Runtime.Serialization.Formatters.Soap {
 		MethodCall, MethodResponse, ServerFault, NotRecognize
 	}
 	
-	public sealed class SoapFormatter: IRemotingFormatter, WebFormsCore.Serialization.Formatters.IFormatter {
+	public sealed class SoapFormatter: IRemotingFormatter, EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.IFormatter {
 		private SerializationBinder _binder;
 		private StreamingContext _context;
 		private ISurrogateSelector _selector;
