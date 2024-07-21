@@ -76,7 +76,9 @@ namespace System.Web.Services.Description {
                     foreach (Type extensionType in ImportContext.ServiceImporter.Extensions) {
                         importer.Extensions.Add(extensionType.FullName, extensionType);
                     }
+#if NETFRAMEWORK
                     importer.Extensions.Add(new System.Data.Design.TypedDataSetSchemaImporterExtension());
+#endif
                     importer.Extensions.Add(new DataSetSchemaImporterExtension());
                 }
                 return importer;

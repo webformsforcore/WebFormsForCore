@@ -18,7 +18,10 @@ namespace System.Web.Services {
 
         internal const string Action = "SOAPAction";
         internal const string ArrayType = "Array";
-        internal const string Prefix = "soap";
+		internal const string UrType = "anyType";
+		internal const string Array = "Array";
+		//internal const string ArrayType = "arrayType";
+		internal const string Prefix = "soap";
         internal const string ClaimPrefix = "wsi";
         internal const string DimeContentType = "application/dime";
         internal const string SoapContentType = "text/xml";
@@ -61,7 +64,8 @@ namespace System.Web.Services {
         internal const string Namespace = "http://www.w3.org/2003/05/soap-envelope";
         internal const string Encoding = "http://www.w3.org/2003/05/soap-encoding";
         internal const string RpcNamespace = "http://www.w3.org/2003/05/soap-rpc";
-        internal const string Prefix = "soap12";
+		internal const string RpcResult = "result";
+		internal const string Prefix = "soap12";
         internal class Attribute {
             private Attribute() { }
             internal const string UpgradeEnvelopeQname = "qname";

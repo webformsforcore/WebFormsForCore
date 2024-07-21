@@ -15,7 +15,9 @@ namespace System.Web.Services.Description {
     using System.Collections;
     using System;
     using System.Data;
+#if NETFRAMEWORK
     using System.Data.Design;
+#endif
     using System.Reflection;
     using System.CodeDom;
     using System.CodeDom.Compiler;
