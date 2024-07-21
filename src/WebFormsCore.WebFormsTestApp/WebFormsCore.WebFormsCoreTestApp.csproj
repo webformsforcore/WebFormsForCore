@@ -9,6 +9,8 @@
         <StartupObject Condition="'$(TargetFramework)' != 'net48'">EstrellasDeEsperanza.WebFormsCore.Test.Program</StartupObject>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <GenerateDependencyFile>true</GenerateDependencyFile>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -60,70 +62,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="roslyn\csc.exe" />
-      <None Remove="roslyn\csc.rsp" />
-      <None Remove="roslyn\csi.exe" />
-      <None Remove="roslyn\csi.rsp" />
-      <None Remove="roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
-      <None Remove="roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
-      <None Remove="roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
-      <None Remove="roslyn\Microsoft.CodeAnalysis.dll" />
-      <None Remove="roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
-      <None Remove="roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
-      <None Remove="roslyn\Microsoft.CSharp.Core.targets" />
-      <None Remove="roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
-      <None Remove="roslyn\Microsoft.DiaSymReader.Native.arm64.dll" />
-      <None Remove="roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
-      <None Remove="roslyn\Microsoft.Managed.Core.CurrentVersions.targets" />
-      <None Remove="roslyn\Microsoft.Managed.Core.targets" />
-      <None Remove="roslyn\Microsoft.VisualBasic.Core.targets" />
-      <None Remove="roslyn\System.Buffers.dll" />
-      <None Remove="roslyn\System.Collections.Immutable.dll" />
-      <None Remove="roslyn\System.Memory.dll" />
-      <None Remove="roslyn\System.Numerics.Vectors.dll" />
-      <None Remove="roslyn\System.Reflection.Metadata.dll" />
-      <None Remove="roslyn\System.Runtime.CompilerServices.Unsafe.dll" />
-      <None Remove="roslyn\System.Text.Encoding.CodePages.dll" />
-      <None Remove="roslyn\System.Threading.Tasks.Extensions.dll" />
-      <None Remove="roslyn\vbc.exe" />
-      <None Remove="roslyn\vbc.rsp" />
-      <None Remove="roslyn\VBCSCompiler.exe" />
+      <Content Update="WebFormsCore.WebFormsCoreTestApp.deps.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="roslyn\csc.exe" />
-      <Content Include="roslyn\csc.rsp" />
-      <Content Include="roslyn\csi.exe" />
-      <Content Include="roslyn\csi.rsp" />
-      <Content Include="roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
-      <Content Include="roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
-      <Content Include="roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
-      <Content Include="roslyn\Microsoft.CodeAnalysis.dll" />
-      <Content Include="roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
-      <Content Include="roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
-      <Content Include="roslyn\Microsoft.CSharp.Core.targets" />
-      <Content Include="roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
-      <Content Include="roslyn\Microsoft.DiaSymReader.Native.arm64.dll" />
-      <Content Include="roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
-      <Content Include="roslyn\Microsoft.Managed.Core.CurrentVersions.targets" />
-      <Content Include="roslyn\Microsoft.Managed.Core.targets" />
-      <Content Include="roslyn\Microsoft.VisualBasic.Core.targets" />
-      <Content Include="roslyn\System.Buffers.dll" />
-      <Content Include="roslyn\System.Collections.Immutable.dll" />
-      <Content Include="roslyn\System.Memory.dll" />
-      <Content Include="roslyn\System.Numerics.Vectors.dll" />
-      <Content Include="roslyn\System.Reflection.Metadata.dll" />
-      <Content Include="roslyn\System.Runtime.CompilerServices.Unsafe.dll" />
-      <Content Include="roslyn\System.Text.Encoding.CodePages.dll" />
-      <Content Include="roslyn\System.Threading.Tasks.Extensions.dll" />
-      <Content Include="roslyn\vbc.exe" />
-      <Content Include="roslyn\vbc.rsp" />
-      <Content Include="roslyn\VBCSCompiler.exe" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <!--<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />-->
-      <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.3.1" GeneratePathProperty="true" ExcludeAssets="build" />
-    </ItemGroup>
-
+    <Target Name="AddRuntimeDependenciesToContent" Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'" BeforeTargets="GetCopyToOutputDirectoryItems" DependsOnTargets="GenerateBuildDependencyFile;&#xD;&#xA;                            GenerateBuildRuntimeConfigurationFiles">
+        <ItemGroup>
+            <ContentWithTargetPath Include="$(ProjectDepsFilePath)" Condition="'$(GenerateDependencyFile)' == 'true'" CopyToOutputDirectory="PreserveNewest" TargetPath="$(ProjectDepsFileName)" />
+            <ContentWithTargetPath Include="$(ProjectRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'" CopyToOutputDirectory="PreserveNewest" TargetPath="$(ProjectRuntimeConfigFileName)" />
+        </ItemGroup>
+    </Target>
+    
 </Project>

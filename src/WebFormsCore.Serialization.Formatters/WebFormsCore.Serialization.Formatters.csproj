@@ -13,7 +13,15 @@
         <AssemblyName>EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters</AssemblyName>
 	</PropertyGroup>
 
-	<ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
 	  <Compile Remove="Serialization\Formatter.cs" />
 	  <Compile Remove="Serialization\FormatterConverter.cs" />
 	  <Compile Remove="Serialization\Formatters\CommonEnums.cs" />

@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Microsoft.Build;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace EstrellasDeEsperanza.WebFormsCore.Build
 {
-	public class FakeStrongName : Task
+	public class FakeStrongNameTask : Task
 	{
+		public const bool NeedsKey = false;
 		public static bool IsCore => !(IsNetFX || IsNetNative);
 		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
@@ -91,7 +89,7 @@ namespace EstrellasDeEsperanza.WebFormsCore.Build
 			}
 
 			var keyFileName = Key?.ItemSpec;
-			if (string.IsNullOrEmpty(keyFileName) || !File.Exists(keyFileName))
+			if (NeedsKey && (string.IsNullOrEmpty(keyFileName) || !File.Exists(keyFileName)))
 			{
 				LogError("Need to specify a valid *.snk key file in Key.");
 				return false;
@@ -108,22 +106,24 @@ namespace EstrellasDeEsperanza.WebFormsCore.Build
 				if (!IsCore)
 				{
 					LogMessage($"Starting dotnet...");
-					var assemblies = string.Join(";", Assemblies
-						.Select(a => a.ItemSpec)
-						.ToArray());
+					string[] a = new string[Assemblies.Length];
+					for (int i = 0; i < Assemblies.Length; i++)
+					{
+						a[i] = Assemblies[i].ItemSpec;
+					}
+					var assemblies = string.Join(";", a);
 
 					var dll = Assembly.GetExecutingAssembly().Location;
 
 					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" \"{assemblies}\" " +
-						$"\"{PublicKey}\" \"{PublicKeyToken}\" \"{Key?.ItemSpec}\" " +
-						$"\"{Source?.ItemSpec}\"");
+						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
+						$"\"{Source?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;
 					startInfo.UseShellExecute = false;
 					startInfo.RedirectStandardError = true;
 					startInfo.RedirectStandardOutput = true;
 					var p = new Process();
 					p.StartInfo = startInfo;
-					//p.EnableRaisingEvents = true;
 					p.OutputDataReceived += (sender, args) =>
 					{
 						if (args.Data != null) LogMessage(args.Data);
@@ -137,35 +137,42 @@ namespace EstrellasDeEsperanza.WebFormsCore.Build
 					p.BeginOutputReadLine();
 					p.BeginErrorReadLine();
 					p.WaitForExit(30000);
-					LogMessage($"Replaced public keys.");
 				}
 				else
 				{
-					using (var keyFile = new FileStream(keyFileName, FileMode.Open, FileAccess.Read))
+					StrongNameKeyPair? key = null;
+					try
 					{
-						StrongNameKeyPair? key = null;
-						try
+						using (var keyFile = new FileStream(keyFileName, FileMode.Open, FileAccess.Read))
 						{
 							key = new StrongNameKeyPair(keyFile);
 						}
-						catch { }
+					}
+					catch { }
 
-						foreach (var assemblyItem in Assemblies)
+					foreach (var assemblyItem in Assemblies)
+					{
+						var assemblyFileName = assemblyItem.ItemSpec;
+						var assemblyCopyName = Path.ChangeExtension(assemblyFileName, ".Fake.dll");
+
+						if (File.Exists(assemblyFileName))
 						{
-							var assemblyFileName = assemblyItem.ItemSpec;
-							var assemblyCopyName = $"{assemblyFileName}.Copy.dll";
+
+							bool success = false;
 
 							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName))
 							{
 								assembly.Name.PublicKey = publicKey;
 								assembly.Name.PublicKeyToken = publicKeyToken;
+
+								//File.Delete(assemblyFileName);
 								assembly.Write(assemblyCopyName);
+								success = true;
 							}
 
-							if (File.Exists(assemblyCopyName))
+							if (success)
 							{
 								File.Copy(assemblyCopyName, assemblyFileName, true);
-								File.Delete(assemblyCopyName);
 								LogMessage($"Replaced public key in {assemblyFileName}.");
 							}
 						}

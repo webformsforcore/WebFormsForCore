@@ -28,6 +28,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.WebFormsCoreTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CassiniDev.Console4", "src\CassiniDev\source code\CassiniDev\CassiniDev.Console4.csproj", "{539F0304-F14A-413F-A56A-AFB7724EA1A7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Build", "src\WebFormsCore.Build\WebFormsCore.Build.csproj", "{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D256F77-E935-45F1-93EA-EE01BEC2B8BA}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -146,6 +153,18 @@ Global
 		{539F0304-F14A-413F-A56A-AFB7724EA1A7}.Release|x64.Build.0 = Release|x64
 		{539F0304-F14A-413F-A56A-AFB7724EA1A7}.Release|x86.ActiveCfg = Release|x86
 		{539F0304-F14A-413F-A56A-AFB7724EA1A7}.Release|x86.Build.0 = Release|x86
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Debug|x64.Build.0 = Debug|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Debug|x86.Build.0 = Debug|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Release|x64.ActiveCfg = Release|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Release|x64.Build.0 = Release|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Release|x86.ActiveCfg = Release|Any CPU
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

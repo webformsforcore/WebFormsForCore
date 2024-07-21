@@ -105,12 +105,21 @@ namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
 
             if (!String.IsNullOrWhiteSpace(fileExt))
             {
+                string dllPath;
                 // If we have a file extension, try to infer the compiler to use
                 // TODO: Should we also check compilerFullPath to assert it is a Directory and not a file?
                 if (fileExt.Equals(".cs", StringComparison.InvariantCultureIgnoreCase) || fileExt.Equals("cs", StringComparison.InvariantCultureIgnoreCase))
-                    compilerFullPath = Path.Combine(compilerFullPath, "csc.exe");
+                {
+                    dllPath = Path.Combine(compilerFullPath, "csc.dll");
+                    if (File.Exists(dllPath)) compilerFullPath = dllPath;
+                    else compilerFullPath = Path.Combine(compilerFullPath, "csc.exe");
+                }
                 else if (fileExt.Equals(".vb", StringComparison.InvariantCultureIgnoreCase) || fileExt.Equals("vb", StringComparison.InvariantCultureIgnoreCase))
-                    compilerFullPath = Path.Combine(compilerFullPath, "vbc.exe");
+                {
+					dllPath = Path.Combine(compilerFullPath, "vbc.dll");
+					if (File.Exists(dllPath)) compilerFullPath = dllPath;
+					else compilerFullPath = Path.Combine(compilerFullPath, "vbc.exe");
+                }
             }
 
 
@@ -206,11 +215,11 @@ namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
 
         internal static string CompilerDefaultPath()
         {
-            string webPath = @"bin\roslyn";
-            string appPath = @"roslyn";
+            string webPath = @"bin\Roslyn";
+            string appPath = @"Roslyn";
 
             // Check bin folder first
-            string compilerFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, webPath);
+            string compilerFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, webPath.Replace('\\', Path.DirectorySeparatorChar));
 
             // Then appdomain base
             if (!Directory.Exists(compilerFullPath))

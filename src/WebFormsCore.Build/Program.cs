@@ -11,7 +11,7 @@ namespace EstrellasDeEsperanza.WebFormsCore.Build
 	{
 		public static void Main(string[] args)
 		{
-			var task = new FakeStrongName();
+			var task = new FakeStrongNameTask();
 			task.LogToConsole = true;
 			task.Assemblies = args[0].Split(';')
 				.Select(file => new TaskItem(file))

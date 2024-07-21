@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>12</LangVersion>
@@ -10,7 +10,10 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyVersion>8.0.0.0</AssemblyVersion>
         <OutputType>Exe</OutputType>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <StartupObject>EstrellasDeEsperanza.WebFormsCore.Build.Program</StartupObject>
+        <OutputPath>..\..\lib\WebFormsCore.Build</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,6 +24,8 @@
         <None Remove="EstrellasDeEsperanza.WebFormsCore.Build.deps.json" />
         <None Remove="EstrellasDeEsperanza.WebFormsCore.Build.runtimeconfig.json" />
         <None Remove="EstrellasDeEsperanza.WebFormsCore.Build.targets" />
+        <None Remove="netstandard.dll" />
+        <None Remove="System.Runtime.dll" />
     </ItemGroup>
 
     <ItemGroup>
