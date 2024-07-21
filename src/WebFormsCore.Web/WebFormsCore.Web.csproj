@@ -55,15 +55,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) != 'net48'">
-        <Content Include="Roslyn\*.*">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Reference Include="Roslyn\vbc.dll" />
-        <Reference Include="Roslyn\csc.dll" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$(TargetFramework) == 'net48'">
-        <None Include="Roslyn\*.*" />
+        <Reference Include="$(OutputPath)\csc.dll" Visible="false" />
+        <Reference Include="$(OutputPath)\vbc.dll" Visible="false" />
     </ItemGroup>
 
     <ItemGroup>
@@ -131,14 +124,14 @@
 
     <Target Name="CopyCompilers" BeforeTargets="ResolveReferences" Condition="$(TargetFramework) != 'net48'">
         <ItemGroup>
-            <CompilerItems Include="$(PkgMicrosoft_Net_Compilers_Toolset)\tasks\netcore\bincore\*.*" />
+            <CompilerItems Include="$(PkgMicrosoft_Net_Compilers_Toolset)\tasks\netcore\bincore\**\*.*" />
         </ItemGroup>
 
         <Message Text="Copy Compilers..." Importance="high" />
 
-        <MakeDir Directories="roslyn" ContinueOnError="true" />
-
-        <Copy SourceFiles="@(CompilerItems)" DestinationFolder="roslyn" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(CompilerItems)" DestinationFiles="@(CompilerItems->'$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true" />        
+    
     </Target>
 
 </Project>

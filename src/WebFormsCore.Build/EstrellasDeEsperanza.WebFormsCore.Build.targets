@@ -191,25 +191,25 @@ namespace EstrellasDeEsperanza.WebFormsCore.Build
 
 						if (File.Exists(assemblyFileName))
 						{
+
 							bool success = false;
-			
-							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName))
+
+							bool withSymbols = File.Exists(Path.ChangeExtension(assemblyFileName, ".pdb"));
+
+							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName, new ReaderParameters() { ReadSymbols = withSymbols }))
 							{
 								assembly.Name.PublicKey = publicKey;
 								assembly.Name.PublicKeyToken = publicKeyToken;
 
-								assembly.Write(assemblyCopyName);
+								//File.Delete(assemblyFileName);
+								assembly.Write(assemblyCopyName, new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols });
 								success = true;
 							}
 
 							if (success)
 							{
 								File.Copy(assemblyCopyName, assemblyFileName, true);
-								if (File.GetLastWriteTimeUtc(assemblyFileName) >= File.GetLastWriteTimeUtc(assemblyCopyName))
-								{
-									LogMessage("Invalid write times.");
-								}
-								LogMessage($"Replaced public key in {assemblyFileName}.");
+								LogMessage($"Replaced public key in {assemblyFileName} with {PublicKeyToken}.");
 							}
 						}
 					}

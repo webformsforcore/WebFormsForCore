@@ -215,11 +215,15 @@ namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler {
 
         internal static string CompilerDefaultPath()
         {
+#if NETFRAMEWORK
             string webPath = @"bin\Roslyn";
-            string appPath = @"Roslyn";
-
+			string appPath = @"Roslyn";
+#else
+            string webPath = @"Roslyn";
+            string appPath = @"";
+#endif
             // Check bin folder first
-            string compilerFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, webPath.Replace('\\', Path.DirectorySeparatorChar));
+            string compilerFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, webPath);
 
             // Then appdomain base
             if (!Directory.Exists(compilerFullPath))

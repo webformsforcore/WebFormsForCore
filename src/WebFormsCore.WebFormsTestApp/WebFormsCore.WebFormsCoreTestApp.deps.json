@@ -27,8 +27,8 @@
             "System.Web.dll": {
                 "assemblyVersion": "8.0.0.0"
             },
-            "System.Configuration.dll": {
-                "assemblyVersion": "8.0.0.0"
+            "System.Configuration.ConfigurationManager.dll": {
+                "assemblyVersion": "8.5.0.0"
             },
 
             "System.Web.RegularExpressions.dll": {
@@ -40,8 +40,9 @@
             "System.Web.Services.dll": {
                 "assemblyVersion": "8.0.0.0"
             },
-            "Roslyn/csc.dll": {},
-            "Roslyn/vbc.dll": {}
+            "Csc.dll": {},
+            "Vbc.dll": {},
+            "VBCSCompiler.dll": {}
         }
       },
       "Azure.Core/1.35.0": {

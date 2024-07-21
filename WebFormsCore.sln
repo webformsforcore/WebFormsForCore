@@ -11,14 +11,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Signing Key", "Signing Key"
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Web", "src\WebFormsCore.Web\WebFormsCore.Web.csproj", "{0FC2CE4E-3B61-463B-8889-34E308754FA7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Configuration", "src\WebFormsCore.Configuration\WebFormsCore.Configuration.csproj", "{7ADDE066-67CC-464F-A10B-FE1C807CE303}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Web.ApplicationServices", "src\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj", "{A6AC20BB-87ED-4AE1-BE83-20A4116620D4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Web.RegularExpressions", "src\WebFormsCore.Web.RegularExpressions\WebFormsCore.Web.RegularExpressions.csproj", "{81A9D4C1-0682-4DBD-8621-C7651EA96B81}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Web.Services", "src\WebFormsCore.Web.Services\WebFormsCore.Web.Services.csproj", "{67A6ABF6-1756-42AB-B343-D8F38EFE433D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Serialization.Formatters", "src\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj", "{39F3145C-2672-46DA-BEB9-CCC97D10E2C7}"
 EndProject

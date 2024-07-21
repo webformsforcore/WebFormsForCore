@@ -94,7 +94,7 @@ internal class CSharpCompiler : Compiler
 		// we will continue to do so in ASP.Net mode. If these are getting in the way for people
 		// though, disable ASP.Net mode and they will go away. (Sort of. These are the defaults
 		// in the XDT config transform, so they will already be here anyway for most folks.)
-		if (_providerOptions.UseAspNetSettings)
+		if (_providerOptions.UseAspNetSettings && !options.CompilerOptions.Contains("/nowarn:"))
 		{
 			List<string> noWarnStrings = new List<string>(5);
 			noWarnStrings.AddRange(new string[] { "1659", "1699", "1701" });

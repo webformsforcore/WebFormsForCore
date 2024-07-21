@@ -160,20 +160,22 @@ namespace EstrellasDeEsperanza.WebFormsCore.Build
 
 							bool success = false;
 
-							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName))
+							bool withSymbols = File.Exists(Path.ChangeExtension(assemblyFileName, ".pdb"));
+
+							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName, new ReaderParameters() { ReadSymbols = withSymbols }))
 							{
 								assembly.Name.PublicKey = publicKey;
 								assembly.Name.PublicKeyToken = publicKeyToken;
 
 								//File.Delete(assemblyFileName);
-								assembly.Write(assemblyCopyName);
+								assembly.Write(assemblyCopyName, new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols });
 								success = true;
 							}
 
 							if (success)
 							{
 								File.Copy(assemblyCopyName, assemblyFileName, true);
-								LogMessage($"Replaced public key in {assemblyFileName}.");
+								LogMessage($"Replaced public key in {assemblyFileName} with {PublicKeyToken}.");
 							}
 						}
 					}

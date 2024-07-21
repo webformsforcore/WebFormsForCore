@@ -493,6 +493,41 @@ namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler
 
 		public string MapPath(string path) => System.Web.Hosting.HostingEnvironment.MapPath(path);
 
+		private void CompileCSharp(string arguments)
+		{
+#if NETCOREAPP
+			var args = ParseArguments(arguments);
+			Microsoft.CodeAnalysis.CSharp.CommandLine.Program.Main(args);
+#endif
+		}
+
+		private void CompileVB(string arguments)
+		{
+#if NETCOREAPP
+			var args = ParseArguments(arguments);
+			Microsoft.CodeAnalysis.VisualBasic.CommandLine.Program.Main(args);
+#endif
+		}
+
+		private string Find(string command)
+		{
+			if (command.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+				command = command.Substring(0, command.Length - 4);
+			var commandWithExe = command + ".exe";
+		
+			var paths = new[] { "", Environment.CurrentDirectory,
+				Environment.GetFolderPath(Environment.SpecialFolder.System),
+				Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) }
+				.Concat(Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine)
+					.Split(Path.PathSeparator))
+				.Concat(Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User)
+					.Split(Path.PathSeparator));
+			return paths
+				.SelectMany(path => new[] {
+					Path.Combine(path, command),
+					Path.Combine(path, commandWithExe) })
+				.FirstOrDefault(path => File.Exists(path));
+		}
 		private void Compile(CompilerParameters options, string compilerFullPath, string arguments,
 							  ref string outputFile, ref int nativeReturnValue)
 		{
@@ -515,22 +550,23 @@ namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler
 
 			string[] args;
 			string cmdLine = null;
-#if NETCOREAPP
-			if (compilerFullPath == MapPath("~/bin/Roslyn/csc.dll"))
+
+/*#if NETCOREAPP
+			var appBinPath = AppDomain.CurrentDomain.BaseDirectory;
+			if (compilerFullPath == Path.Combine(appBinPath, "csc.dll"))
 			{
-				args = ParseArguments(arguments);
-				Microsoft.CodeAnalysis.CSharp.CommandLine.Program.Main(args);
+				CompileCSharp(arguments);
 			}
-			else if (compilerFullPath == MapPath("~/bin/Roslyn/vbc.dll"))
+			else if (compilerFullPath == Path.Combine(appBinPath, "vbc.dll"))
 			{
-				args = ParseArguments(arguments);
-				Microsoft.CodeAnalysis.VisualBasic.CommandLine.Program.Main(args);
+				CompileVB(arguments);
 			}
 			else
-#endif
+#endif */
 			if (compilerFullPath.EndsWith(".dll"))
 			{
-				cmdLine = "dotnet.exe \"" + compilerFullPath + "\" " + arguments;
+				var dotnetExe = Find("dotnet");
+				cmdLine = $"\"{dotnetExe}\" \"{compilerFullPath}\" {arguments}";
 				nativeReturnValue = Executor.ExecWaitWithCapture(
 					options.UserToken,
 					cmdLine,
@@ -538,7 +574,6 @@ namespace EstrellasDeEsperanza.WebFormsCore.CodeDom.Compiler
 					options.TempFiles,
 					ref outputFile,
 					ref errorFile);
-
 			}
 			else
 			{
