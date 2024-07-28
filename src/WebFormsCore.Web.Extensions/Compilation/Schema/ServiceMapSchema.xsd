@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ServiceMapSchema" targetNamespace="urn:schemas-microsoft-com:xml-wcfservicemap" elementFormDefault="qualified" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap" xmlns:mstns="urn:schemas-microsoft-com:xml-wcfservicemap" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      The schema of Service Reference Map files
+      Copyright (c) Microsoft Corp. All rights reserved.
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="ReferenceGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ClientOptions" maxOccurs="1" minOccurs="0" type="ClientOptions" />
+        <xs:element name="MetadataSources" maxOccurs="1" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MetadataSource" maxOccurs="unbounded" minOccurs="0" type="MetadataSource">
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Metadata" maxOccurs="1" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MetadataFile" minOccurs="0" maxOccurs="unbounded" type="MetadataFile" />
+            </xs:sequence>
+          </xs:complexType>
+          <xs:key name="MetadataFileNameKey">
+            <xs:selector xpath=".//mstns:MetadataFile" />
+            <xs:field xpath="@FileName" />
+          </xs:key>
+          <xs:key name="MetadataIDKey">
+            <xs:selector xpath=".//mstns:MetadataFile" />
+            <xs:field xpath="@ID" />
+          </xs:key>
+        </xs:element>
+        <xs:element name="Extensions" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ExtensionFile" minOccurs="0" maxOccurs="unbounded" type="ExtensionFile" />
+            </xs:sequence>
+          </xs:complexType>
+          <xs:key name="ReferenceGroupExtensionNameKey">
+            <xs:selector xpath=".//mstns:ExtensionFile" />
+            <xs:field xpath="@Name" />
+          </xs:key>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="ID" type="guid" use="required" />
+    </xs:complexType>
+    <xs:key name="ReferenceGroupSourceIdKey">
+      <xs:selector xpath=".//mstns:MetadataSource" />
+      <xs:field xpath="@SourceId" />
+    </xs:key>
+    <xs:keyref name="MetadataFileSourceIdRef" refer="ReferenceGroupSourceIdKey">
+      <xs:selector xpath=".//mstns:MetadataFile" />
+      <xs:field xpath="@SourceId" />
+    </xs:keyref>
+  </xs:element>
+
+  <xs:simpleType name="MetadataType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Wsdl" />
+      <xs:enumeration value="Schema" />
+      <xs:enumeration value="Disco" />
+      <xs:enumeration value="Xml" />
+      <xs:enumeration value="Policy" />
+      <xs:enumeration value="Unknown" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ProtocolType">
+    <xs:restriction base="nonEmptyString">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ProxySerializerType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Auto" />
+      <xs:enumeration value="DataContractSerializer" />
+      <xs:enumeration value="XmlSerializer" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CollectionCategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="List" />
+      <xs:enumeration value="Dictionary" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="guid">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TypeName">
+    <xs:restriction base="nonEmptyString">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AssemblyName">
+    <xs:restriction base="nonEmptyString">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FileName">
+    <xs:restriction base="nonEmptyString">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="MetadataSource">
+    <xs:sequence />
+    <xs:attribute name="SourceId" type="xs:positiveInteger" use="required" />
+    <xs:attribute name="Address" type="nonEmptyString" use="required" />
+    <xs:attribute name="Protocol" type="ProtocolType" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="MetadataFile">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="MetadataType" type="MetadataType" use="required" />
+    <xs:attribute name="FileName" type="FileName" use="required" />
+    <xs:attribute name="SourceUrl" type="xs:string" />
+    <xs:attribute name="ID" type="guid" use="required" />
+    <xs:attribute name="SourceId" use="optional" type="xs:positiveInteger">
+    </xs:attribute>
+    <xs:attribute name="Ignore" type="xs:boolean" default="false" use="optional" />
+    <xs:attribute name="IsMergeResult" type="xs:boolean" use="optional" default="false" />
+  </xs:complexType>
+
+  <xs:complexType name="ExtensionFile">
+    <xs:sequence />
+    <xs:attribute name="Name" type="nonEmptyString" use="required" />
+    <xs:attribute name="FileName" type="FileName" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="ReferencedDataContractType">
+    <xs:sequence />
+    <xs:attribute name="TypeName" type="TypeName" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="ServiceContractMapping">
+    <xs:sequence />
+    <xs:attribute name="TargetNamespace" type="xs:anyURI" use="required" />
+    <xs:attribute name="Name" type="nonEmptyString" use="required" />
+    <xs:attribute name="TypeName" type="TypeName" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="NamespaceMapping">
+    <xs:sequence />
+    <xs:attribute name="TargetNamespace" type="xs:anyURI" use="required" />
+    <xs:attribute name="ClrNamespace" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="ReferencedAssembly">
+    <xs:sequence />
+    <xs:attribute name="AssemblyName" type="AssemblyName" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="ExcludedType">
+    <xs:sequence />
+    <xs:attribute name="TypeName" type="TypeName" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="CollectionMapping">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="TypeName" type="TypeName" use="required" />
+    <xs:attribute name="Category" type="CollectionCategory" />
+  </xs:complexType>
+
+  <xs:complexType name="ClientOptions">
+    <xs:all>
+      <xs:element name="NamespaceMappings" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="NamespaceMapping" maxOccurs="unbounded" minOccurs="0" type="NamespaceMapping">
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServiceContractMappings" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServiceContractMapping" maxOccurs="unbounded" minOccurs="0" type="ServiceContractMapping" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ReferencedDataContractTypes" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ReferencedDataContractType" minOccurs="0" maxOccurs="unbounded" type="ReferencedDataContractType" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ReferencedAssemblies" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ReferencedAssembly" maxOccurs="unbounded" minOccurs="0" type="ReferencedAssembly">
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ExcludedTypes" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ExcludedType" minOccurs="0" maxOccurs="unbounded" type="ExcludedType">
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CollectionMappings" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CollectionMapping" maxOccurs="unbounded" minOccurs="0" type="CollectionMapping">
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GenerateInternalTypes" type="xs:boolean" minOccurs="0" />
+      <xs:element name="GenerateAsynchronousMethods" type="xs:boolean" minOccurs="0" />
+      <xs:element name="GenerateTaskBasedAsynchronousMethod" type="xs:boolean" minOccurs="0" />
+      <xs:element name="GenerateSerializableTypes" type="xs:boolean" minOccurs="0" />
+      <xs:element name="GenerateMessageContracts" type="xs:boolean" minOccurs="0" />
+      <xs:element name="ImportXmlTypes" type="xs:boolean" minOccurs="0" />
+      <xs:element name="EnableDataBinding" type="xs:boolean" minOccurs="0" />
+      <xs:element name="Serializer" type="ProxySerializerType" minOccurs="0" />
+      <xs:element name="UseSerializerForFaults" type="xs:boolean" minOccurs="0" />
+      <xs:element name="Wrapped" type="xs:boolean" minOccurs="0" />
+      <xs:element name="ReferenceAllAssemblies" type="xs:boolean" minOccurs="0" />
+    </xs:all>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DataServiceMapSchema" targetNamespace="urn:schemas-microsoft-com:xml-dataservicemap" elementFormDefault="qualified" xmlns="urn:schemas-microsoft-com:xml-dataservicemap" xmlns:mstns="urn:schemas-microsoft-com:xml-dataservicemap" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+        The schema of Data Service Reference Map files
+        Copyright (c) Microsoft Corp. All rights reserved.
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="ReferenceGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MetadataSources" maxOccurs="1" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MetadataSource" maxOccurs="unbounded" minOccurs="0" type="MetadataSource">
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Metadata" maxOccurs="1" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MetadataFile" minOccurs="0" maxOccurs="unbounded" type="MetadataFile" />
+            </xs:sequence>
+          </xs:complexType>
+          <xs:key name="MetadataFileNameKey">
+            <xs:selector xpath=".//mstns:MetadataFile" />
+            <xs:field xpath="@FileName" />
+          </xs:key>
+          <xs:key name="MetadataIDKey">
+            <xs:selector xpath=".//mstns:MetadataFile" />
+            <xs:field xpath="@ID" />
+          </xs:key>
+        </xs:element>
+        <xs:element name="Extensions" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ExtensionFile" minOccurs="0" maxOccurs="unbounded" type="ExtensionFile" />
+            </xs:sequence>
+          </xs:complexType>
+          <xs:key name="ReferenceGroupExtensionNameKey">
+            <xs:selector xpath=".//mstns:ExtensionFile" />
+            <xs:field xpath="@Name" />
+          </xs:key>
+        </xs:element>
+        <xs:element name="Parameters" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Parameter" minOccurs="0" maxOccurs="unbounded" type="Parameter" />
+            </xs:sequence>
+          </xs:complexType>
+          <xs:key name="ReferenceGroupParameterNameKey">
+            <xs:selector xpath=".//mstns:Parameter" />
+            <xs:field xpath="@Name" />
+          </xs:key>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="ID" type="guid" use="required" />
+    </xs:complexType>
+    <xs:key name="ReferenceGroupSourceIdKey">
+      <xs:selector xpath=".//mstns:MetadataSource" />
+      <xs:field xpath="@SourceId" />
+    </xs:key>
+    <xs:keyref name="MetadataFileSourceIdRef" refer="ReferenceGroupSourceIdKey">
+      <xs:selector xpath=".//mstns:MetadataFile" />
+      <xs:field xpath="@SourceId" />
+    </xs:keyref>
+  </xs:element>
+
+  <xs:simpleType name="MetadataType">
+    <xs:restriction base="nonEmptyString">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ProtocolType">
+    <xs:restriction base="nonEmptyString">
+        <!--
+      <xs:enumeration value="http" />
+      <xs:enumeration value="mex" />
+      <xs:enumeration value="file" />
+         -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="guid">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FileName">
+    <xs:restriction base="nonEmptyString">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="MetadataSource">
+    <xs:sequence />
+    <xs:attribute name="SourceId" type="xs:positiveInteger" use="required" />
+    <xs:attribute name="Address" type="nonEmptyString" use="required" />
+    <xs:attribute name="Protocol" type="ProtocolType" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="MetadataFile">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="MetadataType" type="MetadataType" use="required" />
+    <xs:attribute name="FileName" type="FileName" use="required" />
+	<!--
+    <xs:attribute name="TargetNamespace" type="xs:anyURI" />
+	-->
+    <xs:attribute name="SourceUrl" type="xs:string" />
+    <xs:attribute name="ID" type="guid" use="required" />
+    <xs:attribute name="SourceId" use="optional" type="xs:positiveInteger">
+    </xs:attribute>
+    <xs:attribute name="Ignore" type="xs:boolean" default="false" use="optional" />
+    <xs:attribute name="IsMergeResult" type="xs:boolean" use="optional" default="false" />
+  </xs:complexType>
+
+  <xs:complexType name="ExtensionFile">
+    <xs:sequence />
+    <xs:attribute name="Name" type="nonEmptyString" use="required" />
+    <xs:attribute name="FileName" type="FileName" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="Parameter">
+    <xs:sequence />
+    <xs:attribute name="Name" type="nonEmptyString" use="required" />
+    <xs:attribute name="Value" type="xs:string" use="required" />
+  </xs:complexType>
+</xs:schema>

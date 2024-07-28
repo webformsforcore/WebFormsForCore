@@ -6,1650 +6,1768 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "WebFormsCore.WebFormsCoreTestApp/1.0.0": {
-        "dependencies": {
-          "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters": "1.0.0",
-          "Microsoft.Net.Compilers.Toolset": "4.3.1",
-          "System.Configuration.ConfigurationManager": "1.0.0",
-          "System.Web": "1.0.0",
-          "System.Web.ApplicationServices": "1.0.0",
-          "System.Web.RegularExpressions": "1.0.0",
-          "System.Web.Services": "1.0.0",
-          "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Reference": "8.0.0.0",
-          "System.Configuration.ConfigurationManager.Reference": "8.5.0.0",
-          "System.Web.ApplicationServices.Reference": "8.0.0.0",
-          "System.Web.Reference": "8.0.0.0",
-          "System.Web.RegularExpressions.Reference": "8.0.0.0",
-          "System.Web.Services.Reference": "8.0.0.0"
-        },
-        "runtime": {
-            "WebFormsCore.WebFormsCoreTestApp.dll": {},
-            "System.Web.dll": {
-                "assemblyVersion": "8.0.0.0"
+        "WebFormsCore.WebFormsCoreTestApp/1.0.0": {
+            "dependencies": {
+                "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters": "1.0.0",
+                "Microsoft.Net.Compilers.Toolset": "4.3.1",
+                "System.Configuration": "1.0.0",
+                "System.Configuration.ConfigurationManager": "1.0.0",
+                "System.Web": "1.0.0",
+                "System.Web.ApplicationServices": "1.0.0",
+                "System.Web.RegularExpressions": "1.0.0",
+                "System.Web.Services": "1.0.0",
+                "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Reference": "8.0.0.0",
+                "System.Configuration.ConfigurationManager.Reference": "8.5.0.0",
+                "System.Web.ApplicationServices.Reference": "8.0.0.0",
+                "System.Web.Reference": "8.0.0.0",
+                "System.Web.RegularExpressions.Reference": "8.0.0.0",
+                "System.Web.Services.Reference": "8.0.0.0"
             },
-            "System.Configuration.ConfigurationManager.dll": {
-                "assemblyVersion": "8.5.0.0"
+            "runtime": {
+                "WebFormsCore.WebFormsCoreTestApp.dll": {},
+                "System.Web.dll": {
+                    "assemblyVersion": "8.0.0.0"
+                },
+                "System.Configuration.ConfigurationManager.dll": {
+                    "assemblyVersion": "8.5.0.0"
+                },
+                "System.Configuration.dll": {},
+                "System.Web.RegularExpressions.dll": {
+                    "assemblyVersion": "8.0.0.0"
+                },
+                "System.Web.ApplicationsServices.dll": {
+                    "assemblyVersion": "8.0.0.0"
+                },
+                "System.Web.Services.dll": {
+                    "assemblyVersion": "8.0.0.0"
+                },
+                "Csc.dll": {},
+                "Vbc.dll": {},
+                "VBCSCompiler.dll": {},
+                "CoreWCF.Http.dll": {},
+                "CoreWCF.Primitives.dll": {},
+                "Microsoft.IdentityModel.Protocols.WsFederation.dll": {},
+                "Microsoft.IdentityModel.Xml.dll": {},
+                "Microsoft.IdentityModel.Tokens.Saml.dll": {},
+                "System.ClientModel.dll": {},
+                "System.Net.WebSockets.WebSocketProtocol.dll": {},
+                "System.ServiceModel.Primitives.dll": {},
+                "System.Web.Extensions.dll": {},
+                "System.Web.Services.Description.dll": {}
+            }
+        },
+        "Azure.Core/1.35.0": {
+            "dependencies": {
+                "Microsoft.Bcl.AsyncInterfaces": "8.0.0",
+                "System.Diagnostics.DiagnosticSource": "6.0.1",
+                "System.Memory.Data": "1.0.2",
+                "System.Numerics.Vectors": "4.5.0",
+                "System.Text.Encodings.Web": "4.7.2",
+                "System.Text.Json": "4.7.2",
+                "System.Threading.Tasks.Extensions": "4.5.4"
             },
-
-            "System.Web.RegularExpressions.dll": {
-                "assemblyVersion": "8.0.0.0"
+            "runtime": {
+                "lib/net6.0/Azure.Core.dll": {
+                    "assemblyVersion": "1.35.0.0",
+                    "fileVersion": "1.3500.23.45706"
+                }
+            }
+        },
+        "Azure.Identity/1.10.3": {
+            "dependencies": {
+                "Azure.Core": "1.35.0",
+                "Microsoft.Identity.Client": "4.56.0",
+                "Microsoft.Identity.Client.Extensions.Msal": "4.56.0",
+                "System.Memory": "4.5.5",
+                "System.Security.Cryptography.ProtectedData": "8.0.0",
+                "System.Text.Json": "4.7.2",
+                "System.Threading.Tasks.Extensions": "4.5.4"
             },
-            "System.Web.ApplicationsServices.dll": {
-                "assemblyVersion": "8.0.0.0"
+            "runtime": {
+                "lib/netstandard2.0/Azure.Identity.dll": {
+                    "assemblyVersion": "1.10.3.0",
+                    "fileVersion": "1.1000.323.51804"
+                }
+            }
+        },
+        "Humanizer.Core/2.14.1": {
+            "runtime": {
+                "lib/net6.0/Humanizer.dll": {
+                    "assemblyVersion": "2.14.0.0",
+                    "fileVersion": "2.14.1.48190"
+                }
+            }
+        },
+        "CoreWCF.Http/1.5.2": {
+            "dependencies": {
+                "CoreWCF.Primitives": "1.5.2",
+                "Microsoft.AspNetCore.Authentication": "2.1.2",
+                "Microsoft.AspNetCore.Authorization": "2.1.2",
+                "Microsoft.AspNetCore.WebSockets": "2.1.7",
+                "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.1",
+                "Microsoft.Extensions.Logging.Abstractions": "2.1.1"
             },
-            "System.Web.Services.dll": {
-                "assemblyVersion": "8.0.0.0"
+            "runtime": {
+                "lib/netstandard2.0/CoreWCF.Http.dll": {
+                    "assemblyVersion": "1.5.0.0",
+                    "fileVersion": "1.5.2.1"
+                }
+            }
+        },
+        "CoreWCF.Primitives/1.5.2": {
+            "dependencies": {
+                "Microsoft.AspNetCore.Authentication": "2.1.2",
+                "Microsoft.AspNetCore.Authorization": "2.1.2",
+                "Microsoft.AspNetCore.DataProtection": "2.1.1",
+                "Microsoft.AspNetCore.DataProtection.Abstractions": "2.1.1",
+                "Microsoft.AspNetCore.Hosting.Abstractions": "2.1.1",
+                "Microsoft.AspNetCore.Hosting.Server.Abstractions": "2.1.1",
+                "Microsoft.AspNetCore.Http": "2.1.34",
+                "Microsoft.AspNetCore.Http.Abstractions": "2.1.1",
+                "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+                "Microsoft.Extensions.Caching.Memory": "2.1.23",
+                "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.1",
+                "Microsoft.Extensions.Logging.Abstractions": "2.1.1",
+                "Microsoft.Extensions.ObjectPool": "6.0.16",
+                "Microsoft.IdentityModel.Protocols.WsFederation": "6.23.1",
+                "Microsoft.IdentityModel.Tokens": "6.35.0",
+                "Microsoft.IdentityModel.Tokens.Saml": "6.23.1",
+                "System.DirectoryServices": "8.0.0",
+                "System.DirectoryServices.Protocols": "8.0.0",
+                "System.Reflection.DispatchProxy": "4.7.1",
+                "System.Security.Cryptography.ProtectedData": "8.0.0",
+                "System.Security.Cryptography.Xml": "6.0.1",
+                "System.Security.Principal.Windows": "5.0.0",
+                "System.Threading.Tasks.Extensions": "4.5.4",
+                "System.Web.Services.Description": "4.10.3"
             },
-            "Csc.dll": {},
-            "Vbc.dll": {},
-            "VBCSCompiler.dll": {}
-        }
-      },
-      "Azure.Core/1.35.0": {
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "8.0.0",
-          "System.Diagnostics.DiagnosticSource": "6.0.1",
-          "System.Memory.Data": "1.0.2",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Text.Encodings.Web": "4.7.2",
-          "System.Text.Json": "4.7.2",
-          "System.Threading.Tasks.Extensions": "4.5.4"
+            "runtime": {
+                "lib/netstandard2.0/CoreWCF.Primitives.dll": {
+                    "assemblyVersion": "1.5.0.0",
+                    "fileVersion": "1.5.2.1"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Azure.Core.dll": {
-            "assemblyVersion": "1.35.0.0",
-            "fileVersion": "1.3500.23.45706"
-          }
-        }
-      },
-      "Azure.Identity/1.10.3": {
-        "dependencies": {
-          "Azure.Core": "1.35.0",
-          "Microsoft.Identity.Client": "4.56.0",
-          "Microsoft.Identity.Client.Extensions.Msal": "4.56.0",
-          "System.Memory": "4.5.5",
-          "System.Security.Cryptography.ProtectedData": "8.0.0",
-          "System.Text.Json": "4.7.2",
-          "System.Threading.Tasks.Extensions": "4.5.4"
+        "Microsoft.IdentityModel.Protocols.WsFederation/6.23.1": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Protocols": "6.35.0",
+                "Microsoft.IdentityModel.Tokens.Saml": "6.23.1",
+                "Microsoft.IdentityModel.Xml": "6.23.1",
+                "System.Xml.XmlDocument": "4.3.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Protocols.WsFederation.dll": {
+                    "assemblyVersion": "6.23.1.0",
+                    "fileVersion": "6.23.1.30908"
+                }
+            }
         },
-        "runtime": {
-          "lib/netstandard2.0/Azure.Identity.dll": {
-            "assemblyVersion": "1.10.3.0",
-            "fileVersion": "1.1000.323.51804"
-          }
-        }
-      },
-      "Humanizer.Core/2.14.1": {
-        "runtime": {
-          "lib/net6.0/Humanizer.dll": {
-            "assemblyVersion": "2.14.0.0",
-            "fileVersion": "2.14.1.48190"
-          }
-        }
-      },
-      "Microsoft.Bcl.AsyncInterfaces/8.0.0": {
-        "runtime": {
-          "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "Microsoft.Build.Framework/15.9.20": {
-        "dependencies": {
-          "System.Runtime.Serialization.Primitives": "4.1.1",
-          "System.Threading.Thread": "4.0.0"
+        "Microsoft.IdentityModel.Tokens.Saml/6.23.1": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Tokens": "6.35.0",
+                "Microsoft.IdentityModel.Xml": "6.23.1"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Tokens.Saml.dll": {
+                    "assemblyVersion": "6.23.1.0",
+                    "fileVersion": "6.23.1.30908"
+                }
+            }
         },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Build.Framework.dll": {
-            "assemblyVersion": "15.1.0.0",
-            "fileVersion": "15.9.20.62856"
-          }
-        }
-      },
-      "Microsoft.Build.Tasks.Core/15.9.20": {
-        "dependencies": {
-          "Microsoft.Build.Framework": "15.9.20",
-          "Microsoft.Build.Utilities.Core": "15.9.20",
-          "Microsoft.Win32.Registry": "4.3.0",
-          "System.CodeDom": "8.0.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Linq.Parallel": "4.0.1",
-          "System.Net.Http": "4.3.0",
-          "System.Reflection.Metadata": "8.0.0",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Resources.Writer": "4.0.0",
-          "System.Threading.Tasks.Dataflow": "4.6.0"
+        "Microsoft.IdentityModel.Xml/6.23.1": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Tokens": "6.35.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Xml.dll": {
+                    "assemblyVersion": "6.23.1.0",
+                    "fileVersion": "6.23.1.30908"
+                }
+            }
         },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Build.Tasks.Core.dll": {
-            "assemblyVersion": "15.1.0.0",
-            "fileVersion": "15.9.20.62856"
-          }
-        }
-      },
-      "Microsoft.Build.Utilities.Core/15.9.20": {
-        "dependencies": {
-          "Microsoft.Build.Framework": "15.9.20",
-          "Microsoft.Win32.Registry": "4.3.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Runtime.InteropServices.RuntimeInformation": "4.3.0",
-          "System.Text.Encoding.CodePages": "7.0.0"
+        "System.ClientModel/1.0.0": {
+            "dependencies": {
+                "System.Memory.Data": "1.0.2",
+                "System.Text.Json": "4.7.2"
+            },
+            "runtime": {
+                "lib/net6.0/System.ClientModel.dll": {
+                    "assemblyVersion": "1.0.0.0",
+                    "fileVersion": "1.0.24.5302"
+                }
+            }
         },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Build.Utilities.Core.dll": {
-            "assemblyVersion": "15.1.0.0",
-            "fileVersion": "15.9.20.62856"
-          }
-        }
-      },
-      "Microsoft.CodeAnalysis/4.10.0": {
-        "dependencies": {
-          "Humanizer.Core": "2.14.1",
-          "Microsoft.Bcl.AsyncInterfaces": "8.0.0",
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.10.0",
-          "Microsoft.CodeAnalysis.VisualBasic.Workspaces": "4.10.0",
-          "System.Buffers": "4.5.1",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Composition": "8.0.0",
-          "System.IO.Pipelines": "8.0.0",
-          "System.Memory": "4.5.5",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Reflection.Metadata": "8.0.0",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encoding.CodePages": "7.0.0",
-          "System.Threading.Channels": "7.0.0",
-          "System.Threading.Tasks.Extensions": "4.5.4"
-        }
-      },
-      "Microsoft.CodeAnalysis.Analyzers/3.3.4": {},
-      "Microsoft.CodeAnalysis.Common/4.10.0": {
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Reflection.Metadata": "8.0.0"
+        "System.Net.WebSockets.WebSocketProtocol/4.5.3": {
+            "runtime": {
+                "lib/netcoreapp2.1/System.Net.WebSockets.WebSocketProtocol.dll": {
+                    "assemblyVersion": "4.0.0.2",
+                    "fileVersion": "4.6.27129.4"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "4.10.0.0",
-            "fileVersion": "4.1000.24.27302"
-          }
+        "Microsoft.Bcl.AsyncInterfaces/8.0.0": {
+            "runtime": {
+                "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "resources": {
-          "lib/net8.0/cs/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net8.0/de/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pl/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/tr/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.CodeAnalysis.CSharp/4.10.0": {
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "Microsoft.CodeAnalysis.Common": "4.10.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Reflection.Metadata": "8.0.0"
+        "Microsoft.Build.Framework/15.9.20": {
+            "dependencies": {
+                "System.Runtime.Serialization.Primitives": "4.1.1",
+                "System.Threading.Thread": "4.0.0"
+            },
+            "runtime": {
+                "lib/netstandard2.0/Microsoft.Build.Framework.dll": {
+                    "assemblyVersion": "15.1.0.0",
+                    "fileVersion": "15.9.20.62856"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.CodeAnalysis.CSharp.dll": {
-            "assemblyVersion": "4.10.0.0",
-            "fileVersion": "4.1000.24.27302"
-          }
+        "Microsoft.Build.Tasks.Core/15.9.20": {
+            "dependencies": {
+                "Microsoft.Build.Framework": "15.9.20",
+                "Microsoft.Build.Utilities.Core": "15.9.20",
+                "Microsoft.Win32.Registry": "4.3.0",
+                "System.CodeDom": "8.0.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Linq.Parallel": "4.0.1",
+                "System.Net.Http": "4.3.0",
+                "System.Reflection.Metadata": "8.0.0",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Resources.Writer": "4.0.0",
+                "System.Threading.Tasks.Dataflow": "4.6.0"
+            },
+            "runtime": {
+                "lib/netstandard2.0/Microsoft.Build.Tasks.Core.dll": {
+                    "assemblyVersion": "15.1.0.0",
+                    "fileVersion": "15.9.20.62856"
+                }
+            }
         },
-        "resources": {
-          "lib/net8.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net8.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.CodeAnalysis.CSharp.Workspaces/4.10.0": {
-        "dependencies": {
-          "Humanizer.Core": "2.14.1",
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "Microsoft.CodeAnalysis.CSharp": "4.10.0",
-          "Microsoft.CodeAnalysis.Common": "4.10.0",
-          "Microsoft.CodeAnalysis.Workspaces.Common": "4.10.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Composition": "8.0.0",
-          "System.IO.Pipelines": "8.0.0",
-          "System.Reflection.Metadata": "8.0.0",
-          "System.Threading.Channels": "7.0.0"
+        "Microsoft.Build.Utilities.Core/15.9.20": {
+            "dependencies": {
+                "Microsoft.Build.Framework": "15.9.20",
+                "Microsoft.Win32.Registry": "4.3.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Runtime.InteropServices.RuntimeInformation": "4.3.0",
+                "System.Text.Encoding.CodePages": "7.0.0"
+            },
+            "runtime": {
+                "lib/netstandard2.0/Microsoft.Build.Utilities.Core.dll": {
+                    "assemblyVersion": "15.1.0.0",
+                    "fileVersion": "15.9.20.62856"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll": {
-            "assemblyVersion": "4.10.0.0",
-            "fileVersion": "4.1000.24.27302"
-          }
+        "Microsoft.CodeAnalysis/4.10.0": {
+            "dependencies": {
+                "Humanizer.Core": "2.14.1",
+                "Microsoft.Bcl.AsyncInterfaces": "8.0.0",
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.10.0",
+                "Microsoft.CodeAnalysis.VisualBasic.Workspaces": "4.10.0",
+                "System.Buffers": "4.5.1",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Composition": "8.0.0",
+                "System.IO.Pipelines": "8.0.0",
+                "System.Memory": "4.5.5",
+                "System.Numerics.Vectors": "4.5.0",
+                "System.Reflection.Metadata": "8.0.0",
+                "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+                "System.Text.Encoding.CodePages": "7.0.0",
+                "System.Threading.Channels": "7.0.0",
+                "System.Threading.Tasks.Extensions": "4.5.4"
+            }
         },
-        "resources": {
-          "lib/net8.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net8.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.CodeAnalysis.VisualBasic/4.10.0": {
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "Microsoft.CodeAnalysis.Common": "4.10.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Reflection.Metadata": "8.0.0"
+        "Microsoft.CodeAnalysis.Analyzers/3.3.4": {},
+        "Microsoft.CodeAnalysis.Common/4.10.0": {
+            "dependencies": {
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Reflection.Metadata": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.CodeAnalysis.dll": {
+                    "assemblyVersion": "4.10.0.0",
+                    "fileVersion": "4.1000.24.27302"
+                }
+            },
+            "resources": {
+                "lib/net8.0/cs/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "cs"
+                },
+                "lib/net8.0/de/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pl/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "pl"
+                },
+                "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/tr/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "tr"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.CodeAnalysis.VisualBasic.dll": {
-            "assemblyVersion": "4.10.0.0",
-            "fileVersion": "4.1000.24.27302"
-          }
+        "Microsoft.CodeAnalysis.CSharp/4.10.0": {
+            "dependencies": {
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "Microsoft.CodeAnalysis.Common": "4.10.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Reflection.Metadata": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.CodeAnalysis.CSharp.dll": {
+                    "assemblyVersion": "4.10.0.0",
+                    "fileVersion": "4.1000.24.27302"
+                }
+            },
+            "resources": {
+                "lib/net8.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "cs"
+                },
+                "lib/net8.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "pl"
+                },
+                "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "tr"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            }
         },
-        "resources": {
-          "lib/net8.0/cs/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net8.0/de/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pl/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/tr/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.CodeAnalysis.VisualBasic.Workspaces/4.10.0": {
-        "dependencies": {
-          "Humanizer.Core": "2.14.1",
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "Microsoft.CodeAnalysis.Common": "4.10.0",
-          "Microsoft.CodeAnalysis.VisualBasic": "4.10.0",
-          "Microsoft.CodeAnalysis.Workspaces.Common": "4.10.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Composition": "8.0.0",
-          "System.IO.Pipelines": "8.0.0",
-          "System.Reflection.Metadata": "8.0.0",
-          "System.Threading.Channels": "7.0.0"
+        "Microsoft.CodeAnalysis.CSharp.Workspaces/4.10.0": {
+            "dependencies": {
+                "Humanizer.Core": "2.14.1",
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "Microsoft.CodeAnalysis.CSharp": "4.10.0",
+                "Microsoft.CodeAnalysis.Common": "4.10.0",
+                "Microsoft.CodeAnalysis.Workspaces.Common": "4.10.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Composition": "8.0.0",
+                "System.IO.Pipelines": "8.0.0",
+                "System.Reflection.Metadata": "8.0.0",
+                "System.Threading.Channels": "7.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll": {
+                    "assemblyVersion": "4.10.0.0",
+                    "fileVersion": "4.1000.24.27302"
+                }
+            },
+            "resources": {
+                "lib/net8.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "cs"
+                },
+                "lib/net8.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "pl"
+                },
+                "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "tr"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll": {
-            "assemblyVersion": "4.10.0.0",
-            "fileVersion": "4.1000.24.27302"
-          }
+        "Microsoft.CodeAnalysis.VisualBasic/4.10.0": {
+            "dependencies": {
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "Microsoft.CodeAnalysis.Common": "4.10.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Reflection.Metadata": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.CodeAnalysis.VisualBasic.dll": {
+                    "assemblyVersion": "4.10.0.0",
+                    "fileVersion": "4.1000.24.27302"
+                }
+            },
+            "resources": {
+                "lib/net8.0/cs/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "cs"
+                },
+                "lib/net8.0/de/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pl/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "pl"
+                },
+                "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/tr/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "tr"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.VisualBasic.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            }
         },
-        "resources": {
-          "lib/net8.0/cs/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net8.0/de/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pl/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/tr/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.CodeAnalysis.Workspaces.Common/4.10.0": {
-        "dependencies": {
-          "Humanizer.Core": "2.14.1",
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
-          "Microsoft.CodeAnalysis.Common": "4.10.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Composition": "8.0.0",
-          "System.IO.Pipelines": "8.0.0",
-          "System.Reflection.Metadata": "8.0.0",
-          "System.Threading.Channels": "7.0.0"
+        "Microsoft.CodeAnalysis.VisualBasic.Workspaces/4.10.0": {
+            "dependencies": {
+                "Humanizer.Core": "2.14.1",
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "Microsoft.CodeAnalysis.Common": "4.10.0",
+                "Microsoft.CodeAnalysis.VisualBasic": "4.10.0",
+                "Microsoft.CodeAnalysis.Workspaces.Common": "4.10.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Composition": "8.0.0",
+                "System.IO.Pipelines": "8.0.0",
+                "System.Reflection.Metadata": "8.0.0",
+                "System.Threading.Channels": "7.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll": {
+                    "assemblyVersion": "4.10.0.0",
+                    "fileVersion": "4.1000.24.27302"
+                }
+            },
+            "resources": {
+                "lib/net8.0/cs/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "cs"
+                },
+                "lib/net8.0/de/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pl/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "pl"
+                },
+                "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/tr/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "tr"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.CodeAnalysis.Workspaces.dll": {
-            "assemblyVersion": "4.10.0.0",
-            "fileVersion": "4.1000.24.27302"
-          }
+        "Microsoft.CodeAnalysis.Workspaces.Common/4.10.0": {
+            "dependencies": {
+                "Humanizer.Core": "2.14.1",
+                "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+                "Microsoft.CodeAnalysis.Common": "4.10.0",
+                "System.Collections.Immutable": "8.0.0",
+                "System.Composition": "8.0.0",
+                "System.IO.Pipelines": "8.0.0",
+                "System.Reflection.Metadata": "8.0.0",
+                "System.Threading.Channels": "7.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.CodeAnalysis.Workspaces.dll": {
+                    "assemblyVersion": "4.10.0.0",
+                    "fileVersion": "4.1000.24.27302"
+                }
+            },
+            "resources": {
+                "lib/net8.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "cs"
+                },
+                "lib/net8.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "pl"
+                },
+                "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "tr"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            }
         },
-        "resources": {
-          "lib/net8.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net8.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net8.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.CSharp/4.5.0": {},
-      "Microsoft.Data.SqlClient/5.2.0": {
-        "dependencies": {
-          "Azure.Identity": "1.10.3",
-          "Microsoft.Data.SqlClient.SNI.runtime": "5.2.0",
-          "Microsoft.Identity.Client": "4.56.0",
-          "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
-          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
-          "Microsoft.SqlServer.Server": "1.0.0",
-          "System.Configuration.ConfigurationManager": "1.0.0",
-          "System.Runtime.Caching": "8.0.0"
+        "Microsoft.CSharp/4.5.0": {},
+        "Microsoft.Data.SqlClient/5.2.0": {
+            "dependencies": {
+                "Azure.Identity": "1.10.3",
+                "Microsoft.Data.SqlClient.SNI.runtime": "5.2.0",
+                "Microsoft.Identity.Client": "4.56.0",
+                "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
+                "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
+                "Microsoft.SqlServer.Server": "1.0.0",
+                "System.Configuration.ConfigurationManager": "1.0.0",
+                "System.Runtime.Caching": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/Microsoft.Data.SqlClient.dll": {
+                    "assemblyVersion": "5.0.0.0",
+                    "fileVersion": "5.20.24059.2"
+                }
+            },
+            "resources": {
+                "lib/net8.0/de/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "de"
+                },
+                "lib/net8.0/es/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "es"
+                },
+                "lib/net8.0/fr/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "fr"
+                },
+                "lib/net8.0/it/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "it"
+                },
+                "lib/net8.0/ja/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "ja"
+                },
+                "lib/net8.0/ko/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "ko"
+                },
+                "lib/net8.0/pt-BR/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "pt-BR"
+                },
+                "lib/net8.0/ru/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "ru"
+                },
+                "lib/net8.0/zh-Hans/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "zh-Hans"
+                },
+                "lib/net8.0/zh-Hant/Microsoft.Data.SqlClient.resources.dll": {
+                    "locale": "zh-Hant"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/unix/lib/net8.0/Microsoft.Data.SqlClient.dll": {
+                    "rid": "unix",
+                    "assetType": "runtime",
+                    "assemblyVersion": "5.0.0.0",
+                    "fileVersion": "5.20.24059.2"
+                },
+                "runtimes/win/lib/net8.0/Microsoft.Data.SqlClient.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "5.0.0.0",
+                    "fileVersion": "5.20.24059.2"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/Microsoft.Data.SqlClient.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.20.24059.2"
-          }
+        "Microsoft.Data.SqlClient.SNI.runtime/5.2.0": {
+            "runtimeTargets": {
+                "runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll": {
+                    "rid": "win-arm",
+                    "assetType": "native",
+                    "fileVersion": "5.2.0.0"
+                },
+                "runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll": {
+                    "rid": "win-arm64",
+                    "assetType": "native",
+                    "fileVersion": "5.2.0.0"
+                },
+                "runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll": {
+                    "rid": "win-x64",
+                    "assetType": "native",
+                    "fileVersion": "5.2.0.0"
+                },
+                "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll": {
+                    "rid": "win-x86",
+                    "assetType": "native",
+                    "fileVersion": "5.2.0.0"
+                }
+            }
         },
-        "resources": {
-          "lib/net8.0/de/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net8.0/es/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net8.0/fr/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net8.0/it/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net8.0/ja/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net8.0/ko/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net8.0/pt-BR/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net8.0/ru/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net8.0/zh-Hans/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net8.0/zh-Hant/Microsoft.Data.SqlClient.resources.dll": {
-            "locale": "zh-Hant"
-          }
+        "Microsoft.Identity.Client/4.56.0": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Abstractions": "6.35.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.Identity.Client.dll": {
+                    "assemblyVersion": "4.56.0.0",
+                    "fileVersion": "4.56.0.0"
+                }
+            }
         },
-        "runtimeTargets": {
-          "runtimes/unix/lib/net8.0/Microsoft.Data.SqlClient.dll": {
-            "rid": "unix",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.20.24059.2"
-          },
-          "runtimes/win/lib/net8.0/Microsoft.Data.SqlClient.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.20.24059.2"
-          }
-        }
-      },
-      "Microsoft.Data.SqlClient.SNI.runtime/5.2.0": {
-        "runtimeTargets": {
-          "runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-arm",
-            "assetType": "native",
-            "fileVersion": "5.2.0.0"
-          },
-          "runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-arm64",
-            "assetType": "native",
-            "fileVersion": "5.2.0.0"
-          },
-          "runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-x64",
-            "assetType": "native",
-            "fileVersion": "5.2.0.0"
-          },
-          "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-x86",
-            "assetType": "native",
-            "fileVersion": "5.2.0.0"
-          }
-        }
-      },
-      "Microsoft.Identity.Client/4.56.0": {
-        "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "6.35.0"
+        "Microsoft.Identity.Client.Extensions.Msal/4.56.0": {
+            "dependencies": {
+                "Microsoft.Identity.Client": "4.56.0",
+                "System.IO.FileSystem.AccessControl": "5.0.0",
+                "System.Security.Cryptography.ProtectedData": "8.0.0"
+            },
+            "runtime": {
+                "lib/netstandard2.0/Microsoft.Identity.Client.Extensions.Msal.dll": {
+                    "assemblyVersion": "4.56.0.0",
+                    "fileVersion": "4.56.0.0"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Microsoft.Identity.Client.dll": {
-            "assemblyVersion": "4.56.0.0",
-            "fileVersion": "4.56.0.0"
-          }
-        }
-      },
-      "Microsoft.Identity.Client.Extensions.Msal/4.56.0": {
-        "dependencies": {
-          "Microsoft.Identity.Client": "4.56.0",
-          "System.IO.FileSystem.AccessControl": "5.0.0",
-          "System.Security.Cryptography.ProtectedData": "8.0.0"
+        "Microsoft.IdentityModel.Abstractions/6.35.0": {
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
         },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Identity.Client.Extensions.Msal.dll": {
-            "assemblyVersion": "4.56.0.0",
-            "fileVersion": "4.56.0.0"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Abstractions/6.35.0": {
-        "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.JsonWebTokens/6.35.0": {
-        "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "6.35.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Text.Encodings.Web": "4.7.2",
-          "System.Text.Json": "4.7.2"
+        "Microsoft.IdentityModel.JsonWebTokens/6.35.0": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Tokens": "6.35.0",
+                "System.Text.Encoding": "4.3.0",
+                "System.Text.Encodings.Web": "4.7.2",
+                "System.Text.Json": "4.7.2"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Logging/6.35.0": {
-        "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "6.35.0"
+        "Microsoft.IdentityModel.Logging/6.35.0": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Abstractions": "6.35.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Protocols/6.35.0": {
-        "dependencies": {
-          "Microsoft.IdentityModel.Logging": "6.35.0",
-          "Microsoft.IdentityModel.Tokens": "6.35.0"
+        "Microsoft.IdentityModel.Protocols/6.35.0": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Logging": "6.35.0",
+                "Microsoft.IdentityModel.Tokens": "6.35.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Protocols.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Protocols.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Protocols.OpenIdConnect/6.35.0": {
-        "dependencies": {
-          "Microsoft.IdentityModel.Protocols": "6.35.0",
-          "System.IdentityModel.Tokens.Jwt": "6.35.0"
+        "Microsoft.IdentityModel.Protocols.OpenIdConnect/6.35.0": {
+            "dependencies": {
+                "Microsoft.IdentityModel.Protocols": "6.35.0",
+                "System.IdentityModel.Tokens.Jwt": "6.35.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Tokens/6.35.0": {
-        "dependencies": {
-          "Microsoft.CSharp": "4.5.0",
-          "Microsoft.IdentityModel.Logging": "6.35.0",
-          "System.Security.Cryptography.Cng": "4.5.0"
+        "Microsoft.IdentityModel.Tokens/6.35.0": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.5.0",
+                "Microsoft.IdentityModel.Logging": "6.35.0",
+                "System.Security.Cryptography.Cng": "4.5.0"
+            },
+            "runtime": {
+                "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "Microsoft.Net.Compilers.Toolset/4.3.1": {},
-      "Microsoft.NETCore.Platforms/5.0.0": {},
-      "Microsoft.NETCore.Targets/1.1.0": {},
-      "Microsoft.SqlServer.Server/1.0.0": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.SqlServer.Server.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
-      "Microsoft.Win32.Registry/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Collections": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0"
-        }
-      },
-      "Microsoft.Win32.SystemEvents/8.0.0": {
-        "runtime": {
-          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "Microsoft.Net.Compilers.Toolset/4.3.1": {},
+        "Microsoft.NETCore.Platforms/5.0.0": {},
+        "Microsoft.NETCore.Targets/1.1.0": {},
+        "Microsoft.SqlServer.Server/1.0.0": {
+            "runtime": {
+                "lib/netstandard2.0/Microsoft.SqlServer.Server.dll": {
+                    "assemblyVersion": "1.0.0.0",
+                    "fileVersion": "1.0.0.0"
+                }
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.native.System/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0"
-        }
-      },
-      "runtime.native.System.Net.Http/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0"
-        }
-      },
-      "runtime.native.System.Security.Cryptography.Apple/4.3.1": {
-        "dependencies": {
-          "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple": "4.3.1"
-        }
-      },
-      "runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
-        "dependencies": {
-          "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
-          "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
-        }
-      },
-      "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple/4.3.1": {},
-      "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
-      "System.Buffers/4.5.1": {},
-      "System.CodeDom/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.CodeDom.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Collections/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Collections.Concurrent/4.3.0": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Diagnostics.Tracing": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.Reflection": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Threading": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.Collections.Immutable/8.0.0": {},
-      "System.Composition/8.0.0": {
-        "dependencies": {
-          "System.Composition.AttributedModel": "8.0.0",
-          "System.Composition.Convention": "8.0.0",
-          "System.Composition.Hosting": "8.0.0",
-          "System.Composition.Runtime": "8.0.0",
-          "System.Composition.TypedParts": "8.0.0"
-        }
-      },
-      "System.Composition.AttributedModel/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.Composition.AttributedModel.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Composition.Convention/8.0.0": {
-        "dependencies": {
-          "System.Composition.AttributedModel": "8.0.0"
+        "Microsoft.Win32.Registry/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Collections": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0"
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Composition.Convention.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Composition.Hosting/8.0.0": {
-        "dependencies": {
-          "System.Composition.Runtime": "8.0.0"
+        "Microsoft.Win32.SystemEvents/8.0.0": {
+            "runtime": {
+                "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Composition.Hosting.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Composition.Runtime/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.Composition.Runtime.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Composition.TypedParts/8.0.0": {
-        "dependencies": {
-          "System.Composition.AttributedModel": "8.0.0",
-          "System.Composition.Hosting": "8.0.0",
-          "System.Composition.Runtime": "8.0.0"
+        "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.native.System/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0"
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Composition.TypedParts.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Data.OleDb/8.0.0": {
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "1.0.0",
-          "System.Diagnostics.PerformanceCounter": "8.0.0"
+        "runtime.native.System.Net.Http/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0"
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Data.OleDb.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "runtime.native.System.Security.Cryptography.Apple/4.3.1": {
+            "dependencies": {
+                "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple": "4.3.1"
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Data.OleDb.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Diagnostics.Debug/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Diagnostics.DiagnosticSource/6.0.1": {
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        }
-      },
-      "System.Diagnostics.PerformanceCounter/8.0.0": {
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "1.0.0"
+        "runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
+            "dependencies": {
+                "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2",
+                "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Diagnostics.PerformanceCounter.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple/4.3.1": {},
+        "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+        "System.Buffers/4.5.1": {},
+        "System.CodeDom/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.CodeDom.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Diagnostics.PerformanceCounter.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Diagnostics.Tracing/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.DirectoryServices/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.DirectoryServices.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "System.Collections/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.DirectoryServices.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.DirectoryServices.AccountManagement/8.0.0": {
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "1.0.0",
-          "System.DirectoryServices": "8.0.0",
-          "System.DirectoryServices.Protocols": "8.0.0"
+        "System.Collections.Concurrent/4.3.0": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Diagnostics.Tracing": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.Reflection": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Threading": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.DirectoryServices.AccountManagement.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "System.Collections.Immutable/8.0.0": {},
+        "System.Composition/8.0.0": {
+            "dependencies": {
+                "System.Composition.AttributedModel": "8.0.0",
+                "System.Composition.Convention": "8.0.0",
+                "System.Composition.Hosting": "8.0.0",
+                "System.Composition.Runtime": "8.0.0",
+                "System.Composition.TypedParts": "8.0.0"
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.DirectoryServices.AccountManagement.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.DirectoryServices.Protocols/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.DirectoryServices.Protocols.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "System.Composition.AttributedModel/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.Composition.AttributedModel.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtimeTargets": {
-          "runtimes/linux/lib/net8.0/System.DirectoryServices.Protocols.dll": {
-            "rid": "linux",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          },
-          "runtimes/osx/lib/net8.0/System.DirectoryServices.Protocols.dll": {
-            "rid": "osx",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          },
-          "runtimes/win/lib/net8.0/System.DirectoryServices.Protocols.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Drawing.Common/8.0.4": {
-        "dependencies": {
-          "Microsoft.Win32.SystemEvents": "8.0.0"
+        "System.Composition.Convention/8.0.0": {
+            "dependencies": {
+                "System.Composition.AttributedModel": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Composition.Convention.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Drawing.Common.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.424.16911"
-          }
-        }
-      },
-      "System.Dynamic.Runtime/4.0.11": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.Linq": "4.3.0",
-          "System.Linq.Expressions": "4.1.0",
-          "System.ObjectModel": "4.0.12",
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Emit": "4.0.1",
-          "System.Reflection.Emit.ILGeneration": "4.0.1",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Threading": "4.3.0"
-        }
-      },
-      "System.Globalization/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Globalization.Calendars/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Globalization": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Globalization.Extensions/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Globalization": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0"
-        }
-      },
-      "System.IdentityModel.Tokens.Jwt/6.35.0": {
-        "dependencies": {
-          "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
-          "Microsoft.IdentityModel.Tokens": "6.35.0"
+        "System.Composition.Hosting/8.0.0": {
+            "dependencies": {
+                "System.Composition.Runtime": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Composition.Hosting.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
-            "assemblyVersion": "6.35.0.0",
-            "fileVersion": "6.35.0.41201"
-          }
-        }
-      },
-      "System.IO/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.IO.FileSystem/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.IO": "4.3.0",
-          "System.IO.FileSystem.Primitives": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.IO.FileSystem.AccessControl/5.0.0": {
-        "dependencies": {
-          "System.Security.AccessControl": "5.0.0",
-          "System.Security.Principal.Windows": "5.0.0"
-        }
-      },
-      "System.IO.FileSystem.Primitives/4.3.0": {
-        "dependencies": {
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.IO.Pipelines/8.0.0": {},
-      "System.Linq/4.3.0": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0"
-        }
-      },
-      "System.Linq.Expressions/4.1.0": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.Linq": "4.3.0",
-          "System.ObjectModel": "4.0.12",
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Emit": "4.0.1",
-          "System.Reflection.Emit.ILGeneration": "4.0.1",
-          "System.Reflection.Emit.Lightweight": "4.0.1",
-          "System.Reflection.Extensions": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Threading": "4.3.0"
-        }
-      },
-      "System.Linq.Parallel/4.0.1": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Collections.Concurrent": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Diagnostics.Tracing": "4.3.0",
-          "System.Linq": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Threading": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.Memory/4.5.5": {},
-      "System.Memory.Data/1.0.2": {
-        "dependencies": {
-          "System.Text.Encodings.Web": "4.7.2",
-          "System.Text.Json": "4.7.2"
+        "System.Composition.Runtime/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.Composition.Runtime.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "lib/netstandard2.0/System.Memory.Data.dll": {
-            "assemblyVersion": "1.0.2.0",
-            "fileVersion": "1.0.221.20802"
-          }
-        }
-      },
-      "System.Net.Http/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Diagnostics.DiagnosticSource": "6.0.1",
-          "System.Diagnostics.Tracing": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.Globalization.Extensions": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.IO.FileSystem": "4.3.0",
-          "System.Net.Primitives": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Security.Cryptography.Algorithms": "4.3.1",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.OpenSsl": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0",
-          "System.Security.Cryptography.X509Certificates": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Threading": "4.3.0",
-          "System.Threading.Tasks": "4.3.0",
-          "runtime.native.System": "4.3.0",
-          "runtime.native.System.Net.Http": "4.3.0",
-          "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
-        }
-      },
-      "System.Net.Primitives/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Handles": "4.3.0"
-        }
-      },
-      "System.Numerics.Vectors/4.5.0": {},
-      "System.ObjectModel/4.0.12": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Threading": "4.3.0"
-        }
-      },
-      "System.Reflection/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.IO": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Reflection.Emit/4.0.1": {
-        "dependencies": {
-          "System.IO": "4.3.0",
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Emit.ILGeneration": "4.0.1",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Reflection.Emit.ILGeneration/4.0.1": {
-        "dependencies": {
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Reflection.Emit.Lightweight/4.0.1": {
-        "dependencies": {
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Emit.ILGeneration": "4.0.1",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Reflection.Extensions/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Reflection": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Reflection.Metadata/8.0.0": {
-        "dependencies": {
-          "System.Collections.Immutable": "8.0.0"
-        }
-      },
-      "System.Reflection.Primitives/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Reflection.TypeExtensions/4.1.0": {
-        "dependencies": {
-          "System.Reflection": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Resources.ResourceManager/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Globalization": "4.3.0",
-          "System.Reflection": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Resources.Writer/4.0.0": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Text.Encoding": "4.3.0"
-        }
-      },
-      "System.Runtime/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0"
-        }
-      },
-      "System.Runtime.Caching/8.0.0": {
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "1.0.0"
+        "System.Composition.TypedParts/8.0.0": {
+            "dependencies": {
+                "System.Composition.AttributedModel": "8.0.0",
+                "System.Composition.Hosting": "8.0.0",
+                "System.Composition.Runtime": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Composition.TypedParts.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Runtime.Caching.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "System.Data.OleDb/8.0.0": {
+            "dependencies": {
+                "System.Configuration.ConfigurationManager": "1.0.0",
+                "System.Diagnostics.PerformanceCounter": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Data.OleDb.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/System.Data.OleDb.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Runtime.Caching.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
-      "System.Runtime.Extensions/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Runtime.Handles/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Runtime.InteropServices/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Handles": "4.3.0"
-        }
-      },
-      "System.Runtime.InteropServices.RuntimeInformation/4.3.0": {
-        "dependencies": {
-          "System.Reflection": "4.3.0",
-          "System.Reflection.Extensions": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Threading": "4.3.0",
-          "runtime.native.System": "4.3.0"
-        }
-      },
-      "System.Runtime.Numerics/4.3.0": {
-        "dependencies": {
-          "System.Globalization": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0"
-        }
-      },
-      "System.Runtime.Serialization.Primitives/4.1.1": {
-        "dependencies": {
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Security.AccessControl/5.0.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Security.Principal.Windows": "5.0.0"
-        }
-      },
-      "System.Security.Cryptography.Algorithms/4.3.1": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Collections": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Runtime.Numerics": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "runtime.native.System.Security.Cryptography.Apple": "4.3.1",
-          "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
-        }
-      },
-      "System.Security.Cryptography.Cng/4.5.0": {},
-      "System.Security.Cryptography.Csp/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.IO": "4.3.0",
-          "System.Reflection": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Security.Cryptography.Algorithms": "4.3.1",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Threading": "4.3.0"
-        }
-      },
-      "System.Security.Cryptography.Encoding/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Collections": "4.3.0",
-          "System.Collections.Concurrent": "4.3.0",
-          "System.Linq": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
-        }
-      },
-      "System.Security.Cryptography.OpenSsl/4.3.0": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Runtime.Numerics": "4.3.0",
-          "System.Security.Cryptography.Algorithms": "4.3.1",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
-        }
-      },
-      "System.Security.Cryptography.Primitives/4.3.0": {
-        "dependencies": {
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Threading": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.Security.Cryptography.ProtectedData/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.Security.Cryptography.ProtectedData.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Security.Cryptography.X509Certificates/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.Globalization.Calendars": "4.3.0",
-          "System.IO": "4.3.0",
-          "System.IO.FileSystem": "4.3.0",
-          "System.IO.FileSystem.Primitives": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Runtime.Handles": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Runtime.Numerics": "4.3.0",
-          "System.Security.Cryptography.Algorithms": "4.3.1",
-          "System.Security.Cryptography.Cng": "4.5.0",
-          "System.Security.Cryptography.Csp": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.OpenSsl": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Threading": "4.3.0",
-          "runtime.native.System": "4.3.0",
-          "runtime.native.System.Net.Http": "4.3.0",
-          "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
-        }
-      },
-      "System.Security.Permissions/8.0.0": {
-        "dependencies": {
-          "System.Windows.Extensions": "8.0.0"
+        "System.Diagnostics.Debug/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
         },
-        "runtime": {
-          "lib/net8.0/System.Security.Permissions.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "System.Security.Principal.Windows/5.0.0": {},
-      "System.Text.Encoding/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Text.Encoding.CodePages/7.0.0": {},
-      "System.Text.Encodings.Web/4.7.2": {},
-      "System.Text.Json/4.7.2": {},
-      "System.Threading/4.3.0": {
-        "dependencies": {
-          "System.Runtime": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.Threading.Channels/7.0.0": {},
-      "System.Threading.Tasks/4.3.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.NETCore.Targets": "1.1.0",
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Threading.Tasks.Dataflow/4.6.0": {
-        "dependencies": {
-          "System.Collections": "4.3.0",
-          "System.Collections.Concurrent": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Diagnostics.Tracing": "4.3.0",
-          "System.Dynamic.Runtime": "4.0.11",
-          "System.Linq": "4.3.0",
-          "System.Resources.ResourceManager": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.Extensions": "4.3.0",
-          "System.Threading": "4.3.0",
-          "System.Threading.Tasks": "4.3.0"
-        }
-      },
-      "System.Threading.Tasks.Extensions/4.5.4": {},
-      "System.Threading.Thread/4.0.0": {
-        "dependencies": {
-          "System.Runtime": "4.3.0"
-        }
-      },
-      "System.Windows.Extensions/8.0.0": {
-        "runtime": {
-          "lib/net8.0/System.Windows.Extensions.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
+        "System.Diagnostics.DiagnosticSource/6.0.1": {
+            "dependencies": {
+                "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            }
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Windows.Extensions.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
-      "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters/1.0.0": {
-        "runtime": {
-          "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.dll": {}
-        }
-      },
-      "System.Configuration.ConfigurationManager/1.0.0": {
-        "dependencies": {
-          "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters": "1.0.0",
-          "System.CodeDom": "8.0.0",
-          "System.IO.FileSystem.AccessControl": "5.0.0",
-          "System.Security.Cryptography.Algorithms": "4.3.1",
-          "System.Security.Permissions": "8.0.0"
+        "System.Diagnostics.PerformanceCounter/8.0.0": {
+            "dependencies": {
+                "System.Configuration.ConfigurationManager": "1.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Diagnostics.PerformanceCounter.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/System.Diagnostics.PerformanceCounter.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "System.Configuration.ConfigurationManager.dll": {}
-        }
-      },
-      "System.Web/1.0.0": {
-        "dependencies": {
-          "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters": "1.0.0",
-          "Microsoft.Build.Framework": "15.9.20",
-          "Microsoft.Build.Tasks.Core": "15.9.20",
-          "Microsoft.Build.Utilities.Core": "15.9.20",
-          "Microsoft.CodeAnalysis": "4.10.0",
-          "Microsoft.Data.SqlClient": "5.2.0",
-          "System.Configuration.ConfigurationManager": "1.0.0",
-          "System.Data.OleDb": "8.0.0",
-          "System.DirectoryServices": "8.0.0",
-          "System.DirectoryServices.AccountManagement": "8.0.0",
-          "System.DirectoryServices.Protocols": "8.0.0",
-          "System.Drawing.Common": "8.0.4",
-          "System.Runtime.Caching": "8.0.0",
-          "System.Security.Cryptography.ProtectedData": "8.0.0",
-          "System.Web.ApplicationServices": "1.0.0",
-          "System.Web.RegularExpressions": "1.0.0"
+        "System.Diagnostics.Tracing/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
         },
-        "runtime": {
-          "System.Web.dll": {}
-        }
-      },
-      "System.Web.ApplicationServices/1.0.0": {
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "1.0.0"
+        "System.DirectoryServices/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.DirectoryServices.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/System.DirectoryServices.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "System.Web.ApplicationServices.dll": {}
-        }
-      },
-      "System.Web.RegularExpressions/1.0.0": {
-        "runtime": {
-          "System.Web.RegularExpressions.dll": {}
-        }
-      },
-      "System.Web.Services/1.0.0": {
-        "dependencies": {
-          "System.Web": "1.0.0"
+        "System.DirectoryServices.AccountManagement/8.0.0": {
+            "dependencies": {
+                "System.Configuration.ConfigurationManager": "1.0.0",
+                "System.DirectoryServices": "8.0.0",
+                "System.DirectoryServices.Protocols": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.DirectoryServices.AccountManagement.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/System.DirectoryServices.AccountManagement.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
         },
-        "runtime": {
-          "System.Web.Services.dll": {}
+        "System.DirectoryServices.Protocols/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.DirectoryServices.Protocols.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/linux/lib/net8.0/System.DirectoryServices.Protocols.dll": {
+                    "rid": "linux",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                },
+                "runtimes/osx/lib/net8.0/System.DirectoryServices.Protocols.dll": {
+                    "rid": "osx",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                },
+                "runtimes/win/lib/net8.0/System.DirectoryServices.Protocols.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
+        },
+        "System.Drawing.Common/8.0.4": {
+            "dependencies": {
+                "Microsoft.Win32.SystemEvents": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Drawing.Common.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.424.16911"
+                }
+            }
+        },
+        "System.Dynamic.Runtime/4.0.11": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.Linq.Expressions": "4.1.0",
+                "System.ObjectModel": "4.0.12",
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Emit": "4.0.1",
+                "System.Reflection.Emit.ILGeneration": "4.0.1",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Threading": "4.3.0"
+            }
+        },
+        "System.Globalization/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Globalization.Calendars/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Globalization": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Globalization.Extensions/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Globalization": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0"
+            }
+        },
+        "System.IdentityModel.Tokens.Jwt/6.35.0": {
+            "dependencies": {
+                "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
+                "Microsoft.IdentityModel.Tokens": "6.35.0"
+            },
+            "runtime": {
+                "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
+                    "assemblyVersion": "6.35.0.0",
+                    "fileVersion": "6.35.0.41201"
+                }
+            }
+        },
+        "System.IO/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "System.IO.FileSystem/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.IO": "4.3.0",
+                "System.IO.FileSystem.Primitives": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "System.IO.FileSystem.AccessControl/5.0.0": {
+            "dependencies": {
+                "System.Security.AccessControl": "5.0.0",
+                "System.Security.Principal.Windows": "5.0.0"
+            }
+        },
+        "System.IO.FileSystem.Primitives/4.3.0": {
+            "dependencies": {
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.IO.Pipelines/8.0.0": {},
+        "System.Linq/4.3.0": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0"
+            }
+        },
+        "System.Linq.Expressions/4.1.0": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.ObjectModel": "4.0.12",
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Emit": "4.0.1",
+                "System.Reflection.Emit.ILGeneration": "4.0.1",
+                "System.Reflection.Emit.Lightweight": "4.0.1",
+                "System.Reflection.Extensions": "4.3.0",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Threading": "4.3.0"
+            }
+        },
+        "System.Linq.Parallel/4.0.1": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Collections.Concurrent": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Diagnostics.Tracing": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Threading": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "System.Memory/4.5.5": {},
+        "System.Memory.Data/1.0.2": {
+            "dependencies": {
+                "System.Text.Encodings.Web": "4.7.2",
+                "System.Text.Json": "4.7.2"
+            },
+            "runtime": {
+                "lib/netstandard2.0/System.Memory.Data.dll": {
+                    "assemblyVersion": "1.0.2.0",
+                    "fileVersion": "1.0.221.20802"
+                }
+            }
+        },
+        "System.Net.Http/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Diagnostics.DiagnosticSource": "6.0.1",
+                "System.Diagnostics.Tracing": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.Globalization.Extensions": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.IO.FileSystem": "4.3.0",
+                "System.Net.Primitives": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Security.Cryptography.Algorithms": "4.3.1",
+                "System.Security.Cryptography.Encoding": "4.3.0",
+                "System.Security.Cryptography.OpenSsl": "4.3.0",
+                "System.Security.Cryptography.Primitives": "4.3.0",
+                "System.Security.Cryptography.X509Certificates": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "System.Threading": "4.3.0",
+                "System.Threading.Tasks": "4.3.0",
+                "runtime.native.System": "4.3.0",
+                "runtime.native.System.Net.Http": "4.3.0",
+                "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
+            }
+        },
+        "System.Net.Primitives/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Handles": "4.3.0"
+            }
+        },
+        "System.Numerics.Vectors/4.5.0": {},
+        "System.ObjectModel/4.0.12": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Threading": "4.3.0"
+            }
+        },
+        "System.Reflection/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.IO": "4.3.0",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Reflection.Emit/4.0.1": {
+            "dependencies": {
+                "System.IO": "4.3.0",
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Emit.ILGeneration": "4.0.1",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Reflection.Emit.ILGeneration/4.0.1": {
+            "dependencies": {
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Reflection.Emit.Lightweight/4.0.1": {
+            "dependencies": {
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Emit.ILGeneration": "4.0.1",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Reflection.Extensions/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Reflection": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Reflection.Metadata/8.0.0": {
+            "dependencies": {
+                "System.Collections.Immutable": "8.0.0"
+            }
+        },
+        "System.Reflection.Primitives/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Reflection.TypeExtensions/4.1.0": {
+            "dependencies": {
+                "System.Reflection": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Resources.ResourceManager/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Globalization": "4.3.0",
+                "System.Reflection": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Resources.Writer/4.0.0": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Text.Encoding": "4.3.0"
+            }
+        },
+        "System.Runtime/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0"
+            }
+        },
+        "System.Runtime.Caching/8.0.0": {
+            "dependencies": {
+                "System.Configuration.ConfigurationManager": "1.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Runtime.Caching.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/System.Runtime.Caching.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
+        },
+        "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
+        "System.Runtime.Extensions/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Runtime.Handles/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Runtime.InteropServices/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Primitives": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Handles": "4.3.0"
+            }
+        },
+        "System.Runtime.InteropServices.RuntimeInformation/4.3.0": {
+            "dependencies": {
+                "System.Reflection": "4.3.0",
+                "System.Reflection.Extensions": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Threading": "4.3.0",
+                "runtime.native.System": "4.3.0"
+            }
+        },
+        "System.Runtime.Numerics/4.3.0": {
+            "dependencies": {
+                "System.Globalization": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0"
+            }
+        },
+        "System.Runtime.Serialization.Primitives/4.1.1": {
+            "dependencies": {
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Security.AccessControl/5.0.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Security.Principal.Windows": "5.0.0"
+            }
+        },
+        "System.Security.Cryptography.Algorithms/4.3.1": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Collections": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Runtime.Numerics": "4.3.0",
+                "System.Security.Cryptography.Encoding": "4.3.0",
+                "System.Security.Cryptography.Primitives": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "runtime.native.System.Security.Cryptography.Apple": "4.3.1",
+                "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
+            }
+        },
+        "System.Security.Cryptography.Cng/4.5.0": {},
+        "System.Security.Cryptography.Csp/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.IO": "4.3.0",
+                "System.Reflection": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Security.Cryptography.Algorithms": "4.3.1",
+                "System.Security.Cryptography.Encoding": "4.3.0",
+                "System.Security.Cryptography.Primitives": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "System.Threading": "4.3.0"
+            }
+        },
+        "System.Security.Cryptography.Encoding/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Collections": "4.3.0",
+                "System.Collections.Concurrent": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Security.Cryptography.Primitives": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
+            }
+        },
+        "System.Security.Cryptography.OpenSsl/4.3.0": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Runtime.Numerics": "4.3.0",
+                "System.Security.Cryptography.Algorithms": "4.3.1",
+                "System.Security.Cryptography.Encoding": "4.3.0",
+                "System.Security.Cryptography.Primitives": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
+            }
+        },
+        "System.Security.Cryptography.Primitives/4.3.0": {
+            "dependencies": {
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Threading": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "System.Security.Cryptography.ProtectedData/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.Security.Cryptography.ProtectedData.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
+        },
+        "System.Security.Cryptography.X509Certificates/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "System.Collections": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Globalization": "4.3.0",
+                "System.Globalization.Calendars": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.IO.FileSystem": "4.3.0",
+                "System.IO.FileSystem.Primitives": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.Handles": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Runtime.Numerics": "4.3.0",
+                "System.Security.Cryptography.Algorithms": "4.3.1",
+                "System.Security.Cryptography.Cng": "4.5.0",
+                "System.Security.Cryptography.Csp": "4.3.0",
+                "System.Security.Cryptography.Encoding": "4.3.0",
+                "System.Security.Cryptography.OpenSsl": "4.3.0",
+                "System.Security.Cryptography.Primitives": "4.3.0",
+                "System.Text.Encoding": "4.3.0",
+                "System.Threading": "4.3.0",
+                "runtime.native.System": "4.3.0",
+                "runtime.native.System.Net.Http": "4.3.0",
+                "runtime.native.System.Security.Cryptography.OpenSsl": "4.3.2"
+            }
+        },
+        "System.Security.Permissions/8.0.0": {
+            "dependencies": {
+                "System.Windows.Extensions": "8.0.0"
+            },
+            "runtime": {
+                "lib/net8.0/System.Security.Permissions.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
+        },
+        "System.Security.Principal.Windows/5.0.0": {},
+        "System.Text.Encoding/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Text.Encoding.CodePages/7.0.0": {},
+        "System.Text.Encodings.Web/4.7.2": {},
+        "System.Text.Json/4.7.2": {},
+        "System.Threading/4.3.0": {
+            "dependencies": {
+                "System.Runtime": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "System.Threading.Channels/7.0.0": {},
+        "System.Threading.Tasks/4.3.0": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "5.0.0",
+                "Microsoft.NETCore.Targets": "1.1.0",
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Threading.Tasks.Dataflow/4.6.0": {
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.Collections.Concurrent": "4.3.0",
+                "System.Diagnostics.Debug": "4.3.0",
+                "System.Diagnostics.Tracing": "4.3.0",
+                "System.Dynamic.Runtime": "4.0.11",
+                "System.Linq": "4.3.0",
+                "System.Resources.ResourceManager": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Threading": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "System.Threading.Tasks.Extensions/4.5.4": {},
+        "System.Threading.Thread/4.0.0": {
+            "dependencies": {
+                "System.Runtime": "4.3.0"
+            }
+        },
+        "System.Windows.Extensions/8.0.0": {
+            "runtime": {
+                "lib/net8.0/System.Windows.Extensions.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            },
+            "runtimeTargets": {
+                "runtimes/win/lib/net8.0/System.Windows.Extensions.dll": {
+                    "rid": "win",
+                    "assetType": "runtime",
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.23.53103"
+                }
+            }
+        },
+        "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters/1.0.0": {
+            "runtime": {
+                "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.dll": {}
+            }
+        },
+        "System.Configuration.ConfigurationManager/1.0.0": {
+            "dependencies": {
+                "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters": "1.0.0",
+                "System.CodeDom": "8.0.0",
+                "System.IO.FileSystem.AccessControl": "5.0.0",
+                "System.Security.Cryptography.Algorithms": "4.3.1",
+                "System.Security.Permissions": "8.0.0"
+            },
+            "runtime": {
+                "System.Configuration.ConfigurationManager.dll": {}
+            }
+        },
+        "System.Web/1.0.0": {
+            "dependencies": {
+                "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters": "1.0.0",
+                "Microsoft.Build.Framework": "15.9.20",
+                "Microsoft.Build.Tasks.Core": "15.9.20",
+                "Microsoft.Build.Utilities.Core": "15.9.20",
+                "Microsoft.CodeAnalysis": "4.10.0",
+                "Microsoft.Data.SqlClient": "5.2.0",
+                "System.Configuration.ConfigurationManager": "1.0.0",
+                "System.Data.OleDb": "8.0.0",
+                "System.DirectoryServices": "8.0.0",
+                "System.DirectoryServices.AccountManagement": "8.0.0",
+                "System.DirectoryServices.Protocols": "8.0.0",
+                "System.Drawing.Common": "8.0.4",
+                "System.Runtime.Caching": "8.0.0",
+                "System.Security.Cryptography.ProtectedData": "8.0.0",
+                "System.Web.ApplicationServices": "1.0.0",
+                "System.Web.RegularExpressions": "1.0.0"
+            },
+            "runtime": {
+                "System.Web.dll": {}
+            }
+        },
+        "System.Web.ApplicationServices/1.0.0": {
+            "dependencies": {
+                "System.Configuration.ConfigurationManager": "1.0.0"
+            },
+            "runtime": {
+                "System.Web.ApplicationServices.dll": {}
+            }
+        },
+        "System.Web.RegularExpressions/1.0.0": {
+            "runtime": {
+                "System.Web.RegularExpressions.dll": {}
+            }
+        },
+        "System.Web.Services/1.0.0": {
+            "dependencies": {
+                "System.Web": "1.0.0"
+            },
+            "runtime": {
+                "System.Web.Services.dll": {}
+            }
+        },
+        "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Reference/8.0.0.0": {
+            "runtime": {
+                "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.0.0"
+                }
+            }
+        },
+        "System.Configuration.ConfigurationManager.Reference/8.5.0.0": {
+            "runtime": {
+                "System.Configuration.ConfigurationManager.dll": {
+                    "assemblyVersion": "8.5.0.0",
+                    "fileVersion": "8.5.0.0"
+                }
+            }
+        },
+        "System.Web.ApplicationServices.Reference/8.0.0.0": {
+            "runtime": {
+                "System.Web.ApplicationServices.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.0.0"
+                }
+            }
+        },
+        "System.Web.Reference/8.0.0.0": {
+            "runtime": {
+                "System.Web.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.0.0"
+                }
+            }
+        },
+        "System.Web.RegularExpressions.Reference/8.0.0.0": {
+            "runtime": {
+                "System.Web.RegularExpressions.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.0.0"
+                }
+            }
+        },
+        "System.Web.Services.Reference/8.0.0.0": {
+            "runtime": {
+                "System.Web.Services.dll": {
+                    "assemblyVersion": "8.0.0.0",
+                    "fileVersion": "8.0.0.0"
+                }
+            }
         }
-      },
-      "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.Reference/8.0.0.0": {
-        "runtime": {
-          "EstrellasDeEsperanza.WebFormsCore.Serialization.Formatters.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.0.0"
-          }
-        }
-      },
-      "System.Configuration.ConfigurationManager.Reference/8.5.0.0": {
-        "runtime": {
-          "System.Configuration.ConfigurationManager.dll": {
-            "assemblyVersion": "8.5.0.0",
-            "fileVersion": "8.5.0.0"
-          }
-        }
-      },
-      "System.Web.ApplicationServices.Reference/8.0.0.0": {
-        "runtime": {
-          "System.Web.ApplicationServices.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.0.0"
-          }
-        }
-      },
-      "System.Web.Reference/8.0.0.0": {
-        "runtime": {
-          "System.Web.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.0.0"
-          }
-        }
-      },
-      "System.Web.RegularExpressions.Reference/8.0.0.0": {
-        "runtime": {
-          "System.Web.RegularExpressions.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.0.0"
-          }
-        }
-      },
-      "System.Web.Services.Reference/8.0.0.0": {
-        "runtime": {
-          "System.Web.Services.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.0.0"
-          }
-        }
-      }
     }
   },
   "libraries": {

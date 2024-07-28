@@ -62,6 +62,153 @@
       <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Remove="Resources\**\*.resx" />
+        <EmbeddedResource Remove="Script\**\*.js" />
+        <None Remove="Script\Date.HijriCalendar.debug.js" />
+        <None Remove="Script\Date.UmAlQuraCalendar.debug.js" />
+        <None Remove="Script\MicrosoftAjax.debug.js" />
+        <None Remove="Script\MicrosoftAjaxApplicationServices.debug.js" />
+        <None Remove="Script\MicrosoftAjaxComponentModel.debug.js" />
+        <None Remove="Script\MicrosoftAjaxCore.debug.js" />
+        <None Remove="Script\MicrosoftAjaxGlobalization.debug.js" />
+        <None Remove="Script\MicrosoftAjaxHistory.debug.js" />
+        <None Remove="Script\MicrosoftAjaxNetwork.debug.js" />
+        <None Remove="Script\MicrosoftAjaxSerialization.debug.js" />
+        <None Remove="Script\MicrosoftAjaxTimer.debug.js" />
+        <None Remove="Script\MicrosoftAjaxWebForms.debug.js" />
+        <None Remove="Script\MicrosoftAjaxWebServices.debug.js" />
+        <EmbeddedResource Include="Resources\AtlasWeb.resx">
+            <LogicalName>System.Web.Resources.AtlasWeb.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ScriptLibrary\Res.resx">
+            <LogicalName>System.Web.Resources.ScriptLibrary.Res.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ScriptLibrary\WebForms.Res.resx">
+            <LogicalName>System.Web.Resources.ScriptLibrary.WebForms.Res.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ScriptLibrary\Res.debug.resx">
+            <LogicalName>System.Web.Resources.ScriptLibrary.Res.debug.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ScriptLibrary\WebForms.Res.debug.resx">
+            <LogicalName>System.Web.Resources.ScriptLibrary.WebForms.Res.debug.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\DataPager.bmp">
+            <LogicalName>System.Web.UI.WebControls.DataPager.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\LinqDataSource.bmp">
+            <LogicalName>System.Web.UI.WebControls.LinqDataSource.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ListView.bmp">
+            <LogicalName>System.Web.UI.WebControls.ListView.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\QueryExtender.bmp">
+            <LogicalName>System.Web.UI.WebControls.QueryExtender.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ScriptManager.bmp">
+            <LogicalName>System.Web.Resources.ScriptManager.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\ScriptManagerProxy.bmp">
+            <LogicalName>System.Web.Resources.ScriptManagerProxy.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\Timer.bmp">
+            <LogicalName>System.Web.Resources.Timer.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\UpdatePanel.bmp">
+            <LogicalName>System.Web.Resources.UpdatePanel.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\UpdateProgress.bmp">
+            <LogicalName>System.Web.Resources.UpdateProgress.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\WCFModelStrings.resx">
+            <LogicalName>System.Web.Resources.WCFModelStrings.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\Date.UmAlQuraCalendar.debug.js">
+          <LogicalName>Date.UmAlQuraCalendar.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\Date.HijriCalendar.debug.js">
+          <LogicalName>Date.HijriCalendar.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\Date.HijriCalendar.js">
+            <LogicalName>Date.HijriCalendar.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\Date.UmAlQuraCalendar.js">
+            <LogicalName>Date.UmAlQuraCalendar.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjax.debug.js">
+          <LogicalName>MicrosoftAjax.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjax.js">
+            <LogicalName>MicrosoftAjax.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxApplicationServices.debug.js">
+          <LogicalName>MicrosoftAjaxApplicationServices.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxApplicationServices.js">
+            <LogicalName>MicrosoftAjaxApplicationServices.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxComponentModel.debug.js">
+          <LogicalName>MicrosoftAjaxComponentModel.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxComponentModel.js">
+            <LogicalName>MicrosoftAjaxComponentModel.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxCore.debug.js">
+          <LogicalName>MicrosoftAjaxCore.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxCore.js">
+            <LogicalName>MicrosoftAjaxCore.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxGlobalization.debug.js">
+          <LogicalName>MicrosoftAjaxGlobalization.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxGlobalization.js">
+            <LogicalName>MicrosoftAjaxGlobalization.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxHistory.debug.js">
+          <LogicalName>MicrosoftAjaxHistory.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxHistory.js">
+            <LogicalName>MicrosoftAjaxHistory.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxNetwork.debug.js">
+          <LogicalName>MicrosoftAjaxNetwork.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxNetwork.js">
+            <LogicalName>MicrosoftAjaxNetwork.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxSerialization.debug.js">
+          <LogicalName>MicrosoftAjaxSerialization.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxSerialization.js">
+            <LogicalName>MicrosoftAjaxSerialization.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxTimer.debug.js">
+          <LogicalName>MicrosoftAjaxTimer.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxTimer.js">
+            <LogicalName>MicrosoftAjaxTimer.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxWebForms.debug.js">
+          <LogicalName>MicrosoftAjaxWebForms.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxWebForms.js">
+            <LogicalName>MicrosoftAjaxWebForms.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxWebServices.debug.js">
+          <LogicalName>MicrosoftAjaxWebServices.debug.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Script\MicrosoftAjaxWebServices.js">
+            <LogicalName>MicrosoftAjaxWebServices.js</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Compilation\Schema\DataServiceMapSchema.xsd">
+            <LogicalName>System.Web.Compilation.WCFModel.Schema.DataServiceMapSchema.xsd</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Compilation\Schema\ServiceMapSchema.xsd">
+            <LogicalName>System.Web.Compilation.WCFModel.Schema.ServiceMapSchema.xsd</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
     <Import Project="..\..\lib\WebFormsCore.Build\netstandard2.0\EstrellasDeEsperanza.WebFormsCore.Build.targets" />
 
     <PropertyGroup>
