@@ -268,7 +268,7 @@ namespace System.Web.Query.Dynamic
             CustomAttributeBuilder securityRulesAttribute = new CustomAttributeBuilder(securityRulesConstructor, new object[] { SecurityRuleSet.Level1 });
             assemblyAttributes.Add(securityRulesAttribute);
             AssemblyName name = new AssemblyName("DynamicClasses");
-            AssemblyBuilder assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run, assemblyAttributes);
+            AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run, assemblyAttributes);
 #if ENABLE_LINQ_PARTIAL_TRUST
             new ReflectionPermission(PermissionState.Unrestricted).Assert();
 #endif

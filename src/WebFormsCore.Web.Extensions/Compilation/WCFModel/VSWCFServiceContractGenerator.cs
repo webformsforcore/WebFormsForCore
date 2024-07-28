@@ -5,16 +5,25 @@
 /// </copyright>
 #endregion
 
+#if NETFRAMEWORK
+
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
+#if NETFRAMEWORK
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
+#else
+using CoreWCF;
+using CoreWCF.Channels;
+using CoreWCF.Configuration;
+using CoreWCF.Description;
+#endif
 using System.Xml;
 using System.Xml.Schema;
 using System.Security.Permissions;
@@ -1847,3 +1856,4 @@ namespace Microsoft.VSDesigner.WCFModel
         }
     }
 }
+#endif

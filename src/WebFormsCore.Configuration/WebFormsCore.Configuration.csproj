@@ -30,7 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="System\Configuration\ApplicationSettingsBase.cs" />
         <Compile Remove="System\Configuration\TypeUtil.cs" />
         <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
         <Compile Remove="System\System.Configuration\ConfigurationPermission.cs" />
@@ -66,7 +65,6 @@
 
     <ItemGroup>
         <None Include="System\Configuration.resx" />
-        <None Include="System\Configuration\ApplicationSettingsBase.cs" />
         <None Include="System\Configuration\TypeUtil.cs" />
         <None Include="System\System.Configuration\ConfigurationException.cs" />
         <None Include="System\System.Configuration\ConfigurationPermission.cs" />

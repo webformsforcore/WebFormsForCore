@@ -14,11 +14,16 @@ namespace System.Web.ClientServices.Providers
     using System.Data.Common;
     using System.Data.OleDb;
     using System.IO;
+#if NETFRAMEWORK
     using System.Windows.Forms;
     using System.Data.SqlClient;
+#else
+	using Microsoft.Data.SqlClient;
+#endif
     using System.Reflection;
     using System.Diagnostics.CodeAnalysis;
     using System.Web.Resources;
+	using static System.Net.Mime.MediaTypeNames;
 
     internal static class SqlHelper
     {
@@ -296,9 +301,13 @@ namespace System.Web.ClientServices.Providers
         /////////////////////////////////////////////////////////////////////////////////
         internal static string GetFullDBFileName(string username, string extension)
         {
+#if NETFRAMEWORK
             return Path.Combine(Application.UserAppDataPath, GetPartialDBFileName(username, extension));
-        }
-        internal static string GetPartialDBFileName(string username, string extension)
+#else
+			return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GetPartialDBFileName(username, extension));
+#endif
+		}
+		internal static string GetPartialDBFileName(string username, string extension)
         {
             if (string.IsNullOrEmpty(username)) {
                 return "Application" + extension;

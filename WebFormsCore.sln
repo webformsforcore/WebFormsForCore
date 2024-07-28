@@ -48,6 +48,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D256F77-E935-45F1-93EA-EE01BEC2B8BA}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsCore.Web.Extensions", "src\WebFormsCore.Web.Extensions\WebFormsCore.Web.Extensions.csproj", "{E9D0BAC0-C7DC-4412-B332-ED0CBA64D170}"

@@ -116,6 +116,22 @@ using WRA = System.Web.UI.WebResourceAttribute;
 [assembly: NeutralResourcesLanguage("en-US")]
 #endif
 
+#if WebFormsCore
+[assembly: AssemblyTitle("System.Web.Extensions.dll")]
+[assembly: AssemblyDescription("System.Web.Extensions.dll")]
+[assembly: AssemblyDefaultAlias("System.Web.Extensions.dll")]
+[assembly: AssemblyCompany("Estrellas de Esperanza")]
+[assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsCore")]
+[assembly: AssemblyCopyright("© Estrellas de Esperanza. All rights reserved.")]
+[assembly: AssemblyFileVersion("8.0.0.0")]
+[assembly: AssemblyInformationalVersion("8.0.0.0")]
+[assembly: SatelliteContractVersion("8.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]
+[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyKeyFile(@"..\SigningKey\WebFormsCore.snk")]
+[assembly: AssemblyVersion("8.0.0.0")]
+#endif
+
 // Suppress Code Analysis violations for terms that appear frequently in resource strings
 [module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly",
     MessageId = "postback", Scope = "resource", Target = "System.Web.Resources.AtlasWeb.resources",

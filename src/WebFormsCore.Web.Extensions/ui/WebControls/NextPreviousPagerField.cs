@@ -85,7 +85,9 @@ namespace System.Web.UI.WebControls {
         [
         Category("Appearance"),
         DefaultValue(""),
+#if NETFRAMEWORK
         Editor(typeof(System.Web.UI.Design.ImageUrlEditor), typeof(UITypeEditor)),
+#endif
         ResourceDescription("NextPreviousPagerField_FirstPageImageUrl"),
         SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings",
                         Justification="Required by ASP.NET parser."),
@@ -132,7 +134,9 @@ namespace System.Web.UI.WebControls {
         [
         Category("Appearance"),
         DefaultValue(""),
+#if NETFRAMEWORK
         Editor(typeof(System.Web.UI.Design.ImageUrlEditor), typeof(UITypeEditor)),
+#endif
         ResourceDescription("NextPreviousPagerField_LastPageImageUrl"),
         SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings",
                         Justification = "Required by ASP.NET parser."),
@@ -226,7 +230,9 @@ namespace System.Web.UI.WebControls {
         [
         Category("Appearance"),
         DefaultValue(""),
+#if NETFRAMEWORK
         Editor(typeof(System.Web.UI.Design.ImageUrlEditor), typeof(UITypeEditor)),
+#endif
         ResourceDescription("NextPreviousPagerField_PreviousPageImageUrl"),
         SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings",
                         Justification = "Required by ASP.NET parser."),

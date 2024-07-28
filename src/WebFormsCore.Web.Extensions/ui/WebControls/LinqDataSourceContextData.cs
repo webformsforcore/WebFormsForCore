@@ -4,6 +4,7 @@
 // </copyright>                                                                
 //------------------------------------------------------------------------------
 
+#if !WebFormsCore
 #if ORYX_VNEXT
 namespace Microsoft.Web.Data.UI.WebControls {
 #else
@@ -32,3 +33,4 @@ namespace System.Web.UI.WebControls {
     }
 }
 
+#endif

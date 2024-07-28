@@ -34,8 +34,12 @@ namespace System.Web.ClientServices
         //[PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         private static void FetchIsOffline()
         {
+#if NETFRAMEWORK
             string path = Path.Combine(System.Windows.Forms.Application.UserAppDataPath, "AppIsOffline");
-            _IsOffline = File.Exists(path);
+#else
+			string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AppIsOffline");
+#endif
+			_IsOffline = File.Exists(path);
             _IsOfflineFetched = true;
         }
 
@@ -43,8 +47,12 @@ namespace System.Web.ClientServices
         //[PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         private static void StoreIsOffline()
         {
+#if NETFRAMEWORK
             string path = Path.Combine(System.Windows.Forms.Application.UserAppDataPath, "AppIsOffline");
-            if (!_IsOffline) {
+#else
+			string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AppIsOffline");
+#endif
+			if (!_IsOffline) {
                 File.Delete(path);
             } else {
                 using (FileStream fs = File.Create(path)) {

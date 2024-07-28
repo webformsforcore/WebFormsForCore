@@ -4,6 +4,8 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+#if NETFRAMEWORK
+
 namespace System.Web.UI.WebControls {
     using System.Web.UI.WebControls.Expressions;
     using System.Collections;
@@ -614,3 +616,4 @@ namespace System.Web.UI.WebControls {
     }
 }
 
+#endif

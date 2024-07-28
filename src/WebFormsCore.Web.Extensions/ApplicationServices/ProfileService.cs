@@ -10,8 +10,12 @@ namespace System.Web.ApplicationServices {
     using System.Collections.ObjectModel;
     using System.Configuration;
     using System.Security.Principal;
+#if NETFRAMEWORK
     using System.ServiceModel;
     using System.ServiceModel.Activation;
+#else
+    using CoreWCF;
+#endif
     using System.Web;
     using System.Web.Management;
     using System.Web.Profile;
@@ -19,7 +23,9 @@ namespace System.Web.ApplicationServices {
 
     [ServiceContract(Namespace="http://asp.net/ApplicationServices/v200")]
     [ServiceKnownType("GetKnownTypes", typeof(KnownTypesProvider))]
+#if NETFRAMEWORK
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Required)]
+#endif
     [ServiceBehavior(Namespace="http://asp.net/ApplicationServices/v200", InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class ProfileService {
 

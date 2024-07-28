@@ -4,6 +4,7 @@
 ///    Information Contained Herein is Proprietary and Confidential.
 /// </copyright>
 #endregion
+extern alias Core;
 
 using System;
 using System.Diagnostics;
@@ -11,8 +12,12 @@ using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using Discovery = System.Web.Services.Discovery;
-using Description = System.Web.Services.Description;
+using Description = Core.System.Web.Services.Description;
+#if NETFRAMEWORK
 using MetadataSection = System.ServiceModel.Description.MetadataSection;
+#else
+using CoreWCF.Description;
+#endif
 using XmlSerialization = System.Xml.Serialization;
 
 #if WEB_EXTENSIONS_CODE
@@ -683,7 +688,7 @@ namespace Microsoft.VSDesigner.WCFModel
                 case MetadataType.Wsdl:
                     // We need to make a copy of the WSDL object model since the act of importing it actuall
                     // modifies it, and we don't want the cached instance to be polluted...
-                    System.Web.Services.Description.ServiceDescription description = metadata.MetadataServiceDescription;
+                    Core.System.Web.Services.Description.ServiceDescription description = metadata.MetadataServiceDescription;
                     if (description != null)
                     {
                         metadataSection = MetadataSection.CreateFromServiceDescription(description);

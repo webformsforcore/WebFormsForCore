@@ -5,11 +5,17 @@
 /// </copyright>
 #endregion
 
+#if NETFRAMEWORK
+
 using System;
 using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
+#if NETFRAMEWORK
 using System.ServiceModel.Description;
+#else
+using CoreWCF.Description;
+#endif
 using System.Xml;
 using System.Xml.Schema;
 using WsdlNS = System.Web.Services.Description;
@@ -72,3 +78,4 @@ namespace Microsoft.VSDesigner.WCFModel
         }
     }
 }
+#endif

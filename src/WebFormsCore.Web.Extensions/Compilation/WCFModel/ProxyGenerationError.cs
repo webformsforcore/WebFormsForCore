@@ -6,7 +6,11 @@
 #endregion
 
 using System;
+#if NETFRAMEWORK
 using System.ServiceModel.Description;
+#else
+using CoreWCF.Description;
+#endif
 using System.Xml;
 using System.Xml.Schema;
 

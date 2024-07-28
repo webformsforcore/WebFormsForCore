@@ -19,10 +19,14 @@ namespace System.Web.ClientServices.Providers
     using System.Security.Principal;
     using System.Security.Permissions;
     using System.Net;
+#if NETFRAMEWORK
     using System.ServiceModel;
     using System.ServiceModel.Activation;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Dispatcher;
+#else
+    using CoreWCF;
+#endif
     using System.Web.ClientServices;
     using System.Web.Resources;
     using System.Web.Security;

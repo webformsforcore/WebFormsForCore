@@ -4,13 +4,16 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-#if NETFRAMEWORK
 
 namespace System.Web.ApplicationServices {
     using System;
     using System.Diagnostics.CodeAnalysis;
+#if NETFRAMEWORK
     using System.ServiceModel;
     using System.ServiceModel.Activation;
+#else
+    using CoreWCF;
+#endif
     using System.Web;
     using System.Web.Management;
     using System.Web.Resources;
@@ -23,7 +26,9 @@ namespace System.Web.ApplicationServices {
     /// </devdoc>
 
     [
+#if NETFRAMEWORK
     AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Required),
+#endif
     ServiceContract(Namespace="http://asp.net/ApplicationServices/v200"),
     ServiceBehavior(Namespace="http://asp.net/ApplicationServices/v200", InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)
     ]
@@ -195,4 +200,3 @@ namespace System.Web.ApplicationServices {
 
     }
 }
-#endif

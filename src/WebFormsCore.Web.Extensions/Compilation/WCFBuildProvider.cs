@@ -31,7 +31,9 @@ namespace System.Web.Compilation
     using System.Web.Resources;
     using System.Security;
     using System.Security.Permissions;
+#if NETFRAMEWORK
     using System.Data.Services.Design;
+#endif
     using System.IO;
     using System.Xml;
     using System.Reflection;
@@ -141,8 +143,12 @@ namespace System.Web.Compilation
         /// <param name="mapFilePath">The physical path to the data service map file</param>
         private void GenerateCodeFromDataServiceMapFile(string mapFilePath, AssemblyBuilder assemblyBuilder)
         {
+#if !NETFRAMEWORK
+            throw new NotSupportedException("DataServices not supported in WebFormsCore.");
+#else
             try
-            {
+			{
+
                 assemblyBuilder.AddAssemblyReference(typeof(System.Data.Services.Client.DataServiceContext).Assembly);
 
                 DataSvcMapFileLoader loader = new DataSvcMapFileLoader(mapFilePath);
@@ -190,6 +196,7 @@ namespace System.Web.Compilation
                 errorMessage = String.Format(CultureInfo.CurrentCulture, "{0}: {1}", IO.Path.GetFileName(mapFilePath), errorMessage);
                 throw new InvalidOperationException(errorMessage, ex);
             }
+#endif
         }
 
         /// <summary>
@@ -201,6 +208,9 @@ namespace System.Web.Compilation
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands", Justification="Violation is no longer relevant due to 4.0 CAS model")]
         private CodeCompileUnit GenerateCodeFromServiceMapFile(string mapFilePath)
         {
+#if !NETFRAMEWORK
+            throw new NotSupportedException("Service map files not supported in WebFormsCore.");
+#else
             try
             {
                 string generatedNamespace = GetGeneratedNamespace();
@@ -250,6 +260,7 @@ namespace System.Web.Compilation
                 errorMessage = String.Format(CultureInfo.CurrentCulture, "{0}: {1}", IO.Path.GetFileName(mapFilePath), errorMessage);
                 throw new InvalidOperationException(errorMessage, ex);
             }
+#endif
         }
 
         /// <summary>

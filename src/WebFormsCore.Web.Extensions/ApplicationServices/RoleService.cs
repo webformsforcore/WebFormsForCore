@@ -7,9 +7,13 @@
 namespace System.Web.ApplicationServices {
     using System;
     using System.Diagnostics.CodeAnalysis;
+#if NETFRAMEWORK
     using System.ServiceModel;
     using System.ServiceModel.Activation;
     using System.ServiceModel.Configuration;
+#else
+    using CoreWCF;
+#endif
     using System.Runtime.Serialization;
     using System.Web;
     using System.Web.Security;
@@ -22,7 +26,9 @@ namespace System.Web.ApplicationServices {
     using System.Configuration.Provider;
 
     [
+#if NETFRAMEWORK
     AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Required),
+#endif
     ServiceContract(Namespace = "http://asp.net/ApplicationServices/v200"),
     ServiceBehavior(Namespace="http://asp.net/ApplicationServices/v200", InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)
     ]
