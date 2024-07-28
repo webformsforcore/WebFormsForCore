@@ -4,6 +4,7 @@
 // </copyright>                                                                
 //------------------------------------------------------------------------------
 
+#if NETFRAMEWORK
 namespace System.Web.Services.Description {
     using System.CodeDom;
     using System.Web.Services.Protocols;
@@ -42,3 +43,4 @@ namespace System.Web.Services.Description {
         }
     }
 }
+#endif

@@ -1,4 +1,6 @@
-﻿#nullable disable
+﻿namespace System.Web;
+
+#nullable disable
 static class AssemblyRef
 {
 	internal const string EcmaPublicKey = "b77a5c561934e089";

@@ -5,6 +5,8 @@
 // <owner current="true" primary="true">Microsoft</owner>                                                                
 //------------------------------------------------------------------------------
 
+#if NETCOREAPP
+
 namespace System.Xml.Serialization {
 
     using System.Collections;
@@ -788,3 +790,4 @@ namespace System.Xml.Serialization {
         }
     }
 }
+#endif

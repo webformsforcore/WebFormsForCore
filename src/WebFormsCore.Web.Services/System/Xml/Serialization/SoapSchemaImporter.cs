@@ -210,7 +210,7 @@ namespace System.Xml.Serialization  {
         }
 
         [PermissionSet(SecurityAction.InheritanceDemand, Name="FullTrust")]
-        internal override void ImportDerivedTypes(XmlQualifiedName baseName) {
+        internal virtual void ImportDerivedTypes(XmlQualifiedName baseName) {
             foreach (XmlSchema schema in Schemas) {
                 if (Schemas.IsReference(schema)) continue;
                 if (XmlSchemas.IsDataSet(schema)) continue;

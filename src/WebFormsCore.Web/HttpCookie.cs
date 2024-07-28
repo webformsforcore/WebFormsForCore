@@ -465,11 +465,15 @@ namespace System.Web {
             // expiration
             if (_expirationSet && _expires != DateTime.MinValue) {
                 s.Append("; expires=");
+#if NETFRAMEWORK
                 s.Append(HttpUtility.FormatHttpCookieDateTime(_expires));
-            }
+#else
+				s.Append(HttpUtilityInternal.FormatHttpCookieDateTime(_expires));
+#endif
+			}
 
-            // path
-            if (!String.IsNullOrEmpty(_path)) {
+			// path
+			if (!String.IsNullOrEmpty(_path)) {
                 s.Append("; path=");
                 s.Append(_path);
             }

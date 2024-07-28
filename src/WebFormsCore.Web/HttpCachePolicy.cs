@@ -904,16 +904,24 @@ namespace System.Web {
                  * Expires header.
                  */
                 if (_isExpiresSet && _slidingExpiration != 1) {
+#if NETFRAMEWORK
                     expirationDate = HttpUtility.FormatHttpDateTimeUtc(_utcExpires);
-                    _headerExpires = new HttpResponseHeader(HttpWorkerRequest.HeaderExpires, expirationDate);
+#else
+					expirationDate = HttpUtilityInternal.FormatHttpDateTimeUtc(_utcExpires);
+#endif
+					_headerExpires = new HttpResponseHeader(HttpWorkerRequest.HeaderExpires, expirationDate);
                 }
 
                 /*
                  * Last Modified header.
                  */
                 if (_isLastModifiedSet) {
+#if NETFRAMEWORK
                     lastModifiedDate = HttpUtility.FormatHttpDateTimeUtc(_utcLastModified);
-                    _headerLastModified = new HttpResponseHeader(HttpWorkerRequest.HeaderLastModified, lastModifiedDate);
+#else
+					lastModifiedDate = HttpUtilityInternal.FormatHttpDateTimeUtc(_utcLastModified);
+#endif
+					_headerLastModified = new HttpResponseHeader(HttpWorkerRequest.HeaderLastModified, lastModifiedDate);
                 }
 
 
@@ -994,8 +1002,12 @@ namespace System.Web {
                     /* update Expires header */
                     if (_isExpiresSet) {
                         utcExpires = _utcTimestampRequest + _slidingDelta;
+#if NETFRAMEWORK
                         expirationDate = HttpUtility.FormatHttpDateTimeUtc(utcExpires);
-                        headerExpires = new HttpResponseHeader(HttpWorkerRequest.HeaderExpires, expirationDate);
+#else
+						expirationDate = HttpUtilityInternal.FormatHttpDateTimeUtc(utcExpires);
+#endif
+						headerExpires = new HttpResponseHeader(HttpWorkerRequest.HeaderExpires, expirationDate);
                     }
                 }
                 else {

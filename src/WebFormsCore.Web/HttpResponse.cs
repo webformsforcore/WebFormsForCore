@@ -3326,13 +3326,24 @@ namespace System.Web {
 
             if (isValidUrl) {
                 // only encode the path portion
-                return schemeAndAuthority + HttpEncoderUtility.UrlEncodeSpaces(HttpUtility.UrlEncodeNonAscii(path, Encoding.UTF8)) + queryAndFragment;
+                return schemeAndAuthority + HttpEncoderUtility.UrlEncodeSpaces(
+#if NETFRAMEWORK
+                    HttpUtility.UrlEncodeNonAscii(path, Encoding.UTF8)
+#else
+					HttpUtilityInternal.UrlEncodeNonAscii(path, Encoding.UTF8)
+#endif
+					) + queryAndFragment;
             }
             else {
                 // encode the entire URL
-                return HttpEncoderUtility.UrlEncodeSpaces(HttpUtility.UrlEncodeNonAscii(url, Encoding.UTF8));
-            }
-        }
+                return HttpEncoderUtility.UrlEncodeSpaces(
+#if NETFRAMEWORK
+                    HttpUtility.UrlEncodeNonAscii(url, Encoding.UTF8));
+#else
+					HttpUtilityInternal.UrlEncodeNonAscii(url, Encoding.UTF8));
+#endif
+			}
+		}
 
         private String UrlEncodeRedirect(String url) {
             // convert all non-ASCII chars before ? to %XX using UTF-8 and
@@ -3342,9 +3353,14 @@ namespace System.Web {
 
             if (iqs >= 0) {
                 Encoding qsEncoding = (Request != null) ? Request.ContentEncoding : ContentEncoding;
-                url = UrlEncodeIDNSafe(url.Substring(0, iqs)) + HttpUtility.UrlEncodeNonAscii(url.Substring(iqs), qsEncoding);
-            }
-            else {
+                url = UrlEncodeIDNSafe(url.Substring(0, iqs)) +
+#if NETFRAMEWORK
+                    HttpUtility.UrlEncodeNonAscii(url.Substring(iqs), qsEncoding);
+#else
+					HttpUtilityInternal.UrlEncodeNonAscii(url.Substring(iqs), qsEncoding);
+#endif
+			}
+			else {
                 url = UrlEncodeIDNSafe(url);
             }
 

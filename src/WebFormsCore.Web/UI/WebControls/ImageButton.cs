@@ -404,8 +404,12 @@ namespace System.Web.UI.WebControls {
 
         internal static double ReadPositionFromPost(string requestValue) {
             double doubleValue;
+#if NETFRAMEWORK
             if (HttpUtility.TryParseCoordinates(requestValue, out doubleValue)) {
-                return doubleValue;
+#else
+            if (HttpUtilityInternal.TryParseCoordinates(requestValue, out doubleValue)) {
+#endif
+				return doubleValue;
             }
             return 0;
         }

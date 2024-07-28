@@ -21,6 +21,11 @@
         <DebugType>portable</DebugType>
     </PropertyGroup>
 
+    <ItemGroup>
+        <Compile Remove="System\Xml\**\*.cs" />
+        <None Include="System\Xml\**\*.cs" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 	    <Reference Include="System" />
   	  	<Reference Include="System.Data" />

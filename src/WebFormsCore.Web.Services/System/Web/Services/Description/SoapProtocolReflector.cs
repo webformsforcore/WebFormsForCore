@@ -45,6 +45,7 @@ namespace System.Web.Services.Description {
             }
         }
 
+#if NETFRAMEWORK
         internal SoapSchemaExporter SoapExporter {
             get { 
                 SoapSchemaExporter soapExporter = ReflectionContext[typeof(SoapSchemaExporter)] as SoapSchemaExporter;
@@ -55,6 +56,7 @@ namespace System.Web.Services.Description {
                 return soapExporter;
             }
         }
+#endif
 
         protected override bool ReflectMethod() {
             soapMethod = ReflectionContext[Method] as SoapReflectedMethod;
@@ -88,9 +90,13 @@ namespace System.Web.Services.Description {
         void CreateHeaderMessages(string methodName, SoapBindingUse use, XmlMembersMapping inHeaderMappings, XmlMembersMapping outHeaderMappings, SoapReflectedHeader[] headers, bool rpc) {
             // 
             if (use == SoapBindingUse.Encoded) {
+#if NETFRAMEWORK
                 SoapExporter.ExportMembersMapping(inHeaderMappings, false);
                 if (outHeaderMappings != null)
                     SoapExporter.ExportMembersMapping(outHeaderMappings, false);
+#else
+                throw new NotSupportedException("SoapBingingsUse.Encoded not supported by WebFormsCore.");
+#endif
             }
             else {
                 SchemaExporter.ExportMembersMapping(inHeaderMappings);
@@ -145,11 +151,16 @@ namespace System.Web.Services.Description {
             bool wrapped = paramStyle != SoapParameterStyle.Bare;
 
             if (use == SoapBindingUse.Encoded)
+#if NETFRAMEWORK
                 CreateEncodedMessage(message, messageBinding, members, wrapped && !rpc);
+#else
+                throw new NotSupportedException("SoapBindingUse.Encoded not supported by WebFormsCore.");
+#endif
             else
                 CreateLiteralMessage(message, messageBinding, members, wrapped && !rpc, rpc);
         }
 
+#if NETFRAMEWORK
         void CreateEncodedMessage(Message message, MessageBinding messageBinding, XmlMembersMapping members, bool wrapped) {
             SoapExporter.ExportMembersMapping(members, wrapped);
 
@@ -171,6 +182,7 @@ namespace System.Web.Services.Description {
 
             messageBinding.Extensions.Add(CreateSoapBodyBinding(SoapBindingUse.Encoded, members.Namespace));
         }
+#endif
 
         void CreateLiteralMessage(Message message, MessageBinding messageBinding, XmlMembersMapping members, bool wrapped, bool rpc) {
             if (members.Count == 1 && members[0].Any && members[0].ElementName.Length == 0 && !wrapped) {

@@ -228,15 +228,22 @@ namespace System.Web {
 
                 case "encoding":
                     return CertEncoding.ToString("G", CultureInfo.InvariantCulture);
-
+#if NETFRAMEWORK
                 case "validfrom":
                     return HttpUtility.FormatHttpDateTime(ValidFrom);
 
                 case "validuntil":
                     return HttpUtility.FormatHttpDateTime(ValidUntil);
-            }
+#else
+				case "validfrom":
+					return HttpUtilityInternal.FormatHttpDateTime(ValidFrom);
 
-            if (StringUtil.StringStartsWith(field, "issuer"))
+				case "validuntil":
+					return HttpUtilityInternal.FormatHttpDateTime(ValidUntil);
+#endif
+			}
+
+			if (StringUtil.StringStartsWith(field, "issuer"))
                 return ExtractString(Issuer, field.Substring(6));
 
             if (StringUtil.StringStartsWith(field, "subject")) {

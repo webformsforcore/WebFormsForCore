@@ -460,20 +460,33 @@ namespace System.Web.Handlers {
 
                 bool isErr = datarow[SR.Trace_Warning].Equals("yes");
 
-                // FormatPlainTextAsHtml the values first
+				// FormatPlainTextAsHtml the values first
+#if NETFRAMEWORK
                 tcell = AddCell(trow, HttpUtility.FormatPlainTextAsHtml((string) datarow[SR.Trace_Category]));
-                if (isErr) tcell.CssClass = "err";
+#else
+				tcell = AddCell(trow, HttpUtilityInternal.FormatPlainTextAsHtml((string)datarow[SR.Trace_Category]));
+#endif
+				if (isErr) tcell.CssClass = "err";
 
+#if NETFRAMEWORK
                 StringBuilder message = new StringBuilder(HttpUtility.FormatPlainTextAsHtml((string) datarow[SR.Trace_Message]));
-
-                object errormessage = datarow["ErrorInfoMessage"];
+#else
+				StringBuilder message = new StringBuilder(HttpUtilityInternal.FormatPlainTextAsHtml((string)datarow[SR.Trace_Message]));
+#endif
+				object errormessage = datarow["ErrorInfoMessage"];
                 object errorstack =   datarow["ErrorInfoStack"];
+#if NETFRAMEWORK
                 if (!(errormessage is System.DBNull))
                     message.Append("<br>" + HttpUtility.FormatPlainTextAsHtml((string) errormessage));
                 if (!(errorstack is System.DBNull))
                     message.Append("<br>" + HttpUtility.FormatPlainTextAsHtml((string) errorstack));
-
-                tcell = AddCell(trow, message.ToString());
+#else
+				if (!(errormessage is System.DBNull))
+					message.Append("<br>" + HttpUtilityInternal.FormatPlainTextAsHtml((string)errormessage));
+				if (!(errorstack is System.DBNull))
+					message.Append("<br>" + HttpUtilityInternal.FormatPlainTextAsHtml((string)errorstack));
+#endif
+				tcell = AddCell(trow, message.ToString());
                 if (isErr) tcell.CssClass = "err";
 
                 tcell = AddCell(trow, FormatPotentialDouble(datarow[SR.Trace_From_First]));
@@ -540,9 +553,13 @@ namespace System.Web.Handlers {
                 for (int i=0; i<cells.Length; i++) {
                     string temp;
                     if(encodeSpaces)
+#if NETFRAMEWORK
                         temp = HttpUtility.FormatPlainTextSpacesAsHtml(HttpUtility.HtmlEncode(cells[i].ToString()));
-                    else
-                        temp = HttpUtility.HtmlEncode(cells[i].ToString());
+#else
+						temp = HttpUtilityInternal.FormatPlainTextSpacesAsHtml(HttpUtility.HtmlEncode(cells[i].ToString()));
+#endif
+					else
+						temp = HttpUtility.HtmlEncode(cells[i].ToString());
 
                     AddCell(trow, (temp.Length != 0) ? temp : "&nbsp;");
                 }

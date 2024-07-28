@@ -5,7 +5,7 @@
 // <owner current="true" primary="true">Microsoft</owner>
 //------------------------------------------------------------------------------
 
-namespace System.Xml.Serialization  {
+namespace System.Xml.Serialization.Legacy  {
 
     using System;
     using System.Xml.Schema;
@@ -29,7 +29,7 @@ namespace System.Xml.Serialization  {
     ///    <para>[To be supplied.]</para>
     /// </devdoc>
     [PermissionSet(SecurityAction.InheritanceDemand, Name="FullTrust")]
-    internal class SchemaImporterBase: SchemaImporter {
+    public abstract class SchemaImporterBase: SchemaImporter {
         XmlSchemas schemas;
         StructMapping root;
         CodeGenerationOptions options;

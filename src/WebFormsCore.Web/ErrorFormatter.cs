@@ -880,10 +880,13 @@ namespace System.Web {
                 // Use the exception's message if there is one
                 string msg = _initialException.Message;
                 if (!String.IsNullOrEmpty(msg))
+#if NETFRAMEWORK
                     return HttpUtility.FormatPlainTextAsHtml(msg);
-
-                // Otherwise, use some default string
-                return SR.GetString(SR.Unhandled_Err_Error);
+#else
+					return HttpUtilityInternal.FormatPlainTextAsHtml(msg);
+#endif
+				// Otherwise, use some default string
+				return SR.GetString(SR.Unhandled_Err_Error);
             }
         }
 
@@ -909,8 +912,12 @@ namespace System.Web {
                 string adaptiveMiscLine = exceptionName;
 
                 if (_initialException.Message != null) {
+#if NETFRAMEWORK
                     string errorMessage = HttpUtility.FormatPlainTextAsHtml(_initialException.Message);
-                    msg.Append(": ");
+#else
+					string errorMessage = HttpUtilityInternal.FormatPlainTextAsHtml(_initialException.Message);
+#endif
+					msg.Append(": ");
                     msg.Append(errorMessage);
                     adaptiveMiscLine += ": " + errorMessage;
                 }
@@ -988,9 +995,12 @@ namespace System.Web {
                                            ((setLeftToRightMarker) ? EndLeftToRightMarker : string.Empty));
                     }
 
+#if NETFRAMEWORK
                     msg = HttpUtility.FormatPlainTextAsHtml(msg);
-
-                    if (setLeftToRightMarker) {
+#else
+					msg = HttpUtilityInternal.FormatPlainTextAsHtml(msg);
+#endif
+					if (setLeftToRightMarker) {
                         // If only <div dir=ltr> was used to wrap around the left-to-right code text,
                         // the font rendering on Firefox was not good.  We use <code> in addition to
                         // the <div> tag to workaround the problem.
@@ -1188,10 +1198,14 @@ namespace System.Web {
 
         protected override string Description {
             get {
-                // VSWhidbey 493720: Do Html encode to preserve space characters
+				// VSWhidbey 493720: Do Html encode to preserve space characters
+#if NETFRAMEWORK
                 return HttpUtility.FormatPlainTextAsHtml(SR.GetString(SR.Security_Err_Desc));
-            }
-        }
+#else
+				return HttpUtilityInternal.FormatPlainTextAsHtml(SR.GetString(SR.Security_Err_Desc));
+#endif
+			}
+		}
     }
 
     /*
@@ -1211,10 +1225,14 @@ namespace System.Web {
         }
 
         protected override string Description {
+#if NETFRAMEWORK
             get { return HttpUtility.FormatPlainTextAsHtml(SR.GetString(SR.NotFound_Http_404));}
-        }
+#else
+			get { return HttpUtilityInternal.FormatPlainTextAsHtml(SR.GetString(SR.NotFound_Http_404)); }
+#endif
+		}
 
-        protected override string MiscSectionTitle {
+		protected override string MiscSectionTitle {
             get { return SR.GetString(SR.NotFound_Requested_Url);}
         }
 
@@ -1268,9 +1286,13 @@ namespace System.Web {
                 if (m.Success)
                     extMessage = SR.GetString(SR.Forbidden_Extension_Incorrect, m.ToString());
 
+#if NETFRAMEWORK
                 return HttpUtility.FormatPlainTextAsHtml(SR.GetString(SR.Forbidden_Extension_Desc, extMessage));
-            }
-        }
+#else
+				return HttpUtilityInternal.FormatPlainTextAsHtml(SR.GetString(SR.Forbidden_Extension_Desc, extMessage));
+#endif
+			}
+		}
 
         protected override string MiscSectionTitle {
             get { return SR.GetString(SR.NotFound_Requested_Url);}
@@ -1407,10 +1429,14 @@ namespace System.Web {
         }
 
         protected override string Description {
+#if NETFRAMEWORK
             get { return HttpUtility.FormatPlainTextAsHtml(SR.GetString(SR.CustomErrorFailed_Err_Desc)); }
-        }
+#else
+			get { return HttpUtilityInternal.FormatPlainTextAsHtml(SR.GetString(SR.CustomErrorFailed_Err_Desc)); }
+#endif
+		}
 
-        protected override string MiscSectionTitle {
+		protected override string MiscSectionTitle {
             get { return null; }
         }
 
@@ -1815,11 +1841,15 @@ namespace System.Web {
             string sourceCode, int line, string message)
         : base(virtualPath, null /*physicalPath*/, sourceCode, line) {
             _excep = e;
+#if NETFRAMEWORK
             _message = HttpUtility.FormatPlainTextAsHtml(message);
+#else
+			_message = HttpUtilityInternal.FormatPlainTextAsHtml(message);
+#endif     
             _adaptiveMiscContent.Add(_message);
-        }
+		}
 
-        protected override Exception Exception {
+		protected override Exception Exception {
             get { return _excep; }
         }
 
@@ -1862,8 +1892,12 @@ namespace System.Web {
             _e = e;
             PerfCounters.IncrementCounter(AppPerfCounter.ERRORS_PRE_PROCESSING);
             PerfCounters.IncrementCounter(AppPerfCounter.ERRORS_TOTAL);
+#if NETFRAMEWORK
             _message = HttpUtility.FormatPlainTextAsHtml(e.BareMessage);
-            _adaptiveMiscContent.Add(_message);
+#else
+			_message = HttpUtilityInternal.FormatPlainTextAsHtml(e.BareMessage);
+#endif
+			_adaptiveMiscContent.Add(_message);
         }
 
         public bool AllowSourceCode {

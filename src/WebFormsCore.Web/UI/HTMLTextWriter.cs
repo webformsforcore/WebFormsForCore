@@ -1305,9 +1305,14 @@ namespace System.Web.UI {
                 else {
                     // VSWhidbey 448625: For DBCS characters, use UTF8 encoding
                     // which can be handled by IIS5 and above.
-                    Write(HttpUtility.UrlEncodeNonAscii(Char.ToString(ch), Encoding.UTF8));
-                }
-            }
+                    Write(
+#if NETFRAMEWORK
+                        HttpUtility.UrlEncodeNonAscii(Char.ToString(ch), Encoding.UTF8));
+#else
+                        HttpUtilityInternal.UrlEncodeNonAscii(Char.ToString(ch), Encoding.UTF8));
+#endif
+				}
+			}
         }
 
         internal void WriteHtmlAttributeEncode(string s) {

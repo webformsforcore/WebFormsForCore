@@ -144,31 +144,41 @@ namespace System.Web.Security {
                 return String.Empty;
             int iPos1 = strIn.IndexOf('=');
             if (iPos1 < 0)
+#if NETFRAMEWORK
                 return HttpUtility.AspCompatUrlEncode(strIn);
-            
-            iPos1++;
+#else
+                return HttpUtilityInternal.AspCompatUrlEncode(strIn);
+#endif
+			iPos1++;
             int iPos2 = strIn.IndexOf(';', iPos1);
             if (iPos2 < 0)
-                return HttpUtility.AspCompatUrlEncode(strIn);           
-
-            string str1 = strIn.Substring(0, iPos1);
+#if NETFRAMEWORK
+                return HttpUtility.AspCompatUrlEncode(strIn);
+#else
+                return HttpUtilityInternal.AspCompatUrlEncode(strIn);
+#endif
+			string str1 = strIn.Substring(0, iPos1);
             string str2 = strIn.Substring(iPos1, iPos2-iPos1);
             string str3 = strIn.Substring(iPos2, strIn.Length-iPos2);
 
+#if NETFRAMEWORK
             return str1 + HttpUtility.AspCompatUrlEncode(str2) + str3;
-        }
+#else
+            return str1 + HttpUtilityInternal.AspCompatUrlEncode(str2) + str3;
+#endif
+		}
 
 
-        ////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////
-        // Properties
+		////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////
+		// Properties
 
-        /// <devdoc>
-        ///    The name of the identity. In this
-        ///    case, the Passport user name.
-        /// </devdoc>
-        public   String    Name { 
+		/// <devdoc>
+		///    The name of the identity. In this
+		///    case, the Passport user name.
+		/// </devdoc>
+		public   String    Name { 
             get { 
                 if (_Name == null) {
                     if (_iPassportVer >= 3)

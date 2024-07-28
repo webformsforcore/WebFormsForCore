@@ -3,6 +3,9 @@
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>                                                                
 //------------------------------------------------------------------------------
+
+#if NETFRAMEWORK
+
 namespace System.Web.Services.Description {
     using System.Web.Services.Protocols;
     using System.Xml.Serialization;
@@ -78,10 +81,10 @@ namespace System.Web.Services.Description {
                     }
 #if NETFRAMEWORK
                     importer.Extensions.Add(new System.Data.Design.TypedDataSetSchemaImporterExtension());
-#endif
                     importer.Extensions.Add(new DataSetSchemaImporterExtension());
-                }
-                return importer;
+#endif
+				}
+				return importer;
             }
         }
 
@@ -113,3 +116,4 @@ namespace System.Web.Services.Description {
         }
     }
 }
+#endif

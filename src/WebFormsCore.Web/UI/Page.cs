@@ -2511,12 +2511,20 @@ namespace System.Web.UI
 				string xpos = _requestValueCollection[_scrollPositionXID];
 				if (xpos != null)
 				{
+#if NETFRAMEWORK
 					_scrollPositionX = HttpUtility.TryParseCoordinates(xpos, out doubleValue) ? (int)doubleValue : 0;
+#else
+					_scrollPositionX = HttpUtilityInternal.TryParseCoordinates(xpos, out doubleValue) ? (int)doubleValue : 0;
+#endif
 				}
 				string ypos = _requestValueCollection[_scrollPositionYID];
 				if (ypos != null)
 				{
+#if NETFRAMEWORK
 					_scrollPositionY = HttpUtility.TryParseCoordinates(ypos, out doubleValue) ? (int)doubleValue : 0;
+#else
+					_scrollPositionY = HttpUtilityInternal.TryParseCoordinates(ypos, out doubleValue) ? (int)doubleValue : 0;
+#endif
 				}
 			}
 		}

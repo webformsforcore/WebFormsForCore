@@ -63,9 +63,13 @@ namespace System.Web.Configuration {
 
         protected override string MiscSectionContent {
             get {
-                // VSWhidbey 493720: Do Html encode to preserve space characters
+				// VSWhidbey 493720: Do Html encode to preserve space characters
+#if NETFRAMEWORK
                 string miscContent = HttpUtility.FormatPlainTextAsHtml(SR.GetString(SR.Assess_Denied_Misc_Content2));
-                AdaptiveMiscContent.Add(miscContent);
+#else
+				string miscContent = HttpUtilityInternal.FormatPlainTextAsHtml(SR.GetString(SR.Assess_Denied_Misc_Content2));
+#endif
+				AdaptiveMiscContent.Add(miscContent);
                 return miscContent;
                 //return "Access denied due to the web server's configuration. Ask the web server's administrator for help.";
             }

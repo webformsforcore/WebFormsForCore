@@ -126,10 +126,13 @@ namespace System.Web.Services.Description {
         }
 
         internal static string FullTypeName(XmlMemberMapping mapping, CodeDomProvider codeProvider) {
-            return mapping.GenerateTypeName(codeProvider);
+#if NETFRAMEWORK
+			return mapping.GenerateTypeName(codeProvider);
+#else
+            throw new NotSupportedException("FullTypeName not supported in WebFormsCore.");
+#endif
         }
-
-        static string MakeFieldName(string name) {
+		static string MakeFieldName(string name) {
             return CodeIdentifier.MakeCamel(name) + "Field";
         }
 

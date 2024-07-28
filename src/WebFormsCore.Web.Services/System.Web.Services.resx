@@ -1404,4 +1404,64 @@ Document URI is '{2}'.</value>
   <data name="Xml_InvalidNameChars" xml:space="preserve">
     <value>Invalid name character in '{0}'.</value>
   </data>
+  <data name="XmlCircularDerivation" xml:space="preserve">
+    <value>Circular reference in derivation of IXmlSerializable type '{0}'.</value>
+  </data>
+  <data name="XmlGetSchemaEmptyTypeName" xml:space="preserve">
+    <value>{0}.{1}() must return a valid type name.</value>
+  </data>
+  <data name="XmlGetSchemaInclude" xml:space="preserve">
+    <value>Multiple schemas with targetNamespace='{0}' returned by {1}.{2}().  Please use only the main (parent) schema, and add the others to the schema Includes.</value>
+  </data>
+  <data name="XmlGetSchemaMethodReturnType" xml:space="preserve">
+    <value>Method {0}.{1}() specified by {2} has invalid signature: return type must be compatible with {3}.</value>
+  </data>
+  <data name="XmlGetSchemaTypeMissing" xml:space="preserve">
+    <value>{0}.{1}() must return a valid type name. Type '{2}' cannot be found in the targetNamespace='{3}'.</value>
+  </data>
+  <data name="XmlHiddenMember" xml:space="preserve">
+    <value>Member {0}.{1} of type {2} hides base class member {3}.{4} of type {5}. Use XmlElementAttribute or XmlAttributeAttribute to specify a new name.</value>
+  </data>
+  <data name="XmlIllegalSimpleContentExtension" xml:space="preserve">
+    <value>Cannot serialize object of type '{0}'. Base type '{1}' has simpleContent and can only be extended by adding XmlAttribute elements. Please consider changing XmlText member of the base class to string array.</value>
+  </data>
+  <data name="XmlIllegalTypedTextAttribute" xml:space="preserve">
+    <value>Cannot serialize object of type '{0}'. Consider changing type of XmlText member '{0}.{1}' from {2} to string or string array.</value>
+  </data>
+  <data name="XmlInvalidXmlOverride" xml:space="preserve">
+    <value>Member '{0}.{1}' hides inherited member '{2}.{3}', but has different custom attributes.</value>
+  </data>
+  <data name="XmlMissingSchema" xml:space="preserve">
+    <value>Missing schema targetNamespace="{0}".</value>
+  </data>
+  <data name="XmlRemarks" xml:space="preserve">
+    <value>&lt;remarks/&gt;</value>
+  </data>
+  <data name="XmlSerializableNameMissing1" xml:space="preserve">
+    <value>Schema Id is missing. The schema returned from {0}.GetSchema() must have an Id.</value>
+  </data>
+  <data name="XmlSerializableSchemaError" xml:space="preserve">
+    <value>Schema type information provided by {0} is invalid: {1}</value>
+  </data>
+  <data name="XmlUnsupportedTypeKind" xml:space="preserve">
+    <value>The type {0} may not be serialized.</value>
+  </data>
+  <data name="XmlConvert_BadFormat" xml:space="preserve">
+    <value>The string '{0}' is not a valid {1} value.</value>
+  </data>
+  <data name="XmlInvalidSpecifiedType" xml:space="preserve">
+    <value>Member '{0}' of type {1} cannot be serialized.  Members with names ending on 'Specified' suffix have special meaning to the XmlSerializer: they control serialization of optional ValueType members and have to be of type {2}.</value>
+  </data>
+  <data name="XmlMismatchSchemaObjects" xml:space="preserve">
+    <value>Warning: Cannot share {0} named '{1}' from '{2}' namespace. Several mismatched schema declarations were found.</value>
+  </data>
+  <data name="XmlSerializableRootDupName" xml:space="preserve">
+    <value>Cannot reconcile schema for '{0}'. Please use [XmlRoot] attribute to change default name or namespace of the top-level element to avoid duplicate element declarations: element name='{1}' namespace='{2}'.</value>
+  </data>
+  <data name="XmlSerializerUnsupportedMember" xml:space="preserve">
+    <value>Cannot serialize member '{0}' of type '{1}', see inner exception for more details.</value>
+  </data>
+  <data name="XmlSerializerUnsupportedType" xml:space="preserve">
+    <value>{0} is an unsupported type. Please use [XmlIgnore] attribute to exclude members of this type from serialization graph.</value>
+  </data>
 </root>

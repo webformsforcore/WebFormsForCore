@@ -28,12 +28,14 @@ namespace System.Web.Services.Protocols {
             get { return type; }
         }
 
+#if NETFRAMEWORK
         internal Evidence Evidence {
             get {
                 new SecurityPermission(SecurityPermissionFlag.ControlEvidence).Assert();
                 return Type.Assembly.Evidence;
             }
         }
+#endif
     }
 
 }

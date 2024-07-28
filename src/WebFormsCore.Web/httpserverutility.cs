@@ -1061,6 +1061,7 @@ namespace System.Web {
     /// <devdoc>
     /// </devdoc>
 
+#if NETFRAMEWORK
     // VSWhidbey 473228 - removed link demand from HttpUtility for ClickOnce scenario
     public sealed class HttpUtility {
 
@@ -1155,7 +1156,7 @@ namespace System.Web {
             HttpEncoder.Current.HtmlAttributeEncode(s, output);
         }
 
-        
+        /*
         internal static string FormatPlainTextSpacesAsHtml(string s) {
             if (s == null) {
                 return null;
@@ -1245,7 +1246,7 @@ namespace System.Web {
                 prevCh = ch;
             }
         }
-
+        */
 
         //////////////////////////////////////////////////////////////////////////
         //
@@ -1323,19 +1324,6 @@ namespace System.Web {
             return HttpEncoder.Current.UrlPathEncode(str);
         }
 
-        internal static string AspCompatUrlEncode(string s) {
-            s = UrlEncode(s);
-            s = s.Replace("!", "%21");
-            s = s.Replace("*", "%2A");
-            s = s.Replace("(", "%28");
-            s = s.Replace(")", "%29");
-            s = s.Replace("-", "%2D");
-            s = s.Replace(".", "%2E");
-            s = s.Replace("_", "%5F");
-            s = s.Replace("\\", "%5C");
-            return s;
-        }
-
 
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
@@ -1346,11 +1334,12 @@ namespace System.Web {
             return Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));
         }
 
+        /*
         //  Helper to encode the non-ASCII url characters only
         internal static String UrlEncodeNonAscii(string str, Encoding e) {
             return HttpEncoder.Current.UrlEncodeNonAscii(str, e);
         }
-
+        */
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
         /// </devdoc>
@@ -1502,7 +1491,9 @@ namespace System.Web {
         public static byte[] UrlDecodeToBytes(byte[] bytes, int offset, int count) {
             return HttpEncoder.Current.UrlDecode(bytes, offset, count);
         }
-                
+#else
+    internal class HttpUtilityInternal { 
+#endif
 
         //////////////////////////////////////////////////////////////////////////
         //
@@ -1526,11 +1517,152 @@ namespace System.Web {
             return dt.ToString("ddd, dd-MMM-yyyy HH':'mm':'ss 'GMT'", DateTimeFormatInfo.InvariantInfo);
         }
 
-        //
-        // JavaScriptStringEncode
-        //
+		internal static string FormatPlainTextSpacesAsHtml(string s)
+		{
+			if (s == null)
+			{
+				return null;
+			}
 
-        public static String JavaScriptStringEncode(string value) {
+			StringBuilder builder = new StringBuilder();
+			StringWriter writer = new StringWriter(builder);
+
+			int cb = s.Length;
+
+			for (int i = 0; i < cb; i++)
+			{
+				char ch = s[i];
+				if (ch == ' ')
+				{
+					writer.Write("&nbsp;");
+				}
+				else
+				{
+					writer.Write(ch);
+				}
+			}
+			return builder.ToString();
+		}
+        
+        //  Helper to encode the non-ASCII url characters only
+        internal static String UrlEncodeNonAscii(string str, Encoding e)
+		{
+			return HttpEncoder.Current.UrlEncodeNonAscii(str, e);
+		}
+
+		internal static String FormatPlainTextAsHtml(String s)
+		{
+			if (s == null)
+				return null;
+
+			StringBuilder builder = new StringBuilder();
+			StringWriter writer = new StringWriter(builder);
+
+			FormatPlainTextAsHtml(s, writer);
+
+			return builder.ToString();
+		}
+      
+		internal static void FormatPlainTextAsHtml(String s, TextWriter output)
+		{
+			if (s == null)
+				return;
+
+			int cb = s.Length;
+
+			char prevCh = '\0';
+
+			for (int i = 0; i < cb; i++)
+			{
+				char ch = s[i];
+				switch (ch)
+				{
+					case '<':
+						output.Write("&lt;");
+						break;
+					case '>':
+						output.Write("&gt;");
+						break;
+					case '"':
+						output.Write("&quot;");
+						break;
+					case '&':
+						output.Write("&amp;");
+						break;
+					case ' ':
+						if (prevCh == ' ')
+							output.Write("&nbsp;");
+						else
+							output.Write(ch);
+						break;
+					case '\r':
+						// Ignore \r, only handle \n
+						break;
+					case '\n':
+						output.Write("<br>");
+						break;
+
+					// 
+					default:
+#if ENTITY_ENCODE_HIGH_ASCII_CHARS
+						// The seemingly arbitrary 160 comes from RFC
+						if (ch >= 160 && ch < 256)
+						{
+							output.Write("&#");
+							output.Write(((int)ch).ToString(NumberFormatInfo.InvariantInfo));
+							output.Write(';');
+							break;
+						}
+#endif // ENTITY_ENCODE_HIGH_ASCII_CHARS
+
+						output.Write(ch);
+						break;
+				}
+
+				prevCh = ch;
+			}
+		}
+
+		internal static string AspCompatUrlEncode(string s)
+		{
+            s = HttpUtility.UrlEncode(s);
+			s = s.Replace("!", "%21");
+			s = s.Replace("*", "%2A");
+			s = s.Replace("(", "%28");
+			s = s.Replace(")", "%29");
+			s = s.Replace("-", "%2D");
+			s = s.Replace(".", "%2E");
+			s = s.Replace("_", "%5F");
+			s = s.Replace("\\", "%5C");
+			return s;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		//
+		//  ASII encode - everything all non-7-bit to '?'
+		//
+
+		/*internal static String AsciiEncode(String s) {
+            if (s == null)
+                return null;
+
+            StringBuilder sb = new StringBuilder(s.Length);
+
+            for (int i = 0; i < s.Length; i++) {
+                char ch = s[i];
+                if (((ch & 0xff80) != 0) || (ch < ' ' && ch != '\r' && ch != '\n' && ch != '\t'))
+                    ch = '?';
+                sb.Append(ch);
+            }
+
+            return sb.ToString();
+        }*/
+#if NETFRAMEWORK
+		//
+		// JavaScriptStringEncode
+		//
+
+		public static String JavaScriptStringEncode(string value) {
             return JavaScriptStringEncode(value, false);
         }
 
@@ -1538,6 +1670,7 @@ namespace System.Web {
             string encoded = HttpEncoder.Current.JavaScriptStringEncode(value);
             return (addDoubleQuotes) ? "\"" + encoded + "\"" : encoded;
         }
+#endif
 
         /// <summary>
         /// Attempts to parse a co-ordinate as a double precision floating point value. 

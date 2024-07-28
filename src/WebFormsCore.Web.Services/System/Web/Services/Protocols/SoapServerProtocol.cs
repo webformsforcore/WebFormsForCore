@@ -111,17 +111,26 @@ namespace System.Web.Services.Protocols {
             
             XmlMapping[] xmlMappings = (XmlMapping[])mappings.ToArray(typeof(XmlMapping));
             TraceMethod caller = Tracing.On ? new TraceMethod(this, ".ctor", type, protocolsSupported) : null;
-            if (Tracing.On) Tracing.Enter(Tracing.TraceId(Res.TraceCreateSerializer), caller, new TraceMethod(typeof(XmlSerializer), "FromMappings", xmlMappings, this.Evidence));
-            XmlSerializer[] serializers = null;
+            if (Tracing.On) Tracing.Enter(Tracing.TraceId(Res.TraceCreateSerializer), caller,
+#if NETFRAMEWORK
+                new TraceMethod(typeof(XmlSerializer), "FromMappings", xmlMappings, this.Evidence));
+#else
+				new TraceMethod(typeof(XmlSerializer), "FromMappings", xmlMappings));
+#endif
+			XmlSerializer[] serializers = null;
             if (AppDomain.CurrentDomain.IsHomogenous) {
                 serializers = XmlSerializer.FromMappings(xmlMappings);
             }
             else {
 #pragma warning disable 618 // If we're in a non-homogenous domain, legacy CAS mode is enabled, so passing through evidence will not fail
+#if NETFRAMEWORK
                 serializers = XmlSerializer.FromMappings((xmlMappings), this.Evidence);
+#else
+                serializers = XmlSerializer.FromMappings((xmlMappings));
+#endif
 #pragma warning restore 618
-            }
-            if (Tracing.On) Tracing.Exit(Tracing.TraceId(Res.TraceCreateSerializer), caller);
+			}
+			if (Tracing.On) Tracing.Exit(Tracing.TraceId(Res.TraceCreateSerializer), caller);
             
             int count = 0;
             for (int i = 0; i < soapMethods.Length; i++) {
@@ -333,12 +342,12 @@ namespace System.Web.Services.Protocols {
                 // For one-way methods we rely on Request.InputStream guaranteeing that the entire request body has arrived
                 message.SetStream(Request.InputStream);
         
-                #if DEBUG
+#if DEBUG
                     //Debug.Assert(message.Stream.CanSeek, "Web services SOAP handler assumes a seekable stream.");
                     // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
                     if (!message.Stream.CanSeek) throw new InvalidOperationException("Non-Seekable stream " + message.Stream.GetType().FullName + " Web services SOAP handler assumes a seekable stream.");
 
-                #endif
+#endif
 
                 message.InitExtensionStreamChain(message.highPriConfigExtensions);
                 message.SetStage(SoapMessageStage.BeforeDeserialize);
@@ -497,14 +506,14 @@ namespace System.Web.Services.Protocols {
         }
 
         /*
-        #if DEBUG
+#if DEBUG
         private static void CopyStream(Stream source, Stream dest) {
             byte[] bytes = new byte[1024];
             int numRead = 0;
             while ((numRead = source.Read(bytes, 0, 1024)) > 0)
                 dest.Write(bytes, 0, numRead);
         }
-        #endif
+#endif
         */
 
         private void SetHelper(SoapServerProtocolHelper helper) {

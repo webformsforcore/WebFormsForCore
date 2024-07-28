@@ -10,6 +10,7 @@ namespace System.Web.Services.Configuration {
     using System.Globalization;
     using System.Security.Permissions;
     using System.Threading;
+    using System.Linq;
     using System.Web;
     using System.Web.Services.Description;
     using System.Web.Services.Discovery;
@@ -261,10 +262,18 @@ namespace System.Web.Services.Configuration {
 
                                 // order is important for soap: 1.2 must come after 1.1
                                 if ((enabledProtocols & WebServiceProtocols.HttpSoap) != 0) {
-                                    protocolImporterList.Add(typeof(SoapProtocolImporter));
-                                }
+#if NETFRAMEWORK
+                                protocolImporterList.Add(typeof(SoapProtocolImporter));
+#else
+                                throw new NotSupportedException("Protocol HttpSoap not supported by WebFormsCore.");
+#endif
+                            }
                             if ((enabledProtocols & WebServiceProtocols.HttpSoap12) != 0) {
+#if NETFRAMEWORK
                                 protocolImporterList.Add(typeof(Soap12ProtocolImporter));
+#else
+                                throw new NotSupportedException("Protocol HttpSoap12 not supported by WebFormsCore.");
+#endif
                             }
                             if ((enabledProtocols & WebServiceProtocols.HttpGet) != 0) {
                                 protocolImporterList.Add(typeof(HttpGetProtocolImporter));
@@ -431,12 +440,19 @@ namespace System.Web.Services.Configuration {
 
         internal Type[] SoapTransportImporters {
             get {
+#if NETFRAMEWORK
                 Type[] retval = new Type[1 + this.SoapTransportImporterTypes.Count];
                 retval[0] = typeof(SoapHttpTransportImporter);
                 for (int i = 0; i < SoapTransportImporterTypes.Count; ++i) {
                     retval[i + 1] = SoapTransportImporterTypes[i].Type;
                 }
                 return retval;
+#else
+                return SoapTransportImporterTypes
+                    .OfType<TypeElement>()
+                    .Select(e => e.Type)
+                    .ToArray();
+#endif
             }
         }
 
@@ -507,8 +523,12 @@ namespace System.Web.Services.Configuration {
         Type[] discoveryReferenceTypes = new Type[] { typeof(DiscoveryDocumentReference), typeof(ContractReference), typeof(SchemaReference), typeof(System.Web.Services.Discovery.SoapBinding) };
         XmlSerializer discoveryDocumentSerializer = null;
         WebServiceProtocols enabledProtocols = WebServiceProtocols.Unknown;
+#if NETFRAMEWORK
         Type[] mimeImporterTypes = new Type[] { typeof(MimeXmlImporter), typeof(MimeFormImporter), typeof(MimeTextImporter) };
-        Type[] mimeReflectorTypes = new Type[] { typeof(MimeXmlReflector), typeof(MimeFormReflector) };
+#else
+		Type[] mimeImporterTypes = new Type[] { typeof(MimeFormImporter), typeof(MimeTextImporter) };
+#endif
+		Type[] mimeReflectorTypes = new Type[] { typeof(MimeXmlReflector), typeof(MimeFormReflector) };
         Type[] parameterReaderTypes = new Type[] { typeof(UrlParameterReader), typeof(HtmlFormParameterReader) };
         Type[] protocolImporterTypes = new Type[0];
         Type[] protocolReflectorTypes = new Type[0];

@@ -466,8 +466,13 @@ namespace System.Web {
 
             // if we make it here, we're sending a "206 Partial Content" status
             response.StatusCode = 206;
-            response.AppendHeader("Last-Modified", HttpUtility.FormatHttpDateTime(lastModified));
-            response.AppendHeader("Accept-Ranges", "bytes");
+            response.AppendHeader("Last-Modified",
+#if NETFRAMEWORK
+                HttpUtility.FormatHttpDateTime(lastModified));
+#else
+                HttpUtilityInternal.FormatHttpDateTime(lastModified));
+#endif
+			response.AppendHeader("Accept-Ranges", "bytes");
             response.AppendHeader("ETag", etag);
             response.AppendHeader("Cache-Control", "public");
 

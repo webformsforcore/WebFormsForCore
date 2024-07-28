@@ -2876,8 +2876,14 @@ namespace System.Web {
                 double xVal;
                 double yVal;
 
-                if (x != null && y != null && HttpUtility.TryParseCoordinates(x, out xVal) && HttpUtility.TryParseCoordinates(y, out yVal)) {
-                    ret = new[] { xVal, yVal };
+                if (x != null && y != null &&
+#if NETFRAMEWORK
+                    HttpUtility.TryParseCoordinates(x, out xVal) && HttpUtility.TryParseCoordinates(y, out yVal)) {
+#else
+					HttpUtilityInternal.TryParseCoordinates(x, out xVal) && HttpUtilityInternal.TryParseCoordinates(y, out yVal))
+				{
+#endif
+					ret = new[] { xVal, yVal };
                 }
             }
             catch {

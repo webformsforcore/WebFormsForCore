@@ -73,7 +73,11 @@ namespace System.Web.Services.Protocols {
             // Most of the fields in this class are ----ed in from the reflected information
             //
             ImportReflectedMethod(soapMethod);
-            ImportSerializers(soapMethod, GetServerTypeEvidence(serverType));
+            ImportSerializers(soapMethod
+#if NETFRAMEWORK
+                    , GetServerTypeEvidence(serverType)
+#endif
+                );
             ImportHeaderSerializers(soapMethod);
         }
 
@@ -181,10 +185,12 @@ namespace System.Web.Services.Protocols {
             }
         }
 
+#if NETFRAMEWORK
         [SecurityPermission(SecurityAction.Assert, ControlEvidence = true)]
         private Evidence GetServerTypeEvidence(Type type) {
             return type.Assembly.Evidence;
         }
+#endif
 
         private List<XmlMapping> GetXmlMappingsForMethod(SoapReflectedMethod soapMethod) {
             List<XmlMapping> mappings = new List<XmlMapping>();
@@ -238,11 +244,16 @@ namespace System.Web.Services.Protocols {
                 this.outHeaderMappings = outHeaders.ToArray();
         }
 
+#if NETFRAMEWORK
         private void ImportSerializers(SoapReflectedMethod soapMethod, Evidence serverEvidence) {
-            //
-            // Keep track of all XmlMapping instances we need for this method.
-            //
-            List<XmlMapping> mappings = GetXmlMappingsForMethod(soapMethod);
+#else
+		private void ImportSerializers(SoapReflectedMethod soapMethod) {
+#endif
+
+			//
+			// Keep track of all XmlMapping instances we need for this method.
+			//
+			List<XmlMapping> mappings = GetXmlMappingsForMethod(soapMethod);
 
             //
             // Generate serializers from those XmlMappings
@@ -250,17 +261,26 @@ namespace System.Web.Services.Protocols {
 
             XmlMapping[] xmlMappings = mappings.ToArray();
             TraceMethod caller = Tracing.On ? new TraceMethod(this, "ImportSerializers") : null;
-            if (Tracing.On) Tracing.Enter(Tracing.TraceId(Res.TraceCreateSerializer), caller, new TraceMethod(typeof(XmlSerializer), "FromMappings", xmlMappings, serverEvidence));
-            XmlSerializer[] serializers = null;
+            if (Tracing.On) Tracing.Enter(Tracing.TraceId(Res.TraceCreateSerializer), caller,
+#if NETFRAMEWORK
+                new TraceMethod(typeof(XmlSerializer), "FromMappings", xmlMappings, serverEvidence));
+#else
+				new TraceMethod(typeof(XmlSerializer), "FromMappings", xmlMappings));
+#endif
+			XmlSerializer[] serializers = null;
             if (AppDomain.CurrentDomain.IsHomogenous) {
                 serializers = XmlSerializer.FromMappings(xmlMappings);
             }
             else {
 #pragma warning disable 618 // If we're in a non-homogenous domain, legacy CAS mode is enabled, so passing through evidence will not fail
+#if NETFRAMEWORK
                 serializers = XmlSerializer.FromMappings(xmlMappings, serverEvidence);
+#else
+				serializers = XmlSerializer.FromMappings(xmlMappings);
+#endif
 #pragma warning restore 618
-            }
-            if (Tracing.On) Tracing.Exit(Tracing.TraceId(Res.TraceCreateSerializer), caller);
+			}
+			if (Tracing.On) Tracing.Exit(Tracing.TraceId(Res.TraceCreateSerializer), caller);
 
             int i = 0;
             this.parameterSerializer = serializers[i++];

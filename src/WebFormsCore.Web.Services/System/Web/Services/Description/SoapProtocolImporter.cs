@@ -4,18 +4,19 @@
 //     Information Contained Herein is Proprietary and Confidential.            
 //  </copyright>                                                                
 //------------------------------------------------------------------------------
-namespace System.Web.Services.Description {
+namespace System.Web.Services.Description
+{
 
     using System.Web.Services;
     using System.Web.Services.Protocols;
     using System.Xml;
     using System.Xml.Serialization;
-    using System.Xml.Serialization.Advanced;
     using System.Xml.Schema;
     using System.Collections;
     using System;
     using System.Data;
 #if NETFRAMEWORK
+    using System.Xml.Serialization.Advanced;
     using System.Data.Design;
 #endif
     using System.Reflection;
@@ -27,8 +28,9 @@ namespace System.Web.Services.Description {
     using System.Security.Permissions;
     using System.Globalization;
     using System.Threading;
-    
-    internal class SoapParameters {
+
+    internal class SoapParameters
+    {
         XmlMemberMapping ret;
         ArrayList parameters = new ArrayList();
         ArrayList inParameters = new ArrayList();
@@ -37,28 +39,34 @@ namespace System.Web.Services.Description {
         int inCheckSpecifiedCount;
         int outCheckSpecifiedCount;
 
-        internal SoapParameters(XmlMembersMapping request, XmlMembersMapping response, string[] parameterOrder, CodeIdentifiers identifiers) {
+        internal SoapParameters(XmlMembersMapping request, XmlMembersMapping response, string[] parameterOrder, CodeIdentifiers identifiers)
+        {
             ArrayList requestList = new ArrayList();
             ArrayList responseList = new ArrayList();
 
             AddMappings(requestList, request);
             if (response != null) AddMappings(responseList, response);
 
-            if (parameterOrder != null) {
-                for (int i = 0; i < parameterOrder.Length; i++) {
+            if (parameterOrder != null)
+            {
+                for (int i = 0; i < parameterOrder.Length; i++)
+                {
                     string elementName = parameterOrder[i];
                     XmlMemberMapping requestMapping = FindMapping(requestList, elementName);
                     SoapParameter parameter = new SoapParameter();
-                    if (requestMapping != null) {
+                    if (requestMapping != null)
+                    {
                         if (RemoveByRefMapping(responseList, requestMapping))
                             parameter.codeFlags = CodeFlags.IsByRef;
                         parameter.mapping = requestMapping;
                         requestList.Remove(requestMapping);
                         AddParameter(parameter);
                     }
-                    else {
+                    else
+                    {
                         XmlMemberMapping responseMapping = FindMapping(responseList, elementName);
-                        if (responseMapping != null) {
+                        if (responseMapping != null)
+                        {
                             parameter.codeFlags = CodeFlags.IsOut;
                             parameter.mapping = responseMapping;
                             responseList.Remove(responseMapping);
@@ -68,7 +76,8 @@ namespace System.Web.Services.Description {
                 }
             }
 
-            foreach (XmlMemberMapping requestMapping in requestList) {
+            foreach (XmlMemberMapping requestMapping in requestList)
+            {
                 SoapParameter parameter = new SoapParameter();
                 if (RemoveByRefMapping(responseList, requestMapping))
                     parameter.codeFlags = CodeFlags.IsByRef;
@@ -76,12 +85,15 @@ namespace System.Web.Services.Description {
                 AddParameter(parameter);
             }
 
-            if (responseList.Count > 0) {
-                if (!((XmlMemberMapping) responseList[0]).CheckSpecified) {
+            if (responseList.Count > 0)
+            {
+                if (!((XmlMemberMapping)responseList[0]).CheckSpecified)
+                {
                     ret = (XmlMemberMapping)responseList[0];
                     responseList.RemoveAt(0);
                 }
-                foreach (XmlMemberMapping responseMapping in responseList) {
+                foreach (XmlMemberMapping responseMapping in responseList)
+                {
                     SoapParameter parameter = new SoapParameter();
                     parameter.mapping = responseMapping;
                     parameter.codeFlags = CodeFlags.IsOut;
@@ -89,36 +101,45 @@ namespace System.Web.Services.Description {
                 }
             }
 
-            foreach (SoapParameter parameter in parameters) {
+            foreach (SoapParameter parameter in parameters)
+            {
                 parameter.name = identifiers.MakeUnique(CodeIdentifier.MakeValid(parameter.mapping.MemberName));
             }
         }
 
-        void AddParameter(SoapParameter parameter) {
+        void AddParameter(SoapParameter parameter)
+        {
             parameters.Add(parameter);
-            if (parameter.mapping.CheckSpecified) {
+            if (parameter.mapping.CheckSpecified)
+            {
                 checkSpecifiedCount++;
             }
-            if (parameter.IsByRef) {
+            if (parameter.IsByRef)
+            {
                 inParameters.Add(parameter);
                 outParameters.Add(parameter);
-                if (parameter.mapping.CheckSpecified) {
+                if (parameter.mapping.CheckSpecified)
+                {
                     inCheckSpecifiedCount++;
                     outCheckSpecifiedCount++;
                 }
-            } else if (parameter.IsOut) {
+            }
+            else if (parameter.IsOut)
+            {
                 outParameters.Add(parameter);
                 if (parameter.mapping.CheckSpecified)
                     outCheckSpecifiedCount++;
             }
-            else {
+            else
+            {
                 inParameters.Add(parameter);
                 if (parameter.mapping.CheckSpecified)
                     inCheckSpecifiedCount++;
             }
         }
 
-        static bool RemoveByRefMapping(ArrayList responseList, XmlMemberMapping requestMapping) {
+        static bool RemoveByRefMapping(ArrayList responseList, XmlMemberMapping requestMapping)
+        {
             XmlMemberMapping responseMapping = FindMapping(responseList, requestMapping.ElementName);
             if (responseMapping == null) return false;
             if (requestMapping.TypeFullName != responseMapping.TypeFullName) return false;
@@ -128,125 +149,153 @@ namespace System.Web.Services.Description {
             return true;
         }
 
-        static void AddMappings(ArrayList mappingsList, XmlMembersMapping mappings) {
-            for (int i = 0; i < mappings.Count; i++) {
+        static void AddMappings(ArrayList mappingsList, XmlMembersMapping mappings)
+        {
+            for (int i = 0; i < mappings.Count; i++)
+            {
                 mappingsList.Add(mappings[i]);
             }
         }
 
-        static XmlMemberMapping FindMapping(ArrayList mappingsList, string elementName) {
+        static XmlMemberMapping FindMapping(ArrayList mappingsList, string elementName)
+        {
             foreach (XmlMemberMapping mapping in mappingsList)
                 if (mapping.ElementName == elementName)
                     return mapping;
             return null;
         }
 
-        internal XmlMemberMapping Return {
+        internal XmlMemberMapping Return
+        {
             get { return ret; }
         }
 
-        internal IList Parameters {
+        internal IList Parameters
+        {
             get { return parameters; }
         }
 
-        internal IList InParameters {
+        internal IList InParameters
+        {
             get { return inParameters; }
         }
 
-        internal IList OutParameters {
+        internal IList OutParameters
+        {
             get { return outParameters; }
         }
-        
-        internal int CheckSpecifiedCount {
+
+        internal int CheckSpecifiedCount
+        {
             get { return checkSpecifiedCount; }
         }
-        
-        internal int InCheckSpecifiedCount {
+
+        internal int InCheckSpecifiedCount
+        {
             get { return inCheckSpecifiedCount; }
         }
-        
-        internal int OutCheckSpecifiedCount {
+
+        internal int OutCheckSpecifiedCount
+        {
             get { return outCheckSpecifiedCount; }
         }
     }
 
-    internal class SoapParameter {
+    internal class SoapParameter
+    {
         internal CodeFlags codeFlags;
         internal string name;
         internal XmlMemberMapping mapping;
         internal string specifiedName;
 
-        internal bool IsOut {
+        internal bool IsOut
+        {
             get { return (codeFlags & CodeFlags.IsOut) != 0; }
         }
 
-        internal bool IsByRef {
+        internal bool IsByRef
+        {
             get { return (codeFlags & CodeFlags.IsByRef) != 0; }
         }
 
-        internal static string[] GetTypeFullNames(IList parameters, int specifiedCount, CodeDomProvider codeProvider) {
+        internal static string[] GetTypeFullNames(IList parameters, int specifiedCount, CodeDomProvider codeProvider)
+        {
             string[] typeFullNames = new string[parameters.Count + specifiedCount];
             GetTypeFullNames(parameters, typeFullNames, 0, specifiedCount, codeProvider);
             return typeFullNames;
         }
 
-        internal static void GetTypeFullNames(IList parameters, string[] typeFullNames, int start, int specifiedCount, CodeDomProvider codeProvider) {
+        internal static void GetTypeFullNames(IList parameters, string[] typeFullNames, int start, int specifiedCount, CodeDomProvider codeProvider)
+        {
             int specified = 0;
-            for (int i = 0; i < parameters.Count; i++) {
+            for (int i = 0; i < parameters.Count; i++)
+            {
                 typeFullNames[i + start + specified] = WebCodeGenerator.FullTypeName(((SoapParameter)parameters[i]).mapping, codeProvider);
-                if (((SoapParameter) parameters[i]).mapping.CheckSpecified) {
+                if (((SoapParameter)parameters[i]).mapping.CheckSpecified)
+                {
                     specified++;
                     typeFullNames[i + start + specified] = typeof(bool).FullName;
                 }
             }
         }
 
-        internal static string[] GetNames(IList parameters, int specifiedCount) {
+        internal static string[] GetNames(IList parameters, int specifiedCount)
+        {
             string[] names = new string[parameters.Count + specifiedCount];
             GetNames(parameters, names, 0, specifiedCount);
             return names;
         }
 
-        internal static void GetNames(IList parameters, string[] names, int start, int specifiedCount) {
+        internal static void GetNames(IList parameters, string[] names, int start, int specifiedCount)
+        {
             int specified = 0;
-            for (int i = 0; i < parameters.Count; i++) {
+            for (int i = 0; i < parameters.Count; i++)
+            {
                 names[i + start + specified] = ((SoapParameter)parameters[i]).name;
-                if (((SoapParameter) parameters[i]).mapping.CheckSpecified) {
+                if (((SoapParameter)parameters[i]).mapping.CheckSpecified)
+                {
                     specified++;
-                    names[i + start + specified] = ((SoapParameter) parameters[i]).specifiedName;
+                    names[i + start + specified] = ((SoapParameter)parameters[i]).specifiedName;
                 }
             }
         }
 
-        internal static CodeFlags[] GetCodeFlags(IList parameters, int specifiedCount) {
+        internal static CodeFlags[] GetCodeFlags(IList parameters, int specifiedCount)
+        {
             CodeFlags[] codeFlags = new CodeFlags[parameters.Count + specifiedCount];
             GetCodeFlags(parameters, codeFlags, 0, specifiedCount);
             return codeFlags;
         }
 
-        internal static void GetCodeFlags(IList parameters, CodeFlags[] codeFlags, int start, int specifiedCount) {
+        internal static void GetCodeFlags(IList parameters, CodeFlags[] codeFlags, int start, int specifiedCount)
+        {
             int specified = 0;
-            for (int i = 0; i < parameters.Count; i++) {
+            for (int i = 0; i < parameters.Count; i++)
+            {
                 codeFlags[i + start + specified] = ((SoapParameter)parameters[i]).codeFlags;
-                if (((SoapParameter) parameters[i]).mapping.CheckSpecified) {
+                if (((SoapParameter)parameters[i]).mapping.CheckSpecified)
+                {
                     specified++;
-                    codeFlags[i + start + specified] = ((SoapParameter) parameters[i]).codeFlags;
+                    codeFlags[i + start + specified] = ((SoapParameter)parameters[i]).codeFlags;
                 }
             }
         }
     }
 
-    internal class GlobalSoapHeader {
-        internal string fieldName;        
-        internal XmlTypeMapping mapping;  
-        internal bool isEncoded;      
+    internal class GlobalSoapHeader
+    {
+        internal string fieldName;
+        internal XmlTypeMapping mapping;
+        internal bool isEncoded;
     }
-    
-    internal class LocalSoapHeader {
-        internal SoapHeaderDirection direction;        
-        internal string fieldName;        
+
+    internal class LocalSoapHeader
+    {
+        internal SoapHeaderDirection direction;
+        internal string fieldName;
     }
-            
+
+
     /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter"]/*' />
     /// <devdoc>
     ///    <para>[To be supplied.]</para>
@@ -255,9 +304,11 @@ namespace System.Web.Services.Description {
     [PermissionSet(SecurityAction.InheritanceDemand, Name = "FullTrust")]
     public class SoapProtocolImporter : ProtocolImporter {
         XmlSchemaImporter xmlImporter;
+#if NETFRAMEWORK
         XmlCodeExporter xmlExporter;
         SoapSchemaImporter soapImporter;
         SoapCodeExporter soapExporter;
+#endif
         ArrayList xmlMembers = new ArrayList();        
         ArrayList soapMembers = new ArrayList();
         Hashtable headers = new Hashtable();
@@ -268,7 +319,9 @@ namespace System.Web.Services.Description {
         SoapTransportImporter transport;
         SoapBinding soapBinding;
         ArrayList codeClasses = new ArrayList();
+#if NETFRAMEWORK
         static TypedDataSetSchemaImporterExtension typedDataSetSchemaImporterExtension;
+#endif
 
         /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter.ProtocolName"]/*' />
         /// <devdoc>
@@ -286,6 +339,7 @@ namespace System.Web.Services.Description {
             get { return soapBinding; }
         }
 
+#if NETFRAMEWORK
         /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter.SoapImporter"]/*' />
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
@@ -293,7 +347,7 @@ namespace System.Web.Services.Description {
         public SoapSchemaImporter SoapImporter {
             get { return soapImporter; }
         }
-
+#endif
         /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter.XmlImporter"]/*' />
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
@@ -302,6 +356,7 @@ namespace System.Web.Services.Description {
             get { return xmlImporter; }
         }
 
+#if NETFRAMEWORK
         /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter.XmlExporter"]/*' />
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
@@ -326,6 +381,7 @@ namespace System.Web.Services.Description {
                 return typedDataSetSchemaImporterExtension;
             }
         }
+#endif
 
         /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter.BeginNamespace"]/*' />
         /// <devdoc>
@@ -335,7 +391,7 @@ namespace System.Web.Services.Description {
             try {
                 MethodNames.Clear();
                 ExtraCodeClasses.Clear();
-                soapImporter = new SoapSchemaImporter(AbstractSchemas, ServiceImporter.CodeGenerationOptions, ImportContext);
+#if NETFRAMEWORK
                 xmlImporter = new XmlSchemaImporter(ConcreteSchemas, ServiceImporter.CodeGenerationOptions, ServiceImporter.CodeGenerator, ImportContext);
                 foreach (Type extensionType in ServiceImporter.Extensions) {
                     xmlImporter.Extensions.Add(extensionType.FullName, extensionType);
@@ -344,10 +400,12 @@ namespace System.Web.Services.Description {
                 // 
                 xmlImporter.Extensions.Add(TypedDataSetSchemaImporterExtension);
                 xmlImporter.Extensions.Add(new DataSetSchemaImporterExtension());
-                xmlExporter = new XmlCodeExporter(this.CodeNamespace, ServiceImporter.CodeCompileUnit, ServiceImporter.CodeGenerator, ServiceImporter.CodeGenerationOptions, ExportContext);
+				soapImporter = new SoapSchemaImporter(AbstractSchemas, ServiceImporter.CodeGenerationOptions, ImportContext);
+				xmlExporter = new XmlCodeExporter(this.CodeNamespace, ServiceImporter.CodeCompileUnit, ServiceImporter.CodeGenerator, ServiceImporter.CodeGenerationOptions, ExportContext);
                 soapExporter = new SoapCodeExporter(this.CodeNamespace, null, ServiceImporter.CodeGenerator, ServiceImporter.CodeGenerationOptions, ExportContext);
-            }
-            catch (Exception e) {
+#endif
+			}
+			catch (Exception e) {
                 if (e is ThreadAbortException || e is StackOverflowException || e is OutOfMemoryException) {
                     throw;
                 }
@@ -360,9 +418,9 @@ namespace System.Web.Services.Description {
         ///    <para>[To be supplied.]</para>
         /// </devdoc>
         protected override void EndNamespace() {
+#if NETFRAMEWORK
             // need to preprocess all exported schemas to make sure that IXmlSerializable schemas are Merged and the resulting set is valid
             ConcreteSchemas.Compile(null, false);
-
             foreach (GlobalSoapHeader soapHeader in headers.Values) {
                 if (soapHeader.isEncoded)
                     soapExporter.ExportTypeMapping(soapHeader.mapping);
@@ -392,6 +450,9 @@ namespace System.Web.Services.Description {
                 this.CodeNamespace.Types.Add(declaration);
             }
             CodeGenerator.ValidateIdentifiers(CodeNamespace);
+#else 
+            throw new NotSupportedException("SoapProtocolImported not supported in WebFormsCore.");
+#endif
         }
 
         /// <include file='doc\SoapProtocolImporter.uex' path='docs/doc[@for="SoapProtocolImporter.IsBindingSupported"]/*' />
@@ -572,10 +633,14 @@ namespace System.Web.Services.Description {
                     XmlTypeMapping mapping;
                     string key;
                     if (use == SoapBindingUse.Encoded) {
+#if NETFRAMEWORK
                         if (part.Type.IsEmpty) throw new InvalidOperationException(Res.GetString(Res.WebDescriptionPartTypeRequired, part.Name, header.Message.Name, header.Message.Namespace));
                         if (!part.Element.IsEmpty) UnsupportedOperationBindingWarning(Res.GetString(Res.WebDescriptionPartElementWarning, part.Name, header.Message.Name, header.Message.Namespace));
                         mapping = soapImporter.ImportDerivedTypeMapping(part.Type, typeof(SoapHeader), true);
                         key = "type=" + part.Type.ToString();
+#else
+                        throw new NotSupportedException("SoapBindingUse.Encoded not supported by WebFormsCore.");
+#endif
                     }
                     else {
                         if (part.Element.IsEmpty) throw new InvalidOperationException(Res.GetString(Res.WebDescriptionPartElementRequired, part.Name, header.Message.Name, header.Message.Namespace));
@@ -783,17 +848,27 @@ namespace System.Web.Services.Description {
             foreach (SoapParameter parameter in parameters.Parameters) {
                 paramsMetadata[j] = new CodeAttributeDeclarationCollection();
                 if (soapRequestBinding.Use == SoapBindingUse.Encoded)
+#if NETFRAMEWORK
                     soapExporter.AddMappingMetadata(paramsMetadata[j], parameter.mapping, parameter.name != parameter.mapping.MemberName);
-                else {
+#else
+                    throw new NotSupportedException("SoapBindingUse.Encoded not supported by WebFormsCore.");
+#endif
+                else
+                {
+#if NETFRAMEWORK
                     string ns = soapBindingStyle == SoapBindingStyle.Rpc ? parameter.mapping.Namespace : parameter.IsOut ? response.Namespace : request.Namespace;
                     bool forceUseMemberName = parameter.name != parameter.mapping.MemberName;
-                    xmlExporter.AddMappingMetadata(paramsMetadata[j], parameter.mapping,  ns, forceUseMemberName);
-                    if (parameter.mapping.CheckSpecified) {
+                    xmlExporter.AddMappingMetadata(paramsMetadata[j], parameter.mapping, ns, forceUseMemberName);
+                    if (parameter.mapping.CheckSpecified)
+                    {
                         j++;
                         paramsMetadata[j] = new CodeAttributeDeclarationCollection();
                         xmlExporter.AddMappingMetadata(paramsMetadata[j], parameter.mapping, ns, parameter.specifiedName != parameter.mapping.MemberName + "Specified");
                         paramsMetadata[j].Add(ignoreAttribute);
                     }
+#else
+                    throw new NotSupportedException("XmlCodeExporter not supported by WebFormsCore.");
+#endif
                 }
                 if (paramsMetadata[j].Count > 0  && !ServiceImporter.CodeGenerator.Supports(GeneratorSupport.ParameterAttributes)) {
                     UnsupportedOperationWarning(Res.GetString(Res.CodeGenSupportParameterAttributes, ServiceImporter.CodeGenerator.GetType().Name));
@@ -818,11 +893,14 @@ namespace System.Web.Services.Description {
             mainCodeMethod.Comments.Add(new CodeCommentStatement(Res.GetString(Res.CodeRemarks), true));
 
             if (parameters.Return != null) {
+#if NETFRAMEWORK
                 if (soapRequestBinding.Use == SoapBindingUse.Encoded)
                     soapExporter.AddMappingMetadata(mainCodeMethod.ReturnTypeCustomAttributes, parameters.Return, parameters.Return.ElementName != uniqueMethodName + "Result");
                 else
                     xmlExporter.AddMappingMetadata(mainCodeMethod.ReturnTypeCustomAttributes, parameters.Return, response.Namespace, parameters.Return.ElementName != uniqueMethodName + "Result");
-
+#else
+                throw new NotSupportedException("SoapProtocolImporter not supported by WebFormsCore.");
+#endif
                 if (mainCodeMethod.ReturnTypeCustomAttributes.Count != 0 && !ServiceImporter.CodeGenerator.Supports(GeneratorSupport.ReturnTypeAttributes)) {
                     UnsupportedOperationWarning(Res.GetString(Res.CodeGenSupportReturnTypeAttributes, ServiceImporter.CodeGenerator.GetType().Name));
                     return null;
@@ -1124,6 +1202,7 @@ namespace System.Web.Services.Description {
         }
 
         XmlMembersMapping ImportEncodedMessage(string messageName, MessagePart[] parts, SoapBodyBinding soapBodyBinding, bool wrapped) {
+#if NETFRAMEWORK
             XmlMembersMapping membersMapping;
             if (wrapped) {
                 SoapSchemaMember schemaMember = new SoapSchemaMember();
@@ -1144,6 +1223,9 @@ namespace System.Web.Services.Description {
             } 
             soapMembers.Add(membersMapping);
             return membersMapping;
+#else
+			throw new NotSupportedException("SoapProtocolImporter not supported by WebFormsCore.");
+#endif
         }
 
         XmlMembersMapping ImportLiteralMessage(string messageName, MessagePart[] parts, SoapBodyBinding soapBodyBinding, SoapBindingStyle soapBindingStyle, bool wrapped) {
