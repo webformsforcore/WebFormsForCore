@@ -15,7 +15,7 @@ using System.Security;
 [assembly: AssemblyCompany("Estrellas de Esperanza")]
 [assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsCore")]
 [assembly: AssemblyCopyright("© Estrellas de Esperanza. All rights reserved.")]
-[assembly: AssemblyFileVersion("8.5.0.0")]
+[assembly: AssemblyFileVersion("8.5.*.*")]
 [assembly: AssemblyInformationalVersion("8.5.0.0")]
 [assembly: SatelliteContractVersion("8.5.0.0")]
 [assembly: NeutralResourcesLanguage("en-US")]

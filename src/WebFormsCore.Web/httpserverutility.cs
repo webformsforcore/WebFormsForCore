@@ -14,6 +14,11 @@
 // 
 #define ENTITY_ENCODE_HIGH_ASCII_CHARS
 
+using System.Runtime.CompilerServices;
+
+[assembly: TypeForwardedToAttribute(typeof(System.Web.HttpUtility))]
+
+
 namespace System.Web {
     using System.Collections;
     using System.Collections.Specialized;
