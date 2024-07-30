@@ -29,7 +29,7 @@
 
     <ItemGroup Condition="$(TargetFramework) != 'net48'">
         <ProjectReference Include="..\WebFormsCore.Configuration\WebFormsCore.Configuration.csproj" />
-        <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" />
+        <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
         <ProjectReference Include="..\WebFormsCore.Web.Services\WebFormsCore.Web.Services.csproj" />
         <ProjectReference Include="..\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj" />
         <PackageReference Include="CoreWCF.Http" Version="1.5.2" />

@@ -38,7 +38,7 @@
         <ProjectReference Include="..\WebFormsCore.Serialization.Formatters\WebFormsCore.Serialization.Formatters.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsCore.Web.ApplicationServices\WebFormsCore.Web.ApplicationServices.csproj" />
         <ProjectReference Include="..\WebFormsCore.Web.RegularExpressions\WebFormsCore.Web.RegularExpressions.csproj" />
-        <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" />
+        <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
         <ProjectReference Include="..\WebFormsCore.Web.Services\WebFormsCore.Web.Services.csproj" />
     </ItemGroup>
 

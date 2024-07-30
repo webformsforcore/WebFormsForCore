@@ -133,6 +133,19 @@
 	</ItemGroup>
 	-->
 
+    <Target Name="Replace" BeforeTargets="CoreCompile">
+        <PropertyGroup>
+            <InputFile>AssemblyInfo.cs</InputFile>
+            <OutputFile>AssemblyInfo.cs</OutputFile>
+            <Lines>$([System.IO.File]::ReadAllText($(InputFile)).Replace('BuildDate("[^"]*")','</Lines>
+        </PropertyGroup>
+        <WriteLinesToFile
+            File="$(OutputFile)"
+            Overwrite="true"
+            Lines="$([System.Text.RegularExpressions.Regex]::Replace($([System.IO.File]::ReadAllText('$(InputFile)')),'BuildDate\(&quot;\d+&quot;\)', 'BuildDate(&quot;$([System.DateTime]::UtcNow.ToString(&quot;yyyyMMddHHmmss&quot;))&quot;)'))"
+            Encoding="Unicode" />
+    </Target>
+    
     <Import Project="..\..\lib\WebFormsCore.Build\netstandard2.0\EstrellasDeEsperanza.WebFormsCore.Build.targets" />
 
     <PropertyGroup>

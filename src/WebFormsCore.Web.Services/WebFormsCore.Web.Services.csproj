@@ -45,7 +45,7 @@
     </ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" />
+	  <ProjectReference Include="..\WebFormsCore.Web\WebFormsCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
 	</ItemGroup>
 
     <Import Project="..\..\lib\WebFormsCore.Build\netstandard2.0\EstrellasDeEsperanza.WebFormsCore.Build.targets" />
