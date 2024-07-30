@@ -1,0 +1,178 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>11</LangVersion>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
+        <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyName>System.Configuration.ConfigurationManager</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Security" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="System\Configuration\TypeUtil.cs" />
+        <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
+        <Compile Remove="System\System.Configuration\ConfigurationPermission.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="System\Configuration.resx" />
+        <None Remove="machine.config" />
+        <EmbeddedResource Include="Config\machine.config" />
+        <EmbeddedResource Include="System\Configuration.resx">
+            <LogicalName>System.Configuration.resources</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.CodeDom" Version="8.0.0" />
+        <!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />-->
+        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+        <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <ProjectReference Include="..\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="System\Net\Configuration\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="System\Configuration.resx" />
+        <None Include="System\Configuration\TypeUtil.cs" />
+        <None Include="System\System.Configuration\ConfigurationException.cs" />
+        <None Include="System\System.Configuration\ConfigurationPermission.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="System\Configuration\CodeDom\CodeDomProvider.cs" />
+    </ItemGroup>
+
+    <!--
+	<ItemGroup>
+	  <Compile Remove="System\System.Configuration\Configuration.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationCollectionAttribute.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationConverterBase.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElement.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElementCollection.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElementCollectionType.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationElementProperty.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationErrorsException.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationFileMap.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLocation.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLocationCollection.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLockCollection.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationLockCollectionType.cs" />
+	  <Compile Remove="System\System.Configuration\ConfigurationManager.cs" />
+	  <Compile Remove="System\System.Configuration\IgnoreSectionHandler.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\DelegatingConfigHost.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigErrorInfo.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigSystem.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigurationManagerHelper.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IConfigurationManagerInternal.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigClientHost.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigConfigurationFactory.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigHost.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigRecord.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigRoot.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigSettingsFactory.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\IInternalConfigSystem.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\InternalConfigEventArgs.cs" />
+	  <Compile Remove="System\System.Configuration\Internal\InternalConfigEventHandler.cs" />
+	  <None Include="System\System.Configuration\Configuration.cs" />
+	  <None Include="System\System.Configuration\ConfigurationCollectionAttribute.cs" />
+	  <None Include="System\System.Configuration\ConfigurationConverterBase.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElement.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElementCollection.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElementCollectionType.cs" />
+	  <None Include="System\System.Configuration\ConfigurationElementProperty.cs" />
+	  <None Include="System\System.Configuration\ConfigurationErrorsException.cs" />
+	  <None Include="System\System.Configuration\ConfigurationFileMap.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLocation.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLocationCollection.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLockCollection.cs" />
+	  <None Include="System\System.Configuration\ConfigurationLockCollectionType.cs" />
+	  <None Include="System\System.Configuration\ConfigurationManager.cs" />
+	  <None Include="System\System.Configuration\IgnoreSectionHandler.cs" />
+	  <None Include="System\System.Configuration\Internal\DelegatingConfigHost.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigErrorInfo.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigSystem.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigurationManagerHelper.cs" />
+	  <None Include="System\System.Configuration\Internal\IConfigurationManagerInternal.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigClientHost.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigConfigurationFactory.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigRecord.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigRoot.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigSettingsFactory.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigSystem.cs" />
+	  <None Include="System\System.Configuration\Internal\InternalConfigEventArgs.cs" />
+	  <None Include="System\System.Configuration\Internal\InternalConfigEventHandler.cs" />
+	  <None Include="System\System.Configuration\Internal\IInternalConfigHost.cs" />
+	</ItemGroup>
+	-->
+
+    <Target Name="ReplaceBuildDate" BeforeTargets="CoreCompile"
+        Inputs="$(MSBuildAllProjects);
+                @(Compile);
+                @(_CoreCompileResourceInputs);
+                $(ApplicationIcon);
+                $(KeyOriginatorFile);
+                @(ReferencePathWithRefAssemblies);
+                @(CompiledLicenseFile);
+                @(LinkResource);
+                @(EmbeddedDocumentation);
+                $(Win32Resource);
+                $(Win32Manifest);
+                @(CustomAdditionalCompileInputs);
+                $(ResolvedCodeAnalysisRuleSet);
+                @(AdditionalFiles);
+                @(EmbeddedFiles);
+                @(Analyzer);
+                @(EditorConfigFiles)"
+        Outputs="@(DocFileItem);
+                @(IntermediateAssembly);
+                @(IntermediateRefAssembly);
+                @(_DebugSymbolsIntermediatePath);
+                $(NonExistentFile);
+                @(CustomAdditionalCompileOutputs)">
+        <PropertyGroup>
+            <InputFile>AssemblyInfo.cs</InputFile>
+            <OutputFile>AssemblyInfo.cs</OutputFile>
+        </PropertyGroup>
+        <WriteLinesToFile
+            File="$(OutputFile)"
+            Overwrite="true"
+            Lines="$([System.Text.RegularExpressions.Regex]::Replace($([System.IO.File]::ReadAllText('$(InputFile)')),'BuildDate\(&quot;[^&quot;]*&quot;\)', 'BuildDate(&quot;$([System.DateTime]::UtcNow.ToString(&quot;yyyyMMddHHmmss&quot;))&quot;)'))"
+            Encoding="Unicode" />
+    </Target>
+    
+    <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.targets" />
+
+    <PropertyGroup>
+        <StrongNamePublicKey>00240000048000009400000006020000002400005253413100040000010001004b86c4cb78549b34bab61a3b1800e23bfeb5b3ec390074041536a7e3cbd97f5f04cf0f857155a8928eaa29ebfd11cfbbad3ba70efea7bda3226c6a8d370a4cd303f714486b6ebc225985a638471e6ef571cc92a4613c00b8fa65d61ccee0cbe5f36330c9a01f4183559f1bef24cc2917c6d913e3a541333a1d05d9bed22b38cb</StrongNamePublicKey>
+        <StrongNamePublicKeyToken>cc7b13ffcd2ddd51</StrongNamePublicKeyToken>
+    </PropertyGroup>
+
+</Project>

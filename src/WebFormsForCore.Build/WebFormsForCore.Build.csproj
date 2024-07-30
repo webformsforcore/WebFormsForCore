@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+        <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Build</AssemblyName>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <OutputType>Exe</OutputType>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <StartupObject>EstrellasDeEsperanza.WebFormsForCore.Build.Program</StartupObject>
+        <OutputPath>..\..\lib\WebFormsForCore.Build</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="AssemblyPatcher.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.deps.json" />
+        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.runtimeconfig.json" />
+        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.targets" />
+        <None Remove="netstandard.dll" />
+        <None Remove="System.Runtime.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.deps.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.runtimeconfig.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.targets">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="AssemblyPatcher.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
+        <PackageReference Include="Mono.Cecil" Version="0.11.5" />
+    </ItemGroup>
+
+</Project>

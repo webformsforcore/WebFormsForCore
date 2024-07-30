@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <WebFormsForCoreTasksPath Condition="'$(WebFormsForCoreTasksPath)' == '' and '$(MSBuildThisFile)' == 'WebFormsForCore.Build.targets'">$(MSBuildThisFileDirectory)</WebFormsForCoreTasksPath>
+        <!--<WebFormsForCoreTasksPath Condition="'$(WebFormsForCoreTasksPath)' == '' and '$(MSBuildThisFile)' == 'MSBuildTasks.targets'">$(MSBuildThisFileDirectory)..\tools</WebFormsForCoreTasksPath>-->
+        <WebFormsForCoreTasksLib Condition="'$(OS)' == 'Windows_NT'">$([MSBUILD]::Unescape($(WebFormsForCoreTasksPath)\EstrellasDeEsperanza.WebFormsForCore.Build.dll))</WebFormsForCoreTasksLib>
+        <WebFormsForCoreTasksLib Condition="'$(OS)' != 'Windows_NT'">$(WebFormsForCoreTasksPath)\EstrellasDeEsperanza.WebFormsForCore.Build.dll</WebFormsForCoreTasksLib>
+        <WebFormsForCoreTasksLib Condition="!Exists('$(WebFormsForCoreTasksLib)')">EstrellasDeEsperanza.WebFormsForCore.Build.dll</WebFormsForCoreTasksLib>
+        <NetFXDir>$(windir)\Microsoft.NET\Framework64\v4.0.30319\</NetFXDir>
+        <TargetsTriggeredByCompilation>
+            $(TargetsTriggeredByCompilation);
+            FakeStrongName
+        </TargetsTriggeredByCompilation>
+    </PropertyGroup>
+
+    <UsingTask
+        TaskName="FakeStrongName"
+        TaskFactory="RoslynCodeTaskFactory"
+        AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup />
+        <Task Evaluate="true">
+            <Using Namespace="EstrellasDeEsperanza.WebFormsForCore.Build" />
+            <Reference Include="$(MSBuildThisFileDirectory)Mono.Cecil.dll" />
+            <Reference Include="$(MSBuildThisFileDirectory)Microsoft.Build.dll" />
+            <Reference Include="$(MSBuildThisFileDirectory)Microsoft.Build.Framework.dll" />
+            <Reference Include="$(MSBuildThisFileDirectory)Microsoft.Build.Utilities.Core.dll" />
+            <Reference Include="$(MSBuildThisFileDirectory)System.Linq.dll" />
+            <!--<Reference Include="System.Core" Confition="$(MSBuildRuntimeType) != 'Core'" />
+            <Reference Include="System.Reflection.Metadata" />
+            <Reference Include="System.Reflection.TypeExtensions" />
+            <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />-->
+            <Code Type="Class" Language="cs">
+                <![CDATA[
+using System;
+using System.Reflection;
+using System.IO;
+using System.Diagnostics;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using Mono.Cecil;
+using System.Runtime.InteropServices;
+
+#nullable enable
+
+namespace EstrellasDeEsperanza.WebFormsForCore.Build
+{
+	public class FakeStrongName : Task
+	{
+		public const bool NeedsKey = false;
+		public static bool IsCore => !(IsNetFX || IsNetNative);
+		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
+		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
+		public ITaskItem[]? Assemblies { get; set; }
+		public ITaskItem? Source { get; set; }
+		public ITaskItem? Key { get; set; }
+		public string? PublicKey { get; set; }
+		public string? PublicKeyToken { get; set; }
+		public bool LogToConsole { get; set; } = false;
+		public string? AssemblyPath { get; set; }
+		byte[] StringToByteArray(string hex)
+		{
+			int length = hex.Length;
+			byte[] bytes = new byte[length / 2];
+
+			for (int i = 0; i < length; i += 2)
+			{
+				bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+			}
+			return bytes;
+		}
+
+		void LogError(string msg)
+		{
+			if (Log != null && !LogToConsole) Log.LogError(msg);
+			else Console.Error.WriteLine(msg);
+		}
+
+		void LogMessage(string msg)
+		{
+			if (Log != null && !LogToConsole) Log.LogMessage(MessageImportance.High, msg);
+			else Console.WriteLine(msg);
+		}
+
+		public override bool Execute()
+		{
+			byte[]? publicKey = null;
+			byte[]? publicKeyToken = null;
+
+			if (string.IsNullOrEmpty(PublicKey) || string.IsNullOrEmpty(PublicKeyToken))
+			{
+				if (string.IsNullOrEmpty(Source?.ItemSpec))
+				{
+					LogError("Need to specify PublicKey if no Source specified.");
+					return false;
+				}
+
+				if (!File.Exists(Source?.ItemSpec))
+				{
+					LogError("Need to specify a valid Source dll in Source.");
+					return false;
+				}
+				var source = AssemblyDefinition.ReadAssembly(Source?.ItemSpec);
+				publicKey = source.Name.PublicKey;
+				publicKeyToken = source.Name.PublicKeyToken;
+			}
+			else if (!string.IsNullOrEmpty(PublicKey) && !string.IsNullOrEmpty(PublicKeyToken))
+			{
+				try
+				{
+					publicKey = StringToByteArray(PublicKey!);
+					publicKeyToken = StringToByteArray(PublicKeyToken!);
+				}
+				catch (Exception ex)
+				{
+					LogError($"Invalid PublicKey {PublicKey}, {PublicKeyToken}, {ex}.");
+					return false;
+				}
+			}
+			else
+			{
+				LogError("You must specify a PublicKey & PublicKeyToken.");
+				return false;
+			}
+
+			var keyFileName = Key?.ItemSpec;
+			if (NeedsKey && (string.IsNullOrEmpty(keyFileName) || !File.Exists(keyFileName)))
+			{
+				LogError("Need to specify a valid *.snk key file in Key.");
+				return false;
+			}
+
+			if (Assemblies == null)
+			{
+				LogError("Must specify Assemblies.");
+				return false;
+			}
+
+			try
+			{
+				if (!IsCore)
+				{
+					LogMessage($"Starting dotnet...");
+					string[] a = new string[Assemblies.Length];
+					for (int i = 0; i < Assemblies.Length; i++) {
+						a[i] = Assemblies[i].ItemSpec;
+					}
+					var assemblies = string.Join(";", a);
+
+					var dll = Path.Combine(AssemblyPath, "EstrellasDeEsperanza.WebFormsForCore.Build.dll");
+
+					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" \"{assemblies}\" " +
+						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
+						$"\"{Source?.ItemSpec ?? ""}\"");
+					startInfo.CreateNoWindow = true;
+					startInfo.UseShellExecute = false;
+					startInfo.RedirectStandardError = true;
+					startInfo.RedirectStandardOutput = true;
+					var p = new Process();
+					p.StartInfo = startInfo;
+					p.OutputDataReceived += (sender, args) =>
+					{
+						if (args.Data != null) LogMessage(args.Data);
+					};
+					p.ErrorDataReceived += (sender, args) =>
+					{
+						if (args.Data != null) LogError(args.Data);
+					};
+					p.EnableRaisingEvents = true;
+					p.Start();
+					p.BeginOutputReadLine();
+					p.BeginErrorReadLine();
+					p.WaitForExit(30000);
+				}
+				else
+				{
+					StrongNameKeyPair? key = null;
+					try
+					{
+						using (var keyFile = new FileStream(keyFileName, FileMode.Open, FileAccess.Read))
+						{
+							key = new StrongNameKeyPair(keyFile);
+						}
+					}
+					catch { }
+
+					foreach (var assemblyItem in Assemblies)
+					{
+						var assemblyFileName = assemblyItem.ItemSpec;
+						var assemblyCopyName = Path.ChangeExtension(assemblyFileName, ".Fake.dll");
+
+						if (File.Exists(assemblyFileName))
+						{
+
+							bool success = false;
+
+							bool withSymbols = File.Exists(Path.ChangeExtension(assemblyFileName, ".pdb"));
+
+							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName, new ReaderParameters() { ReadSymbols = withSymbols }))
+							{
+								assembly.Name.PublicKey = publicKey;
+								assembly.Name.PublicKeyToken = publicKeyToken;
+
+								//File.Delete(assemblyFileName);
+								assembly.Write(assemblyCopyName, new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols });
+								success = true;
+							}
+
+							if (success)
+							{
+								File.Copy(assemblyCopyName, assemblyFileName, true);
+								LogMessage($"Replaced public key in {assemblyFileName} with {PublicKeyToken}.");
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				LogError($"Exception creating FakeStrongName: {ex}");
+				return false;
+			}
+			return true;
+		}
+	}
+}
+ ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
+    <ItemGroup>
+        <StrongNameAssemblies Include="$(IntermediateOutputPath)$(AssemblyName).dll" Visible="false" />
+        <StrongNameAssemblies Include="$(IntermediateOutputPath)refint\$(AssemblyName).dll" Visible="false" />
+        <FakeStrongNameAssemblies Include="$(IntermediateOutputPath)$(AssemblyName).Fake.dll" Visible="false" />
+        <FakeStrongNameAssemblies Include="$(IntermediateOutputPath)refint\$(AssemblyName).Fake.dll" Visible="false" />    
+    </ItemGroup>
+
+    <Target Name="FakeStrongName" Condition="$(TargetFramework) != 'net48'"
+		AfterTargets="CoreCompile"
+        Inputs="@(StrongNameAssemblies)"
+        Outputs="@(FakeStrongNameAssemblies)">
+
+        <FakeStrongName Assemblies="@(StrongNameAssemblies)"
+            PublicKey="$(StrongNamePublicKey)"
+            PublicKeyToken="$(StrongNamePublicKeyToken)"
+			AssemblyPath="$(MSBuildThisFileDirectory)" />
+        
+		<Touch Files="@(FakeStrongNameAssemblies)" />
+    </Target>
+
+</Project>

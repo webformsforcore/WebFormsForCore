@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<DefineConstants>$(DefineConstants);Legacy;WebFormsForCore</DefineConstants>
+		<NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0050;SYSLIB0051</NoWarn>
+		<SignAssembly>True</SignAssembly>
+        <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</AssemblyName>
+	</PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+	  <Compile Remove="Serialization\Formatter.cs" />
+	  <Compile Remove="Serialization\FormatterConverter.cs" />
+	  <Compile Remove="Serialization\Formatters\CommonEnums.cs" />
+	  <Compile Remove="Serialization\Formatters\IFieldInfo.cs" />
+	  <Compile Remove="Serialization\ISerializationSurrogate.cs" />
+	  <Compile Remove="Serialization\ISurrogateSelector.cs" />
+	  <Compile Remove="Serialization\SerializationBinder.cs" />
+	  <Compile Remove="Serialization\SerializationObjectManager.cs" />
+	  <Compile Remove="Serialization\SurrogateSelector.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Serialization\Formatter.cs" />
+	  <None Include="Serialization\FormatterConverter.cs" />
+	  <None Include="Serialization\Formatters\CommonEnums.cs" />
+	  <None Include="Serialization\Formatters\IFieldInfo.cs" />
+	  <None Include="Serialization\ISerializationSurrogate.cs" />
+	  <None Include="Serialization\ISurrogateSelector.cs" />
+	  <None Include="Serialization\SerializationBinder.cs" />
+	  <None Include="Serialization\SerializationObjectManager.cs" />
+	  <None Include="Serialization\SurrogateSelector.cs" />
+	</ItemGroup>
+
+</Project>

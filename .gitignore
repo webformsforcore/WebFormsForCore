@@ -399,5 +399,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-lib/WebFormsCore.Build
+lib/WebFormsForCore.Build
 bin_dotnet

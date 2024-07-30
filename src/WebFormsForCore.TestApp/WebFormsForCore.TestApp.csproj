@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>11</LangVersion>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <StartupObject Condition="'$(TargetFramework)' != 'net48'">EstrellasDeEsperanza.WebFormsForCore.Test.Program</StartupObject>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <GenerateDependencyFile>true</GenerateDependencyFile>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+        <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
+        <OutputType>Exe</OutputType>
+        <OutputPath>bin_dotnet</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+        <OutputType>Library</OutputType>
+        <OutputPath>bin</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+        <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj" Condition="'$(TargetFramework)' != 'net48'" />
+        <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web.RegularExpressions\WebFormsForCore.Web.RegularExpressions.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
+        <ProjectReference Include="..\WebFormsForCore.Web.Services\WebFormsForCore.Web.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+        <Reference Include="System.Configuration" />
+        <!--<Reference Include="System.Runtime.Serializtion" />-->
+        <Reference Include="System.Web" />
+        <Reference Include="System.Web.ApplicationServices" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+       <!-- <None Remove="Config\machine.config" />
+        <Content Include="Config\machine.config" CopyToOutputDirectory="PreserveNewest" />-->
+        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.10.0" GeneratePathProperty="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="WebFormsForCore.TestApp.deps.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <Target Name="AddRuntimeDependenciesToContent" Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'" BeforeTargets="GetCopyToOutputDirectoryItems" DependsOnTargets="GenerateBuildDependencyFile;&#xD;&#xA;                            GenerateBuildRuntimeConfigurationFiles">
+        <ItemGroup>
+            <ContentWithTargetPath Include="$(ProjectDepsFilePath)" Condition="'$(GenerateDependencyFile)' == 'true'" CopyToOutputDirectory="PreserveNewest" TargetPath="$(ProjectDepsFileName)" />
+            <ContentWithTargetPath Include="$(ProjectRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'" CopyToOutputDirectory="PreserveNewest" TargetPath="$(ProjectRuntimeConfigFileName)" />
+        </ItemGroup>
+    </Target>
+    
+</Project>
