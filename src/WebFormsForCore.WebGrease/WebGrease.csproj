@@ -1,0 +1,572 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E853D38C-EFD5-495E-853B-69FFE19FA199}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebGrease</RootNamespace>
+    <AssemblyName>WebGrease</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SourceAnalysisTreatErrorsAsWarnings>false</SourceAnalysisTreatErrorsAsWarnings>
+    <SourceAnalysisOverrideSettingsFile Condition="'$(SourceAnalysisOverrideSettingsFile)' == ''">..\Settings.StyleCop</SourceAnalysisOverrideSettingsFile>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\AllRulesAndTreatWarningsAsErrors.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\AllRulesAndTreatWarningsAsErrors.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <NoWarn>
+    </NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseAndSigned|AnyCPU'">
+    <OutputPath>bin\ReleaseAndSigned\</OutputPath>
+    <DefineConstants>TRACE;SIGNED</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\AllRulesAndTreatWarningsAsErrors.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\Ref\StrongNaming\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activities\MinifyCssPivot.cs" />
+    <Compile Include="Activities\ResourcePivotActivity.cs" />
+    <Compile Include="Activities\MinifyCssResult.cs" />
+    <Compile Include="Ajax\JavaScript\BindingIdentifier.cs" />
+    <Compile Include="Ajax\JavaScript\BindingsVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\BindingTransform.cs" />
+    <Compile Include="Ajax\JavaScript\ClassNode.cs" />
+    <Compile Include="Ajax\JavaScript\ComprehensionClause.cs" />
+    <Compile Include="Ajax\JavaScript\ComprehensionForClause.cs" />
+    <Compile Include="Ajax\JavaScript\ComprehensionIfClause.cs" />
+    <Compile Include="Ajax\JavaScript\ComprehensionNode.cs" />
+    <Compile Include="Ajax\JavaScript\ExportNode.cs" />
+    <Compile Include="Ajax\JavaScript\IModuleReference.cs" />
+    <Compile Include="Ajax\JavaScript\ImportExportSpecifier.cs" />
+    <Compile Include="Ajax\JavaScript\ImportExportStatement.cs" />
+    <Compile Include="Ajax\JavaScript\ImportNode.cs" />
+    <Compile Include="Ajax\JavaScript\Initializer.cs" />
+    <Compile Include="Ajax\JavaScript\IRenameable.cs" />
+    <Compile Include="Ajax\JavaScript\JSON.cs" />
+    <Compile Include="Ajax\JavaScript\ModuleDeclaration.cs" />
+    <Compile Include="Ajax\JavaScript\ModuleScope.cs" />
+    <Compile Include="Ajax\JavaScript\RequiresSeparatorVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\StatementStartVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\TemplateLiteral.cs" />
+    <Compile Include="Ajax\JavaScript\TemplateLiteralExpression.cs" />
+    <Compile Include="Ajax\Utilities\CommonData.cs" />
+    <Compile Include="Ajax\Utilities\CommonStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommonStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Cache\CacheFileLockException.cs" />
+    <Compile Include="Configuration\FileSetBase.cs" />
+    <Compile Include="Configuration\GlobalConfig.cs" />
+    <Compile Include="Configuration\INamedConfig.cs" />
+    <Compile Include="Configuration\ResourcePivotGroupCollection.cs" />
+    <Compile Include="Configuration\ResourcePivotApplyMode.cs" />
+    <Compile Include="Configuration\ResourcePivotGroup.cs" />
+    <Compile Include="Configuration\ResourcePivotKey.cs" />
+    <Compile Include="Css\Visitor\ResourceResolutionVisitor.cs" />
+    <Compile Include="Css\Ast\ImportantCommentNode.cs" />
+    <Compile Include="Css\Ast\StyleSheetRuleOrCommentNode.cs" />
+    <Compile Include="DelayedLogManager.cs" />
+    <Compile Include="Cache\CacheFileCategories.cs" />
+    <Compile Include="Activities\ErrorCode.cs" />
+    <Compile Include="Activities\FileTypes.cs" />
+    <Compile Include="Activities\EverythingActivity.cs" />
+    <Compile Include="Activities\LogDelegates.cs" />
+    <Compile Include="Activities\MinifyJSActivity.cs" />
+    <Compile Include="Activities\BundleActivity.cs" />
+    <Compile Include="Activities\PreprocessorActivity.cs" />
+    <Compile Include="Activities\RenamedFile.cs" />
+    <Compile Include="Activities\RenamedFilesLog.cs" />
+    <Compile Include="Activities\RenamedFilesLogs.cs" />
+    <Compile Include="Activities\ResourceDirectoryPath.cs" />
+    <Compile Include="Activities\ResourceOverrideException.cs" />
+    <Compile Include="Activities\ResourcesManager.cs" />
+    <Compile Include="Activities\ResourcesResolver.cs" />
+    <Compile Include="Activities\ResourcesResolutionActivity.cs" />
+    <Compile Include="Activities\ResourceType.cs" />
+    <Compile Include="Activities\AssemblerActivity.cs" />
+    <Compile Include="Activities\MinifyCssActivity.cs" />
+    <Compile Include="Ajax\Css\CssColorName.cs" />
+    <Compile Include="Ajax\Css\CssErrorCode.cs" />
+    <Compile Include="Ajax\Css\CssParser.cs" />
+    <Compile Include="Ajax\Css\CssScanner.cs" />
+    <Compile Include="Ajax\Css\CssSettings.cs" />
+    <Compile Include="Ajax\Css\CssStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CssStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Ajax\Css\CssToken.cs" />
+    <Compile Include="Ajax\JavaScript\activationobject.cs" />
+    <Compile Include="Ajax\JavaScript\AnalyzeNodeVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\arrayliteral.cs" />
+    <Compile Include="Ajax\JavaScript\aspnetblocknode.cs" />
+    <Compile Include="Ajax\JavaScript\ast.cs" />
+    <Compile Include="Ajax\JavaScript\astlist.cs" />
+    <Compile Include="Ajax\JavaScript\binaryop.cs" />
+    <Compile Include="Ajax\JavaScript\block.cs" />
+    <Compile Include="Ajax\JavaScript\blockscope.cs" />
+    <Compile Include="Ajax\JavaScript\break.cs" />
+    <Compile Include="Ajax\JavaScript\call.cs" />
+    <Compile Include="Ajax\JavaScript\catchscope.cs" />
+    <Compile Include="Ajax\JavaScript\cccomment.cs" />
+    <Compile Include="Ajax\JavaScript\ccelif.cs" />
+    <Compile Include="Ajax\JavaScript\ccelse.cs" />
+    <Compile Include="Ajax\JavaScript\ccend.cs" />
+    <Compile Include="Ajax\JavaScript\ccif.cs" />
+    <Compile Include="Ajax\JavaScript\ccon.cs" />
+    <Compile Include="Ajax\JavaScript\ccset.cs" />
+    <Compile Include="Ajax\JavaScript\ccstatement.cs" />
+    <Compile Include="Ajax\JavaScript\codesettings.cs" />
+    <Compile Include="Ajax\JavaScript\CommaOperator.cs" />
+    <Compile Include="Ajax\JavaScript\conditional.cs" />
+    <Compile Include="Ajax\JavaScript\const.cs" />
+    <Compile Include="Ajax\JavaScript\constantwrapper.cs" />
+    <Compile Include="Ajax\JavaScript\constantwrapperpp.cs" />
+    <Compile Include="Ajax\JavaScript\context.cs" />
+    <Compile Include="Ajax\JavaScript\continue.cs" />
+    <Compile Include="Ajax\JavaScript\crunchenumerator.cs" />
+    <Compile Include="Ajax\JavaScript\CustomNode.cs" />
+    <Compile Include="Ajax\JavaScript\debugger.cs" />
+    <Compile Include="Ajax\JavaScript\declaration.cs" />
+    <Compile Include="Ajax\JavaScript\DetachReferences.cs" />
+    <Compile Include="Ajax\JavaScript\directiveprologue.cs" />
+    <Compile Include="Ajax\JavaScript\documentcontext.cs" />
+    <Compile Include="Ajax\JavaScript\dowhile.cs" />
+    <Compile Include="Ajax\JavaScript\emptystatement.cs" />
+    <Compile Include="Ajax\JavaScript\EvaluateLiteralVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\expr.cs" />
+    <Compile Include="Ajax\JavaScript\FinalPassVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\for.cs" />
+    <Compile Include="Ajax\JavaScript\forin.cs" />
+    <Compile Include="Ajax\JavaScript\functionobject.cs" />
+    <Compile Include="Ajax\JavaScript\functionscope.cs" />
+    <Compile Include="Ajax\JavaScript\gettersetter.cs" />
+    <Compile Include="Ajax\JavaScript\globalscope.cs" />
+    <Compile Include="Ajax\JavaScript\grouping.cs" />
+    <Compile Include="Ajax\JavaScript\if.cs" />
+    <Compile Include="Ajax\JavaScript\importantcomment.cs" />
+    <Compile Include="Ajax\JavaScript\INameDeclaration.cs" />
+    <Compile Include="Ajax\JavaScript\INameReference.cs" />
+    <Compile Include="Ajax\JavaScript\ISourceMap.cs" />
+    <Compile Include="Ajax\JavaScript\IterationStatement.cs" />
+    <Compile Include="Ajax\JavaScript\IVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\JScript.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JScript.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Ajax\JavaScript\jserror.cs" />
+    <Compile Include="Ajax\JavaScript\jskeyword.cs" />
+    <Compile Include="Ajax\JavaScript\JSONOutputVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\jsparser.cs" />
+    <Compile Include="Ajax\JavaScript\jsscanner.cs" />
+    <Compile Include="Ajax\JavaScript\jstoken.cs" />
+    <Compile Include="Ajax\JavaScript\jsvariablefield.cs" />
+    <Compile Include="Ajax\JavaScript\labeledstatement.cs" />
+    <Compile Include="Ajax\JavaScript\LexicalDeclaration.cs" />
+    <Compile Include="Ajax\JavaScript\LogicalNotVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\lookup.cs" />
+    <Compile Include="Ajax\JavaScript\MatchPropertiesVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\member.cs" />
+    <Compile Include="Ajax\JavaScript\missing.cs" />
+    <Compile Include="Ajax\JavaScript\NewParensVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\objectliteral.cs" />
+    <Compile Include="Ajax\JavaScript\objectliteralfield.cs" />
+    <Compile Include="Ajax\JavaScript\ObjectLiteralProperty.cs" />
+    <Compile Include="Ajax\JavaScript\opprec.cs" />
+    <Compile Include="Ajax\JavaScript\OutputVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\parameterdeclaration.cs" />
+    <Compile Include="Ajax\JavaScript\regexpliteral.cs" />
+    <Compile Include="Ajax\JavaScript\ReorderScopeVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\ResolutionVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\return.cs" />
+    <Compile Include="Ajax\JavaScript\ScriptSharpSourceMap.cs" />
+    <Compile Include="Ajax\JavaScript\SourceMapFactory.cs" />
+    <Compile Include="Ajax\JavaScript\switch.cs" />
+    <Compile Include="Ajax\JavaScript\switchcase.cs" />
+    <Compile Include="Ajax\JavaScript\thisliteral.cs" />
+    <Compile Include="Ajax\JavaScript\throw.cs" />
+    <Compile Include="Ajax\JavaScript\TreeVisitor.cs" />
+    <Compile Include="Ajax\JavaScript\try.cs" />
+    <Compile Include="Ajax\JavaScript\unaryop.cs" />
+    <Compile Include="Ajax\JavaScript\V3SourceMap.cs" />
+    <Compile Include="Ajax\JavaScript\var.cs" />
+    <Compile Include="Ajax\JavaScript\variabledeclaration.cs" />
+    <Compile Include="Ajax\JavaScript\while.cs" />
+    <Compile Include="Ajax\JavaScript\with.cs" />
+    <Compile Include="Ajax\JavaScript\withscope.cs" />
+    <Compile Include="Ajax\Utilities\CommonSettings.cs" />
+    <Compile Include="Ajax\Utilities\ContextError.cs" />
+    <Compile Include="Ajax\Utilities\Extensions.cs" />
+    <Compile Include="Ajax\Utilities\JSEncoderFallback.cs" />
+    <Compile Include="Ajax\Utilities\Minifier.cs" />
+    <Compile Include="Ajax\Utilities\ResourceStrings.cs" />
+    <Compile Include="Ajax\Utilities\SwitchParser.cs" />
+    <Compile Include="BuildWorkflowException.cs" />
+    <Compile Include="Cache\CacheDependencyGraph.cs" />
+    <Compile Include="Cache\CacheManager.cs" />
+    <Compile Include="Cache\CacheResult.cs" />
+    <Compile Include="Cache\CacheSection.cs" />
+    <Compile Include="Cache\CacheSourceDependency.cs" />
+    <Compile Include="Cache\CacheVaryByFile.cs" />
+    <Compile Include="Cache\ICacheManager.cs" />
+    <Compile Include="Cache\ICacheSection.cs" />
+    <Compile Include="Cache\NullCacheManager.cs" />
+    <Compile Include="Cache\NullCacheSection.cs" />
+    <Compile Include="Cache\ReadOnlyCacheSection.cs" />
+    <Compile Include="Common\FileHelper.cs" />
+    <Compile Include="Configuration\ActivityMode.cs" />
+    <Compile Include="Configuration\ArgumentProcessor.cs" />
+    <Compile Include="Configuration\AutonameConfig.cs" />
+    <Compile Include="Configuration\BundlingConfig.cs" />
+    <Compile Include="Configuration\CssFileSet.cs" />
+    <Compile Include="Configuration\CssMinificationConfig.cs" />
+    <Compile Include="Configuration\CssSpritingConfig.cs" />
+    <Compile Include="Configuration\IFileSet.cs" />
+    <Compile Include="Configuration\InputSpec.cs" />
+    <Compile Include="Configuration\JSFileSet.cs" />
+    <Compile Include="Configuration\JSMinificationConfig.cs" />
+    <Compile Include="Configuration\JSValidationConfig.cs" />
+    <Compile Include="Configuration\PreprocessingConfig.cs" />
+    <Compile Include="Configuration\WebGreaseConfiguration.cs" />
+    <Compile Include="ContentPivot.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\InputSpecExtensions.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="Extensions\StringPathExtensions.cs" />
+    <Compile Include="ICachableWebGreaseSection.cs" />
+    <Compile Include="ImageAssemble\BitmapContainer.cs" />
+    <Compile Include="ImageAssemble\ImageType.cs" />
+    <Compile Include="ImageAssemble\SpritePackingType.cs" />
+    <Compile Include="IWebGreaseSection.cs" />
+    <Compile Include="IWebGreaseContext.cs" />
+    <Compile Include="LogManager.cs" />
+    <Compile Include="ContentItem.cs" />
+    <Compile Include="ContentItemType.cs" />
+    <Compile Include="MessageImportance.cs" />
+    <Compile Include="Safe.cs" />
+    <Compile Include="TemporaryOverrides.cs" />
+    <Compile Include="WebGreaseSection.cs" />
+    <Compile Include="TimeMeasure\ITimeMeasure.cs" />
+    <Compile Include="TimeMeasure\NullTimeMeasure.cs" />
+    <Compile Include="TimeMeasure\TimeMeasure.cs" />
+    <Compile Include="TimeMeasure\TimeMeasureExtensions.cs" />
+    <Compile Include="TimeMeasure\TimeMeasureItem.cs" />
+    <Compile Include="TimeMeasure\SectionIdParts.cs" />
+    <Compile Include="TimeMeasure\TimeMeasureResult.cs" />
+    <Compile Include="Css\Ast\AllowedImportData.cs" />
+    <Compile Include="Css\Ast\Animation\KeyFramesBlockNode.cs" />
+    <Compile Include="Css\Ast\Animation\KeyFramesNode.cs" />
+    <Compile Include="Css\Ast\AstException.cs" />
+    <Compile Include="Css\Ast\AstNode.cs" />
+    <Compile Include="Css\Ast\Combinator.cs" />
+    <Compile Include="Css\Ast\CombinatorSimpleSelectorSequenceNode.cs" />
+    <Compile Include="Css\Ast\DeclarationNode.cs" />
+    <Compile Include="Css\Ast\DocumentQueryNode.cs" />
+    <Compile Include="Css\Ast\ExprNode.cs" />
+    <Compile Include="Css\Ast\FunctionNode.cs" />
+    <Compile Include="Css\Ast\ImportNode.cs" />
+    <Compile Include="Css\Ast\MediaQuery\MediaExpressionNode.cs" />
+    <Compile Include="Css\Ast\MediaQuery\MediaNode.cs" />
+    <Compile Include="Css\Ast\MediaQuery\MediaQueryNode.cs" />
+    <Compile Include="Css\Ast\NamespaceNode.cs" />
+    <Compile Include="Css\Ast\PageNode.cs" />
+    <Compile Include="Css\Ast\RulesetNode.cs" />
+    <Compile Include="Css\Ast\Selectors\AttribNode.cs" />
+    <Compile Include="Css\Ast\Selectors\AttribOperatorAndValueNode.cs" />
+    <Compile Include="Css\Ast\Selectors\AttribOperatorKind.cs" />
+    <Compile Include="Css\Ast\Selectors\FunctionalPseudoNode.cs" />
+    <Compile Include="Css\Ast\Selectors\HashClassAtNameAttribPseudoNegationNode.cs" />
+    <Compile Include="Css\Ast\Selectors\NegationArgNode.cs" />
+    <Compile Include="Css\Ast\Selectors\NegationNode.cs" />
+    <Compile Include="Css\Ast\Selectors\PseudoNode.cs" />
+    <Compile Include="Css\Ast\Selectors\SelectorExpressionNode.cs" />
+    <Compile Include="Css\Ast\Selectors\SelectorNamespacePrefixNode.cs" />
+    <Compile Include="Css\Ast\Selectors\SelectorNode.cs" />
+    <Compile Include="Css\Ast\Selectors\SelectorsGroupNode.cs" />
+    <Compile Include="Css\Ast\Selectors\SimpleSelectorSequenceNode.cs" />
+    <Compile Include="Css\Ast\Selectors\TypeSelectorNode.cs" />
+    <Compile Include="Css\Ast\Selectors\UniversalSelectorNode.cs" />
+    <Compile Include="Css\Ast\StyleSheetNode.cs" />
+    <Compile Include="Css\Ast\StyleSheetRuleNode.cs" />
+    <Compile Include="Css\Ast\TermNode.cs" />
+    <Compile Include="Css\Ast\TermWithOperatorNode.cs" />
+    <Compile Include="Css\CommonTreeTransformer.cs" />
+    <Compile Include="Css\CssConstants.cs" />
+    <Compile Include="Css\CssLexer.g3.cs" />
+    <Compile Include="Css\CssParser.g3.cs" />
+    <Compile Include="Css\CssStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CssStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Css\Extensions\AstNodeExtensions.cs" />
+    <Compile Include="Css\Extensions\BackgroundAstNodeExtensions.cs" />
+    <Compile Include="Css\Extensions\CommonTreeExtensions.cs" />
+    <Compile Include="Css\Extensions\ListExtensions.cs" />
+    <Compile Include="Css\Extensions\NumberExtensions.cs" />
+    <Compile Include="Css\Extensions\OrderedDictionaryExtensions.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\ImageAssembleConstants.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\ImageAssembleException.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\ImageAssemblyScanInput.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\ImageAssemblyScanOutput.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\LogModel\AssembledImage.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\LogModel\ImageAssemblyAnalysis.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\LogModel\ImageAssemblyAnalysisLog.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\LogModel\ImageLog.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\PropertyModel\Background.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\PropertyModel\BackgroundImage.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\PropertyModel\BackgroundPosition.cs" />
+    <Compile Include="Css\ImageAssemblyAnalysis\PropertyModel\BackgroundRepeat.cs" />
+    <Compile Include="CssMinifier.cs" />
+    <Compile Include="Css\PrinterFormatter.cs" />
+    <Compile Include="Css\UnicodeDecoder.cs" />
+    <Compile Include="Css\Visitor\ColorOptimizationVisitor.cs" />
+    <Compile Include="Css\Visitor\ExcludePropertyVisitor.cs" />
+    <Compile Include="Css\Visitor\FloatOptimizationVisitor.cs" />
+    <Compile Include="Css\Visitor\ImageAssemblyScanVisitor.cs" />
+    <Compile Include="Css\Visitor\ImageAssemblyUpdateVisitor.cs" />
+    <Compile Include="Css\Visitor\NodeTransformVisitor.cs" />
+    <Compile Include="Css\Visitor\NodeVisitor.cs" />
+    <Compile Include="Css\Visitor\OptimizationVisitor.cs" />
+    <Compile Include="Css\Visitor\PrintVisitor.cs" />
+    <Compile Include="Css\Visitor\SelectorValidationOptimizationVisitor.cs" />
+    <Compile Include="Css\Visitor\ValidateLowercaseVisitor.cs" />
+    <Compile Include="Css\ErrorHelper.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ImageAssemble\ColorQuantizer.cs" />
+    <Compile Include="ImageAssemble\ImageAssembleBase.cs" />
+    <Compile Include="ImageAssemble\ImageAssembleGenerator.cs" />
+    <Compile Include="ImageAssemble\ImageAssembleStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImageAssembleStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ImageAssemble\ImageMap.cs" />
+    <Compile Include="ImageAssemble\InputImage.cs" />
+    <Compile Include="ImageAssemble\NonPhotoIndexedAssemble.cs" />
+    <Compile Include="ImageAssemble\NonPhotoNonIndexedAssemble.cs" />
+    <Compile Include="ImageAssemble\NotSupportedAssemble.cs" />
+    <Compile Include="ImageAssemble\PhotoAssemble.cs" />
+    <Compile Include="Preprocessing\IPreprocessingEngine.cs" />
+    <Compile Include="Preprocessing\PreprocessingException.cs" />
+    <Compile Include="Preprocessing\PreprocessingManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourceStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Strings.cs" />
+    <Compile Include="Activities\FileHasherActivity.cs" />
+    <Compile Include="WebGreaseContext.cs" />
+    <Compile Include="WebGreaseSectionKey.cs" />
+    <Compile Include="WorkflowException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Css\CSS Minifier - Implementation Notes.docx" />
+    <Antlr3 Include="Css\CssLexer.g3">
+      <Generator>MSBuild:Compile</Generator>
+    </Antlr3>
+    <Antlr3 Include="Css\CssParser.g3">
+      <Generator>MSBuild:Compile</Generator>
+    </Antlr3>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Ajax\Css\CssStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CssStrings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Ajax.Utilities</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ajax\JavaScript\JScript.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>JScript.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Ajax.Utilities</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ajax\Utilities\CommonStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommonStrings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Ajax.Utilities</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Css\CssStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CssStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageAssemble\ImageAssembleStrings.resx">
+      <LastGenOutput>ImageAssembleStrings.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResourceStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>ResourceStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\Ref\StyleCop 4.6\StyleCop.Targets" />
+  <Import Project="..\WebGrease.Build.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

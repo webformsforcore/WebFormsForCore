@@ -13,3 +13,9 @@
 [submodule "src/CassiniDev"]
 	path = src/CassiniDev
 	url = https://github.com/simonegli8/CassiniDev
+[submodule "src/AspNetWebOptimization"]
+	path = src/AspNetWebOptimization
+	url = https://github.com/aspnet/AspNetWebOptimization.git
+[submodule "src/WebGrease"]
+	path = src/WebGrease
+	url = https://github.com/Licshee/WebGrease.git

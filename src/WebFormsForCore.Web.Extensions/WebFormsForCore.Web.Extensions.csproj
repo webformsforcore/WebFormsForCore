@@ -7,6 +7,7 @@
         <LangVersion>11</LangVersion>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Web.Extensions</AssemblyName>
         <DefineConstants>$(DefineConstants);WEB_EXTENSIONS_CODE;WebFormsForCore</DefineConstants>
     </PropertyGroup>

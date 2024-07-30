@@ -9,6 +9,7 @@
         <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
         <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
         <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Configuration.ConfigurationManager</AssemblyName>
     </PropertyGroup>
 

@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1075A673-BA04-452A-98A1-9067C5E7CC3D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.Web.Optimization</RootNamespace>
+    <AssemblyName>System.Web.Optimization</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <WebGreaseLibPath>..\..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <DocumentationFile>bin\Debug\System.Web.Optimization.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\System.Web.Optimization.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\..\ReferenceAssemblies\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebGrease">
+      <HintPath>..\..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BundleFile.cs" />
+    <Compile Include="BundleFileComparer.cs" />
+    <Compile Include="Properties\AssemblyMetadataAttribute.cs" />
+    <Compile Include="IItemTransform.cs" />
+    <Compile Include="HttpContextCache.cs" />
+    <Compile Include="AssetManager.cs" />
+    <Compile Include="Bundle.cs" />
+    <Compile Include="BundleCollection.cs" />
+    <Compile Include="BundleFileSetOrdering.cs" />
+    <Compile Include="BundleHandler.cs" />
+    <Compile Include="BundleManifest.cs" />
+    <Compile Include="BundleModule.cs" />
+    <Compile Include="BundleResolver.cs" />
+    <Compile Include="BundleResponse.cs" />
+    <Compile Include="BundleTable.cs" />
+    <Compile Include="BundleDefinition.cs" />
+    <Compile Include="IBundleCache.cs" />
+    <Compile Include="CssRewriteUrlTransform.cs" />
+    <Compile Include="FileExtensionReplacementList.cs" />
+    <Compile Include="FileVirtualPathProvider.cs" />
+    <Compile Include="IgnoreList.cs" />
+    <Compile Include="BundleContext.cs" />
+    <Compile Include="BundleItem.cs" />
+    <Compile Include="BundleDirectoryItem.cs" />
+    <Compile Include="ItemRegistry.cs" />
+    <Compile Include="OptimizationMode.cs" />
+    <Compile Include="OptimizationSettings.cs" />
+    <Compile Include="Optimizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PatternHelper.cs" />
+    <Compile Include="Styles.cs" />
+    <Compile Include="Scripts.cs" />
+    <Compile Include="ScriptBundle.cs" />
+    <Compile Include="StyleBundle.cs" />
+    <Compile Include="IBundleResolver.cs" />
+    <Compile Include="DefaultBundleBuilder.cs" />
+    <Compile Include="IBundleBuilder.cs" />
+    <Compile Include="CssMinify.cs" />
+    <Compile Include="DefaultBundleOrderer.cs" />
+    <Compile Include="DynamicFolderBundle.cs" />
+    <Compile Include="ExceptionUtil.cs" />
+    <Compile Include="VirtualFileComparer.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IBundleOrderer.cs" />
+    <Compile Include="IBundleTransform.cs" />
+    <Compile Include="JsMinify.cs" />
+    <Compile Include="DefaultTransform.cs" />
+    <Compile Include="PreApplicationStartCode.cs" />
+    <Compile Include="Resources\OptimizationResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OptimizationResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\UrlUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\OptimizationResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OptimizationResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="35MSSharedLib1024.snk" />
+    <EmbeddedResource Include="BundleManifestSchema.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

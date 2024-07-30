@@ -4,6 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+#if NETFRAMEWORK
 using System.Diagnostics.CodeAnalysis;
 
 namespace System.Web {
@@ -12,3 +13,4 @@ namespace System.Web {
         string ToHtmlString();
     }
 }
+#endif

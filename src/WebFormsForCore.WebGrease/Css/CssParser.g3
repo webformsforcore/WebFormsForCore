@@ -1,0 +1,591 @@
+
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CssParser.g3" company="Microsoft">
+//   Copyright Microsoft Corporation, all rights reserved
+// </copyright>
+// <summary>
+//   The css parser ANTLR grammar based on CSS specs located at http://www.w3.org/Style/CSS/specs
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+parser grammar CssParser;
+options
+{
+    language=CSharp3;
+    output=AST;
+    TokenLabelType=CommonToken;
+    tokenVocab=CssLexer;
+}
+
+// The list of Synthetic Tokens for tree construction
+tokens
+{
+    ATTRIBIDENTIFIER;
+    ATTRIBNAME;
+    ATTRIBOPERATORVALUE;
+    ATTRIBOPERATOR;
+    ATTRIBVALUE;
+    ATIDENTIFIER;
+    CHARSET;
+    CLASSIDENTIFIER;
+    COLONS;
+    COMBINATOR;
+    COMBINATOR_SIMPLE_SELECTOR;
+    COMBINATOR_SIMPLE_SELECTOR_SEQUENCES;
+    DECLARATION;
+    DECLARATIONS;
+    DOCUMENT;
+    DOCUMENT_MATCHNAME;
+    DOCUMENT_SYMBOL;
+    EXPR;
+    SELECTOR_EXPRESSION;
+    FUNCTIONBASEDVALUE;
+    FUNCTIONNAME;
+    FUNCTIONPARAM;
+    FUNCTIONAL_PSEUDO;
+    HASHCLASSATNAMEATTRIBPSEUDONEGATIONNODES;
+    HASHCLASSATNAMEATTRIBPSEUDONEGATION;
+    HASHIDENTIFIER;
+    HEXBASEDVALUE;
+    IDENTBASEDVALUE;
+    IMPORT;
+    IMPORTS;
+    IMPORTANT;
+    KEYFRAMES;
+    KEYFRAMES_BLOCK;
+    KEYFRAMES_BLOCKS;
+    KEYFRAMES_SELECTOR;
+    KEYFRAMES_SELECTORS;
+    KEYFRAMES_SYMBOL;
+    MEDIA;
+    MEDIA_FEATURE;
+    MEDIA_EXPRESSION;
+    MEDIA_EXPRESSIONS;
+    MEDIA_QUERY;
+    MEDIA_QUERY_LIST;
+    MEDIA_TYPE;
+    NAMESPACES;
+    NAMESPACE;
+    NAMESPACE_PREFIX;
+    NEGATIONIDENTIFIER;
+    NEGATION_ARG;
+    NOT_TEXT;
+    NUMBERBASEDVALUE;
+    ONLY_TEXT;
+    OPERATOR;
+    PAGE;
+    PROPERTY;
+    PSEUDO_PAGE;
+    PSEUDOIDENTIFIER;
+    PSEUDONAME;
+    RULESET;
+    RULESETS;
+    SELECTOR;
+    SELECTORS_GROUP;
+    SELECTOR_NAMESPACE_PREFIX;
+    SIMPLE_SELECTOR_SEQUENCE;
+    STAR_TEXT;
+    ELEMENT_NAME;
+    STRINGBASEDVALUE;
+    STYLESHEET;
+    TERM;
+    TERMWITHOPERATOR;
+    TERMWITHOPERATORS;
+    TYPE_SELECTOR;
+    UNARY;
+    UNIVERSAL;
+    URIBASEDVALUE;
+    WHITESPACE;
+    WG_DPI;	
+    REPLACEMENTTOKEN;
+    REPLACEMENTTOKENBASEDVALUE;
+    REPLACEMENTTOKENIDENTIFIER;
+    URIHASH;
+}
+
+@namespace { WebGrease.Css }
+@header
+{
+    using System;
+    using System.Text;
+    using WebGrease.Css.Ast;
+}
+
+public
+main
+    : styleSheet
+    EOF
+    ;
+
+// styleSheet
+//  : [ CHARSET_SYM STRING ';' ]?
+//    [S|CDO|CDC]* [ import [ CDO S* | CDC S* ]* ]* [ namespace [ CDO S* | CDC S* ]* ]* 
+//    [ [ ruleset | media | page | keyframes ] [ CDO S* | CDC S* ]* ]*
+//  ;
+styleSheet
+    : ((CHARSET_SYM STRING SEMICOLON)? styleimport* namespace* styleSheetRulesOrComment*)
+    -> ^(STYLESHEET ^(CHARSET ^(STRINGBASEDVALUE STRING))? ^(IMPORTS styleimport*)? ^(NAMESPACES namespace*)? styleSheetRulesOrComment*)  
+    ;
+
+///styleSheetRulesOrComment
+styleSheetRulesOrComment
+	: IMPORTANT_COMMENTS 
+	  | styleSheetrules
+	;
+	
+
+// import
+//  : IMPORT_SYM S*
+//    [STRING|URI] S* media_query_list? ';' S*
+//  ;
+styleimport
+    : IMPORT_SYM stringoruri media_query_list? SEMICOLON
+    -> ^(IMPORT stringoruri media_query_list?)
+    ;
+
+// namespace
+//  : NAMESPACE_SYM S* [namespace_prefix S*]? [STRING|URI] S* ';' S*
+//  ;
+namespace
+    : NAMESPACE_SYM namespace_prefix? stringoruri SEMICOLON
+    -> ^(NAMESPACE namespace_prefix? stringoruri)
+    ;
+
+namespace_prefix
+    : IDENT
+    -> ^(NAMESPACE_PREFIX IDENT)
+    ;
+
+wg_dpi
+    : WG_DPI_SYM NUMBER SEMICOLON
+    -> ^(WG_DPI NUMBER)
+    ;
+
+// media
+//  : MEDIA_SYM S* media_query_list '{' S* ruleset* '}' S*
+//  ;
+media
+    : MEDIA_SYM media_query_list? CURLY_BEGIN ( ruleset | page )* CURLY_END
+    -> ^(MEDIA media_query_list? ^(RULESETS ruleset*)? ^(PAGE page*)?)
+    ;
+
+// media_query_list
+// : S* [media_query [ ',' S* media_query ]* ]?
+// ;
+media_query_list
+    : media_query (COMMA media_query)*
+    -> ^(MEDIA_QUERY_LIST media_query*)
+    ;
+
+// media_query
+// : [ONLY | NOT]? S* media_type S* [ AND S* expression ]*
+// | expression [ AND S* expression ]*
+// ;
+media_query
+ : (ONLY | NOT)? media_type (AND media_expression)*
+ -> ^(MEDIA_QUERY ^(ONLY_TEXT ONLY)? ^(NOT_TEXT NOT)? media_type ^(MEDIA_EXPRESSIONS media_expression*)?)
+ | media_expression (AND media_expression)*
+ -> ^(MEDIA_QUERY ^(MEDIA_EXPRESSIONS media_expression*))
+ ;
+
+// media_type
+// : IDENT
+// ;
+media_type
+ : IDENT
+ -> ^(MEDIA_TYPE IDENT)
+ ;
+
+// expression
+// : '(' S* media_feature S* [ ':' S* expr ]? ')' S*
+// ;
+media_expression
+ : CIRCLE_BEGIN media_feature (COLON expr)? CIRCLE_END
+ -> ^(MEDIA_EXPRESSION media_feature expr?)
+ ;
+ 
+// media_feature
+// : IDENT
+// ;
+media_feature
+ : IDENT
+ -> ^(MEDIA_FEATURE IDENT)
+ | REPLACEMENTTOKEN
+ -> ^(MEDIA_FEATURE REPLACEMENTTOKEN)
+ ;
+
+// page
+//  : PAGE_SYM S* pseudo_page?
+//    '{' S* declaration? [ ';' S* declaration? ]* '}' S*
+//  ;
+page
+    : PAGE_SYM pseudo_page? CURLY_BEGIN (declaration SEMICOLON?)* CURLY_END
+    -> ^(PAGE pseudo_page? ^(DECLARATIONS declaration*)?)
+    ;
+
+// pseudo_page
+//  : ':' IDENT S*
+//  ;
+pseudo_page
+    : COLON IDENT
+    -> ^(PSEUDO_PAGE COLON IDENT)
+    ;
+
+// operator
+//  : '/' S* | ',' S* | '*' S*
+//  ;
+operator
+    : FORWARD_SLASH | COMMA | STAR | EQUALS 
+    ;
+
+// unary_operator
+//  : '-' | '+'
+//  ;
+unary_operator
+    : MINUS -> ^(UNARY MINUS)
+    | PLUS -> ^(UNARY PLUS)
+    ;
+
+// property
+//  : IDENT S*
+//  ;
+property
+    : (STAR)? IDENT IMPORTANT_COMMENTS*
+    -> ^(PROPERTY STAR? IDENT IMPORTANT_COMMENTS*)	
+	|REPLACEMENTTOKEN
+	-> ^(PROPERTY REPLACEMENTTOKEN)
+    ;
+
+// ruleset
+//  : selectors_group
+//    '{' S* declaration? [ ';' S* declaration? ]* '}' S*
+//  ;
+ruleset
+    : selectors_group
+    CURLY_BEGIN
+    (declaration SEMICOLON?)*
+	IMPORTANT_COMMENTS*
+    CURLY_END
+    -> ^(RULESET selectors_group ^(DECLARATIONS declaration*)? IMPORTANT_COMMENTS*)
+    ;
+
+// selectors_group
+//  : selector [ COMMA S* selector ]*
+//  ;
+selectors_group
+  : selector (COMMA selector)*
+  -> ^(SELECTORS_GROUP selector*)
+  ;
+
+// selector
+//  : simple_selector_sequence [ combinator simple_selector_sequence ]*
+//  ;
+selector
+    : simple_selector_sequence (combinator_simple_selector_sequence)*
+    -> ^(SELECTOR simple_selector_sequence ^(COMBINATOR_SIMPLE_SELECTOR_SEQUENCES combinator_simple_selector_sequence*)?)
+    ;
+
+combinator_simple_selector_sequence
+    : combinator simple_selector_sequence
+     -> ^(COMBINATOR_SIMPLE_SELECTOR combinator simple_selector_sequence)
+    ;
+
+// combinator
+//  /* combinators can be surrounded by whitespace */
+//  : PLUS S* | GREATER S* | TILDE S* | S+
+//  ;
+combinator
+    : (combinatorValue = PLUS
+    |combinatorValue = GREATER
+    |combinatorValue = TILDE)
+    -> ^(COMBINATOR $combinatorValue)
+    |whitespace
+    -> ^(COMBINATOR whitespace)
+    ;
+
+whitespace
+    : (ws = ((WS) => WS)?
+    {
+        $ws = GetWhitespaceToken();
+    })
+    -> ^(WHITESPACE $ws)
+    ;
+
+// simple_selector_sequence
+//  : [ type_selector | universal ]
+//    [ HASH | class | attrib | pseudo | negation ]*
+//  | [ HASH | class | attrib | pseudo | negation ]+
+//  ;
+// universal is subset of type_selector
+// Grammar Note - The productions don't exactly match the Css 3 spec because of whitespace handling done through
+// combinator.
+simple_selector_sequence
+    : (((universal) => universal)|((type_selector) => type_selector)) whitespace ((hashclassatnameattribpseudonegation) => hashclassatnameattribpseudonegation)?
+    -> ^(SIMPLE_SELECTOR_SEQUENCE type_selector? universal? whitespace? ^(HASHCLASSATNAMEATTRIBPSEUDONEGATIONNODES hashclassatnameattribpseudonegation)?)
+    | (hashclassatnameattribpseudonegation) => hashclassatnameattribpseudonegation
+    -> ^(SIMPLE_SELECTOR_SEQUENCE ^(HASHCLASSATNAMEATTRIBPSEUDONEGATIONNODES hashclassatnameattribpseudonegation))
+    ;
+
+hashclassatnameattribpseudonegation
+	: REPLACEMENTTOKEN
+    -> ^(REPLACEMENTTOKEN ^(REPLACEMENTTOKENIDENTIFIER REPLACEMENTTOKEN))
+    | hash
+    -> ^(HASHCLASSATNAMEATTRIBPSEUDONEGATION hash)
+    | class
+    -> ^(HASHCLASSATNAMEATTRIBPSEUDONEGATION class)
+    | atname
+    -> ^(HASHCLASSATNAMEATTRIBPSEUDONEGATION atname)
+    | attrib
+    -> ^(HASHCLASSATNAMEATTRIBPSEUDONEGATION attrib)
+    | pseudo
+    -> ^(HASHCLASSATNAMEATTRIBPSEUDONEGATION pseudo)
+    | negation
+    -> ^(HASHCLASSATNAMEATTRIBPSEUDONEGATION negation)
+    ;
+
+// type_selector
+//  : [ selector_namespace_prefix ]? element_name
+//  ;
+// Example:
+// @namespace a "http://foo.com";
+// @namespace b "http://bar.com";
+// a|b {}
+// |b {}
+// a {}
+type_selector
+    : ((selector_namespace_prefix) => selector_namespace_prefix)? element_name
+    -> ^(TYPE_SELECTOR selector_namespace_prefix? element_name)
+    ;
+
+// selector_namespace_prefix
+//  : [ IDENT | '*' ]? '|'
+//  ;
+// No element name would imply pipe in Ast
+selector_namespace_prefix
+  : element_name? PIPE
+  -> ^(SELECTOR_NAMESPACE_PREFIX element_name?)
+  ;
+
+// element_name
+//  : IDENT | '*'
+//  ;
+element_name
+    : IDENT
+    -> ^(ELEMENT_NAME IDENT)
+    | STAR
+    -> ^(ELEMENT_NAME STAR)
+    ;
+
+// universal
+//  : [ selector_namespace_prefix ]? '*'
+//  ;
+universal
+  : ((selector_namespace_prefix) => selector_namespace_prefix)? STAR
+  -> ^(UNIVERSAL selector_namespace_prefix?)
+  ;
+
+// class
+//  : '.' IDENT
+//  ;
+class
+    : CLASS_IDENT
+    -> ^(CLASSIDENTIFIER CLASS_IDENT)
+    ;
+
+// attrib
+//  : '[' S* [ selector_namespace_prefix ]? IDENT S*
+//        [ [ PREFIXMATCH |
+//            SUFFIXMATCH |
+//            SUBSTRINGMATCH |
+//            '=' |
+//            INCLUDES |
+//            DASHMATCH ] S* [ IDENT | STRING ] S*
+//        ]? ']'
+//  ;
+attrib
+    : SQUARE_BEGIN 
+        selector_namespace_prefix? attributeName=IDENT
+        (
+            (attributeOperator=PREFIXMATCH|attributeOperator=SUFFIXMATCH|attributeOperator=SUBSTRINGMATCH|attributeOperator=EQUALS|attributeOperator=INCLUDES|attributeOperator=DASHMATCH)
+            (attribvalue=IDENT|STRING)
+        )?
+    SQUARE_END
+    -> ^(ATTRIBIDENTIFIER selector_namespace_prefix? ^(ATTRIBNAME $attributeName) ^(ATTRIBOPERATORVALUE ^(ATTRIBOPERATOR $attributeOperator) ^(ATTRIBVALUE $attribvalue? ^(STRINGBASEDVALUE STRING)?))?)
+    ;
+
+// pseudo
+//  /* '::' starts a pseudo-element, ':' a pseudo-class */
+//  /* Exceptions: :first-line, :first-letter, :before and :after. */
+//  /* Note that pseudo-elements are restricted to one per selector and */
+//  /* occur only in the last simple_selector_sequence. */
+//  : ':' ':'? [ IDENT | functional_pseudo ]
+//  ;
+pseudo
+    : c1=COLON c2=COLON? pseudoName=IDENT
+    -> ^(PSEUDOIDENTIFIER ^(COLONS $c1 $c2?) ^(PSEUDONAME $pseudoName))
+    | c1=COLON c2=COLON? functional_pseudo
+    -> ^(PSEUDOIDENTIFIER ^(COLONS $c1 $c2?) functional_pseudo)
+    ;
+
+// functional_pseudo
+//  : FUNCTION S* expression ')'
+//  ;
+functional_pseudo
+  : beginfunc selectorexpression CIRCLE_END
+  -> ^(FUNCTIONAL_PSEUDO beginfunc ^(SELECTOR_EXPRESSION selectorexpression))
+  ;
+
+// expression
+//  /* In CSS3, the expressions are identifiers, strings, */
+//  /* or of the form "an+b" */
+//  : [ [ PLUS | '-' | DIMENSION | NUMBER | STRING | IDENT ] S* ]+
+//  ;
+selectorexpression
+  /* In CSS3, the expressions are identifiers, strings, */
+  /* or of the form "an+b" */
+  : (PLUS|MINUS|DIMENSION|NUMBER|STRING|IDENT|REPLACEMENT)+
+  ;
+
+// negation
+//  : NOT S* negation_arg S* ')'
+//  ;
+negation
+  :  (COLON)NOT(CIRCLE_BEGIN) negation_arg CIRCLE_END
+  -> ^(NEGATIONIDENTIFIER ^(NEGATION_ARG negation_arg))
+  ;
+
+// negation_arg
+//  : type_selector | universal | HASH | class | attrib | pseudo
+//  ;
+negation_arg
+  : ((universal) => universal)|type_selector|hash|class|attrib|pseudo
+  ;
+
+atname
+    : AT_NAME
+    -> ^(ATIDENTIFIER AT_NAME)
+    ;
+
+// declaration
+//  : property ':' S* expr prio?
+//  ;
+declaration
+    : IMPORTANT_COMMENTS* property COLON expr prio? 
+    -> ^(DECLARATION IMPORTANT_COMMENTS* property expr prio? )
+    ;
+
+stringoruri
+    : STRING
+    -> ^(STRINGBASEDVALUE STRING)
+    | URI
+    -> ^(URIBASEDVALUE URI)
+    ;
+
+styleSheetrules
+    : ruleset|media|page|keyframes|document|wg_dpi
+    ;
+
+// prio
+//  : IMPORTANT_SYM S*
+//  ;
+prio
+    : IMPORTANT_SYM
+    -> ^(IMPORTANT IMPORTANT_SYM)
+    ;
+
+// expr
+//  : term [ operator? term ]*
+//  ;
+expr	
+	: IMPORTANT_COMMENTS* term (termwithoperator)* 
+    -> ^(EXPR IMPORTANT_COMMENTS* term ^(TERMWITHOPERATORS termwithoperator*)?)
+    ;
+
+termwithoperator
+	: operator? term
+    -> ^(TERMWITHOPERATOR ^(OPERATOR operator)? term)	
+    ;
+
+term
+    : (unary_operator? (t = NUMBER | t = PERCENTAGE | t = LENGTH | t = RELATIVELENGTH | t = ANGLE | t = TIME | t = FREQ | t = RESOLUTION | t = SPEECH) ) IMPORTANT_COMMENTS*
+    -> ^(TERM unary_operator? ^(NUMBERBASEDVALUE $t) IMPORTANT_COMMENTS*)
+    | URI IMPORTANT_COMMENTS*
+    -> ^(TERM ^(URIBASEDVALUE URI) IMPORTANT_COMMENTS*)
+    | (exp = (MSIE_EXPRESSION { $exp = TrimMsieExpression($MSIE_EXPRESSION.text); }))IMPORTANT_COMMENTS*
+    -> ^(TERM ^(STRINGBASEDVALUE $exp) IMPORTANT_COMMENTS*)
+    | IDENT IMPORTANT_COMMENTS*
+    -> ^(TERM ^(IDENTBASEDVALUE IDENT) IMPORTANT_COMMENTS*)
+    | STRING IMPORTANT_COMMENTS*
+    -> ^(TERM ^(STRINGBASEDVALUE STRING) IMPORTANT_COMMENTS*)
+    | hash IMPORTANT_COMMENTS*
+    -> ^(TERM ^(HEXBASEDVALUE hash) IMPORTANT_COMMENTS*)
+	| REPLACEMENTTOKEN
+    -> ^(TERM ^(REPLACEMENTTOKENBASEDVALUE REPLACEMENTTOKEN))
+    | function IMPORTANT_COMMENTS*
+    -> ^(TERM function IMPORTANT_COMMENTS*)
+    ;
+
+hash
+    : HASH_IDENT
+    -> ^(HASHIDENTIFIER HASH_IDENT)
+    ;
+
+// function
+//  : FUNCTION S* expr ')' S*
+//  ;
+function
+    : beginfunc expr? CIRCLE_END
+    -> ^(FUNCTIONBASEDVALUE beginfunc expr?)
+    ;
+
+beginfunc
+    : IDENT CIRCLE_BEGIN
+    -> ^(FUNCTIONNAME IDENT) 
+// non-standard support for Safari
+    | FROM CIRCLE_BEGIN
+    -> ^(FUNCTIONNAME FROM)
+    | TO CIRCLE_BEGIN
+    -> ^(FUNCTIONNAME TO)
+// non-standard support for MSIE
+    | MSIE_IMAGE_TRANSFORM CIRCLE_BEGIN
+    -> ^(FUNCTIONNAME MSIE_IMAGE_TRANSFORM)
+    ;
+
+// keyframes-rule: '@keyframes' IDENT '{' keyframes-blocks '}';
+keyframes
+    : KEYFRAMES_SYM (IDENT|STRING) CURLY_BEGIN keyframes_block* CURLY_END
+    -> ^(KEYFRAMES ^(KEYFRAMES_SYMBOL KEYFRAMES_SYM) ^(IDENTBASEDVALUE IDENT)? ^(STRINGBASEDVALUE STRING)? ^(KEYFRAMES_BLOCKS keyframes_block*)?)
+    ;
+
+// keyframes-blocks: [ keyframe-selectors block ]* ;
+keyframes_block
+    : keyframes_selectors CURLY_BEGIN (declaration SEMICOLON?)* CURLY_END
+    -> ^(KEYFRAMES_BLOCK ^(KEYFRAMES_SELECTORS keyframes_selectors) ^(DECLARATIONS declaration*)?)
+    ;
+
+// keyframe-selectors: [ 'from' | 'to' | PERCENTAGE ] [ ',' [ 'from' | 'to' | PERCENTAGE ] ]*;
+keyframes_selectors
+    : keyframes_selector (COMMA keyframes_selector)*
+    -> ^(KEYFRAMES_SELECTOR keyframes_selector)*
+    ;
+
+keyframes_selector
+    : FROM|TO|PERCENTAGE
+    ;
+
+document
+    : DOCUMENT_SYM S* document_match_function S* CURLY_BEGIN ruleset* CURLY_END
+    -> ^(DOCUMENT ^(DOCUMENT_SYMBOL DOCUMENT_SYM) document_match_function ^(RULESETS ruleset*)?)
+    ;
+
+// will be of form ['url("http://foo")' | 'url-prefix("foo/bar")' | 'domain("foo")' | 'regexp("expr")']
+document_match_function
+    : URI 
+    -> ^(DOCUMENT_MATCHNAME URI)
+    | URLPREFIX_FUNCTION
+    -> ^(DOCUMENT_MATCHNAME URLPREFIX_FUNCTION) 
+    | DOMAIN_FUNCTION
+    -> ^(DOCUMENT_MATCHNAME DOMAIN_FUNCTION)
+    | REGEXP_FUNCTION
+    -> ^(DOCUMENT_MATCHNAME REGEXP_FUNCTION)
+    ;

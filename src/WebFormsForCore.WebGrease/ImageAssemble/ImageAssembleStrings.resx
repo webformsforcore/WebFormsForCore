@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdditionalDetailsMessage" xml:space="preserve">
+    <value>Additional Details:
+
+Image Name: {0}
+Sprite Name: {1}</value>
+  </data>
+  <data name="BitDepthParsingErrorMessage" xml:space="preserve">
+    <value>No action performed. There was an error parsing BitDepth for input images:
+{0}</value>
+  </data>
+  <data name="DirectoryDoesNotExistMessage" xml:space="preserve">
+    <value>Directory does not exist: {0}. 
+Parameter Name - {1}</value>
+  </data>
+  <data name="DuplicateInputFilePathsMessage" xml:space="preserve">
+    <value>No action performed. Duplicate image filepaths are present for image - '{1}' in parameter - {0}</value>
+  </data>
+  <data name="EightBitPNGCannotbeSpritedMessage" xml:space="preserve">
+    <value>8-bit PNGs are not supported for spriting.</value>
+  </data>
+  <data name="IgnoredFilesMessage" xml:space="preserve">
+    <value>No action performed. Following image files did not exist:</value>
+  </data>
+  <data name="ImageHashNameUpdateFailedMessage" xml:space="preserve">
+    <value>Operation failed while replacing assembled image name: '{0}' with hashed name.</value>
+  </data>
+  <data name="ImageLoadOutofMemoryExceptionMessage" xml:space="preserve">
+    <value>The file does not have a valid image format.
+
+Or
+
+GDI+ does not support the pixel format of the file.</value>
+  </data>
+  <data name="ImageSaveExternalExceptionMessage" xml:space="preserve">
+    <value>The image was saved with the wrong image format.
+
+Or
+
+The image was saved to the same file it was created from.
+
+Or
+
+Access is denied to the path - {0}.</value>
+  </data>
+  <data name="InputFilesDuplicateParameterMessage" xml:space="preserve">
+    <value>{0} and {1} should not be used together. Only one parameter should be used at one time.</value>
+  </data>
+  <data name="InvalidInputParameterMessage" xml:space="preserve">
+    <value>Input parameter '{0}' is not supported.</value>
+  </data>
+  <data name="InvalidInputParameterValueMessage" xml:space="preserve">
+    <value>Invalid value for input parameter - {0}</value>
+  </data>
+  <data name="InvalidPaddingValueMessage" xml:space="preserve">
+    <value>Invalid value {0} specified for padding between images assembled together in a sprite. Valid padding values are between {1} and {2} pixels (inclusive).</value>
+  </data>
+  <data name="MissingInputParameterMessage" xml:space="preserve">
+    <value>Mandatory Input Parameter(s) are missing. Please provide mandatory parameter(s) - 
+{0}</value>
+  </data>
+  <data name="NoInputFilesMessage" xml:space="preserve">
+    <value>There are no files present to process under folder: {0}</value>
+  </data>
+  <data name="NoInputFileToProcessMessage" xml:space="preserve">
+    <value>There are no image files provided to process.</value>
+  </data>
+  <data name="NoInputParametersMessage" xml:space="preserve">
+    <value>There are no input parameters provided. Please provide all mandatory parameters.
+
+{0}</value>
+  </data>
+  <data name="SingleInputImageCannotBeSpritedMessage" xml:space="preserve">
+    <value>Single input image cannot be sprited.</value>
+  </data>
+  <data name="ToolCommandLineErrorMessage" xml:space="preserve">
+    <value>An error occurred while performing the requested operation:
+{0}</value>
+  </data>
+  <data name="ToolSuccessfulCompletionMessage" xml:space="preserve">
+    <value>Successfully completed the action. Log file located at: {0}</value>
+  </data>
+  <data name="ToolUsageMessage" xml:space="preserve">
+    <value>Tool Usage:
+
+Provide parameters from following list:
+
+/inputdirectory  - [Mandatory] Input directory path that contains all the images to be assembled. This parameter is not recursive. Shorthand - /i. E.g. /inputdirectory:C:\Images.
+'/inputdirectory' and '/inputfilepaths' should not be used together. Only one parameter should be used at one time.
+
+/inputfilepaths  - [Mandatory] Semicolon (;) separated input file paths for images that need to be assembled. Providing image position for each image is mandatory. Image position is specified by providing L (for Left) and R (for Right) after each image path separated by pipe symbol (|). Image position will be used only in vertical sprite packing scheme to position the image. Shorthand - /f. E.g./inputfilepaths:C:\Images\1.jpg|L; C:\Images\3.gif|R; C:\Images\shoes.png|R; C:\Images\windows.gif|L
+'/inputdirectory' and '/inputfilepaths' should not be used together. Only one parameter should be used at one time.
+
+/outputdirectory - [Mandatory] Output directory path where assembled images will be placed. E.g. /outputDirectory:C:\AssembledImages
+
+/logfile         - [Mandatory] Xml log filepath for the tool. Shorthand - /l. E.g./logfile:C:\AssembledImages\ReplaceLog.xml
+
+/padding         - [Mandatory] Amount of padding in pixel to be added between individual images within Sprite Image. Default value is {0}. E.g. /padding:5
+Valid values are from {1} to {2}.
+
+/spriteimage     - [Optional] Assembled image (sprite) name without file extension. Shorthand - /s. E.g./spriteimage:combined
+
+/packingscheme   - [Optional] Sprite packing scheme (Horizontal/Vertical). Default value - Vertical. Shorthand - /ps. E.g. /packingscheme:Horizontal
+
+/dedup           - [Optional] Dedup (remove duplicate) images.  Default value - False.  Shorthand - /d.  E.g. /dedup:True
+
+Examples:
+
+ImageAssembleTool.exe /inputdirectory:C:\Images /outputDirectory:C:\AssembledImages /logfile:ReplaceLog.xml /padding:0
+
+ImageAssembleTool.exe /inputfilepaths:C:\Images\1.gif|L;C:\Images\2.gif|R;C:\Images\3.png|L;C:\Images\4.png|L /outputDirectory:C:\AssembledImages /logfile:ReplaceLog.xml /padding:5
+
+ImageAssembleTool.exe /inputdirectory:C:\Images /outputDirectory:C:\AssembledImages /spriteimage:Combined.gif /logfile:ReplaceLog.xml /packingscheme:Horizontal /padding:2 /dedup:True</value>
+  </data>
+  <data name="ValueMissingForInputParameterMessage" xml:space="preserve">
+    <value>Value is not specified for {0}</value>
+  </data>
+  <data name="InputFilesMissingPositionMessage" xml:space="preserve">
+    <value>Image position is missing for the input image file {0}. Please provide image position (L for Left / R for Right) after image path separated by Pipe symbol (|). E.g. /f:C:\1.gif|L;C:\2.gif|R</value>
+  </data>
+  <data name="InputFilesPathAndPositionMessage" xml:space="preserve">
+    <value>Input files must contain both Path and Position for each image. Input file value {0} is missing Path and/or Position value. Please provide image position (L for Left / R for Right) after image path separated by Pipe symbol (|). E.g. /f:C:\1.gif|L;C:\2.gif|R</value>
+  </data>
+  <data name="InputImageListNoImageMessage" xml:space="preserve">
+    <value>There are no InputImages found in InputImageList. Please verify InputImageList is specified correctly. Alternatively, provide either /inputdirectory or /inputfilepaths parameter to specify input images.</value>
+  </data>
+  <data name="ImagePositionValues" xml:space="preserve">
+    <value>{0} and {1}</value>
+  </data>
+  <data name="InvalidImagePositionMessage" xml:space="preserve">
+    <value>Invalid value {0} is specified for Image {1}. Please provide valid value for Image Position. Valid image position values are {2}.</value>
+  </data>
+  <data name="SinglePNGCannotBeSpritedMessage" xml:space="preserve">
+    <value>Single PNG image having {0} bpp cannot be sprited.</value>
+  </data>
+  <data name="PNGBitDepthNotSupportedMessage" xml:space="preserve">
+    <value>Spriting of {0} bpp PNGs is not supported by this tool.</value>
+  </data>
+</root>

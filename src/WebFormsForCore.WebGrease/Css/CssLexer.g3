@@ -1,0 +1,532 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CssLexer.g3" company="Microsoft">
+//   Copyright Microsoft Corporation, all rights reserved
+// </copyright>
+// <summary>
+//   The css lexer ANTLR grammar based on CSS specs located at http://www.w3.org/Style/CSS/specs
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+lexer grammar CssLexer;
+
+options
+{
+    language=CSharp3;
+    TokenLabelType=CommonToken;
+}
+
+@namespace { WebGrease.Css }
+
+CHARSET_SYM
+    : '@charset'
+    ;
+
+MEDIA_SYM
+    : '@media'
+    ;
+
+WG_DPI_SYM
+    : '@-wg-dpi'
+    ;
+
+PAGE_SYM
+    : '@page'
+    ;
+
+KEYFRAMES_SYM
+    : '@keyframes'
+    | '@-ms-keyframes' // MS - Not sure how spec would be implemented?
+    | '@-moz-keyframes' // Mozilla
+    | '@-webkit-keyframes' // Chrome/Safari
+    ;
+
+// based on http://www.w3.org/TR/css3-conditional/#at-document
+DOCUMENT_SYM
+    : '@document'
+    | '@-moz-document'
+    ;
+
+URLPREFIX_FUNCTION
+    : 'url-prefix('(.*)(CIRCLE_END) {$text = RemoveUrlEdgeWhitespaces(RemoveComments($text)); }
+    ;
+
+DOMAIN_FUNCTION
+    : 'domain('(.*)(CIRCLE_END) {$text = RemoveComments($text); }
+    ;
+
+REGEXP_FUNCTION
+    : 'regexp('(.*)(CIRCLE_END) {$text = RemoveComments($text); }
+    ;
+
+NAMESPACE_SYM
+    : '@'(N)(A)(M)(E)(S)(P)(A)(C)(E)
+    ;
+
+CIRCLE_BEGIN
+    : '('
+    ;
+
+CIRCLE_END
+    : ')'
+    ;
+
+COMMA
+    : ','
+    ;
+
+COLON
+    : ':'
+    ;
+
+CURLY_BEGIN
+    : '{'
+    ;
+
+CURLY_END
+    : '}'
+    ;
+
+DASHMATCH
+    : '|='
+    ;
+
+PREFIXMATCH
+    : '^='
+    ;
+
+SUFFIXMATCH
+    : '$='
+    ;
+
+SUBSTRINGMATCH
+    : '*='
+    ;
+
+// non-standard support for MSIE
+MSIE_IMAGE_TRANSFORM
+    : (P)(R)(O)(G)(I)(D) COLON (D)(X)(I)(M)(A)(G)(E)(T)(R)(A)(N)(S)(F)(O)(R)(M)'.'(M)(I)(C)(R)(O)(S)(O)(F)(T)'.' IDENT
+    ;
+
+MSIE_EXPRESSION
+    : (E)(X)(P)(R)(E)(S)(S)(I)(O)(N) CIRCLE_BEGIN ( options {greedy=false;} : .)* SEMICOLON
+    ;
+
+CLASS_IDENT
+    : '.'(IDENT)
+    ;
+
+EQUALS
+    : '='
+    ;
+
+FORWARD_SLASH
+    : '/'
+    ;
+
+fragment BACKWARD_SLASH
+    : '\\'
+    ;
+
+GREATER
+    : '>'
+    ;
+
+STAR
+    : '*'
+    ;
+
+MINUS
+    : '-'
+    ;
+
+FROM
+    : 'from'
+    ;
+
+TO
+    : 'to'
+    ;
+
+AND
+    : (A)(N)(D)
+    ;
+
+NOT
+    : (N)(O)(T)
+    ;
+
+ONLY
+    : (O)(N)(L)(Y)
+    ;
+
+PLUS
+    : '+'
+    ;
+
+PIPE
+    : '|'
+    ;
+
+SEMICOLON
+    : ';'
+    ;
+
+SQUARE_BEGIN
+    : '['
+    ;
+
+SQUARE_END
+    : ']'
+    ;
+
+TILDE
+    : '~'
+    ;
+
+// Uri can pretty much contain whole enchilada. We wil clean the comments and whitespace explicitly.
+// Examples:
+// url(abc.gif)
+// url('abc.gif')
+// url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAABnRSTlMAAAAAAABupgeRAAAABmJLR0QA%2FwD%2FAP%2BgvaeTAAAAEUlEQVR42mP4%2F58BCv7%2FZwAAHfAD%2FabwPj4AAAAASUVORK5CYII%3D)
+// url(hash(abc.gif))
+// url('hash(abc.gif)')
+URI
+    : 'url(\'hash('(.*)')'(.*)'\')' {$text = RemoveUrlEdgeWhitespaces(RemoveComments($text)); }
+    | 'url("hash('(.*)')'(.*)'")' {$text = RemoveUrlEdgeWhitespaces(RemoveComments($text)); }
+    | 'url(hash('(.*)')'(.*)')' {$text = RemoveUrlEdgeWhitespaces(RemoveComments($text)); }
+    | 'url('(.*)(CIRCLE_END) {$text = RemoveUrlEdgeWhitespaces(RemoveComments($text)); }
+    ;
+
+// The LENGTH and RELATIVELENGTH types listed below can have their units removed during optimization if the numeric value is zero.
+// If any new units are added to either of these, be sure to update the corresponding LengthUnits regular expression 
+// in the FloatOptimizationVisitor class accordingly.
+LENGTH
+    : NUMBER ((C)(M) | (M)(M) | (I)(N) | (P)(X) | (P)(T) | (P)(C)) UNICODE_ESCAPE_HACK?
+    ;
+
+RELATIVELENGTH
+    : NUMBER ((E)(M) | (E)(X) | (C)(H) | (R)(E)(M) | (V)(W) | (V)(H) | (V)(M)(I)(N) | (V)(M)(A)(X) | (F)(R) | (G)(R)) UNICODE_ESCAPE_HACK?
+    ;
+
+ANGLE
+    : NUMBER ((D)(E)(G) | (G)(R)(A)(D) | (R)(A)(D) | (T)(U)(R)(N)) UNICODE_ESCAPE_HACK?
+    ;
+
+RESOLUTION
+    : NUMBER ((D)(P)(I) | (D)(P)(C)(M) | (D)(P)(P)(X)) UNICODE_ESCAPE_HACK?
+    ;
+
+TIME
+    : NUMBER ((S) | (M)(S)) UNICODE_ESCAPE_HACK?
+    ;
+
+FREQ
+    : NUMBER ((H)(Z) | (K)(H)(Z)) UNICODE_ESCAPE_HACK?
+    ;
+
+// decibels and semi-tones defined in http://www.w3.org/TR/css3-speech/, but not yet updated in http://www.w3.org/TR/css3-values/
+SPEECH
+    : NUMBER ((D)(B) | (S)(T)) UNICODE_ESCAPE_HACK?
+    ;
+
+// common hack for targeting non-MSIE
+fragment UNICODE_ESCAPE_HACK
+    : UNICODE_NULLTERM
+    | UNICODE_TAB
+    ;
+
+// 1. The identifier can begin with a MINUS token for vendor specific extensions:
+// Example - -webkit-appearance:none;
+// The non-standard optional STAR is a hack to target MSIE, see http://en.wikipedia.org/wiki/CSS_filter#Star_hack
+// 2. The unicode range is desired for @font-face implementation.
+IDENT
+    : (MINUS)? NMSTART (NMCHAR)*
+	|UNICODE_RANGE
+    ;
+
+NUMBER
+    : (DIGITS)+ (UNICODE_ESCAPE_HACK)?
+    | (DIGITS)*'.'(DIGITS)+ (UNICODE_ESCAPE_HACK)?
+    ;
+
+DIMENSION
+    : (NUMBER)(IDENT)
+    ;
+
+IMPORT_SYM
+    : '@'(I)(M)(P)(O)(R)(T)
+    ;
+
+IMPORTANT_SYM
+    : '!'(WS_FRAGMENT)*(I)(M)(P)(O)(R)(T)(A)(N)(T) {$text = "!important"; }
+    ;
+
+INCLUDES
+    : '~='
+    ;
+
+PERCENTAGE
+    : NUMBER('%') UNICODE_ESCAPE_HACK?
+    ;
+
+// string {string1}|{string2}
+// string1 \"([^\n\r\f\\"]|\\{nl}|{escape})*\"
+// string2 \'([^\n\r\f\\']|\\{nl}|{escape})*\'
+STRING
+    : (
+        '"'
+        (
+            (~('\n'|'\r'|'\f'|BACKWARD_SLASH|'"'))
+            |((BACKWARD_SLASH)NL)
+            |ESCAPE
+        )*
+        '"'
+    )
+    |
+    (
+        '\''
+        (
+            (~('\n'|'\r'|'\f'|BACKWARD_SLASH|'\''))
+            |((BACKWARD_SLASH)NL)
+            |ESCAPE
+        )*
+        '\''
+    )
+    ;
+
+HASH_IDENT
+    : (HASH)(NAME) UNICODE_ESCAPE_HACK?
+    ;
+
+AT_NAME
+    : '@'(NAME)
+    ;
+
+WS
+    : WS_FRAGMENT+ { $channel = Hidden; }
+    ;
+
+fragment EMPTY_COMMENT 
+	: '/**/'
+	;
+
+COMMENTS
+	options {greedy=false;}
+    : EMPTY_COMMENT { $channel = Hidden; }
+	| '/*' ~('!') (.)*  '*/' { $channel = Hidden; }
+    ;
+
+IMPORTANT_COMMENTS
+	: '/*!' (.)*  '*/'
+	;
+
+REPLACEMENTTOKEN
+    : ('.'|'#')?'%'(LETTER|DIGITS|'-'|'.')+(':'(LETTER|DIGITS)*)?'%'
+    ;
+
+fragment NMSTART
+    : LETTER
+    | NONASCII
+    | ESCAPE
+    ;
+
+fragment NMCHAR
+    : (LETTER|DIGITS|'-')
+    | NONASCII
+    | ESCAPE
+    ;
+
+fragment NAME
+    : NMCHAR+
+    ;
+
+fragment DIGITS
+    : '0'..'9'
+    ;
+
+fragment ESCAPE
+    : UNICODE|((BACKWARD_SLASH)~('\r'|'\n'|'\f'|HEXDIGIT))
+    ;
+
+fragment HASH
+    : '#'
+    ;
+
+fragment HEXDIGIT
+    : (DIGITS|'a'..'f'|'A'..'F')
+    ;
+
+fragment LETTER
+    : 'A'..'Z'
+    | 'a'..'z'
+    | '_'
+    ;
+
+// http://www.unicode.org/charts/nameslist/ Ignore the C0 Controls and Basic Latin (ASCII)
+fragment NONASCII
+    : '\u0080'..'\uffff'
+    ;
+
+fragment NL
+    : '\n'|'\r\n'|'\r'|'\f'
+    ;
+
+fragment URL
+    : (
+        ~('\n'|'\r'|'\t'|'\f'|'"'|'\''|CIRCLE_BEGIN|CIRCLE_END)
+      )*
+    ;
+
+// http://www.w3.org/International/questions/qa-escapes
+fragment UNICODE
+    : ((BACKWARD_SLASH)(HEXDIGIT)
+    | (BACKWARD_SLASH)(HEXDIGIT)(HEXDIGIT)
+    | (BACKWARD_SLASH)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)
+    | (BACKWARD_SLASH)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)
+    | (BACKWARD_SLASH)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)
+    | (BACKWARD_SLASH)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT)(HEXDIGIT))SPACE_AFTER_UNICODE?
+    ;
+
+// http://www.w3.org/TR/css3-fonts/#unicode-range-desc
+fragment UNICODE_RANGE
+    : (U)(PLUS)(HEXDIGIT)+(MINUS(HEXDIGIT)+)*
+    ;
+
+fragment SPACE_AFTER_UNICODE
+    : ('\r\n'|' '|'\t'|'\r'|'\n'|'\f')
+    ;
+
+fragment WS_FRAGMENT
+    : (' '|'\t'|'\r'|'\n'|'\f')
+    ;
+
+// A a|\\0{0,4}(41|61)(\r\n|[ \t\r\n\f])?
+// C c|\\0{0,4}(43|63)(\r\n|[ \t\r\n\f])?
+// D d|\\0{0,4}(44|64)(\r\n|[ \t\r\n\f])?
+// E e|\\0{0,4}(45|65)(\r\n|[ \t\r\n\f])?
+// G g|\\0{0,4}(47|67)(\r\n|[ \t\r\n\f])?|\\g
+// H h|\\0{0,4}(48|68)(\r\n|[ \t\r\n\f])?|\\h
+// I i|\\0{0,4}(49|69)(\r\n|[ \t\r\n\f])?|\\i
+// K k|\\0{0,4}(4b|6b)(\r\n|[ \t\r\n\f])?|\\k
+// L l|\\0{0,4}(4c|6c)(\r\n|[ \t\r\n\f])?|\\l
+// M m|\\0{0,4}(4d|6d)(\r\n|[ \t\r\n\f])?|\\m
+// N n|\\0{0,4}(4e|6e)(\r\n|[ \t\r\n\f])?|\\n
+// O o|\\0{0,4}(4f|6f)(\r\n|[ \t\r\n\f])?|\\o
+// P p|\\0{0,4}(50|70)(\r\n|[ \t\r\n\f])?|\\p
+// R r|\\0{0,4}(52|72)(\r\n|[ \t\r\n\f])?|\\r
+// S s|\\0{0,4}(53|73)(\r\n|[ \t\r\n\f])?|\\s
+// T t|\\0{0,4}(54|74)(\r\n|[ \t\r\n\f])?|\\t
+// U u|\\0{0,4}(55|75)(\r\n|[ \t\r\n\f])?|\\u
+// X x|\\0{0,4}(58|78)(\r\n|[ \t\r\n\f])?|\\x
+// Y y|\\0{0,4}(59|79)(\r\n|[ \t\r\n\f])?|\\y
+// Z z|\\0{0,4}(5a|7a)(\r\n|[ \t\r\n\f])?|\\z
+
+fragment UNICODE_ZEROS
+    : ((BACKWARD_SLASH)('0')
+    | (BACKWARD_SLASH)('00')
+    | (BACKWARD_SLASH)('000')
+    | (BACKWARD_SLASH)('0000'))
+    ;
+
+fragment UNICODE_TAB
+    : UNICODE_ZEROS('9')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('9')
+    ;
+
+fragment UNICODE_NULLTERM
+    : UNICODE_ZEROS('0')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('0')
+    ;
+
+fragment A
+    : 'a'|'A'|UNICODE_ZEROS('41'|'61')SPACE_AFTER_UNICODE?
+    ;
+
+fragment B
+    : 'b'|'B'|UNICODE_ZEROS('42'|'62')SPACE_AFTER_UNICODE?
+    ;
+
+fragment C
+    : 'c'|'C'|UNICODE_ZEROS('43'|'63')SPACE_AFTER_UNICODE?
+    ;
+
+fragment D
+    : 'd'|'D'|UNICODE_ZEROS('44'|'64')SPACE_AFTER_UNICODE?
+    ;
+
+fragment E
+    : 'e'|'E'|UNICODE_ZEROS('45'|'65')SPACE_AFTER_UNICODE?
+    ;
+
+fragment F
+    : 'f'|'F'|UNICODE_ZEROS('46'|'66')SPACE_AFTER_UNICODE?
+    ;
+
+fragment G
+    : 'g'|'G'|UNICODE_ZEROS('47'|'67')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('g')
+    ;
+
+fragment H
+    : 'h'|'H'|UNICODE_ZEROS('48'|'68')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('h')
+    ;
+
+fragment I
+    : 'i'|'I'|UNICODE_ZEROS('49'|'69')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('i')
+    ;
+
+fragment K
+    : 'k'|'K'|UNICODE_ZEROS('4b'|'6b')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('k')
+    ;
+
+fragment L
+    : 'l'|'L'|UNICODE_ZEROS('4c'|'6c')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('l') // Where used??
+    ;
+
+fragment M
+    : 'm'|'M'|UNICODE_ZEROS('4d'|'6d')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('m')
+    ;
+
+fragment N
+    : 'n'|'N'|UNICODE_ZEROS('4e'|'6e')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('n')
+    ;
+
+fragment O
+    : 'o'|'O'|UNICODE_ZEROS('4f'|'6f')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('o')
+    ;
+
+fragment P
+    : 'p'|'P'|UNICODE_ZEROS('50'|'70')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('p')
+    ;
+
+fragment R
+    : 'r'|'R'|UNICODE_ZEROS('52'|'72')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('r')
+    ;
+
+fragment S
+    : 's'|'S'|UNICODE_ZEROS('53'|'73')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('s')
+    ;
+
+fragment T
+    : 't'|'T'|UNICODE_ZEROS('54'|'74')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('t')
+    ;
+
+fragment U
+    : 'u'|'U'|UNICODE_ZEROS('55'|'75')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('u')
+    ;
+
+fragment V
+    : 'v'|'V'|UNICODE_ZEROS('56'|'76')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('v')
+    ;
+
+fragment W
+    : 'w'|'W'|UNICODE_ZEROS('57'|'77')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('w')
+    ;
+
+fragment X
+    : 'x'|'X'|UNICODE_ZEROS('58'|'78')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('x')
+    ;
+
+fragment Y
+    : 'y'|'Y'|UNICODE_ZEROS('59'|'79')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('y')
+    ;
+
+fragment Z
+    : 'z'|'Z'|UNICODE_ZEROS('5a'|'7a')SPACE_AFTER_UNICODE?|BACKWARD_SLASH('z')
+    ;

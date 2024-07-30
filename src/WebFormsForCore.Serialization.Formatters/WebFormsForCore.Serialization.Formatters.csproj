@@ -10,6 +10,7 @@
 		<DefineConstants>$(DefineConstants);Legacy;WebFormsForCore</DefineConstants>
 		<NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0050;SYSLIB0051</NoWarn>
 		<SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</AssemblyName>
 	</PropertyGroup>
 
