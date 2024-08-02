@@ -213,9 +213,9 @@
             <ReferencePath Condition="'%(FileName)' == 'System.Web.Services.Description'">
                 <Aliases>Core</Aliases>
             </ReferencePath>
-            <!--<ReferencePath Condition="'%(FileName)' == 'System.Web'">
+            <ReferencePath Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::Match(%(Identity),'\\dotnet\\').Success)">
                 <Aliases>Core</Aliases>
-            </ReferencePath>-->
+            </ReferencePath>
         </ItemGroup>
     </Target>
 

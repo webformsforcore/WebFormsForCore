@@ -38,7 +38,7 @@
         <ProjectReference Include="..\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.RegularExpressions\WebFormsForCore.Web.RegularExpressions.csproj" />
-        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Services\WebFormsForCore.Web.Services.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj" />
@@ -86,5 +86,16 @@
             <ContentWithTargetPath Include="$(ProjectRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'" CopyToOutputDirectory="PreserveNewest" TargetPath="$(ProjectRuntimeConfigFileName)" />
         </ItemGroup>
     </Target>
-    
+
+    <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+        <ItemGroup>
+            <ReferencePath Condition="'%(FileName)' == 'System.Web.Services.Description'">
+                <Aliases>Core</Aliases>
+            </ReferencePath>
+            <ReferencePath Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::Match(%(Identity),'\\dotnet\\').Success)">
+                <Aliases>Core</Aliases>
+            </ReferencePath>
+        </ItemGroup>
+    </Target>
+
 </Project>

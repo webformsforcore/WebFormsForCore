@@ -237,8 +237,8 @@ namespace System.Web.Hosting
         {
             var path = context.Request.Path.Value;
 
-			if (HandleAllRequestsAsLegacy || LegacyExtensions.Any(ext => path.EndsWith(ext))) return true;
-
+			if (LegacyExtensions.Any(ext => path.EndsWith(ext))) return true;
+			
             if (Directory.Exists(MapPath(path)))
             {
 				if (path.EndsWith('/')) path = path.Substring(0, path.Length - 1);
@@ -252,7 +252,10 @@ namespace System.Web.Hosting
                     return true;
                 }
             }
-            return false;
+
+			if (HandleAllRequestsAsLegacy) return true;
+
+			return false;
 		}
 
 		public bool IsVirtualPathInApp(String path)

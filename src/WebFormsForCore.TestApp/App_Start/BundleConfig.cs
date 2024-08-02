@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-//using System.Web.Optimization;
+using System.Web.Optimization;
 using System.Web.UI;
 
 namespace EstrellasDeEsperanza.WebFormsForCore.TestApp
@@ -10,7 +10,6 @@ namespace EstrellasDeEsperanza.WebFormsForCore.TestApp
 	public class BundleConfig
 	{
 
-#if false
 		// For more information on Bundling, visit https://go.microsoft.com/fwlink/?LinkID=303951
 		public static void RegisterBundles(BundleCollection bundles)
 		{
@@ -36,6 +35,5 @@ namespace EstrellasDeEsperanza.WebFormsForCore.TestApp
 			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
 							"~/Scripts/modernizr-*"));
 		}
-#endif
 	}
 }
