@@ -51,7 +51,7 @@ namespace WebGrease.Extensions
             return false;
         }
 
-        /// <summary>The distinct by extension method.</summary>
+        /*/// <summary>The distinct by extension method.</summary>
         /// <param name="source">The source.</param>
         /// <param name="keySelector">The key selector.</param>
         /// <typeparam name="TSource">The source type</typeparam>
@@ -61,7 +61,7 @@ namespace WebGrease.Extensions
         {
             var hash = new HashSet<TKey>();
             return source.Where(p => hash.Add(keySelector(p)));
-        }
+        }*/
 
         /// <summary>Adds a dictionary to another dictionary with the same types.</summary>
         /// <param name="dictionary">The dictionary to add to.</param>

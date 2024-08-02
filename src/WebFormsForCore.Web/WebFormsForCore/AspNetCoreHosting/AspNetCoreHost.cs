@@ -42,7 +42,7 @@ namespace System.Web.Hosting
 		private string processUser;
 
         private string virtualPath;
-        public bool HandleAllRequestsAsLegacy { get; set; } = false;
+        public bool HandleAllRequestsAsLegacy { get; set; } = true;
 		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx", ".asax" };
         public string[] DefaultDocuments { get; set; } = new string[] { "default.aspx" };
 

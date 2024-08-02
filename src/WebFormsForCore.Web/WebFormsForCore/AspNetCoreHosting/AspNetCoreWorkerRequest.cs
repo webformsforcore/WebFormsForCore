@@ -260,13 +260,13 @@ namespace System.Web.Hosting
 			{
 				if (isClientScriptPath)
 				{
-					mappedPath = Host.PhysicalClientScriptPath +
-								 path.Substring(Host.NormalizedClientScriptPath.Length);
+					mappedPath = Path.Combine(Host.PhysicalClientScriptPath,
+								 path.Substring(Host.NormalizedClientScriptPath.Length));
 				}
 				else
 				{
 					// inside app but not the app path itself
-					mappedPath = Host.PhysicalPath + path.Substring(Host.NormalizedVirtualPath.Length);
+					mappedPath = Path.Combine(Host.PhysicalPath, path.Substring(Host.NormalizedVirtualPath.Length));
 				}
 			}
 			else
@@ -274,15 +274,15 @@ namespace System.Web.Hosting
 				// outside of app -- make relative to app path
 				if (path.StartsWith("/", StringComparison.Ordinal))
 				{
-					mappedPath = Host.PhysicalPath + path.Substring(1);
+					mappedPath = Path.Combine(Host.PhysicalPath, path.Substring(1));
 				}
 				else
 				{
-					mappedPath = Host.PhysicalPath + path;
+					mappedPath = Path.Combine(Host.PhysicalPath, path);
 				}
 			}
 
-			mappedPath = mappedPath.Replace('/', '\\');
+			mappedPath = mappedPath.Replace('/', Path.DirectorySeparatorChar);
 
 			if (mappedPath.EndsWith("\\", StringComparison.Ordinal) &&
 				!mappedPath.EndsWith(":\\", StringComparison.Ordinal))

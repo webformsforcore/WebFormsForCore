@@ -8,8 +8,8 @@ namespace WebGrease.Preprocessing
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
+    using System.Composition;
+    using System.Composition.Hosting;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -26,8 +26,8 @@ namespace WebGrease.Preprocessing
         #region Fields
 
         /// <summary>The registered preprocessing engines.</summary>
-        [ImportMany(typeof(IPreprocessingEngine))]
-        private readonly IList<IPreprocessingEngine> registeredPreprocessingEngines = new List<IPreprocessingEngine>();
+        [ImportMany(nameof(IPreprocessingEngine))]
+        public IList<IPreprocessingEngine> RegisteredPreprocessingEngines { get; set; } = new List<IPreprocessingEngine>();
 
         /// <summary>The context.</summary>
         private IWebGreaseContext context;
@@ -66,7 +66,7 @@ namespace WebGrease.Preprocessing
         /// <param name="preprocessingManager">The preprocessing manager.</param>
         internal PreprocessingManager(PreprocessingManager preprocessingManager)
         {
-            preprocessingManager.registeredPreprocessingEngines.ForEach(rp => this.registeredPreprocessingEngines.Add(rp));
+            preprocessingManager.RegisteredPreprocessingEngines.ForEach(rp => this.RegisteredPreprocessingEngines.Add(rp));
         }
 
         /// <summary>Set the current context.</summary>
@@ -134,7 +134,7 @@ namespace WebGrease.Preprocessing
         internal IPreprocessingEngine[] GetProcessors(ContentItem contentItem, PreprocessingConfig preprocessConfig)
         {
             return preprocessConfig.PreprocessingEngines
-                                   .SelectMany(ppe => this.registeredPreprocessingEngines.Where(rppe => rppe.Name.Equals(ppe, StringComparison.OrdinalIgnoreCase)))
+                                   .SelectMany(ppe => this.RegisteredPreprocessingEngines.Where(rppe => rppe.Name.Equals(ppe, StringComparison.OrdinalIgnoreCase)))
                                    .Where(pptu => pptu.CanProcess(this.context, contentItem, preprocessConfig))
                                    .ToArray();
         }
@@ -171,7 +171,7 @@ namespace WebGrease.Preprocessing
 
                 // And now use MEF to load all possible plugins.
                 logManager.Information(ResourceStrings.PreprocessingPluginPath.InvariantFormat(pluginPath));
-                using (var addInCatalog = new AggregateCatalog())
+                /*using (var addInCatalog = new AggregateCatalog())
                 {
                     addInCatalog.Catalogs.Add(new DirectoryCatalog(pluginPath));
 
@@ -193,7 +193,7 @@ namespace WebGrease.Preprocessing
                                 ResourceStrings.PreprocessingEngineFound.InvariantFormat(registeredPreprocessingEngine.Name));
                         }
                     }
-                }
+                }*/
             }
 
             logManager.Information(ResourceStrings.PreprocessingInitializeEnd);

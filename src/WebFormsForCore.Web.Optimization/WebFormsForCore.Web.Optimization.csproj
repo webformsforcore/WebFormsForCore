@@ -15,15 +15,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Antlr" Version="3.5.0.2" />
-      <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="WebGrease" Version="1.6.0" />
+        <None Remove="BundleManifestSchema.xsd" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
-      <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+        <EmbeddedResource Include="BundleManifestSchema.xsd">
+            <LogicalName>System.Web.Optimization.BundleManifestSchema.xsd</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="Resources\*.resx" />
+        <EmbeddedResource Include="Resources\OptimizationResources.resx">
+            <LogicalName>System.Web.Optimization.Resources.OptimizationResources.resources</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
+        <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
     </ItemGroup>
 
 </Project>

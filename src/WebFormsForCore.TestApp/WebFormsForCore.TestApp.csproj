@@ -40,6 +40,10 @@
         <ProjectReference Include="..\WebFormsForCore.Web.RegularExpressions\WebFormsForCore.Web.RegularExpressions.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
         <ProjectReference Include="..\WebFormsForCore.Web.Services\WebFormsForCore.Web.Services.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
@@ -52,11 +56,22 @@
     <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
        <!-- <None Remove="Config\machine.config" />
         <Content Include="Config\machine.config" CopyToOutputDirectory="PreserveNewest" />-->
-        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.10.0" GeneratePathProperty="true" />
+        <!--<PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.10.0" GeneratePathProperty="true" />-->
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
+        <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.4.1" />
+        <PackageReference Include="bootstrap" Version="5.2.3" />
+        <PackageReference Include="jQuery" Version="3.4.1" />
+        <PackageReference Include="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
+        <PackageReference Include="Microsoft.AspNet.FriendlyUrls.Core" Version="1.0.2" />
+        <PackageReference Include="Microsoft.AspNet.ScriptManager.MSAjax" Version="5.0.0" />
+        <PackageReference Include="Microsoft.AspNet.ScriptManager.WebForms" Version="5.0.0" />
+        <!--<PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
+        <PackageReference Include="Microsoft.AspNet.Web.Optimization.WebForms" Version="1.1.3" />
+        <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="2.0.1" />-->
+        <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.1" />
+        <PackageReference Include="Modernizr" Version="2.8.3" />
     </ItemGroup>
 
     <ItemGroup>

@@ -219,7 +219,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
             string webPath = @"bin\Roslyn";
 			string appPath = @"Roslyn";
 #else
-            string webPath = @"Roslyn";
+            string webPath = @"";
             string appPath = @"";
 #endif
             // Check bin folder first

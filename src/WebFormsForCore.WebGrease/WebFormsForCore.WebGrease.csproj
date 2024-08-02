@@ -5,12 +5,61 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AssemblyName>WebGrease</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Antlr" Version="3.5.0.2" />
+        <PackageReference Include="Antlr3" Version="3.5.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
         <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="Css\CSS Minifier - Implementation Notes.docx" />
+        <!--<Antlr3 Include="Css\CssLexer.g3">
+            <Generator>MSBuild:Compile</Generator>
+        </Antlr3>
+        <Antlr3 Include="Css\CssParser.g3">
+            <Generator>MSBuild:Compile</Generator>
+        </Antlr3>-->
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
+      <ProjectReference Include="..\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj" />
+      <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="Ajax\Css\CssStrings.resx" />
+        <EmbeddedResource Include="Ajax\Css\CssStrings.resx">
+            <LogicalName>WebGrease.Ajax.Css.CssStrings.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="Ajax\JavaScript\JScript.resx" />
+        <EmbeddedResource Include="Ajax\JavaScript\JScript.resx">
+            <LogicalName>WebGrease.Ajax.JavaScript.JScript.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="Ajax\Utilities\CommonStrings.resx" />
+        <EmbeddedResource Include="Ajax\Utilities\CommonStrings.resx">
+            <LogicalName>WebGrease.Ajax.Utilities.CommonStrings.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="Css\CssStrings.resx" />
+        <EmbeddedResource Include="Css\CssStrings.resx">
+            <LogicalName>WebGrease.Css.CssStrings.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="ImageAssemble\ImageAssembleStrings.resx" />
+        <EmbeddedResource Include="ImageAssemble\ImageAssembleStrings.resx">
+            <LogicalName>WebGrease.ImageAssemble.ImageAssembleStrings.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="ResourceStrings.resx" />
+        <EmbeddedResource Include="ResourceStrings.resx">
+            <LogicalName>WebGrease.ResourceStrings.resources</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
 </Project>

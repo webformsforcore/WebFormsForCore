@@ -55,7 +55,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.TestApp", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Optimization", "src\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj", "{A9A0CBBC-D668-44D0-AF11-27FEF898D8F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.WebGrease", "src\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj", "{B30618C1-864F-44AA-8D00-D3AC4F7B3506}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.WebGrease", "src\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj", "{B30618C1-864F-44AA-8D00-D3AC4F7B3506}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.Optimization.WebForms", "src\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj", "{459C184B-6598-486D-AE1B-9614DC6C658F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -223,6 +225,18 @@ Global
 		{B30618C1-864F-44AA-8D00-D3AC4F7B3506}.Release|x64.Build.0 = Release|Any CPU
 		{B30618C1-864F-44AA-8D00-D3AC4F7B3506}.Release|x86.ActiveCfg = Release|Any CPU
 		{B30618C1-864F-44AA-8D00-D3AC4F7B3506}.Release|x86.Build.0 = Release|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Debug|x64.Build.0 = Debug|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Debug|x86.Build.0 = Debug|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x64.ActiveCfg = Release|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x64.Build.0 = Release|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x86.ActiveCfg = Release|Any CPU
+		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

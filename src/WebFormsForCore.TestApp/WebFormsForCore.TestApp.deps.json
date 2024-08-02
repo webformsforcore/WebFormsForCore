@@ -53,7 +53,17 @@
                 "System.Net.WebSockets.WebSocketProtocol.dll": {},
                 "System.ServiceModel.Primitives.dll": {},
                 "System.Web.Extensions.dll": {},
-                "System.Web.Services.Description.dll": {}
+                "System.Web.Services.Description.dll": {},
+                "Antlr3.Runtime.dll": {},
+                "Microsoft.Web.Infrastructure.dll": {},
+                "Newtonsoft.Json.dll": {},
+                "System.Web.Optimization.dll": {},
+                "WebGrease.dll": {},
+                "Microsoft.AspNet.Web.Optimization.WebForms.dll": {},
+                "AspNet.ScriptManager.jQuery.dll": {},
+                "Microsoft.AspNet.FriendlyUrls.dll": {},
+                "Microsoft.ScriptManager.MSAjax.dll": {},
+                "Microsoft.ScriptManager.WebForms.dll": {}
             }
         },
         "Azure.Core/1.35.0": {
