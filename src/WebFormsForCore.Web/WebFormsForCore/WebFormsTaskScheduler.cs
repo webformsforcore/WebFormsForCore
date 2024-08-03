@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace System.Web.Hosting
 {
+	/// <summary>
+	/// Unfortunately this implementation relies on internals of dotnet, but I don't see another
+	/// simple way to implement running ASP.NET Worker Thread in a separate thread and not in the
+	/// ThreadPool.
+	/// </summary>
 	public class WebFormsTaskScheduler : TaskScheduler
 	{
 		const string ThreadPoolTaskSchedulerTypeName = "System.Threading.Tasks.ThreadPoolTaskScheduler, System.Private.CoreLib";
@@ -37,7 +42,7 @@ namespace System.Web.Hosting
 		/// Schedules a task to the ThreadPool.
 		/// </summary>
 		/// <param name="task">The task to schedule.</param>
-		protected internal override void QueueTask(Task task)
+		protected override void QueueTask(Task task)
 		{
 			TaskCreationOptions options = task.CreationOptions;
 			if ((options & TaskCreationOptions.LongRunning) != 0)
@@ -45,8 +50,8 @@ namespace System.Web.Hosting
 				// Run LongRunning tasks on their own dedicated thread.
 				new Thread(s_longRunningThreadWork)
 				{
-					IsBackground = false,
-					Name = ".NET Long Running Task"
+					IsBackground = false, // Do not run as background, let task prevent process termination
+					Name = $"ASP.NET WebForms Worker Thread"
 				}.UnsafeStart(task);
 			}
 			else

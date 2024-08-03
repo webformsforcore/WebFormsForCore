@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Text;
 using System.Web;
@@ -315,6 +317,8 @@ namespace System.Web.Hosting
 				PrepareResponse();
 
 				// Hand the processing over to HttpRuntime
+				// Run processing in separate ASP.NET Worker Thread
+				var task = TaskFactory.
 				HttpRuntime.ProcessRequest(this);
 			}
 		}
