@@ -3112,8 +3112,13 @@ namespace System.Web {
         [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "Known issue, but required for proper operation of ASP.NET.")]
         [SecurityPermission(SecurityAction.Assert, ControlThread = true)]
         private static void AbortCurrentThread() {
+#if NETFRAMEWORK
             Thread.CurrentThread.Abort(new HttpApplication.CancelModuleException(false));
-        }
+#else
+#endif
+            throw new HttpApplication.CancelModuleException(false);
+
+		}
 
         /*
          * ASP compatible caching properties

@@ -232,10 +232,10 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
     <ItemGroup>
         <StrongNameAssemblies Include="$(IntermediateOutputPath)$(AssemblyName).dll" Visible="false" />
         <StrongNameAssemblies Include="$(IntermediateOutputPath)refint\$(AssemblyName).dll" Visible="false" />
-        <StrongNameAssemblies Include="$(IntermediateOutputPath)ref\$(AssemblyName).dll" Visible="false" />
+        <!--<StrongNameAssemblies Include="$(IntermediateOutputPath)ref\$(AssemblyName).dll" Visible="false" />-->
         <FakeStrongNameAssemblies Include="$(IntermediateOutputPath)$(AssemblyName).Fake.dll" Visible="false" />
         <FakeStrongNameAssemblies Include="$(IntermediateOutputPath)refint\$(AssemblyName).Fake.dll" Visible="false" />
-        <FakeStrongNameAssemblies Include="$(IntermediateOutputPath)ref\$(AssemblyName).Fake.dll" Visible="false" />
+        <!--<FakeStrongNameAssemblies Include="$(IntermediateOutputPath)ref\$(AssemblyName).Fake.dll" Visible="false" />-->
     </ItemGroup>
 
     <Target Name="FakeStrongName" Condition="$(TargetFramework) != 'net48'"

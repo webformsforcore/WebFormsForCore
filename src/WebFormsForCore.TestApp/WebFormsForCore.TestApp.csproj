@@ -92,9 +92,8 @@
             <ReferencePath Condition="'%(FileName)' == 'System.Web.Services.Description'">
                 <Aliases>Core</Aliases>
             </ReferencePath>
-            <ReferencePath Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::Match(%(Identity),'\\dotnet\\').Success)">
-                <Aliases>Core</Aliases>
-            </ReferencePath>
+            <!-- Do not import System.Web -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
         </ItemGroup>
     </Target>
 

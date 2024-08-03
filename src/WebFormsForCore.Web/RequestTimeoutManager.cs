@@ -174,7 +174,10 @@ namespace System.Web {
                 Thread thread = _context.MustTimeout(now);
                 if (thread != null) {
                     RemoveFromList();
+#if NETFRAMEWORK
                     thread.Abort(new HttpApplication.CancelModuleException(true));
+#else
+#endif
                 }
             }
 

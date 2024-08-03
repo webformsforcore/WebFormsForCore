@@ -2195,34 +2195,42 @@ namespace System.Web {
             Exception error = null;
 
             try {
-                try {
-                    if (step.IsCancellable) {
+                try
+                {
+                    if (step.IsCancellable)
+                    {
                         _context.BeginCancellablePeriod();  // request can be cancelled from this point
 
-                        try {
+                        try
+                        {
                             ExecuteStepImpl(step);
                         }
-                        finally {
+                        finally
+                        {
                             _context.EndCancellablePeriod();  // request can be cancelled until this point
                         }
 
                         _context.WaitForExceptionIfCancelled();  // wait outside of finally
                     }
-                    else {
+                    else
+                    {
                         ExecuteStepImpl(step);
                     }
 
-                    if (!step.CompletedSynchronously) {
+                    if (!step.CompletedSynchronously)
+                    {
                         completedSynchronously = false;
                         return null;
                     }
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     error = e;
 
                     // Since we will leave the context later, we need to remember if we are impersonating
                     // before we lose that info - VSWhidbey 494476
-                    if (ImpersonationContext.CurrentThreadTokenExists) {
+                    if (ImpersonationContext.CurrentThreadTokenExists)
+                    {
                         e.Data[System.Web.Management.WebThreadInformation.IsImpersonatingKey] = String.Empty;
                     }
                     // This might force ThreadAbortException to be thrown
@@ -2230,7 +2238,9 @@ namespace System.Web {
                     // hiding ThreadAbortException behind it
 
                     if (e is ThreadAbortException &&
-                        ((Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0))  {
+                        ((Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0) || 
+                        e is HttpApplication.CancelModuleException)
+                    {
                         // Response.End from a COM+ component that re-throws ThreadAbortException
                         // It is not a real ThreadAbort
                         // VSWhidbey 178556
@@ -2239,7 +2249,8 @@ namespace System.Web {
                     }
                 }
 #pragma warning disable 1058
-                catch {
+                catch
+                {
                     // ignore non-Exception objects that could be thrown
                 }
 #pragma warning restore 1058
@@ -2269,9 +2280,14 @@ namespace System.Web {
 
                     Thread.ResetAbort();
                 }
-            }
+            } catch (HttpApplication.CancelModuleException ce)
+            {
+				// Response.End
+				error = null;
+				_stepManager.CompleteRequest();
+			}
 
-            completedSynchronously = true;
+			completedSynchronously = true;
             return error;
         }
 
@@ -2713,7 +2729,7 @@ namespace System.Web {
          * Special exception to cancel module execution (not really an exception)
          * used in Response.End and when cancelling requests
          */
-        internal class CancelModuleException {
+        internal class CancelModuleException: Exception {
             private bool _timeout;
 
             internal CancelModuleException(bool timeout) {
