@@ -10,6 +10,25 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Web.Extensions</AssemblyName>
         <DefineConstants>$(DefineConstants);WEB_EXTENSIONS_CODE;WebFormsForCore</DefineConstants>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Extensions</PackageId>
+        <Title>WebFormsForCore.Web.Extensions</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web.Extensions</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -52,8 +71,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-      <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0">
+            <Aliases>NET</Aliases>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
+        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -118,10 +140,10 @@
             <LogicalName>System.Web.Resources.WCFModelStrings.resources</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\Date.UmAlQuraCalendar.debug.js">
-          <LogicalName>Date.UmAlQuraCalendar.debug.js</LogicalName>
+            <LogicalName>Date.UmAlQuraCalendar.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\Date.HijriCalendar.debug.js">
-          <LogicalName>Date.HijriCalendar.debug.js</LogicalName>
+            <LogicalName>Date.HijriCalendar.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\Date.HijriCalendar.js">
             <LogicalName>Date.HijriCalendar.js</LogicalName>
@@ -130,67 +152,67 @@
             <LogicalName>Date.UmAlQuraCalendar.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjax.debug.js">
-          <LogicalName>MicrosoftAjax.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjax.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjax.js">
             <LogicalName>MicrosoftAjax.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxApplicationServices.debug.js">
-          <LogicalName>MicrosoftAjaxApplicationServices.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxApplicationServices.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxApplicationServices.js">
             <LogicalName>MicrosoftAjaxApplicationServices.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxComponentModel.debug.js">
-          <LogicalName>MicrosoftAjaxComponentModel.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxComponentModel.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxComponentModel.js">
             <LogicalName>MicrosoftAjaxComponentModel.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxCore.debug.js">
-          <LogicalName>MicrosoftAjaxCore.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxCore.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxCore.js">
             <LogicalName>MicrosoftAjaxCore.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxGlobalization.debug.js">
-          <LogicalName>MicrosoftAjaxGlobalization.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxGlobalization.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxGlobalization.js">
             <LogicalName>MicrosoftAjaxGlobalization.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxHistory.debug.js">
-          <LogicalName>MicrosoftAjaxHistory.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxHistory.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxHistory.js">
             <LogicalName>MicrosoftAjaxHistory.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxNetwork.debug.js">
-          <LogicalName>MicrosoftAjaxNetwork.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxNetwork.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxNetwork.js">
             <LogicalName>MicrosoftAjaxNetwork.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxSerialization.debug.js">
-          <LogicalName>MicrosoftAjaxSerialization.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxSerialization.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxSerialization.js">
             <LogicalName>MicrosoftAjaxSerialization.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxTimer.debug.js">
-          <LogicalName>MicrosoftAjaxTimer.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxTimer.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxTimer.js">
             <LogicalName>MicrosoftAjaxTimer.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxWebForms.debug.js">
-          <LogicalName>MicrosoftAjaxWebForms.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxWebForms.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxWebForms.js">
             <LogicalName>MicrosoftAjaxWebForms.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxWebServices.debug.js">
-          <LogicalName>MicrosoftAjaxWebServices.debug.js</LogicalName>
+            <LogicalName>MicrosoftAjaxWebServices.debug.js</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Script\MicrosoftAjaxWebServices.js">
             <LogicalName>MicrosoftAjaxWebServices.js</LogicalName>
@@ -201,6 +223,10 @@
         <EmbeddedResource Include="Compilation\Schema\ServiceMapSchema.xsd">
             <LogicalName>System.Web.Compilation.WCFModel.Schema.ServiceMapSchema.xsd</LogicalName>
         </EmbeddedResource>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
     <PropertyGroup>

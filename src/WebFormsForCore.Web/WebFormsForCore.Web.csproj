@@ -12,6 +12,25 @@
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Web</AssemblyName>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web</PackageId>
+        <Title>WebFormsForCore.Web</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -57,6 +76,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="..\..\README.md">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+        </None>
         <None Include="WebFormsForCore\ToolboxBitmapAttribute.cs" />
     </ItemGroup>
 
@@ -67,9 +90,6 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0">
-            <Aliases>NET</Aliases>
-        </PackageReference>-->
         <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
         <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
@@ -130,6 +150,8 @@
 
     <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
         <ItemGroup>
+            <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8.0.0\\'))" />
             <!-- Do not import System.Web -->
             <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
         </ItemGroup>

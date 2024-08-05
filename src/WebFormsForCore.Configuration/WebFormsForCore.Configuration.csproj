@@ -11,6 +11,25 @@
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Configuration.ConfigurationManager</AssemblyName>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Configuration</PackageId>
+        <Title>WebFormsForCore.Configuration</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Configuration</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>10.5.0.0</AssemblyVersion>
+        <FileVersion>10.5.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -43,11 +62,14 @@
         <EmbeddedResource Include="System\Configuration.resx">
             <LogicalName>System.Configuration.resources</LogicalName>
         </EmbeddedResource>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="System.CodeDom" Version="8.0.0" />
-        <!--<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />-->
         <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
         <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     </ItemGroup>

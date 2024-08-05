@@ -7,9 +7,31 @@
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AssemblyName>WebGrease</AssemblyName>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.WebGrease</PackageId>
+        <Title>WebFormsForCore.WebGrease</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.WebGrease</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0">
+            <Aliases>NET</Aliases>
+        </PackageReference>
         <PackageReference Include="Antlr3" Version="3.5.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -62,4 +84,12 @@
             <LogicalName>WebGrease.ResourceStrings.resources</LogicalName>
         </EmbeddedResource>
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
 </Project>

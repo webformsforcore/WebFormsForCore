@@ -318,7 +318,6 @@ namespace System.Web.Hosting
 
 				// Hand the processing over to HttpRuntime
 				// Run processing in separate ASP.NET Worker Thread
-				var task = TaskFactory.
 				HttpRuntime.ProcessRequest(this);
 			}
 		}

@@ -1,18 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <LangVersion>12</LangVersion>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<DefineConstants>$(DefineConstants);Legacy;WebFormsForCore</DefineConstants>
-		<NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0050;SYSLIB0051</NoWarn>
-		<SignAssembly>True</SignAssembly>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <DefineConstants>$(DefineConstants);Legacy;WebFormsForCore</DefineConstants>
+        <NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0050;SYSLIB0051</NoWarn>
+        <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</AssemblyName>
-	</PropertyGroup>
+
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</PackageId>
+        <Title>WebFormsForCore.Serialization.Formatters</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Serialization.Formatters</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType>
@@ -23,27 +43,31 @@
     </PropertyGroup>
 
     <ItemGroup>
-	  <Compile Remove="Serialization\Formatter.cs" />
-	  <Compile Remove="Serialization\FormatterConverter.cs" />
-	  <Compile Remove="Serialization\Formatters\CommonEnums.cs" />
-	  <Compile Remove="Serialization\Formatters\IFieldInfo.cs" />
-	  <Compile Remove="Serialization\ISerializationSurrogate.cs" />
-	  <Compile Remove="Serialization\ISurrogateSelector.cs" />
-	  <Compile Remove="Serialization\SerializationBinder.cs" />
-	  <Compile Remove="Serialization\SerializationObjectManager.cs" />
-	  <Compile Remove="Serialization\SurrogateSelector.cs" />
-	</ItemGroup>
+        <Compile Remove="Serialization\Formatter.cs" />
+        <Compile Remove="Serialization\FormatterConverter.cs" />
+        <Compile Remove="Serialization\Formatters\CommonEnums.cs" />
+        <Compile Remove="Serialization\Formatters\IFieldInfo.cs" />
+        <Compile Remove="Serialization\ISerializationSurrogate.cs" />
+        <Compile Remove="Serialization\ISurrogateSelector.cs" />
+        <Compile Remove="Serialization\SerializationBinder.cs" />
+        <Compile Remove="Serialization\SerializationObjectManager.cs" />
+        <Compile Remove="Serialization\SurrogateSelector.cs" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <None Include="Serialization\Formatter.cs" />
-	  <None Include="Serialization\FormatterConverter.cs" />
-	  <None Include="Serialization\Formatters\CommonEnums.cs" />
-	  <None Include="Serialization\Formatters\IFieldInfo.cs" />
-	  <None Include="Serialization\ISerializationSurrogate.cs" />
-	  <None Include="Serialization\ISurrogateSelector.cs" />
-	  <None Include="Serialization\SerializationBinder.cs" />
-	  <None Include="Serialization\SerializationObjectManager.cs" />
-	  <None Include="Serialization\SurrogateSelector.cs" />
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="Serialization\Formatter.cs" />
+        <None Include="Serialization\FormatterConverter.cs" />
+        <None Include="Serialization\Formatters\CommonEnums.cs" />
+        <None Include="Serialization\Formatters\IFieldInfo.cs" />
+        <None Include="Serialization\ISerializationSurrogate.cs" />
+        <None Include="Serialization\ISurrogateSelector.cs" />
+        <None Include="Serialization\SerializationBinder.cs" />
+        <None Include="Serialization\SerializationObjectManager.cs" />
+        <None Include="Serialization\SurrogateSelector.cs" />
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
 </Project>

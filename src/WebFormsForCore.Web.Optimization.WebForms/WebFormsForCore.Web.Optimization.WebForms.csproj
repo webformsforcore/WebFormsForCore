@@ -1,16 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-      <AssemblyName>Microsoft.AspNet.Web.Optimization.WebForms</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <AssemblyName>Microsoft.AspNet.Web.Optimization.WebForms</AssemblyName>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
-    <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
-    <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
-  </ItemGroup>
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms</PackageId>
+        <Title>WebFormsForCore.Web.Optimization.WebForms</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web.Optimization.WebForms</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
 </Project>

@@ -9,7 +9,26 @@
 		<DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
 		<SignAssembly>True</SignAssembly>
         <AssemblyName>System.Web.RegularExpressions</AssemblyName>
-	</PropertyGroup>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.RegularExpressions</PackageId>
+        <Title>WebFormsForCore.Web.RegularExpressions</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web.RegularExpressions</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType>
@@ -26,4 +45,12 @@
         <StrongNamePublicKeyToken>b03f5f7f11d50a3a</StrongNamePublicKeyToken>
     </PropertyGroup>
 
+
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+        
 </Project>
