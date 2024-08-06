@@ -20,7 +20,7 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
     <OutputType>Exe</OutputType>
     <OutputPath>bin_dotnet</OutputPath>
-	<StartupObject>Program</StartupObject>
+    <StartupObject>Program</StartupObject>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
