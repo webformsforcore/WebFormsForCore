@@ -8,7 +8,7 @@ you can run WebForms sites directly in ASP.NET Core.
 
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
 
-First convert you Project to a SDK Project. This can be done easiest by using a converter like the migrate-2019 tool. To use install that tool run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project.
+First convert you Project to a SDK Project. This can be done easiest by using a converter like the migrate-2019 tool. To install that tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project.
 After conversion change the target framework of your project to `net8.0`. You might also keep net48, in order to dual run your project with NET Framework & NET Core. Then, for `net8.0`, import the WebFormsForCore packages like so:
 ```
 <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
