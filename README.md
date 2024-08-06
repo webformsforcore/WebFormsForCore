@@ -78,3 +78,18 @@ public class Program
 }
 #endif
 ```
+
+# Conflicts with existing packages
+
+Currently there might be some conflicts with the packages System.Web.dll & System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent import of the old dll's include the following in your csproj:
+
+```
+<Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+        <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8.0.0\\'))" />
+        <!-- Do not import System.Web -->
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+    </ItemGroup>
+</Target>
+```
