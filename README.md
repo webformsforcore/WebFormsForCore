@@ -79,7 +79,7 @@ public class Program
 #endif
 ```
 
-# Conflicts with existing packages
+# Conflicts with Existing Packages
 
 Currently there might be some conflicts with the packages System.Web.dll & System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent import of the old dll's include the following in your csproj:
 
