@@ -8,8 +8,7 @@ you can run WebForms sites directly in ASP.NET Core.
 
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
 
-First convert you Project to a SDK Project. This can be done easiest by using a converter like the migrate-2019 tool. To install that tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project.
-After conversion change the target framework of your project to `net8.0`. You might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
+First convert you Project to a SDK Project. For the moment, please also keep the old non SDK style project, as WebFormsForCore does not yet properly support generation of the Designer.cs files from aspx. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. After conversion change the target framework of your project to `net8.0`. You might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
 Change the OutputPath for `net8.0` to `bin_dotnet`:
 ```
 <PropertyGroup>
@@ -35,6 +34,7 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
     <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.0.0" />
 </ItemGroup>
 ```
+
 If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions` or `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization` etc. The following packages are available:
 - `System.Configuration`: `EstrellasDeEsperanza.WebFormsForCore.Configuration`
 - `System.Web`: `EstrellasDeEsperanza.WebFormsForCore.Web`
