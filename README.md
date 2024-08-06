@@ -36,13 +36,13 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 </ItemGroup>
 ```
 If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions` or `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization` etc. The following packages are available:
-`System.Configuration`: `EstrellasDeEsperanza.WebFormsForCore.Configuration`
-`System.Web`: `EstrellasDeEsperanza.WebFormsForCore.Web`
-`System.Web.Services`: `EstrellasDeEsperanza.WebFormsForCore.Web.Services`
-`System.Web.Extensions`: `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions`
-`System.Web.Optimization`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization`
-`Microsoft.AspNet.Web.Optimization.WebForms`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms`
-`WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
+- `System.Configuration`: `EstrellasDeEsperanza.WebFormsForCore.Configuration`
+- `System.Web`: `EstrellasDeEsperanza.WebFormsForCore.Web`
+- `System.Web.Services`: `EstrellasDeEsperanza.WebFormsForCore.Web.Services`
+- `System.Web.Extensions`: `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions`
+- `System.Web.Optimization`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization`
+- `Microsoft.AspNet.Web.Optimization.WebForms`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms`
+- `WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
 
 Finally configure ASP-NET Core to use WebForms in the initialization code Program.cs like so:
 ```
