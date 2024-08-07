@@ -120,7 +120,7 @@ internal class FileUtil {
             return null;
 
         int length = path.Length;
-        if (length > 3 && path[length - 1] == '\\')
+        if (length > 3 && path[length - 1] == Path.DirectorySeparatorChar)
             path = path.Substring(0, length - 1);
 
         return path;
@@ -151,8 +151,8 @@ internal class FileUtil {
         dir = Path.GetFullPath(dir);
 
         // Append '\' to the directory if necessary.
-        if (!StringUtil.StringEndsWith(dir, @"\"))
-            dir = dir + @"\";
+        if (!StringUtil.StringEndsWith(dir, $"{Path.DirectorySeparatorChar}"))
+            dir = $"{dir}{Path.DirectorySeparatorChar}";
 
         return dir;
     }
@@ -182,22 +182,22 @@ internal class FileUtil {
         // it work for virtual path provider scenarios
 
         // first a few simple checks:
-        if (physicalPath.IndexOf('/') >= 0) {
+        if (OSInfo.IsWindows && physicalPath.IndexOf('/') >= 0) {
             return true;
         }
         
-        string slashDots = "\\..";
+        string slashDots = $"{Path.DirectorySeparatorChar}..";
         int idxSlashDots = physicalPath.IndexOf(slashDots, StringComparison.Ordinal);
         if (idxSlashDots >= 0
             && (physicalPath.Length == idxSlashDots + slashDots.Length
-                || physicalPath[idxSlashDots + slashDots.Length] == '\\')) {
+                || physicalPath[idxSlashDots + slashDots.Length] == Path.DirectorySeparatorChar)) {
             return true;
         }
 
         // the real check is to go right to left until there is no longer path-too-long
         // and see if the canonicalization check fails then
 
-        int pos = physicalPath.LastIndexOf('\\');
+        int pos = physicalPath.LastIndexOf(Path.DirectorySeparatorChar);
 
         while (pos >= 0) {
             string path = physicalPath.Substring(0, pos);
@@ -213,7 +213,7 @@ internal class FileUtil {
             }
 
             // trim the path some more
-            pos = physicalPath.LastIndexOf('\\', pos-1);
+            pos = physicalPath.LastIndexOf(Path.DirectorySeparatorChar, pos-1);
         }
 
         // backtracted to the end without reaching a non-suspicious path

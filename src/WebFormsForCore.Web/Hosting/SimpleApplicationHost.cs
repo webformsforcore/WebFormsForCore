@@ -12,6 +12,7 @@ namespace System.Web.Hosting {
     using System.Globalization;
     using System.Runtime.InteropServices;  
     using System.Security.Permissions;
+    using System.IO;
     using System.Web;
     using System.Web.Configuration;
     using System.Web.UI;
@@ -36,7 +37,7 @@ namespace System.Web.Hosting {
             }
 
             _appVirtualPath = virtualPath;
-            _appPhysicalPath = StringUtil.StringEndsWith(physicalPath, "\\") ? physicalPath : physicalPath + "\\";
+            _appPhysicalPath = StringUtil.StringEndsWith(physicalPath, $"{Path.DirectorySeparatorChar}") ? physicalPath : physicalPath + $"{Path.DirectorySeparatorChar}";
         }
 
         public override Object InitializeLifetimeService() {

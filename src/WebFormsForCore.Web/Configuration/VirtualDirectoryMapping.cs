@@ -134,9 +134,10 @@ namespace System.Web.Configuration {
                 //
                 string configFilename = Path.Combine(_physicalDirectory, _configFileBaseName);
                 string fullConfigFilename = Path.GetFullPath(configFilename);
-                if (    Path.GetDirectoryName(fullConfigFilename) != _physicalDirectory ||
-                        Path.GetFileName(fullConfigFilename) != _configFileBaseName ||
-                        FileUtil.IsSuspiciousPhysicalPath(configFilename)) {
+                if (OSInfo.IsWindows &&
+                    (Path.GetDirectoryName(fullConfigFilename) != _physicalDirectory ||
+                    Path.GetFileName(fullConfigFilename) != _configFileBaseName ||
+                    FileUtil.IsSuspiciousPhysicalPath(configFilename))) {
 
                     throw ExceptionUtil.ParameterInvalid("configFileBaseName");
                 }

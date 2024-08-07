@@ -312,7 +312,7 @@ namespace System.Web
 		{
 			try
 			{
-#if !FEATURE_PAL
+#if NETFRAMEWORK && !FEATURE_PAL
 				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
 					throw new PlatformNotSupportedException(SR.GetString(SR.RequiresNT));
 #else // !FEATURE_PAL
@@ -3558,7 +3558,8 @@ namespace System.Web
 
         static string GetCurrentUserName() {
             try {
-                return WindowsIdentity.GetCurrent().Name;
+                if (OSInfo.IsWindows) return WindowsIdentity.GetCurrent().Name;
+                else return Environment.UserName;
             }
             catch {
                 return null;
