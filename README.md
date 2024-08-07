@@ -34,7 +34,7 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
     <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.0.0" />
 </ItemGroup>
 ```
-Remove the old `Reference` references or put them in a condition only for net48.
+Remove the old `Reference` references or put them in a condition only for `net48`.
 
 If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions` or `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization` etc. The following packages are available:
 - `System.Configuration`: `EstrellasDeEsperanza.WebFormsForCore.Configuration`
