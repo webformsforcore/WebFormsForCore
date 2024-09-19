@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.IO;
 
-namespace System.Web
+namespace System.Configuration
 {
 	public enum OSPlatform { Unknown = 0, Windows, Mac, Linux, Unix, Other };
 	public enum OSFlavor { Unknown = 0, Min = 0, Windows, Mac, Debian, Mint, Kali, Ubuntu, Fedora, RedHat, Oracle, CentOS, SUSE, Alpine, Arch, FreeBSD, NetBSD, Other, Max = Other }
