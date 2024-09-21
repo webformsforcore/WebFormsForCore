@@ -65,6 +65,8 @@ namespace System.Web.Configuration {
                 // the case of no IIS and no IISExpress, we have been using Metabase server config for a long long time,
                 // and we should continue to do so for compat, even if it doesn't make logical sense.
 
+                if (!OSInfo.IsWindows) return false;
+
                 // See VSO #463596, #406378, #421116, #470016, and #889110.
 
                 // If we detect IISExpress ==> Always use Native Config

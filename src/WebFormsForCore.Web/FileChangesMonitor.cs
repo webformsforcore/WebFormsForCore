@@ -11,6 +11,7 @@ namespace System.Web {
     using System.Globalization;
     using System.IO;
     using System.Runtime.InteropServices;
+    using System.Configuration;
     using System.Security;
     using System.Security.Permissions;
     using System.Text;
@@ -1673,6 +1674,9 @@ namespace System.Web {
         // Request to monitor a file, which may or may not exist.
         //
         internal DateTime StartMonitoringFile(string alias, FileChangeEventHandler callback) {
+
+            if (!OSInfo.IsWindows) return DateTime.MinValue;
+
             Debug.Trace("FileChangesMonitor", "StartMonitoringFile\n" + "\tArgs: File=" + alias + "; Callback=" + callback.Target + "(HC=" + callback.Target.GetHashCode().ToString("x", NumberFormatInfo.InvariantInfo) + ")");
 
             FileMonitor         fileMon;
@@ -1766,6 +1770,13 @@ namespace System.Web {
         // file.
         //
         internal DateTime StartMonitoringPath(string alias, FileChangeEventHandler callback, out FileAttributesData fad) {
+
+            if (!OSInfo.IsWindows)
+            {
+                fad = null;
+                return DateTime.MinValue;
+            }
+
             Debug.Trace("FileChangesMonitor", "StartMonitoringPath\n" + "\tArgs: File=" + alias + "; Callback=" + callback.Target + "(HC=" + callback.Target.GetHashCode().ToString("x", NumberFormatInfo.InvariantInfo) + ")");
 
             FileMonitor         fileMon = null;
@@ -2091,6 +2102,9 @@ namespace System.Web {
         // Request to stop monitoring a file.
         //
         internal void StopMonitoringFile(string alias, object target) {
+
+            if (!OSInfo.IsWindows) return;
+
             Debug.Trace("FileChangesMonitor", "StopMonitoringFile\n" + "File=" + alias + "; Callback=" + target);
 
             if (IsFCNDisabled) {
@@ -2149,6 +2163,9 @@ namespace System.Web {
         // Request to stop monitoring a file.
         // 
         internal void StopMonitoringPath(String alias, object target) {
+
+            if (!OSInfo.IsWindows) return;
+
             Debug.Trace("FileChangesMonitor", "StopMonitoringFile\n" + "File=" + alias + "; Callback=" + target);
 
             if (IsFCNDisabled) {
@@ -2276,6 +2293,9 @@ namespace System.Web {
         // Request to stop monitoring everything -- release all native resources
         //
         internal void Stop() {
+
+            if (!OSInfo.IsWindows) return;
+
             Debug.Trace("FileChangesMonitor", "Stop!");
 
              if (IsFCNDisabled) {

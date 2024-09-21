@@ -13,6 +13,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Configuration;
 using System.Web.Caching;
 using System.Web.Configuration;
 using System.Web.Util;
@@ -144,6 +145,8 @@ namespace System.Web.Hosting {
 
         internal static long ConfiguredProcessMemoryLimit {
             get {
+                if (!OSInfo.IsWindows) return long.MaxValue;
+
                 long memoryLimit = s_configuredProcessMemoryLimit;
 
                 if (memoryLimit == 0) {
@@ -164,6 +167,8 @@ namespace System.Web.Hosting {
 
         internal static long ProcessPrivateBytesLimit {
             get {
+                if (!OSInfo.IsWindows) return long.MaxValue;
+
                 long memoryLimit = s_processPrivateBytesLimit;
                 if (memoryLimit == -1) {
                     memoryLimit = ConfiguredProcessMemoryLimit;
@@ -203,9 +208,9 @@ namespace System.Web.Hosting {
 
         internal static long PhysicalMemoryPercentageLimit {
             get {
-                    if (_firstMemoryMonitor != null && _firstMemoryMonitor._lowMemoryMonitor != null) {
-                        return _firstMemoryMonitor._lowMemoryMonitor.PressureHigh;
-                    }
+                if (_firstMemoryMonitor != null && _firstMemoryMonitor._lowMemoryMonitor != null) {
+                    return _firstMemoryMonitor._lowMemoryMonitor.PressureHigh;
+                }
                 return 0;
             }
         }
@@ -247,6 +252,8 @@ namespace System.Web.Hosting {
         }
 
         static AspNetMemoryMonitor() {
+            if (!OSInfo.IsWindows) return;
+
             UnsafeNativeMethods.MEMORYSTATUSEX memoryStatusEx = new UnsafeNativeMethods.MEMORYSTATUSEX();
             memoryStatusEx.Init();
             if (UnsafeNativeMethods.GlobalMemoryStatusEx(ref memoryStatusEx) != 0) {
@@ -256,12 +263,14 @@ namespace System.Web.Hosting {
         }
 
         internal AspNetMemoryMonitor() {
-            _recycleMonitor = new RecycleLimitMonitor();
-            DefaultRecycleLimitObserver = new RecycleLimitObserver();
+            if (OSInfo.IsWindows)
+            {
+                _recycleMonitor = new RecycleLimitMonitor();
+                DefaultRecycleLimitObserver = new RecycleLimitObserver();
 
-            _lowMemoryMonitor = new LowPhysicalMemoryMonitor();
-            DefaultLowPhysicalMemoryObserver = new LowPhysicalMemoryObserver();
-
+                _lowMemoryMonitor = new LowPhysicalMemoryMonitor();
+                DefaultLowPhysicalMemoryObserver = new LowPhysicalMemoryObserver();
+            }
             if (_firstMemoryMonitor == null) {
                 _firstMemoryMonitor = this;
             }
@@ -284,11 +293,15 @@ namespace System.Web.Hosting {
         }
 
         public void Start() {
+            if (!OSInfo.IsWindows) return;
+
             _recycleMonitor.Start();
             _lowMemoryMonitor.Start();
         }
 
         public void Stop() {
+			if (!OSInfo.IsWindows) return;
+			
             _recycleMonitor.Stop();
             _lowMemoryMonitor.Stop();
         }
@@ -296,7 +309,7 @@ namespace System.Web.Hosting {
         public void Dispose() {
             DefaultLowPhysicalMemoryObserver = null;
             DefaultRecycleLimitObserver = null;
-            _recycleMonitor.Dispose();
+            _recycleMonitor?.Dispose();
         }
 
         class Unsubscriber : IDisposable {

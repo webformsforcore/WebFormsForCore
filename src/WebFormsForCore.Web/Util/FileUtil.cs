@@ -410,28 +410,49 @@ namespace System.Web.Util
 
 			using (new ApplicationImpersonationContext())
 			{
-				UnsafeNativeMethods.WIN32_FILE_ATTRIBUTE_DATA data;
-				bool ok = UnsafeNativeMethods.GetFileAttributesEx(physicalPath, UnsafeNativeMethods.GetFileExInfoStandard, out data);
-				if (ok)
+				if (OSInfo.IsWindows)
 				{
-					exists = true;
-					isDirectory = ((data.fileAttributes & (int)FileAttributes.Directory) == (int)FileAttributes.Directory);
-					if (isDirectory && HasInvalidLastChar(physicalPath))
+					UnsafeNativeMethods.WIN32_FILE_ATTRIBUTE_DATA data;
+					bool ok = UnsafeNativeMethods.GetFileAttributesEx(physicalPath, UnsafeNativeMethods.GetFileExInfoStandard, out data);
+					if (ok)
 					{
-						exists = false;
+						exists = true;
+						isDirectory = ((data.fileAttributes & (int)FileAttributes.Directory) == (int)FileAttributes.Directory);
+						if (isDirectory && HasInvalidLastChar(physicalPath))
+						{
+							exists = false;
+						}
+					}
+					else
+					{
+						if (directoryExistsOnError || fileExistsOnError)
+						{
+							// Set exists to true if we cannot confirm that the path does NOT exist.
+							int hr = Marshal.GetHRForLastWin32Error();
+							if (!(hr == HResults.E_FILENOTFOUND || hr == HResults.E_PATHNOTFOUND))
+							{
+								exists = true;
+								isDirectory = directoryExistsOnError;
+							}
+						}
 					}
 				}
 				else
 				{
-					if (directoryExistsOnError || fileExistsOnError)
+					if (Directory.Exists(physicalPath))
 					{
-						// Set exists to true if we cannot confirm that the path does NOT exist.
-						int hr = Marshal.GetHRForLastWin32Error();
-						if (!(hr == HResults.E_FILENOTFOUND || hr == HResults.E_PATHNOTFOUND))
-						{
-							exists = true;
-							isDirectory = directoryExistsOnError;
-						}
+						exists = true;
+						isDirectory = true;
+					}
+					else if (File.Exists(physicalPath))
+					{
+						exists = true;
+						isDirectory = false;
+					}
+					else
+					{
+						exists = false;
+						isDirectory = false;
 					}
 				}
 			}
@@ -450,31 +471,45 @@ namespace System.Web.Util
 				return false;
 			}
 
-			UnsafeNativeMethods.WIN32_FILE_ATTRIBUTE_DATA data;
-			bool ok = UnsafeNativeMethods.GetFileAttributesEx(filename, UnsafeNativeMethods.GetFileExInfoStandard, out data);
-			if (ok)
+			if (OSInfo.IsWindows)
 			{
-				// The path exists. Return true if it is a directory, false if a file.
-				return (data.fileAttributes & (int)FileAttributes.Directory) == (int)FileAttributes.Directory;
-			}
-			else
-			{
-				if (!trueOnError)
+				UnsafeNativeMethods.WIN32_FILE_ATTRIBUTE_DATA data;
+				bool ok = UnsafeNativeMethods.GetFileAttributesEx(filename, UnsafeNativeMethods.GetFileExInfoStandard, out data);
+				if (ok)
 				{
-					return false;
+					// The path exists. Return true if it is a directory, false if a file.
+					return (data.fileAttributes & (int)FileAttributes.Directory) == (int)FileAttributes.Directory;
 				}
 				else
 				{
-					// Return true if we cannot confirm that the file does NOT exist.
-					int hr = Marshal.GetHRForLastWin32Error();
-					if (hr == HResults.E_FILENOTFOUND || hr == HResults.E_PATHNOTFOUND)
+					if (!trueOnError)
 					{
 						return false;
 					}
 					else
 					{
-						return true;
+						// Return true if we cannot confirm that the file does NOT exist.
+						int hr = Marshal.GetHRForLastWin32Error();
+						if (hr == HResults.E_FILENOTFOUND || hr == HResults.E_PATHNOTFOUND)
+						{
+							return false;
+						}
+						else
+						{
+							return true;
+						}
 					}
+				}
+			}
+			else
+			{
+				try
+				{
+					return Directory.Exists(filename);
+				}
+				catch
+				{
+					return trueOnError;
 				}
 			}
 		}
@@ -491,9 +526,9 @@ namespace System.Web.Util
 		private string _fileNameLong;
 		private string _fileNameShort;
 
-		internal string FileNameLong { get { return _fileNameLong; } }
-		internal string FileNameShort { get { return _fileNameShort; } }
-		internal FileAttributesData FileAttributesData { get { return _fileAttributesData; } }
+		internal string FileNameLong { get { return _fileNameLong; } set { _fileNameLong = value; } }
+		internal string FileNameShort { get { return _fileNameShort; } set { _fileNameShort = value; } }
+		internal FileAttributesData FileAttributesData { get { return _fileAttributesData; } set { _fileAttributesData = value; } }
 
 		// FindFile - given a file name, gets the file attributes and short form (8.3 format) of a file name.
 		static internal int FindFile(string path, out FindFileData data)
@@ -510,14 +545,16 @@ namespace System.Web.Util
         Debug.Assert(Path.GetFileName(path) != null, "Path.GetFileName(path) != null");
 #endif
 
-			hFindFile = UnsafeNativeMethods.FindFirstFile(path, out wfd);
-			int lastError = Marshal.GetLastWin32Error(); // FXCOP demands that this preceed the == 
-			if (hFindFile == UnsafeNativeMethods.INVALID_HANDLE_VALUE)
+			if (OSInfo.IsWindows)
 			{
-				return HttpException.HResultFromLastError(lastError);
-			}
+				hFindFile = UnsafeNativeMethods.FindFirstFile(path, out wfd);
+				int lastError = Marshal.GetLastWin32Error(); // FXCOP demands that this preceed the == 
+				if (hFindFile == UnsafeNativeMethods.INVALID_HANDLE_VALUE)
+				{
+					return HttpException.HResultFromLastError(lastError);
+				}
 
-			UnsafeNativeMethods.FindClose(hFindFile);
+				UnsafeNativeMethods.FindClose(hFindFile);
 
 #if DBG
         string file = Path.GetFileName(path);
@@ -527,8 +564,27 @@ namespace System.Web.Util
                      "Path to FindFile is not for a single file: " + path);
 #endif
 
-			data = new FindFileData(ref wfd);
-			return HResults.S_OK;
+				data = new FindFileData(ref wfd);
+				return HResults.S_OK;
+			}
+			else
+			{
+				if (File.Exists(path))
+				{
+					data = new FindFileData()
+					{
+						FileNameLong = path,
+						FileNameShort = path,
+						FileAttributesData = new FileAttributesData(new FileInfo(path))
+					};
+					return HResults.S_OK;
+				}
+				else
+				{
+					data = null;
+					return HResults.E_FILENOTFOUND;
+				}
+			}
 		}
 
 		// FindFile - takes a full-path and a root-directory-path, and is used to get the
@@ -626,6 +682,8 @@ namespace System.Web.Util
 			}
 		}
 
+		public FindFileData() { }
+
 		private void PrependRelativePath(string relativePathLong, string relativePathShort)
 		{
 			_fileNameLong = relativePathLong + _fileNameLong;
@@ -684,14 +742,15 @@ namespace System.Web.Util
 					var info = new FileInfo(path);
 					fad = new FileAttributesData(info);
 					return HResults.S_OK;
-				} catch
+				}
+				catch
 				{
 					return HResults.E_PATHNOTFOUND;
 				}
-			}			
+			}
 		}
 
-		FileAttributesData()
+		public FileAttributesData()
 		{
 			FileSize = -1;
 			UtcCreationTime = new DateTime(0, DateTimeKind.Utc);
@@ -699,7 +758,7 @@ namespace System.Web.Util
 			UtcLastWriteTime = new DateTime(0, DateTimeKind.Utc);
 		}
 
-		FileAttributesData(FileInfo info)
+		public FileAttributesData(FileInfo info)
 		{
 			FileAttributes = info.Attributes;
 			FileSize = info.Length;

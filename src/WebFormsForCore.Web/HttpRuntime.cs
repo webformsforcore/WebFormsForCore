@@ -761,7 +761,8 @@ namespace System.Web
         }
 
         private void StartMonitoringDirectoryRenamesAndBinDirectory() {
-            _fcm.StartMonitoringDirectoryRenamesAndBinDirectory(AppDomainAppPathInternal, new FileChangeEventHandler(this.OnCriticalDirectoryChange));
+
+            if (OSInfo.IsWindows) _fcm.StartMonitoringDirectoryRenamesAndBinDirectory(AppDomainAppPathInternal, new FileChangeEventHandler(this.OnCriticalDirectoryChange));
         }
 
         //
@@ -769,7 +770,7 @@ namespace System.Web
         //
         internal static void StartListeningToLocalResourcesDirectory(VirtualPath virtualDir) {
 #if !FEATURE_PAL // FEATURE_PAL does not enable file change notification
-            _theRuntime._fcm.StartListeningToLocalResourcesDirectory(virtualDir);
+            if (OSInfo.IsWindows) _theRuntime._fcm.StartListeningToLocalResourcesDirectory(virtualDir);
 #endif // !FEATURE_PAL
         }
 

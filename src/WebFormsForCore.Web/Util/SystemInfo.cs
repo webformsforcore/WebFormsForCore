@@ -4,6 +4,8 @@
 // </copyright>                                                                
 //------------------------------------------------------------------------------
 
+using System.Configuration;
+
 namespace System.Web.Util {
 
     internal static class SystemInfo {
@@ -13,7 +15,9 @@ namespace System.Web.Util {
 #if FEATURE_PAL
             return Environment.ProcessorCount;
 #else
-            if (_trueNumberOfProcessors == 0) {
+            if (!OSInfo.IsWindows) return Environment.ProcessorCount;
+
+			if (_trueNumberOfProcessors == 0) {
                 UnsafeNativeMethods.SYSTEM_INFO si;
                 UnsafeNativeMethods.GetSystemInfo(out si);
 

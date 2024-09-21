@@ -13,6 +13,7 @@
 namespace System.Web.Util {
     using System.Diagnostics;
     using System.Globalization;
+    using System.Configuration;
     using System.Reflection;
     using System.Text;
     using System.Runtime.Serialization.Formatters;
@@ -33,16 +34,24 @@ namespace System.Web.Util {
         }
 
         [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
-        internal static string GetFileVersion(String filename) {
+        internal static string GetFileVersion(String filename)
+        {
 #if !FEATURE_PAL // FEATURE_PAL does not fully support FileVersionInfo
-            try {
-                FileVersionInfo ver = FileVersionInfo.GetVersionInfo(filename);
-                return string.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}",
-                    ver.FileMajorPart, ver.FileMinorPart, ver.FileBuildPart, ver.FilePrivatePart);
+            if (OSInfo.IsWindows)
+            {
+
+                try
+                {
+                    FileVersionInfo ver = FileVersionInfo.GetVersionInfo(filename);
+                    return string.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}",
+                        ver.FileMajorPart, ver.FileMinorPart, ver.FileBuildPart, ver.FilePrivatePart);
+                }
+                catch
+                {
+                    return String.Empty;
+                }
             }
-            catch {
-                return String.Empty;
-            }
+            else return string.Empty;
 #else // !FEATURE_PAL
             // ROTORTODO
             return String.Empty;
@@ -52,18 +61,23 @@ namespace System.Web.Util {
 
         internal static string GetLoadedModuleFileName(string module) {
 #if !FEATURE_PAL // FEATURE_PAL does not fully support FileVersionInfo
-            IntPtr h = UnsafeNativeMethods.GetModuleHandle(module);
-            if (h == IntPtr.Zero)
-                return null;
 
-            StringBuilder buf = new StringBuilder(256);
-            if (UnsafeNativeMethods.GetModuleFileName(h, buf, 256) == 0)
-                return null;
+            if (OSInfo.IsWindows)
+            {
+                IntPtr h = UnsafeNativeMethods.GetModuleHandle(module);
+                if (h == IntPtr.Zero)
+                    return null;
 
-            String fileName = buf.ToString();
-            if (StringUtil.StringStartsWith(fileName, "\\\\?\\")) // on Whistler GetModuleFileName migth return this
-                fileName = fileName.Substring(4);
-            return fileName;
+                StringBuilder buf = new StringBuilder(256);
+                if (UnsafeNativeMethods.GetModuleFileName(h, buf, 256) == 0)
+                    return null;
+
+                String fileName = buf.ToString();
+                if (StringUtil.StringStartsWith(fileName, "\\\\?\\")) // on Whistler GetModuleFileName migth return this
+                    fileName = fileName.Substring(4);
+                return fileName;
+            }
+            else return string.Empty;
 #else // !FEATURE_PAL
             // ROTORTODO
             return String.Empty;
@@ -112,10 +126,6 @@ namespace System.Web.Util {
                     lock(_lock) {
                         if (_mscoreeVersion == null) {
                             //@
-
-
-
-
 
                             // Substring(1) removes the 'v' character. 
                             _mscoreeVersion =
