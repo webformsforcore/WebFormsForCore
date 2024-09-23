@@ -6,7 +6,9 @@
 
 namespace System.Web.Caching {
     using System.Web.Configuration;
+    using System.Configuration;
     using System.Runtime.InteropServices;
+    using System.Diagnostics;
     using System.Web.Util;
     using System.Web;
     using System.Web.Hosting;
@@ -99,9 +101,9 @@ namespace System.Web.Caching {
         }
 
         void InitHistory() {
-            Debug.Assert(_pressureHigh > 0, "_pressureHigh > 0");
-            Debug.Assert(_pressureLow > 0, "_pressureLow > 0");
-            Debug.Assert(_pressureLow <= _pressureHigh, "_pressureLow <= _pressureHigh");
+            Util.Debug.Assert(_pressureHigh > 0, "_pressureHigh > 0");
+            Util.Debug.Assert(_pressureLow > 0, "_pressureLow > 0");
+            Util.Debug.Assert(_pressureLow <= _pressureHigh, "_pressureLow <= _pressureHigh");
 
             int pressure = GetCurrentPressure();
 
@@ -125,12 +127,12 @@ namespace System.Web.Caching {
             _pressureAvg = _pressureTotal / HISTORY_COUNT; 
 
 #if DBG
-            Debug.Trace("CacheMemory", this.GetType().Name + ".Update: last=" + pressure 
+            Util.Debug.Trace("CacheMemory", this.GetType().Name + ".Update: last=" + pressure 
                         + ",avg=" + PressureAvg 
                         + ",high=" + PressureHigh 
                         + ",low=" + PressureLow 
                         + ",middle=" + PressureMiddle 
-                        + " " + Debug.FormatLocalDate(DateTime.Now));
+                        + " " + Util.Debug.FormatLocalDate(DateTime.Now));
 #endif
         }
 
@@ -183,13 +185,15 @@ namespace System.Web.Caching {
                 _memoryLimit = privateBytesLimit;
             }
 
-            Debug.Trace("CacheMemory", "CacheMemorySizePressure.ReadConfig: _memoryLimit=" + (_memoryLimit >> MEGABYTE_SHIFT) + "Mb");
+            Util.Debug.Trace("CacheMemory", "CacheMemorySizePressure.ReadConfig: _memoryLimit=" + (_memoryLimit >> MEGABYTE_SHIFT) + "Mb");
 
             if (_memoryLimit > 0) {
 
-                if (s_pid == 0) // only set this once
-                    s_pid = (uint) SafeNativeMethods.GetCurrentProcessId();
-
+                if (s_pid == 0)
+                { // only set this once
+                    if (OSInfo.IsWindows) s_pid = (uint)SafeNativeMethods.GetCurrentProcessId();
+                    else s_pid = (uint)Process.GetCurrentProcess().Id;
+                }
                 _pressureHigh = 100;
                 _pressureMiddle = 90;
                 _pressureLow = 80;
@@ -204,7 +208,7 @@ namespace System.Web.Caching {
             // Set private bytes limit in kilobytes becuase the counter is a DWORD
             PerfCounters.SetCounter(AppPerfCounter.CACHE_PERCENT_PROC_MEM_LIMIT_USED_BASE, (int)(_memoryLimit >> KILOBYTE_SHIFT));
 
-            Debug.Trace("CacheMemory", "CacheMemorySizePressure.ReadConfig: _pressureHigh=" + _pressureHigh + 
+            Util.Debug.Trace("CacheMemory", "CacheMemorySizePressure.ReadConfig: _pressureHigh=" + _pressureHigh + 
                         ", _pressureMiddle=" + _pressureMiddle + ", _pressureLow=" + _pressureLow);
         }
 
@@ -222,14 +226,14 @@ namespace System.Web.Caching {
                 // the SizedRef is only updated after a Gen2 Collection
                 
                 // increment the index (it's either 1 or 0)
-                Debug.Assert(SAMPLE_COUNT == 2);
+                Util.Debug.Assert(SAMPLE_COUNT == 2);
                 _idx = _idx ^ 1;
                 // remember the sample time
                 _cacheSizeSampleTimes[_idx] = DateTime.UtcNow;
                 // remember the sample value
                 _cacheSizeSamples[_idx] = sref.ApproximateSize;
 #if DBG
-                Debug.Trace("CacheMemory", "SizedRef.ApproximateSize=" + _cacheSizeSamples[_idx]);
+                Util.Debug.Trace("CacheMemory", "SizedRef.ApproximateSize=" + _cacheSizeSamples[_idx]);
 #endif
             }
 

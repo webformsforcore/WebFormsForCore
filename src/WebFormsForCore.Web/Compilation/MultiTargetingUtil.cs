@@ -222,20 +222,29 @@ namespace System.Web.Compilation {
             // introducing any breaking change. The mitigation is handled by IsSupportedVersion which
             // is more flexible with regards to framework profile.
 
-            // registry key is of the form:
-            // [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full]
-            // "TargetVersion"="4.0.0"
-            // The path includes the major version, eg "v4" or "v5", so we need to use a parameter.
-            string path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v" + majorVersion + @"\Full";
-            try {
-                object o = Registry.GetValue(path, "TargetVersion", null);
-                string targetVersion = o as string;
-                if (!string.IsNullOrEmpty(targetVersion)) {
-                    Version ver = new Version(targetVersion);
-                    return ver;
+            if (OSInfo.IsWindows)
+            {
+                // registry key is of the form:
+                // [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full]
+                // "TargetVersion"="4.0.0"
+                // The path includes the major version, eg "v4" or "v5", so we need to use a parameter.
+                string path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v" + majorVersion + @"\Full";
+                try
+                {
+                    object o = Registry.GetValue(path, "TargetVersion", null);
+                    string targetVersion = o as string;
+                    if (!string.IsNullOrEmpty(targetVersion))
+                    {
+                        Version ver = new Version(targetVersion);
+                        return ver;
+                    }
                 }
-            }
-            catch { // ignore exceptions
+                catch
+                { // ignore exceptions
+                }
+            } else
+            {
+                return new Version("8.0");
             }
             return null;
         }

@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Optimiz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.WebGrease", "src\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj", "{B30618C1-864F-44AA-8D00-D3AC4F7B3506}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.Optimization.WebForms", "src\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj", "{459C184B-6598-486D-AE1B-9614DC6C658F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Optimization.WebForms", "src\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj", "{459C184B-6598-486D-AE1B-9614DC6C658F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.Infrastructure", "src\WebFormsForCore.Web.Infrastructure\WebFormsForCore.Web.Infrastructure.csproj", "{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -237,6 +239,18 @@ Global
 		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x64.Build.0 = Release|Any CPU
 		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x86.ActiveCfg = Release|Any CPU
 		{459C184B-6598-486D-AE1B-9614DC6C658F}.Release|x86.Build.0 = Release|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Release|x64.Build.0 = Release|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

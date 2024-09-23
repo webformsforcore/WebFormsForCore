@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
+using Mono.Cecil.Pdb;
 using System.Runtime.InteropServices;
 
 #nullable enable
@@ -153,7 +154,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					foreach (var assemblyItem in Assemblies)
 					{
 						var assemblyFileName = assemblyItem.ItemSpec;
-						var assemblyCopyName = Path.ChangeExtension(assemblyFileName, ".Fake.dll");
+						//var assemblyCopyName = Path.ChangeExtension(assemblyFileName, ".Fake.dll");
 
 						if (File.Exists(assemblyFileName))
 						{
@@ -161,16 +162,43 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 							bool success = false;
 
 							var pdbFile = Path.ChangeExtension(assemblyFileName, ".pdb");
-							bool withSymbols = File.Exists(pdbFile);
+							bool withSymbols = false; // File.Exists(pdbFile);
+							var symReader = new PdbReaderProvider();
+							var symWriter = new PdbWriterProvider();
+							var mem = new MemoryStream();
+							var readerParameters = new ReaderParameters() { ReadWrite = true, InMemory = true, ReadSymbols = withSymbols };
 
-							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName, new ReaderParameters() { ReadWrite = true, InMemory = true, ReadSymbols = withSymbols }))
+							if (withSymbols)
+							{
+								using (var pdbStream = new FileStream(pdbFile, FileMode.Open, FileAccess.Read))
+									pdbStream.CopyTo(mem);
+
+								mem.Seek(0, SeekOrigin.Begin);
+								readerParameters.SymbolReaderProvider = symReader;
+								readerParameters.SymbolStream = mem;
+							}
+
+							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName, readerParameters))
 							{
 								assembly.Name.PublicKey = publicKey;
 								assembly.Name.PublicKeyToken = publicKeyToken;
 
 								//File.Delete(assemblyFileName);
 								//File.Delete(pdbFile);
-								assembly.Write(assemblyFileName, new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols });
+								var writerParameters = new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols };
+								Stream pdbWriteStream = null;
+								
+								if (withSymbols)
+								{
+									pdbWriteStream = new FileStream(pdbFile, FileMode.Create, FileAccess.ReadWrite);
+									writerParameters.SymbolWriterProvider = symWriter;
+									writerParameters.SymbolStream = pdbWriteStream;
+								}
+								
+								assembly.Write(assemblyFileName, writerParameters);
+								
+								pdbWriteStream?.Close();
+
 								success = true;
 							}
 

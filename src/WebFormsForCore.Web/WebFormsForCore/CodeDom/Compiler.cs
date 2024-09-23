@@ -518,10 +518,11 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 			var paths = new[] { "", Environment.CurrentDirectory,
 				Environment.GetFolderPath(Environment.SpecialFolder.System),
 				Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) }
-				.Concat(Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine)
+				.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine) ?? "")
 					.Split(Path.PathSeparator))
-				.Concat(Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User)
-					.Split(Path.PathSeparator));
+				.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) ?? "")
+					.Split(Path.PathSeparator))
+				.Where(path => !string.IsNullOrEmpty(path));
 			return paths
 				.SelectMany(path => new[] {
 					Path.Combine(path, command),

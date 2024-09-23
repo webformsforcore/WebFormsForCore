@@ -42,11 +42,13 @@ namespace System.Web.Hosting {
 
             public void Stop(bool immediate) {
                 if (_appMonitors != null) {
+#if NETFRAMEWORK
                     IApplicationMonitor pbMonitor = _appMonitors.MemoryMonitor;
                     if (pbMonitor != null) {
                         pbMonitor.Stop();
                         pbMonitor.Dispose();
                     }
+#endif
                 }
 
                 HostingEnvironment.UnregisterObject(this);
@@ -58,23 +60,29 @@ namespace System.Web.Hosting {
             get { return _memoryMonitor; }
 
             set {
+#if NETFRAMEWORK
                 // Allow setting to null
                 if (_memoryMonitor != null && _memoryMonitor != value) {
                     _memoryMonitor.Stop();
                     _memoryMonitor.Dispose();
                 }
+#endif
 
                 _memoryMonitor = value;
 
+#if NETFRAMEWORK
                 if (_memoryMonitor != null) {
                     _memoryMonitor.Start();
                 }
+#endif
             }
         }
 
         internal ApplicationMonitors() {
+#if NETFRAMEWORK
             _memoryMonitor = new AspNetMemoryMonitor();
             _memoryMonitor.Start();
+#endif
             AppMonitorRegisteredObject myRegisteredObject = new AppMonitorRegisteredObject(this);
             HostingEnvironment.RegisterObject(myRegisteredObject);
         }

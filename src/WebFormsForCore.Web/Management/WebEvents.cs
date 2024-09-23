@@ -11,6 +11,7 @@ namespace System.Web.Management {
     using System.Configuration;
     using System.Configuration.Provider;
     using System.Diagnostics;
+    using System.Reflection;
     using System.Globalization;
     using System.Runtime.Remoting.Messaging;
     using System.Security;
@@ -99,7 +100,7 @@ namespace System.Web.Management {
             // In order to not overflow the eventlog, we only log one exception per provider instance.
             if (Interlocked.CompareExchange( ref _exceptionLogged, 1, 0) == 0) {
                 // Log all errors in eventlog
-                UnsafeNativeMethods.LogWebeventProviderFailure(
+                if (OSInfo.IsWindows) UnsafeNativeMethods.LogWebeventProviderFailure(
                                         HttpRuntime.AppDomainAppVirtualPath,
                                         Name,
                                         e.ToString());
@@ -595,8 +596,14 @@ namespace System.Web.Management {
                                     inProgressSet = true;
                                 }
 
-                                Debug.Trace("WebEventRaiseDetails", "Calling ProcessEvent under " + HttpApplication.GetCurrentWindowsIdentityWithAssert().Name);
-                                ruleInfo._referencedProvider.ProcessEvent(eventRaised);
+                                if (OSInfo.IsWindows)
+                                {
+                                    Debug.Trace("WebEventRaiseDetails", "Calling ProcessEvent under " + HttpApplication.GetCurrentWindowsIdentityWithAssert().Name);
+                                } else
+                                {
+									Debug.Trace("WebEventRaiseDetails", "Calling ProcessEvent under " + Environment.UserName);
+								}
+								ruleInfo._referencedProvider.ProcessEvent(eventRaised);
                             }
                             catch (Exception e) {
                                 try {
@@ -1830,23 +1837,35 @@ namespace System.Web.Management {
         string  _accountName;
 
         internal WebProcessInformation() {
-            // Can't use Process.ProcessName because it requires the running
-            // account to be part of the Performance Monitor Users group.
-            StringBuilder buf = new StringBuilder(256);
-            if (UnsafeNativeMethods.GetModuleFileName(IntPtr.Zero, buf, 256) == 0) {
-                _processName = String.Empty;
-            }
-            else {
-                int lastIndex;
-
-                _processName = buf.ToString();
-                lastIndex = _processName.LastIndexOf('\\');
-                if (lastIndex != -1) {
-                    _processName = _processName.Substring(lastIndex + 1);
+            if (OSInfo.IsWindows)
+            {
+                // Can't use Process.ProcessName because it requires the running
+                // account to be part of the Performance Monitor Users group.
+                StringBuilder buf = new StringBuilder(256);
+                if (UnsafeNativeMethods.GetModuleFileName(IntPtr.Zero, buf, 256) == 0)
+                {
+                    _processName = String.Empty;
                 }
+                else
+                {
+                    int lastIndex;
+
+                    _processName = buf.ToString();
+                    lastIndex = _processName.LastIndexOf('\\');
+                    if (lastIndex != -1)
+                    {
+                        _processName = _processName.Substring(lastIndex + 1);
+                    }
+                }
+				_processId = SafeNativeMethods.GetCurrentProcessId();
+			}
+			else
+            {
+                var process = Process.GetCurrentProcess();
+                _processName = process.ProcessName;
+                _processId = process.Id;
             }
 
-            _processId = SafeNativeMethods.GetCurrentProcessId() ;
             _accountName = HttpRuntime.WpUserId;
         }
 
@@ -1975,7 +1994,8 @@ namespace System.Web.Management {
                 _requestPath = request.Path;
                 _userHostAddress = request.UserHostAddress;
             }
-            _accountName = WindowsIdentity.GetCurrent().Name;
+            if (OSInfo.IsWindows) _accountName = WindowsIdentity.GetCurrent().Name;
+            else _accountName = Environment.UserName;
         }
 
         // The information is per request.
@@ -2142,8 +2162,13 @@ namespace System.Web.Management {
 
         internal WebThreadInformation(Exception exception) {
             _threadId = Thread.CurrentThread.ManagedThreadId;
-            _accountName = HttpApplication.GetCurrentWindowsIdentityWithAssert().Name;
-
+            if (OSInfo.IsWindows)
+            {
+                _accountName = HttpApplication.GetCurrentWindowsIdentityWithAssert().Name;
+            } else
+            {
+                _accountName = Environment.UserName;
+            }
             if (exception != null) {
                 _stackTrace = new StackTrace(exception, true).ToString();
                 _isImpersonating = exception.Data.Contains(IsImpersonatingKey);

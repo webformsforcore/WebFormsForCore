@@ -15,6 +15,7 @@ namespace System.Web {
     using System.Linq;
     using System.Net;
     using System.Reflection;
+    using System.Configuration;
     using System.Runtime.CompilerServices;
     using System.Runtime.ExceptionServices;
     using System.Runtime.InteropServices;
@@ -1238,7 +1239,8 @@ namespace System.Web {
 
         [SecurityPermission(SecurityAction.Assert, ControlPrincipal = true)]
         internal static WindowsIdentity GetCurrentWindowsIdentityWithAssert() {
-            return WindowsIdentity.GetCurrent();
+            if (OSInfo.IsWindows) return WindowsIdentity.GetCurrent();
+            else return null;
         }
 
         private HttpHandlerAction GetHandlerMapping(HttpContext context, String requestType, VirtualPath path, bool useAppConfig) {

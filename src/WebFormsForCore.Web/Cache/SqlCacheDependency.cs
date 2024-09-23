@@ -1143,11 +1143,17 @@ namespace System.Web.Caching {
         // data.
         internal static void UpdateDatabaseNotifState(string database) {
             using (new ApplicationImpersonationContext()) {
-                Debug.Trace("SqlCacheDependencyManager", "UpdateDatabaseNotifState called for database " + database +
-                    "; running as " + WindowsIdentity.GetCurrent().Name);
-
-                // Make sure we have initialized the polling of this database
-                InitPolling(database);
+                if (OSInfo.IsWindows)
+                {
+                    Debug.Trace("SqlCacheDependencyManager", "UpdateDatabaseNotifState called for database " + database +
+                        "; running as " + WindowsIdentity.GetCurrent().Name);
+                } else
+                {
+					Debug.Trace("SqlCacheDependencyManager", "UpdateDatabaseNotifState called for database " + database +
+						"; running as " + Environment.UserName);
+				}
+				// Make sure we have initialized the polling of this database
+				InitPolling(database);
                 Debug.Assert(s_DatabaseNotifStates[database] != null, "s_DatabaseNotifStates[database] != null");
 
                 PollDatabaseForChanges((DatabaseNotifState)s_DatabaseNotifStates[database], false /*fromTimer*/);

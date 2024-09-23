@@ -128,9 +128,17 @@ namespace System.Configuration.Internal {
             {
                 var info = new FileInfo(streamName);
                 exists = info.Exists;
-                fileSize = info.Length;
-                utcCreationTime = info.CreationTimeUtc;
-                utcLastWriteTime = info.LastWriteTimeUtc;
+                if (exists)
+                {
+                    fileSize = info.Length;
+                    utcCreationTime = info.CreationTimeUtc;
+                    utcLastWriteTime = info.LastWriteTimeUtc;
+                } else
+                {
+                    fileSize = 0;
+                    utcCreationTime = DateTime.MinValue;
+                    utcLastWriteTime = DateTime.MinValue;
+                }
             }
 
             return new FileVersion(exists, fileSize, utcCreationTime, utcLastWriteTime);

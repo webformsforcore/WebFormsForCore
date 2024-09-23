@@ -12,6 +12,7 @@ namespace System.Web.Compilation
 	using System;
 	using System.Threading;
 	using System.Globalization;
+	using System.Configuration;
 	using System.Security.Principal;
 	using System.Web.Util;
 	using System.Web.Configuration;
@@ -44,10 +45,14 @@ namespace System.Web.Compilation
 
 		internal CompilationMutex(String name, String comment)
 		{
+			string mutexRandomName = null;
 
-			// Attempt to get the mutex string from the registry (VSWhidbey 415795)
-			string mutexRandomName = (string)Misc.GetAspNetRegValue("CompilationMutexName",
-				null /*valueName*/, null /*defaultValue*/);
+			if (OSInfo.IsWindows)
+			{
+				// Attempt to get the mutex string from the registry (VSWhidbey 415795)
+				mutexRandomName = (string)Misc.GetAspNetRegValue("CompilationMutexName",
+					null /*valueName*/, null /*defaultValue*/);
+			}
 
 			if (mutexRandomName != null)
 			{
