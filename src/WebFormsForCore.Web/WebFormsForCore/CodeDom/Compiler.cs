@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Configuration;
 using System.Security.Permissions;
 using System.Security.Principal;
 using System.Text;
@@ -514,15 +515,24 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 			if (command.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
 				command = command.Substring(0, command.Length - 4);
 			var commandWithExe = command + ".exe";
-		
-			var paths = new[] { "", Environment.CurrentDirectory,
-				Environment.GetFolderPath(Environment.SpecialFolder.System),
-				Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) }
-				.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine) ?? "")
-					.Split(Path.PathSeparator))
-				.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) ?? "")
-					.Split(Path.PathSeparator))
-				.Where(path => !string.IsNullOrEmpty(path));
+
+			IEnumerable<string> paths;
+			if (OSInfo.IsWindows)
+			{
+				paths = new[] { "", Environment.CurrentDirectory,
+					Environment.GetFolderPath(Environment.SpecialFolder.System),
+					Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) }
+					.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine) ?? "")
+						.Split(Path.PathSeparator))
+					.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) ?? "")
+						.Split(Path.PathSeparator))
+					.Where(path => !string.IsNullOrEmpty(path));
+			} else
+			{
+				paths = new[] { "", Environment.CurrentDirectory }
+					.Concat(Environment.GetEnvironmentVariable("PATH")
+						.Split(Path.PathSeparator));
+			}
 			return paths
 				.SelectMany(path => new[] {
 					Path.Combine(path, command),
@@ -567,10 +577,10 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 			if (compilerFullPath.EndsWith(".dll"))
 			{
 				var dotnetExe = Find("dotnet");
-				cmdLine = $"\"{dotnetExe}\" \"{compilerFullPath}\" {arguments}";
-				nativeReturnValue = Executor.ExecWaitWithCapture(
+				cmdLine = $"\"{compilerFullPath}\" {arguments}";
+				nativeReturnValue = ExecutorPortable.ExecWaitWithCapture(
 					options.UserToken,
-					cmdLine,
+					dotnetExe, cmdLine,
 					Environment.CurrentDirectory,
 					options.TempFiles,
 					ref outputFile,

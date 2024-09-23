@@ -15,6 +15,8 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 	public class FakeStrongNameTask : Task
 	{
 		public const bool NeedsKey = false;
+
+		public const bool CreateFakeStrongName = true;
 		public static bool IsCore => !(IsNetFX || IsNetNative);
 		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
@@ -52,6 +54,8 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 		{
 			byte[]? publicKey = null;
 			byte[]? publicKeyToken = null;
+
+			if (!CreateFakeStrongName) return true;
 
 			if (string.IsNullOrEmpty(PublicKey) || string.IsNullOrEmpty(PublicKeyToken))
 			{
@@ -162,7 +166,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 							bool success = false;
 
 							var pdbFile = Path.ChangeExtension(assemblyFileName, ".pdb");
-							bool withSymbols = false; // File.Exists(pdbFile);
+							bool withSymbols = File.Exists(pdbFile);
 							var symReader = new PdbReaderProvider();
 							var symWriter = new PdbWriterProvider();
 							var mem = new MemoryStream();

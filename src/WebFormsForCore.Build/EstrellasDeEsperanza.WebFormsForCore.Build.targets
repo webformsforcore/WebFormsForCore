@@ -197,7 +197,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 							bool success = false;
 
 							var pdbFile = Path.ChangeExtension(assemblyFileName, ".pdb");
-							bool withSymbols = false; // File.Exists(pdbFile);
+							bool withSymbols = File.Exists(pdbFile);
 							var symReader = new PdbReaderProvider();
 							var symWriter = new PdbWriterProvider();
 							var mem = new MemoryStream();
