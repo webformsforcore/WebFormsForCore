@@ -11,17 +11,17 @@ cd ..\WebFormsForCore.Serialization.Formatters
 dotnet pack --include-symbols -o ..\..\nupkg
 cd ..\WebFormsForCore.Web
 dotnet pack WebFormsForCore.Web.csproj --include-symbols -o ..\..\nupkg
-cd ..\WebFormsForCore.ApplicationServices
+cd ..\WebFormsForCore.Web.ApplicationServices
 dotnet pack --include-symbols -o ..\..\nupkg
-cd ..\WebFormsForCore.Extensions
+cd ..\WebFormsForCore.Web.Extensions
 dotnet pack --include-symbols -o ..\..\nupkg
-cd ..\WebFormsForCore.Infrastructure
+cd ..\WebFormsForCore.Web.Infrastructure
 dotnet pack --include-symbols -o ..\..\nupkg
-cd ..\WebFormsForCore.Optimization
+cd ..\WebFormsForCore.Web.Optimization
+dotnet pack WebFormsForCore.Web.Optimization.csproj --include-symbols -o ..\..\nupkg
+cd ..\WebFormsForCore.Web.Optimization.WebForms
 dotnet pack --include-symbols -o ..\..\nupkg
-cd ..\WebFormsForCore.Optimization.WebForms
-dotnet pack --include-symbols -o ..\..\nupkg
-cd ..\WebFormsForCore.RegularExpressions
+cd ..\WebFormsForCore.Web.RegularExpressions
 dotnet pack --include-symbols -o ..\..\nupkg
 cd ..\WebFormsForCore.Web.Services
 dotnet pack --include-symbols -o ..\..\nupkg

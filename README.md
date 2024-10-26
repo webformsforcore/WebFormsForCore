@@ -44,6 +44,10 @@ If your project also needs `System.Web.Extensions` or `System.Web.Optimization` 
 - `System.Web.Optimization`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization`
 - `Microsoft.AspNet.Web.Optimization.WebForms`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms`
 - `WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
+- `System.Drawing`: `EstrellasDeEsperanza.WebFormsForCore.Drawing`
+
+System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is
+missing.
 
 Finally configure ASP-NET Core to use WebForms in the initialization code Program.cs like so:
 ```
