@@ -35,6 +35,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+        <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
@@ -55,7 +56,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
-       <!-- <None Remove="Config\machine.config" />
+        <!-- <None Remove="Config\machine.config" />
         <Content Include="Config\machine.config" CopyToOutputDirectory="PreserveNewest" />-->
         <!--<PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.10.0" GeneratePathProperty="true" />-->
     </ItemGroup>

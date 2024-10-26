@@ -255,7 +255,8 @@ namespace System.Web.Hosting {
 
                 _limit = privateBytesLimit;
                 _appManager = ApplicationManager.GetApplicationManager();
-                _pid = (uint)SafeNativeMethods.GetCurrentProcessId();
+                if (OSInfo.IsWindows) _pid = (uint)SafeNativeMethods.GetCurrentProcessId();
+                else _pid = (uint)System.Diagnostics.Process.GetCurrentProcess().Id;
 
                 _proxyMonitors = new Dictionary<RecycleLimitMonitor, string>();
 

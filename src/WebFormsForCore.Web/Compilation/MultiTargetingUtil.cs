@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Web.Configuration;
@@ -27,9 +28,12 @@ namespace System.Web.Compilation {
         static internal readonly FrameworkName FrameworkNameV30 = CreateFrameworkName(".NETFramework,Version=v3.0");
         static internal readonly FrameworkName FrameworkNameV35 = CreateFrameworkName(".NETFramework,Version=v3.5");
         static internal readonly FrameworkName FrameworkNameV40 = CreateFrameworkName(".NETFramework,Version=v4.0");
-        static internal readonly FrameworkName FrameworkNameV45 = CreateFrameworkName(".NETFramework,Version=v4.5");
-        
-        internal static Version Version40 = new Version(4, 0);
+		static internal readonly FrameworkName FrameworkNameV45 = CreateFrameworkName(".NETFramework,Version=v4.5");
+		static internal readonly FrameworkName FrameworkNameV48 = CreateFrameworkName(".NETFramework,Version=v4.8");
+		static internal readonly FrameworkName FrameworkNameV80 = CreateFrameworkName(".NETCoreApp,Version=v8.0");
+		static internal readonly FrameworkName FrameworkNameV90 = CreateFrameworkName(".NETCoreApp,Version=v9.0");
+
+		internal static Version Version40 = new Version(4, 0);
         internal static Version Version35 = new Version(3, 5);
         private static FrameworkName s_targetFrameworkName = null;
         private static string s_configTargetFrameworkMoniker = null;
@@ -173,9 +177,13 @@ namespace System.Web.Compilation {
                 // Try treating it as a version, eg "4.0" first.
                 Version v = GetVersion(targetFrameworkMoniker);
                 if (v != null) {
-                    // If it is of the form "4.0", construct the full moniker string,
-                    // eg ".NETFramework,Version=v4.0"
-                    moniker = ".NETFramework,Version=v" + moniker;
+					// If it is of the form "4.0", construct the full moniker string,
+					// eg ".NETFramework,Version=v4.0"
+					if (v.Major > 4) moniker = ".NETCoreApp,Version=v" + moniker;
+#if !NETFRAMEWORK
+                    if (v.Major < 8) moniker = ".NETCoreApp,Version=v8.0";
+#endif
+                    else moniker = ".NETFramework,Version=v" + moniker;
                 }
                 s_targetFrameworkName = CreateFrameworkName(moniker);
             }

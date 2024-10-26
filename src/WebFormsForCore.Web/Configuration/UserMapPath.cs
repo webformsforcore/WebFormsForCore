@@ -6,6 +6,7 @@
 
 namespace System.Web.Configuration {
     using System.Configuration;
+    using System.Runtime.InteropServices;
     using System.Collections;
     using System.Globalization;
     using System.Xml;
@@ -135,7 +136,7 @@ namespace System.Web.Configuration {
                     childPart = path.Substring(l);
                 }
 
-                childPart = childPart.Replace('/', '\\');
+                if (OSInfo.IsWindows) childPart = childPart.Replace('/', '\\');
                 physicalPath = Path.Combine(mapping.PhysicalDirectory, childPart);
             }
 

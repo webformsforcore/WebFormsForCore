@@ -105,7 +105,7 @@ using WRA = System.Web.UI.WebResourceAttribute;
 [assembly: TagPrefix("System.Web.UI.WebControls", "asp")]
 
 // Opts into the VS loading icons from the FrameworkIcon Satellite assemblies found under VSIP\Icons
-[assembly:System.Drawing.BitmapSuffixInSatelliteAssemblyAttribute()]
+//[assembly:System.Drawing.BitmapSuffixInSatelliteAssemblyAttribute()]
 
 #if ATLAS_DEV
 [assembly: AllowPartiallyTrustedCallers(PartialTrustVisibilityLevel = PartialTrustVisibilityLevel.NotVisibleByDefault)]

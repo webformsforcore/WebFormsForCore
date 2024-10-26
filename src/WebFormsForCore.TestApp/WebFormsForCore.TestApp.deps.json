@@ -16,6 +16,7 @@
                 "System.Web.ApplicationServices": "1.0.0",
                 "System.Web.RegularExpressions": "1.0.0",
                 "System.Web.Services": "1.0.0",
+                "System.Drawing": "8.5.0",
                 "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Reference": "8.0.0.0",
                 "System.Configuration.ConfigurationManager.Reference": "8.5.0.0",
                 "System.Web.ApplicationServices.Reference": "8.0.0.0",
@@ -43,6 +44,9 @@
                 },
                 "Csc.dll": {},
                 "Vbc.dll": {},
+                "System.Drawing.dll": {
+                    "assemblyVersion": "8.5.0"
+                },
                 "VBCSCompiler.dll": {},
                 "CoreWCF.Http.dll": {},
                 "CoreWCF.Primitives.dll": {},

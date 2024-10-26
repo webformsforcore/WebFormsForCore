@@ -62,7 +62,11 @@ namespace System.Web.Util {
                     appId = ctx.Name;
                 }
 #endif
-                string pid = SafeNativeMethods.GetCurrentProcessId().ToString(CultureInfo.InstalledUICulture);
+                int processId;
+                if (OSInfo.IsWindows) processId = SafeNativeMethods.GetCurrentProcessId();
+                else processId = System.Diagnostics.Process.GetCurrentProcess().Id;
+
+				string pid = processId.ToString(CultureInfo.InstalledUICulture);
                 string description = SR.Resources.GetString(SR.Unhandled_Exception, CultureInfo.InstalledUICulture);
                 Misc.ReportUnhandledException(exception, new string[5] {description, APPLICATION_ID, appId, PROCESS_ID, pid});
             }
@@ -167,6 +171,9 @@ namespace System.Web.Util {
 
         // Open ASP.NET's reg key, or one of its subkeys
         internal static RegistryKey OpenAspNetRegKey(string subKey) {
+            
+            if (!OSInfo.IsWindows) return null;
+            
             String ver = VersionInfo.SystemWebVersion;
 
             // Zero out minor version number VSWhidbey 602541

@@ -13,6 +13,8 @@ using System.Configuration;
 using System.Security.Permissions;
 using System.Security.Principal;
 using System.Text;
+using System.Runtime.InteropServices;
+
 #if WebFormsForCore && NETCOREAPP
 using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
 #else

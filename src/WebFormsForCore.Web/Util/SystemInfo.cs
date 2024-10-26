@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 
 using System.Configuration;
+using System.Runtime.InteropServices;
 
 namespace System.Web.Util {
 

@@ -14,7 +14,7 @@ namespace System.Web {
     using System.Threading;
     using System.Runtime.InteropServices;
     using System.Security.Permissions;
-
+    
     using System.Collections;
     using System.Collections.Specialized;
     using System.Web;
@@ -365,22 +365,25 @@ namespace System.Web {
         internal HttpApplicationStateLock() {
         }
 
-        internal override void AcquireRead() {
-            int currentThreadId = SafeNativeMethods.GetCurrentThreadId();
+        int CurrentThreadId => OSInfo.IsWindows ? SafeNativeMethods.GetCurrentThreadId() :
+            Thread.CurrentThread.ManagedThreadId;
+
+		internal override void AcquireRead() {
+            int currentThreadId = CurrentThreadId;
 
             if (_threadId != currentThreadId)
                 base.AcquireRead();  // only if no write lock
         }
 
         internal override void ReleaseRead() {
-            int currentThreadId = SafeNativeMethods.GetCurrentThreadId();
+            int currentThreadId = CurrentThreadId;
 
             if (_threadId != currentThreadId)
                 base.ReleaseRead();  // only if no write lock
         }
 
         internal override void AcquireWrite() {
-            int currentThreadId = SafeNativeMethods.GetCurrentThreadId();
+            int currentThreadId = CurrentThreadId;
 
             if (_threadId == currentThreadId) {
                 _recursionCount++;
@@ -393,7 +396,7 @@ namespace System.Web {
         }
 
         internal override void ReleaseWrite() {
-            int currentThreadId = SafeNativeMethods.GetCurrentThreadId();
+            int currentThreadId = CurrentThreadId;
 
             if (_threadId == currentThreadId) {
                 if (--_recursionCount == 0) {
@@ -408,7 +411,7 @@ namespace System.Web {
         //
 
         internal void EnsureReleaseWrite() {
-            int currentThreadId = SafeNativeMethods.GetCurrentThreadId();
+            int currentThreadId = CurrentThreadId;
 
             if (_threadId == currentThreadId) {
                 _threadId = 0;

@@ -7,6 +7,7 @@
 namespace System.Configuration.Internal {
     using Microsoft.Win32;	
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.InteropServices;
     using System.Configuration;
     using System.IO;
     using System.Reflection;

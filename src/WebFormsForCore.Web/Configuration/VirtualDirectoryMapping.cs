@@ -10,11 +10,12 @@ namespace System.Web.Configuration {
     using System.IO;
     using System.Web.Util;
     using System.Security.Permissions;
+	using System.Runtime.InteropServices;
 
-    //
-    // Maps a virtual directory to a physical directory and its config file.
-    //
-    public sealed class VirtualDirectoryMapping {
+	//
+	// Maps a virtual directory to a physical directory and its config file.
+	//
+	public sealed class VirtualDirectoryMapping {
         VirtualPath  _virtualDirectory;
         string  _physicalDirectory;
         string  _configFileBaseName;

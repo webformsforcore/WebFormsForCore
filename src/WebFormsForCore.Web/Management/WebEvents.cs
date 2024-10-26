@@ -17,7 +17,8 @@ namespace System.Web.Management {
     using System.Security;
     using System.Security.Permissions;
     using System.Security.Principal;
-    using System.Text;
+	using System.Runtime.InteropServices;
+	using System.Text;
     using System.Threading;
     using System.Web;
     using System.Web.Caching;
@@ -1857,7 +1858,8 @@ namespace System.Web.Management {
                         _processName = _processName.Substring(lastIndex + 1);
                     }
                 }
-				_processId = SafeNativeMethods.GetCurrentProcessId();
+                if (OSInfo.IsWindows) _processId = SafeNativeMethods.GetCurrentProcessId();
+                else _processId = Process.GetCurrentProcess().Id;
 			}
 			else
             {

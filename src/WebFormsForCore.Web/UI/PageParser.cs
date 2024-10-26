@@ -745,7 +745,7 @@ public sealed class PageParser : TemplateControlParser {
 
     public static bool EnableLongStringsAsResources {
         get {
-            return s_enableLongStringsAsResources;
+            return s_enableLongStringsAsResources && OSInfo.IsWindows;
         }
         set {
             BuildManager.ThrowIfPreAppStartNotRunning();

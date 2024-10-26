@@ -58,6 +58,7 @@ namespace System.Web.Util
 	using System.Collections;
 	using System.Configuration;
 	using System.Collections.Generic;
+	using System.Runtime.InteropServices;
 	using System.Linq;
 
 	/*

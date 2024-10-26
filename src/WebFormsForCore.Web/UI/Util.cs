@@ -28,6 +28,7 @@ namespace System.Web.UI
 	using System.Security.Permissions;
 	using System.Text;
 	using System.Text.RegularExpressions;
+	using System.Threading;
 	using System.Web.Compilation;
 	using System.Web.Configuration;
 	using System.Web.Hosting;
@@ -36,6 +37,7 @@ namespace System.Web.UI
 	using System.Web.Security.Cryptography;
 	using System.Web.UI.WebControls;
 	using System.Web.Util;
+	using System.Runtime.InteropServices;
 	using Microsoft.Win32;
 	using Debug = System.Web.Util.Debug;
 
@@ -333,10 +335,14 @@ namespace System.Web.UI
 			if (!Directory.Exists(dir))
 				return false;
 
+			int threadId;
+			if (OSInfo.IsWindows) threadId = SafeNativeMethods.GetCurrentThreadId();
+			else threadId = Thread.CurrentThread.ManagedThreadId;
+
 			// Get the path to a dummy file in that directory
 			string dummyFile = Path.Combine(dir, "~AspAccessCheck_" +
 				HostingEnvironment.AppDomainUniqueInteger.ToString(
-					"x", CultureInfo.InvariantCulture) + SafeNativeMethods.GetCurrentThreadId() + ".tmp");
+					"x", CultureInfo.InvariantCulture) + threadId + ".tmp");
 			FileStream fs = null;
 
 			bool success = false;

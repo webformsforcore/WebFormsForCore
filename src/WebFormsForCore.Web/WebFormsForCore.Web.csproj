@@ -86,7 +86,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
         <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
-        <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.10" Aliases="Common" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -102,6 +102,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
@@ -152,8 +153,10 @@
         <ItemGroup>
             <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
             <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8.0.0\\'))" />
-            <!-- Do not import System.Web -->
+            <!-- Do not import System.Web from dotnet -->
             <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+            <!-- Do not import System.Drawing from dotnet -->
+            <!--<ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Drawing' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />-->
         </ItemGroup>
     </Target>
 

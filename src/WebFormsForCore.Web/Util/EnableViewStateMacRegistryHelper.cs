@@ -8,6 +8,7 @@ namespace System.Web.Util {
     using Microsoft.Win32;
     using System;
     using System.Globalization;
+    using System.Runtime.InteropServices;
     using System.Security.Permissions;
 
     // See DevDiv #461378 for a description of why we authored the EnableViewStateMac patch using this helper class.
@@ -63,15 +64,20 @@ namespace System.Web.Util {
 
         [RegistryPermission(SecurityAction.Assert, Unrestricted = true)]
         private static bool IsMacEnforcementEnabledViaRegistry() {
-            try {
-                string keyName = String.Format(CultureInfo.InvariantCulture, @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v{0}", Environment.Version.ToString(3));
-                int? rawValue = (int?)Registry.GetValue(keyName, "AspNetEnforceViewStateMac", defaultValue: 0 /* disabled by default */);
-                return (rawValue == null || rawValue != 0);
+            if (OSInfo.IsWindows)
+            {
+                try
+                {
+                    string keyName = String.Format(CultureInfo.InvariantCulture, @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v{0}", Environment.Version.ToString(3));
+                    int? rawValue = (int?)Registry.GetValue(keyName, "AspNetEnforceViewStateMac", defaultValue: 0 /* disabled by default */);
+                    return (rawValue == null || rawValue != 0);
+                }
+                catch
+                {
+                }
             }
-            catch {
-                // If we cannot read the registry for any reason, fail safe and assume enforcement is enabled.
-                return true;
-            }
-        }
-    }
+			// If we cannot read the registry for any reason, fail safe and assume enforcement is enabled.
+			return true;
+		}
+	}
 }

@@ -12,7 +12,8 @@ namespace System.Web.Configuration {
     using System.Globalization;
     using System.Security;
     using System.Security.Permissions;
-    using System.Text;
+	using System.Runtime.InteropServices;
+	using System.Text;
     using System.Threading;
     using System.Web.Util;
     using System.Web.Hosting;

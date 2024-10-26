@@ -1148,7 +1148,7 @@ namespace System.Web.Hosting {
                 // and the other way -- no extra '\\' in physical if virtual didn't have it.
                 if (virtualPath.HasTrailingSlash) {
                     if (!UrlPath.PathEndsWithExtraSlash(result) && !UrlPath.PathIsDriveRoot(result))
-                        result = result + "\\";
+                        result = result + Path.DirectorySeparatorChar.ToString();
                 }
                 else {
                     if (UrlPath.PathEndsWithExtraSlash(result) && !UrlPath.PathIsDriveRoot(result))

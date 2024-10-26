@@ -19,12 +19,13 @@ namespace System.Web.Util {
     using System.Runtime.Serialization.Formatters;
     using System.Configuration.Assemblies;
     using System.Security.Permissions;
+	using System.Runtime.InteropServices;
 
-    //
-    // Support for getting file version of relevant files
-    //
+	//
+	// Support for getting file version of relevant files
+	//
 
-    internal class VersionInfo {
+	internal class VersionInfo {
         static private string _engineVersion;
         static private string _mscoreeVersion;
         static private string _exeName;

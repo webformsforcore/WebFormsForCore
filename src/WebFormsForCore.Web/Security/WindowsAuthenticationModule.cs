@@ -17,6 +17,7 @@ namespace System.Web.Security {
     using System.Web;
     using System.Web.Configuration;
     using System.Web.Util;
+    using System.Runtime.InteropServices;
 
     /// <devdoc>
     ///    <para>
@@ -31,8 +32,8 @@ namespace System.Web.Security {
         private static bool             _fAuthRequired;
 
         // anonymous identity + principal are static for easy referencing + reuse
-        private static readonly WindowsIdentity AnonymousIdentity = WindowsIdentity.GetAnonymous();
-        internal static readonly WindowsPrincipal AnonymousPrincipal = new WindowsPrincipal(AnonymousIdentity);
+        private static readonly WindowsIdentity AnonymousIdentity = OSInfo.IsWindows ? WindowsIdentity.GetAnonymous() : null;
+        internal static readonly WindowsPrincipal AnonymousPrincipal = OSInfo.IsWindows ? new WindowsPrincipal(AnonymousIdentity) : null;
 
 
         /// <devdoc>
@@ -170,6 +171,8 @@ namespace System.Web.Security {
 
         internal static bool IsEnabled {
             get {
+                if (!OSInfo.IsWindows) return false;
+
                 if (!_fAuthChecked) {
                     _fAuthRequired = (AuthenticationConfig.Mode == AuthenticationMode.Windows);
                     _fAuthChecked = true;

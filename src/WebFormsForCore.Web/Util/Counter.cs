@@ -28,7 +28,8 @@ namespace System.Web.Util {
         internal static long Value {
             get {
                 long count = 0;
-                SafeNativeMethods.QueryPerformanceCounter(ref count);
+                if (OSInfo.IsWindows) SafeNativeMethods.QueryPerformanceCounter(ref count);
+                else count = DateTime.Now.Ticks;
                 return count;
             }
         }
@@ -40,7 +41,8 @@ namespace System.Web.Util {
         internal static long Frequency {
             get {
                 long freq = 0;
-                SafeNativeMethods.QueryPerformanceFrequency(ref freq);
+                if (OSInfo.IsWindows) SafeNativeMethods.QueryPerformanceFrequency(ref freq);
+                else return TimeSpan.TicksPerSecond;
                 return freq;
             }
         }
