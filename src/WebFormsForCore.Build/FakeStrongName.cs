@@ -171,7 +171,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 							var symWriter = new PdbWriterProvider();
 							var mem = new MemoryStream();
 							var readerParameters = new ReaderParameters() { ReadWrite = true, InMemory = true, ReadSymbols = withSymbols };
-
+							
 							if (withSymbols)
 							{
 								using (var pdbStream = new FileStream(pdbFile, FileMode.Open, FileAccess.Read))
@@ -196,7 +196,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 								{
 									pdbWriteStream = new FileStream(pdbFile, FileMode.Create, FileAccess.ReadWrite);
 									writerParameters.SymbolWriterProvider = symWriter;
-									writerParameters.SymbolStream = pdbWriteStream;
+									writerParameters.SymbolStream = pdbWriteStream;									
 								}
 								
 								assembly.Write(assemblyFileName, writerParameters);

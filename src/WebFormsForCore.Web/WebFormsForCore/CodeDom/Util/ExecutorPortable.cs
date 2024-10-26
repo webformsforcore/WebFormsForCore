@@ -53,7 +53,9 @@ namespace System.CodeDom.Compiler
 				// Output the command line...
 				outputWriter.Write(currentDir);
 				outputWriter.Write("> ");
-				outputWriter.WriteLine(cmd);
+				outputWriter.Write(cmd);
+				outputWriter.Write(" ");
+				outputWriter.WriteLine(args);
 				outputWriter.WriteLine();
 				outputWriter.WriteLine();
 
