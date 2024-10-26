@@ -26,7 +26,7 @@ dotnet pack --include-symbols -o ..\..\nupkg
 cd ..\WebFormsForCore.Web.Services
 dotnet pack --include-symbols -o ..\..\nupkg
 cd ..\WebFormsForCore.WebGrease
-dotnet pack --include-symbols -o ..\..\nupkg
+dotnet pack WebFormsForCore.WebGrease.csproj --include-symbols -o ..\..\nupkg
 cd ..\..
 
 
