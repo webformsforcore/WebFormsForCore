@@ -92,9 +92,9 @@ Currently there might be some conflicts with the packages System.Web.dll & Syste
 ```
 <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
-        <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
+        &lt;!-- Do not import System.Configuration.ConfigurationManager version 8 --&gt;
         <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8.0.0\\'))" />
-        <!-- Do not import System.Web -->
+        &lt;!-- Do not import System.Web --&gt;
         <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
     </ItemGroup>
 </Target>
