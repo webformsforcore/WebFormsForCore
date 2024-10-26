@@ -42,6 +42,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D256F77-E935-45F1-93EA-EE01BEC2B8BA}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		CreatePackages.bat = CreatePackages.bat
 		README.md = README.md
 	EndProjectSection
 EndProject

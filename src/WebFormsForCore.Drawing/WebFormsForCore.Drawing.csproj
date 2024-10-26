@@ -44,6 +44,13 @@
       <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
     <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.targets" />
 
     <PropertyGroup>

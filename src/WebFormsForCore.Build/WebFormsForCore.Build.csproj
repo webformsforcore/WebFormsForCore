@@ -8,7 +8,6 @@
         <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Build</AssemblyName>
         <PreserveCompilationContext>true</PreserveCompilationContext>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <AssemblyVersion>8.0.0.0</AssemblyVersion>
         <OutputType>Exe</OutputType>
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -27,8 +26,8 @@
         <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.5.0.0</AssemblyVersion>
-        <FileVersion>10.5.0.0</FileVersion>
+        <AssemblyVersion>8.0.1</AssemblyVersion>
+        <FileVersion>8.0.1</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
