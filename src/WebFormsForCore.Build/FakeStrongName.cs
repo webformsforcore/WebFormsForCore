@@ -110,7 +110,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			{
 				if (!IsCore)
 				{
-					LogMessage($"Starting dotnet...");
+					//LogMessage($"Starting dotnet...");
 					string[] a = new string[Assemblies.Length];
 					for (int i = 0; i < Assemblies.Length; i++)
 					{
