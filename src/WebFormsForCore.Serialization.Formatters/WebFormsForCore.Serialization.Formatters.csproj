@@ -13,7 +13,6 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</AssemblyName>
 
-
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</PackageId>
         <Title>WebFormsForCore.Serialization.Formatters</Title>
         <Authors>simonegli8</Authors>
@@ -31,7 +30,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
