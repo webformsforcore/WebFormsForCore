@@ -44,6 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		CreatePackages.bat = CreatePackages.bat
 		README.md = README.md
+		NugetApiKey.txt = NugetApiKey.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Extensions", "src\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj", "{E9D0BAC0-C7DC-4412-B332-ED0CBA64D170}"
@@ -58,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Optimiz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Infrastructure", "src\WebFormsForCore.Web.Infrastructure\WebFormsForCore.Web.Infrastructure.csproj", "{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Drawing", "src\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj", "{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Drawing", "src\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj", "{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

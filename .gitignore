@@ -209,6 +209,7 @@ PublishScripts/
 *.nuget.targets
 *.nupkg
 *.snupkg
+# NugetApiKey.txt
 
 # Microsoft Azure Build Output
 csx/
