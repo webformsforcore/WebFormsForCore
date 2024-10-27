@@ -35,6 +35,7 @@ namespace System.Web.Compilation {
 
 		internal static Version Version40 = new Version(4, 0);
         internal static Version Version35 = new Version(3, 5);
+        internal static Version Version80 = new Version(8, 0);
         private static FrameworkName s_targetFrameworkName = null;
         private static string s_configTargetFrameworkMoniker = null;
         private static object s_configTargetFrameworkMonikerLock = new object();
