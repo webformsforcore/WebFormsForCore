@@ -2,15 +2,17 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>disable</ImplicitUsings>
-        <Nullable>disable</Nullable>
-        <AssemblyName>Microsoft.AspNet.Web.Optimization.WebForms</AssemblyName>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <DebugType>portable</DebugType>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms</PackageId>
-        <Title>WebFormsForCore.Web.Optimization.WebForms</Title>
+        <CompilerToolsVersion>4.11.0</CompilerToolsVersion>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Compilers</PackageId>
+        <Title>WebFormsForCore.Compilers</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
-        <Product>WebFormsForCore.Web.Optimization.WebForms</Product>
+        <Product>WebFormsForCore.Compilers</Product>
         <Description>A port of ASP.NET WebForms to .NET 8</Description>
         <Copyright>Estrellas de Esperanza</Copyright>
         <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
@@ -28,10 +30,16 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(CompilerToolsVersion)" GeneratePathProperty="true" />
+    </ItemGroup>
+
     <ItemGroup>
-        <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
-        <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
-        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+        <Content Include="$(NuGetPackageRoot)\microsoft.net.compilers.toolset\$(CompilerToolsVersion)\tasks\netcore\bincore\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -40,5 +48,13 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
+
+    <Target Name="CopyCompilers" BeforeTargets="ResolveReferences" Condition="$(TargetFramework) != 'net48'">
+        <ItemGroup>
+            <CompilerItems Include="$(PkgMicrosoft_Net_Compilers_Toolset)\tasks\netcore\bincore\**\*.*" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(CompilerItems)" DestinationFiles="@(CompilerItems->'$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    </Target>
 
 </Project>

@@ -43,9 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		CreatePackages.bat = CreatePackages.bat
+		NugetApiKey.txt = NugetApiKey.txt
 		PushToNuget.bat = PushToNuget.bat
 		README.md = README.md
-		NugetApiKey.txt = NugetApiKey.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Extensions", "src\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj", "{E9D0BAC0-C7DC-4412-B332-ED0CBA64D170}"
@@ -61,6 +61,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Infrastructure", "src\WebFormsForCore.Web.Infrastructure\WebFormsForCore.Web.Infrastructure.csproj", "{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Drawing", "src\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj", "{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Compilers", "src\WebFormsForCore.Compilers\WebFormsForCore.Compilers.csproj", "{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -240,6 +242,18 @@ Global
 		{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}.Release|x64.Build.0 = Release|Any CPU
 		{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}.Release|x86.ActiveCfg = Release|Any CPU
 		{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}.Release|x86.Build.0 = Release|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Debug|x64.Build.0 = Debug|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Release|x64.Build.0 = Release|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

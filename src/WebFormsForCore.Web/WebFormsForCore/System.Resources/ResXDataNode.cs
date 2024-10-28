@@ -105,7 +105,7 @@ namespace System.Resources
 					this.typeNameConverter = typeNameConverter;
 					System.Type type = value == null ? typeof(object) : value.GetType();
 					if (value != null && !type.IsSerializable)
-						throw new InvalidOperationException(SR.GetString(SR.Not_Serializable_Type, name, type.FullName));
+						throw new InvalidOperationException(SR.GetString(SR.Not_Serializable_Type_Resources, name, type.FullName));
 					if (value != null)
 						this.typeName = MultitargetUtil.GetAssemblyQualifiedName(type, this.typeNameConverter);
 					this.name = name;
@@ -292,7 +292,7 @@ namespace System.Resources
 			}
 			System.Type type2 = type1;
 			if (value != null && !type2.IsSerializable)
-				throw new InvalidOperationException(SR.GetString(SR.Not_Serializable_Type, (object)this.name, (object)type2.FullName));
+				throw new InvalidOperationException(SR.GetString(SR.Not_Serializable_Type_Resources, (object)this.name, (object)type2.FullName));
 			TypeConverter converter = TypeDescriptor.GetConverter(type2);
 			bool flag1 = converter.CanConvertTo(typeof(string));
 			bool flag2 = converter.CanConvertFrom(typeof(string));
@@ -387,7 +387,7 @@ namespace System.Resources
 					}
 					else
 					{
-						string message = SR.GetString(SR.Type_Load_Exception, (object)typeName, (object)dataNodeInfo.ReaderPosition.Y, (object)dataNodeInfo.ReaderPosition.X);
+						string message = SR.GetString(SR.Type_Load_Exception_Resources, (object)typeName, (object)dataNodeInfo.ReaderPosition.Y, (object)dataNodeInfo.ReaderPosition.X);
 						XmlException inner = new XmlException(message, (Exception)null, dataNodeInfo.ReaderPosition.Y, dataNodeInfo.ReaderPosition.X);
 						throw new TypeLoadException(message, (Exception)inner);
 					}
@@ -416,7 +416,7 @@ namespace System.Resources
 							}
 							catch (NotSupportedException ex)
 							{
-								string message = SR.GetString(SR.Not_Supported, (object)typeName, (object)dataNodeInfo.ReaderPosition.Y, (object)dataNodeInfo.ReaderPosition.X, (object)ex.Message);
+								string message = SR.GetString(SR.Not_Supported_Resources, (object)typeName, (object)dataNodeInfo.ReaderPosition.Y, (object)dataNodeInfo.ReaderPosition.X, (object)ex.Message);
 								XmlException innerException = new XmlException(message, (Exception)ex, dataNodeInfo.ReaderPosition.Y, dataNodeInfo.ReaderPosition.X);
 								throw new NotSupportedException(message, (Exception)innerException);
 							}
@@ -425,7 +425,7 @@ namespace System.Resources
 				}
 				else
 				{
-					string message = SR.GetString(SR.Type_Load_Exception, (object)typeName, (object)dataNodeInfo.ReaderPosition.Y, (object)dataNodeInfo.ReaderPosition.X);
+					string message = SR.GetString(SR.Type_Load_Exception_Resources, (object)typeName, (object)dataNodeInfo.ReaderPosition.Y, (object)dataNodeInfo.ReaderPosition.X);
 					XmlException inner = new XmlException(message, (Exception)null, dataNodeInfo.ReaderPosition.Y, dataNodeInfo.ReaderPosition.X);
 					throw new TypeLoadException(message, (Exception)inner);
 				}
@@ -533,7 +533,7 @@ namespace System.Resources
 					this.fileRef = this.FileRefTextEncoding == null ? new ResXFileRef(this.FileRefFullPath, this.FileRefType) : new ResXFileRef(this.FileRefFullPath, this.FileRefType, Encoding.GetEncoding(this.FileRefTextEncoding));
 					return TypeDescriptor.GetConverter(typeof(ResXFileRef)).ConvertFrom((object)this.fileRef.ToString());
 				}
-				throw new TypeLoadException(SR.GetString(SR.Type_Load_Exception_Short, (object)this.FileRefType));
+				throw new TypeLoadException(SR.GetString(SR.Type_Load_Exception_Short_Resources, (object)this.FileRefType));
 			}
 			return obj == null && this.nodeInfo.ValueData != null ? this.GenerateObjectFromDataNodeInfo(this.nodeInfo, typeResolver) : (object)null;
 		}

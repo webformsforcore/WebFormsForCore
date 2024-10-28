@@ -414,7 +414,7 @@ namespace System.Resources
 			}
 			catch (XmlException ex)
 			{
-				throw new ArgumentException(SR.GetString(SR.InvalidResXFile, (object)ex.Message), (Exception)ex);
+				throw new ArgumentException(SR.GetString(SR.InvalidResXFile_Resource, (object)ex.Message), (Exception)ex);
 			}
 			catch (Exception ex)
 			{
@@ -426,7 +426,7 @@ namespace System.Resources
 				{
 					Point position = this.GetPosition((XmlReader)reader);
 					XmlException innerException = new XmlException(ex.Message, ex, position.Y, position.X);
-					throw new ArgumentException(SR.GetString(SR.InvalidResXFile, (object)innerException.Message), (Exception)innerException);
+					throw new ArgumentException(SR.GetString(SR.InvalidResXFile_Resource, (object)innerException.Message), (Exception)innerException);
 				}
 			}
 			finally
@@ -583,7 +583,7 @@ namespace System.Resources
 					nodeInfo.ValueData = reader.Value.Trim();
 			}
 			ResXDataNode resXdataNode = nodeInfo.Name != null ? new ResXDataNode(nodeInfo, this.BasePath) :
-				throw new ArgumentException(SR.GetString(SR.InvalidResXResourceNoName, (object)nodeInfo.ValueData));
+				throw new ArgumentException(SR.GetString(SR.InvalidResXResourceNoName_Resources, (object)nodeInfo.ValueData));
 			if (this.UseResXDataNodes)
 			{
 				this.resData[(object)nodeInfo.Name] = (object)resXdataNode;

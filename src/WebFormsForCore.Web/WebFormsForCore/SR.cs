@@ -11,6 +11,13 @@ namespace System.Web;
 
 internal sealed class SR
 {
+	internal const string InvalidResXResourceNoName_Resources = "InvalidResXResourceNoName_Resources";
+	internal const string InvalidResXFile_Resource = "InvalidResXFile_Resource";
+	internal const string Type_Load_Exception_Short_Resources = "Type_Load_Exception_Short_Resources";
+	internal const string Type_Load_Exception_Resources = "Type_Load_Exception_Resources";
+	internal const string Not_Serializable_Type_Resources = "Not_Serializable_Type_Resources";
+	internal const string Not_Supported_Resources = "Not_Supported_Resources";
+
 	internal const string NotSupported_CodeDomAPI = "NotSupported_CodeDomAPI";
 
 	internal const string Provider_does_not_support_options = "Provider_does_not_support_options";

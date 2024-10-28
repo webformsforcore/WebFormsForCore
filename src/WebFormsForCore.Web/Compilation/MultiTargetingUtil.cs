@@ -6,11 +6,15 @@ using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.IO;
+using System.Linq;
 using System.Web.Configuration;
 using System.Web.Hosting;
 using System.Web.Util;
 using Microsoft.Build.Utilities;
 using Microsoft.Win32;
+using System.Diagnostics;
 #if WebFormsForCore
 using EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
 #else
@@ -86,18 +90,72 @@ namespace System.Web.Compilation {
                     if (s_targetFrameworkName == null) {
                         InitializeKnownAndLatestFrameworkNames();
                         InitializeTargetFrameworkName();
-                        Debug.Assert(s_targetFrameworkName != null, "s_targetFrameworkName should not be null");
+                        Util.Debug.Assert(s_targetFrameworkName != null, "s_targetFrameworkName should not be null");
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Finds out what the known framework names and also the latest one
-        /// </summary>
-        private static void InitializeKnownAndLatestFrameworkNames() {
+		/// <summary>
+		/// Finds out what the known framework names and also the latest one
+		/// </summary>
+		private static string Find(string command)
+		{
+			if (command.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+				command = command.Substring(0, command.Length - 4);
+			var commandWithExe = command + ".exe";
+
+			IEnumerable<string> paths;
+			if (OSInfo.IsWindows)
+			{
+				paths = new[] { "", Environment.CurrentDirectory,
+					Environment.GetFolderPath(Environment.SpecialFolder.System),
+					Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) }
+					.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine) ?? "")
+						.Split(Path.PathSeparator))
+					.Concat((Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) ?? "")
+						.Split(Path.PathSeparator))
+					.Where(path => !string.IsNullOrEmpty(path));
+			}
+			else
+			{
+				paths = new[] { "", Environment.CurrentDirectory }
+					.Concat(Environment.GetEnvironmentVariable("PATH")
+						.Split(Path.PathSeparator));
+			}
+			return paths
+				.SelectMany(path => new[] {
+					Path.Combine(path, command),
+					Path.Combine(path, commandWithExe) })
+				.FirstOrDefault(path => File.Exists(path));
+		}
+
+        public static IEnumerable<string> DotNetAspRuntimes()
+        {
+            var dotnetExe = Find("dotnet");
+            if (dotnetExe == null) return Enumerable.Empty<string>();
+            var startInfo = new ProcessStartInfo()
+            {
+                RedirectStandardOutput = true,
+                Arguments = "--list-runtimes",
+                FileName = dotnetExe
+            };
+            var process = Process.Start(startInfo);
+            process.WaitForExit();
+            var output = process.StandardOutput.ReadToEnd();
+            return Regex.Matches(output, @"^Microsoft\.AspNetCore\.App\s+([0-9.]+)", RegexOptions.Multiline)
+                .Select(m => new Version(m.Groups[1].Value))
+                .Select(v => $"NETCoreApp,Version=v{v.Major}.{v.Minor}")
+                .Distinct();
+        }
+
+
+		private static void InitializeKnownAndLatestFrameworkNames() {
             IList<string> names = ToolLocationHelper.GetSupportedTargetFrameworks();
             Version latestVersion = null;
+
+            foreach (var name in DotNetAspRuntimes()) names.Add(name);
+            
             s_knownFrameworkNames = new List<FrameworkName>();
             foreach (string name in names) {
                 FrameworkName frameworkName = new FrameworkName(name);
