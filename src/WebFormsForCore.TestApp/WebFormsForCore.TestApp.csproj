@@ -62,9 +62,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.4.1" />
-        <PackageReference Include="bootstrap" Version="5.2.3" />
-        <PackageReference Include="jQuery" Version="3.4.1" />
+        <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.7.1" />
+        <PackageReference Include="bootstrap" Version="5.3.3" />
+        <PackageReference Include="jQuery" Version="3.7.1" />
         <PackageReference Include="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
         <PackageReference Include="Microsoft.AspNet.FriendlyUrls.Core" Version="1.0.2" />
         <PackageReference Include="Microsoft.AspNet.ScriptManager.MSAjax" Version="5.0.0" />
@@ -83,6 +83,10 @@
       <Content Update="WebFormsForCore.TestApp.deps.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
     <Target Name="AddRuntimeDependenciesToContent" Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'" BeforeTargets="GetCopyToOutputDirectoryItems" DependsOnTargets="GenerateBuildDependencyFile;&#xD;&#xA;                            GenerateBuildRuntimeConfigurationFiles">

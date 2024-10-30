@@ -5,6 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DebugType>portable</DebugType>
+        <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Compilers</AssemblyName>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 
         <CompilerToolsVersion>4.11.0</CompilerToolsVersion>
 
@@ -32,10 +34,26 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
         <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(CompilerToolsVersion)" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0" />
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="$(NuGetPackageRoot)\microsoft.net.compilers.toolset\$(CompilerToolsVersion)\tasks\netcore\bincore\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
+        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.common\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
+        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.csharp\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
+        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.visualbasic\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
             <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Pack>True</Pack>
             <PackagePath>lib\$(TargetFramework)</PackagePath>
