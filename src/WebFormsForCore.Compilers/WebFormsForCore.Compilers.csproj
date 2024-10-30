@@ -58,6 +58,21 @@
             <Pack>True</Pack>
             <PackagePath>lib\$(TargetFramework)</PackagePath>
         </Content>
+        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.workspaces.common\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
+        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.csharp.workspaces\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
+        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.visualbasic.workspaces\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
+            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
