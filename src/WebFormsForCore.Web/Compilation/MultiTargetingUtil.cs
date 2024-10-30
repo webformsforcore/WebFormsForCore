@@ -37,8 +37,9 @@ namespace System.Web.Compilation {
 		static internal readonly FrameworkName FrameworkNameV80 = CreateFrameworkName(".NETCoreApp,Version=v8.0");
 		static internal readonly FrameworkName FrameworkNameV90 = CreateFrameworkName(".NETCoreApp,Version=v9.0");
 
+		internal static Version Version35 = new Version(3, 5);
 		internal static Version Version40 = new Version(4, 0);
-        internal static Version Version35 = new Version(3, 5);
+        internal static Version Version45 = new Version(4, 5);
         internal static Version Version80 = new Version(8, 0);
         private static FrameworkName s_targetFrameworkName = null;
         private static string s_configTargetFrameworkMoniker = null;
@@ -505,13 +506,13 @@ namespace System.Web.Compilation {
 
         internal static bool IsTargetFramework40OrAbove {
             get {
-                return MultiTargetingUtil.TargetFrameworkVersion.Major >= 4;
+                return TargetFrameworkVersion >= Version40;
             }
         }
 
         internal static bool IsTargetFramework45OrAbove {
             get {
-                return IsTargetFramework40OrAbove && TargetFrameworkVersion.Minor >= 5;
+                return TargetFrameworkVersion >= Version45; 
             }
         }
 
