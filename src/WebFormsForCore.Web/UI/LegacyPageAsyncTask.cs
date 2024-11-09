@@ -215,7 +215,24 @@ internal sealed class LegacyPageAsyncTask {
            // ---- the exception. Async completion required (DDB 140655)
            Thread.ResetAbort();
         } 
-        catch (Exception e) {
+        catch (ResponseEndException)
+        {
+				// From Response.End()
+				// Mark the request as completed
+				using (app.Context.SyncContext.AcquireThreadLock())
+				{
+					// Handle response end once. Skip if already initiated (previous AsyncTask)
+					if (!app.IsRequestCompleted)
+					{
+						responseEnded = true;
+						app.CompleteRequest();
+					}
+				}
+
+				// Clear the error for Response.End
+				_error = null;
+			}
+			catch (Exception e) {
             _error = e;
         }
 

@@ -2987,7 +2987,9 @@ window.onload = WebForm_RestoreScrollPosition;
 		[SecurityPermission(SecurityAction.Assert, ControlThread = true)]
 		internal static void ThreadResetAbortWithAssert()
 		{
+#if NETFRAMEWORK
 			Thread.ResetAbort();
+#endif
 		}
 
 		/*
@@ -5194,6 +5196,15 @@ window.onload = WebForm_RestoreScrollPosition;
 					}
 					catch { }
 				}
+				catch (ResponseEndException)
+				{
+					try
+					{
+						if (needToCallEndTrace)
+							ProcessRequestEndTrace();
+					}
+					catch { }
+				}
 				finally
 				{
 					if (includeStagesAfterAsyncPoint)
@@ -5242,6 +5253,15 @@ window.onload = WebForm_RestoreScrollPosition;
 					}
 				}
 				catch (ThreadAbortException)
+				{
+					try
+					{
+						if (needToCallEndTrace)
+							ProcessRequestEndTrace();
+					}
+					catch { }
+				}
+				catch (ResponseEndException)
 				{
 					try
 					{
@@ -5306,6 +5326,12 @@ window.onload = WebForm_RestoreScrollPosition;
 				ValidateRawUrlIfRequired();
 			}
 			catch (ThreadAbortException)
+			{
+				// Don't go into HandleError logic for ThreadAbortException's, since they
+				// are expected (e.g. when Response.Redirect() is called).
+				throw;
+			}
+			catch (ResponseEndException)
 			{
 				// Don't go into HandleError logic for ThreadAbortException's, since they
 				// are expected (e.g. when Response.Redirect() is called).
@@ -5715,6 +5741,35 @@ window.onload = WebForm_RestoreScrollPosition;
 					throw;
 				}
 			}
+			catch (ResponseEndException e)
+			{
+				// Don't go into HandleError logic for ThreadAbortExceptions, since they
+				// are expected (e.g. when Response.Redirect() is called).
+
+				// VSWhidbey 500309: perf improvement. We can safely cancel the thread abort here
+				// to avoid re-throwing the exception if this is a redirect and we're not being executed
+				// under the context of a Server.Execute call (i.e. _context.Handler == this).  Otherwise,
+				// re-throw so this can be handled lower in the stack (see HttpApplication.ExecuteStep).
+
+				// This perf optimization can only be applied if we are executing the entire page
+				// lifecycle within this method call (otherwise, in async pages) calling ResetAbort
+				// would only skip part of the lifecycle, not the entire page (as Response.End is supposed to)
+
+				HttpApplication.CancelModuleException cancelException = e.InnerException as HttpApplication.CancelModuleException;
+				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
+					_context.Handler == this &&                                         // not in server execute
+					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request
+					cancelException != null && !cancelException.Timeout)
+				{              // this is Response.End
+					_context.ApplicationInstance.CompleteRequest();
+					ThreadResetAbortWithAssert();
+				}
+				else
+				{
+					CheckRemainingAsyncTasks(true);
+					throw;
+				}
+			}
 			catch (System.Configuration.ConfigurationException)
 			{
 				throw;
@@ -6073,6 +6128,35 @@ window.onload = WebForm_RestoreScrollPosition;
 				// would only skip part of the lifecycle, not the entire page (as Response.End is supposed to)
 
 				HttpApplication.CancelModuleException cancelException = e.ExceptionState as HttpApplication.CancelModuleException;
+				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
+					_context.Handler == this &&                                         // not in server execute
+					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request
+					cancelException != null && !cancelException.Timeout)
+				{              // this is Response.End
+					_context.ApplicationInstance.CompleteRequest();
+					ThreadResetAbortWithAssert();
+				}
+				else
+				{
+					CheckRemainingAsyncTasks(true);
+					throw;
+				}
+			}
+			catch (ResponseEndException e)
+			{
+				// Don't go into HandleError logic for ThreadAbortExceptions, since they
+				// are expected (e.g. when Response.Redirect() is called).
+
+				// VSWhidbey 500309: perf improvement. We can safely cancel the thread abort here
+				// to avoid re-throwing the exception if this is a redirect and we're not being executed
+				// under the context of a Server.Execute call (i.e. _context.Handler == this).  Otherwise,
+				// re-throw so this can be handled lower in the stack (see HttpApplication.ExecuteStep).
+
+				// This perf optimization can only be applied if we are executing the entire page
+				// lifecycle within this method call (otherwise, in async pages) calling ResetAbort
+				// would only skip part of the lifecycle, not the entire page (as Response.End is supposed to)
+
+				HttpApplication.CancelModuleException cancelException = e.InnerException as HttpApplication.CancelModuleException;
 				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
 					_context.Handler == this &&                                         // not in server execute
 					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request

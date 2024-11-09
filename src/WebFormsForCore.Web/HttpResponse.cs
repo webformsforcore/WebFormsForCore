@@ -34,6 +34,11 @@ namespace System.Web {
     /// </devdoc>
     public delegate String HttpResponseSubstitutionCallback(HttpContext context);
 
+    public class ResponseEndException: Exception
+    {
+        public ResponseEndException(): base() { }
+        public ResponseEndException(Exception innerException) : base("", innerException) { }
+    }
 
     /// <devdoc>
     ///    <para> Enables type-safe server to browser communication. Used to
@@ -3111,29 +3116,44 @@ namespace System.Web {
 
         [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "Known issue, but required for proper operation of ASP.NET.")]
         [SecurityPermission(SecurityAction.Assert, ControlThread = true)]
-        private static void AbortCurrentThread() {
+        private void AbortCurrentThread() {
 #if NETFRAMEWORK
             Thread.CurrentThread.Abort(new HttpApplication.CancelModuleException(false));
 #else
+			/*
+			// when cannot abort execution, flush and supress further output
+			_endRequiresObservation = true;
+
+			if (!_flushing)
+			{ // ignore Reponse.End while flushing (in OnPreSendHeaders)
+				Flush();
+				_ended = true;
+
+				if (_context.ApplicationInstance != null)
+				{
+					_context.ApplicationInstance.CompleteRequest();
+				}
+			} */
+
+			throw new ResponseEndException(new HttpApplication.CancelModuleException(false));
 #endif
-            throw new HttpApplication.CancelModuleException(false);
 
 		}
 
-        /*
+		/*
          * ASP compatible caching properties
          */
 
 
-        /// <devdoc>
-        ///    <para>
-        ///       Gets or sets the time, in minutes, until cached
-        ///       information will be removed from the cache. Provided for ASP compatiblility. Use
-        ///       the <see cref='System.Web.HttpResponse.Cache'/>
-        ///       Property instead.
-        ///    </para>
-        /// </devdoc>
-        public int Expires {
+		/// <devdoc>
+		///    <para>
+		///       Gets or sets the time, in minutes, until cached
+		///       information will be removed from the cache. Provided for ASP compatiblility. Use
+		///       the <see cref='System.Web.HttpResponse.Cache'/>
+		///       Property instead.
+		///    </para>
+		/// </devdoc>
+		public int Expires {
             get {
                 return _expiresInMinutes;
             }

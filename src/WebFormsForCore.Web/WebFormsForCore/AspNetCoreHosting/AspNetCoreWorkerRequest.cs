@@ -144,8 +144,12 @@ namespace System.Web.Hosting
 		public override int GetLocalPort() => Context.Connection.LocalPort;
 		public override string GetPathInfo() => pathInfo;
 		public override byte[] GetPreloadedEntityBody() => body;
-		public override string GetQueryString() => Context.Request.QueryString.ToString();
-		public override byte[] GetQueryStringRawBytes() => Encoding.UTF8.GetBytes(GetQueryString());
+		public override string GetQueryString() {
+			var str = Context.Request.QueryString.ToString();
+			if (str.StartsWith("?")) return str.Substring(1);
+			else return str;
+		}
+		public override byte[] GetQueryStringRawBytes() => Encoding.ASCII.GetBytes(GetQueryString());
 		public override string GetRawUrl() => path;
 		public override string GetRemoteAddress() => Context.Connection.RemoteIpAddress.ToString();
 		public override int GetRemotePort() => Context.Connection.RemotePort;

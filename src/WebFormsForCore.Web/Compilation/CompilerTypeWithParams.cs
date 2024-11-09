@@ -16,6 +16,7 @@ namespace System.Web.Compilation
 	using System.Globalization;
 	using System.CodeDom;
 	using System.CodeDom.Compiler;
+	using System.Linq;
 	using System.Web.Hosting;
 	using System.Web.Util;
 	using System.Web.UI;

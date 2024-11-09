@@ -88,6 +88,9 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 			compilerInfo._compilerExtensions = new string[] { ".vb", "vb" };
 			compilerInfo._providerOptions = new Dictionary<string, string>();
 			compilerInfo._providerOptions[RedistVersionInfo.NameTag] = RedistVersionInfo.DefaultVersion;
+			// Add Microsoft.VisualBasic assembly to ReferenceAssemblies
+//			var vbAssembly = Assembly.Load("Microsoft.VisualBasic");
+//			compilerInfo.CompilerParams.ReferencedAssemblies.Add(vbAssembly.Location);
 			AddCompilerInfo(compilerInfo);
 
 			// JScript
@@ -103,6 +106,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 			// C++
 			/*compilerParameters = new CompilerParameters();
 			compilerParameters.WarningLevel = 4;
+			compilerParameters.CompilerOptions = "";
 			typeName = "Microsoft.VisualC.CppCodeProvider, " + AssemblyRef.MicrosoftVisualCCppCodeProvider;
 			compilerInfo = new W.CompilerInfo(compilerParameters, typeName);
 			compilerInfo._compilerLanguages = new string[] { "c++", "mc", "cpp" };

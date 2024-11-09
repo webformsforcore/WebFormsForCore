@@ -1868,9 +1868,23 @@ namespace System.Web {
                                         null, WebEventCodes.RuntimeErrorRequestAbort);
                 }
             }
-        }
+			catch (ResponseEndException e)
+			{
+				if (e.InnerException != null &&
+					e.InnerException is HttpApplication.CancelModuleException &&
+					((HttpApplication.CancelModuleException)e.InnerException).Timeout)
+				{
 
-        internal void PushTraceContext() {
+					//Thread.ResetAbort();
+					PerfCounters.IncrementCounter(AppPerfCounter.REQUESTS_TIMED_OUT);
+
+					throw new HttpException(SR.GetString(SR.Request_timed_out),
+										null, WebEventCodes.RuntimeErrorRequestAbort);
+				}
+			}
+		}
+
+		internal void PushTraceContext() {
             if (_traceContextStack == null) {
                 _traceContextStack = new Stack();
             }

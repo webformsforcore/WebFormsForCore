@@ -17,6 +17,7 @@ namespace System.Windows.Forms
         case StackOverflowException _:
         case OutOfMemoryException _:
         case ThreadAbortException _:
+        case System.Web.ResponseEndException _:
         case ExecutionEngineException _:
         case IndexOutOfRangeException _:
           return true;

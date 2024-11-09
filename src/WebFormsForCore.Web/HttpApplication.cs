@@ -2241,7 +2241,7 @@ namespace System.Web {
 
                     if (e is ThreadAbortException &&
                         ((Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0) || 
-                        e is HttpApplication.CancelModuleException)
+                        e is ResponseEndException)
                     {
                         // Response.End from a COM+ component that re-throws ThreadAbortException
                         // It is not a real ThreadAbort
@@ -2280,9 +2280,11 @@ namespace System.Web {
                         _stepManager.CompleteRequest();
                     }
 
+#if NETFRAMEWORK
                     Thread.ResetAbort();
+#endif
                 }
-            } catch (HttpApplication.CancelModuleException ce)
+            } catch (ResponseEndException ce)
             {
 				// Response.End
 				error = null;
@@ -3468,7 +3470,8 @@ namespace System.Web {
                     }
                 }
                 catch (Exception e) {
-                    if (e is ThreadAbortException || e.InnerException != null && e.InnerException is ThreadAbortException) {
+                    if (e is ThreadAbortException || e.InnerException != null && e.InnerException is ThreadAbortException ||
+                        e is ResponseEndException || e.InnerException != null && e.InnerException is ResponseEndException) {
                         // Response.End happened during async operation
                         _application.CompleteRequest();
                     }

@@ -22,6 +22,7 @@ namespace System.Web.Compilation {
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Security;
@@ -776,7 +777,7 @@ public class AssemblyBuilder {
     }
 
     // Command line string for My.* support
-    private const string MySupport = @"/define:_MYTYPE=\""Web\""";
+    private const string MySupport = @"/define:_MYTYPE=\""Empty\""";
 
     private static void AddVBMyFlags(CompilerParameters compilParams) {
 
@@ -818,7 +819,8 @@ public class AssemblyBuilder {
 
             CodeDomUtility.PrependCompilerOption(compilParams, "/nowarn:" + String.Join(";", noWarnStrings));
         }
-        else if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider)) {
+        else if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider) ||
+                codeDomProviderType == typeof(EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler.VBCodeProvider)) {
             List<string> noWarnStrings = new List<string>(3);
 
             // If VB, add all the imported namespaces on the command line (DevDiv 21499).
@@ -869,7 +871,7 @@ public class AssemblyBuilder {
 			codeDomProviderType != typeof(EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler.VBCodeProvider))
             return;
 
-        if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(compilParams.CompilerOptions, "/warnaserror", CompareOptions.IgnoreCase) >= 0)
+        if (compilParams.CompilerOptions != null && CultureInfo.InvariantCulture.CompareInfo.IndexOf(compilParams.CompilerOptions, "/warnaserror", CompareOptions.IgnoreCase) >= 0)
             compilParams.TreatWarningsAsErrors = false;
     }
 
@@ -893,7 +895,8 @@ public class AssemblyBuilder {
             return;
 
         // For VB, check for OptionInfer
-        if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider))
+        if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider) ||
+            codeDomProviderType == typeof(EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler.VBCodeProvider))
             ProcessBooleanProviderOption("OptionInfer", "/optionInfer+", "/optionInfer-", providerOptions, compilParams);
 
     }

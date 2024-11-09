@@ -39,7 +39,8 @@ namespace System.Web.Configuration {
                 val = BuildManager.GetType(typeName, true /*throwOnError*/, ignoreCase);
             }
             catch (Exception e) {
-                if (e is ThreadAbortException || e is StackOverflowException || e is OutOfMemoryException) {
+                if (e is ThreadAbortException || e is StackOverflowException || e is OutOfMemoryException ||
+                    e is ResponseEndException) {
                     throw;
                 }
 

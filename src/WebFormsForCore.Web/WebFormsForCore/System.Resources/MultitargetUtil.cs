@@ -39,6 +39,7 @@ namespace System.Resources
         case StackOverflowException _:
         case OutOfMemoryException _:
         case ThreadAbortException _:
+        case Web.ResponseEndException _:
         case ExecutionEngineException _:
         case IndexOutOfRangeException _:
         case AccessViolationException _:

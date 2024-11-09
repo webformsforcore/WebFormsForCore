@@ -3,6 +3,7 @@
 
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -19,7 +20,7 @@ using W = System.CodeDom.Compiler;
 namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
     internal class VBCompiler : Compiler {
         // Command line string for My.* support
-        internal static string MySupport = @"/define:_MYTYPE=\""Web\""";
+        internal static string MySupport = @"/define:_MYTYPE=\""Empty\""";
         internal static string VBImportsString;
 
         private static volatile Regex outputReg;
@@ -68,6 +69,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
                 // TODO This code should be removed once CodeDom directly supports provider options such as WarnAsError, OptionInfer
                 CompilationUtil.PrependCompilerOption(options, " /optionInfer+");
 
+                /*
                 List<string> noWarnStrings = new List<string>(3);
 
                 // If VB, add all the imported namespaces on the command line (DevDiv 21499).
@@ -88,7 +90,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
 
                 if (noWarnStrings.Count > 0) {
                     CompilationUtil.PrependCompilerOption(options, "/nowarn:" + String.Join(",", noWarnStrings));
-                }
+                }*/
             }
         }
 
@@ -147,9 +149,40 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
 
                 // Ignore any Microsoft.VisualBasic.dll, since Visual Basic implies it (bug 72785)
                 string fileName = Path.GetFileName(s);
+#if NETFRAMEWORK
                 if (string.Compare(fileName, "Microsoft.VisualBasic.dll", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
+#else
+                if (string.Compare(fileName, "Microsoft.VisualBasic.dll", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    allArgsBuilder.Append("/vbruntime:");
+                    allArgsBuilder.Append("\"");
+                    allArgsBuilder.Append(s);
+                    allArgsBuilder.Append("\"");
+                    allArgsBuilder.Append(" ");
 
+                    bool hasCore = false;
+                    string coreFile = Path.Combine(Path.GetDirectoryName(s), "Microsoft.VisualBasic.Core.dll");
+                    foreach (string file in parameters.ReferencedAssemblies)
+                    {
+                        if (string.Equals(Path.GetFileName(file), "Microsoft.VisualBasic.Core.dll", StringComparison.OrdinalIgnoreCase))
+                        {
+                            hasCore = true;
+                            coreFile = file;
+                        }
+                    }
+                    
+                    if (!hasCore)
+                    {
+						allArgsBuilder.Append("/R:");
+						allArgsBuilder.Append("\"");
+						allArgsBuilder.Append(coreFile);
+						allArgsBuilder.Append("\"");
+						allArgsBuilder.Append(" ");
+					}
+					//continue;
+				}
+#endif
                 // Same deal for mscorlib (bug ASURT 81568)
                 if (string.Compare(fileName, "mscorlib.dll", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
@@ -262,7 +295,6 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
 
         // The code is copied from NDP\fx\src\xsp\system\web\compilation\assemblybuilder.cs
         private static void AddVBMyFlags(CompilerParameters compilParams) {
-
             // Prepend it to the compilerOptions
             if (compilParams.CompilerOptions == null)
                 compilParams.CompilerOptions = MySupport;
@@ -272,6 +304,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
 
         // The code is copied from NDP\fx\src\xsp\system\web\compilation\assemblybuilder.cs
         private static void AddVBGlobalNamespaceImports(CompilerParameters compilParams) {
+#if NETFRAMEWORK
             // Put together the VB import string on demand
             if (VBImportsString == null) {
                 // Get the Web application configuration.
@@ -312,6 +345,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
             if (VBImportsString.Length > 0) {
                 CompilationUtil.PrependCompilerOption(compilParams, VBImportsString);
             }
+#endif
         }
     }
 }

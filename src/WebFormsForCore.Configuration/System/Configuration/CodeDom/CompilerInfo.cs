@@ -15,6 +15,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 	using System.Configuration;
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using System.Linq;
 	using System.Web;
 
 	[PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust")]
@@ -170,6 +171,10 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 			copy.TreatWarningsAsErrors = _compilerParams.TreatWarningsAsErrors;
 			copy.WarningLevel = _compilerParams.WarningLevel;
 			copy.CompilerOptions = _compilerParams.CompilerOptions;
+			copy.ReferencedAssemblies.AddRange(
+				_compilerParams.ReferencedAssemblies
+					.OfType<string>()
+					.ToArray());
 			return copy;
 		}
 

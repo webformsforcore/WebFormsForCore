@@ -43,7 +43,7 @@
             <Pack>True</Pack>
             <PackagePath>lib\$(TargetFramework)</PackagePath>
         </Content>
-        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.common\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
+        <!--<Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.common\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
             <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Pack>True</Pack>
             <PackagePath>lib\$(TargetFramework)</PackagePath>
@@ -72,7 +72,7 @@
             <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Pack>True</Pack>
             <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
+        </Content>-->
     </ItemGroup>
 
     <ItemGroup>
