@@ -24,7 +24,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8;ReportViewer;Reporting</PackageTags>
         <AssemblyVersion>8.0.0.0</AssemblyVersion>
         <FileVersion>8.0.0.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
