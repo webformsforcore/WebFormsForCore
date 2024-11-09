@@ -1,0 +1,97 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>11</LangVersion>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+        <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_WEB;OBJECTSTATEFORMATTER;CONFIGPATHUTILITY_SYSTEMWEB;SAFESERIALIZATIONMANAGER;TRACE;RETAIL;WIN32</DefineConstants>
+        <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
+        <AssemblyName>System.Web.Mobile</AssemblyName>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Mobile</PackageId>
+        <Title>WebFormsForCore.Web.Mobile</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web.Mobile</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.0.0</AssemblyVersion>
+        <FileVersion>8.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.targets" />
+
+    <PropertyGroup>
+        <StrongNamePublicKey>002400000480000094000000060200000024000052534131000400000100010007D1FA57C4AED9F0A32E84AA0FAEFD0DE9E8FD6AEC8F87FB03766C834C99921EB23BE79AD9D5DCC1DD9AD236132102900B723CF980957FC4E177108FC607774F29E8320E92EA05ECE4E821C0A5EFE8F1645C4C0C93C1AB99285D622CAA652C1DFAD63D745D6F2DE5F17E5EAF0FC4963D261C8A12436518206DC093344D5AD293</StrongNamePublicKey>
+        <StrongNamePublicKeyToken>b03f5f7f11d50a3a</StrongNamePublicKeyToken>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="UI\MobileControls\Design\Adapters\**\*.cs" />
+        <Compile Remove="UI\MobileControls\Design\Util\**\*.cs" />
+        <Compile Remove="UI\MobileControls\Design\*.cs" />
+        <None Include="UI\MobileControls\Design\**\*.cs" Exclude="UI\MobileControls\Design\Converters\**\*.cs" />
+        <EmbeddedResource Remove="**\*.resx" />
+        <EmbeddedResource Include="System.Web.Mobile.resx">
+            <LogicalName>System.Web.Mobile.resources</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="UI\MobileControls\Adapters.resx">
+            <LogicalName>System.Web.UI.MobileControls.Adapters.resources</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="**\*.bmp" />
+        <EmbeddedResource Include="**\*.bmp" />
+        <None Remove="UI\MobileControls\Design\Util\DesignerUtility.cs" />
+        <None Remove="UI\MobileControls\Design\Util\UrlBuilder.cs" />
+        <Compile Include="UI\MobileControls\Design\Util\DesignerUtility.cs" />
+        <Compile Include="UI\MobileControls\Design\Util\UrlBuilder.cs" />
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+    </ItemGroup>
+
+    <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+        <ItemGroup>
+            <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8.0.0\\'))" />
+            <!-- Do not import System.Web from dotnet -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+            <!-- Do not import System.Drawing from dotnet -->
+            <!--<ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Drawing' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />-->
+        </ItemGroup>
+    </Target>
+
+</Project>
