@@ -1,0 +1,203 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector.initializeBase(this, [element]);
+    
+    // Constants
+    this._PageStateLoaded = "Loaded";
+    this._PageStateNeedsCorrection = "NeedsCorrection";
+    
+    this.HiddenScrollPositionId = null;
+    this.HiddenViewStateId = null;
+    this.HiddenNewViewStateId = null;
+    this.ReportViewerId = null;
+    this.PageStateId = null;
+    this.TriggerPostBack = null;
+
+    this.m_needHookViewerEvents = true;
+    this.m_shouldApplyStoredScrollPosition = false;
+
+    this.m_onAppLoadDelegate = Function.createDelegate(this, this.OnAppLoad);
+    this.m_onAsyncPostBackLoadingDelegate = Function.createDelegate(this, this.OnAsyncPostBackLoading);
+    this.m_onAsyncPostBackEndedDelegate = Function.createDelegate(this, this.OnAsyncPostBackEnded);
+    this.m_onViewerDisposingDelegate = Function.createDelegate(this, this.OnViewerDisposing);
+    this.m_onViewerScrollChangeDelegate = Function.createDelegate(this, this.OnReportViewerScrollChange);
+    this.m_onViewerLoadingChangeDelegate = Function.createDelegate(this, this.OnViewerLoadingChange);
+}
+
+Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector.callBaseMethod(this, "initialize");
+
+        Sys.Application.add_load(this.m_onAppLoadDelegate);
+
+        var pageRequestManager = Sys.WebForms.PageRequestManager.getInstance();
+        pageRequestManager.add_endRequest(this.m_onAsyncPostBackEndedDelegate);        
+
+        // Using Loading instead of beginRequest so that leaving while an async postback is in
+        // progress causes this class to recognize that the back button OnAppLoad call is one
+        // that needs correction.  PageLoading happens after receiving the async postback response.
+        pageRequestManager.add_pageLoading(this.m_onAsyncPostBackLoadingDelegate);
+    },
+    
+    dispose : function()
+    {
+        Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector.callBaseMethod(this, "dispose");
+
+        if (this.m_onAppLoadDelegate != null)
+        {
+            Sys.Application.remove_load(this.m_onAppLoadDelegate);
+            delete this.m_onAppLoadDelegate;
+            this.m_onAppLoadDelegate = null;
+        }
+
+        if (this.m_onAsyncPostBackEndedDelegate != null)
+        {
+            var pageRequestManager = Sys.WebForms.PageRequestManager.getInstance();
+            pageRequestManager.remove_beginRequest(this.m_onAsyncPostBackLoadingDelegate);
+            pageRequestManager.remove_endRequest(this.m_onAsyncPostBackEndedDelegate);
+
+            delete this.m_onAsyncPostBackEndedDelegate;
+            this.m_onAsyncPostBackEndedDelegate = null;
+            
+            delete this.m_onAsyncPostBackLoadingDelegate;
+            this.m_onAsyncPostBackLoadingDelegate = null;
+        }
+
+        delete this.m_onViewerDisposingDelegate;
+        this.m_onViewerDisposingDelegate = null;
+        
+        delete this.m_onViewerScrollChangeDelegate;
+        this.m_onViewerScrollChangeDelegate = null;
+        
+        delete this.m_onViewerLoadingChangeDelegate;
+        this.m_onViewerLoadingChangeDelegate = null;        
+    },
+    
+    OnAppLoad : function()
+    {
+        var newPageState = this._PageStateLoaded;
+        var shouldPerformPostCorrectionOperations = false;
+        
+        // If the page is already loaded during the Application.Load event, this is a
+        // browser back/forward button navigation.
+        var pageStateField = $get(this.PageStateId);
+        if (pageStateField.value === this._PageStateLoaded)
+        {
+            // No reason to postback if we don't have updated view state to load
+            // (i.e. last postback was synchronous)
+            var hiddenViewState = $get(this.HiddenViewStateId).value;
+            if (hiddenViewState.length > 0)
+            {
+                newPageState = this._PageStateNeedsCorrection;
+                setTimeout(this.TriggerPostBack, 0);
+            }
+            else
+            {
+                // Even though we don't need to post back to correct the page,
+                // there may still be other things to fix up, like scroll position.
+                shouldPerformPostCorrectionOperations = true;
+            }
+        }
+        else if (pageStateField.value === this._PageStateNeedsCorrection)
+        {
+            // After loading a needs correction update, do post correction things
+            shouldPerformPostCorrectionOperations = true;
+        }
+        
+        if (shouldPerformPostCorrectionOperations)
+            this.m_shouldApplyStoredScrollPosition = true;
+
+        if (this.m_needHookViewerEvents)
+        {
+            var reportViewer = $find(this.ReportViewerId);
+            
+            // Hook disposing in case the viewer itself is in an UpdatePanel
+            reportViewer.add_disposing(this.m_onViewerDisposingDelegate);
+
+            reportViewer.add_propertyChanged(this.m_onViewerScrollChangeDelegate);
+            reportViewer.add_propertyChanged(this.m_onViewerLoadingChangeDelegate);
+            
+            this.m_needHookViewerEvents = false;
+        }
+
+        pageStateField.value = newPageState;
+    },
+    
+    OnAsyncPostBackEnded : function()
+    {
+        // When an async postback completes, save the view state in a persisted
+        // hidden field (one that is outside an UpdatePanel).
+        var newViewState = $get(this.HiddenNewViewStateId);
+        var viewStateStore = $get(this.HiddenViewStateId);
+        viewStateStore.value = newViewState.value;
+    },
+    
+    OnViewerLoadingChange : function(sender, e)
+    {
+        var viewer = $find(this.ReportViewerId);
+        
+        // Once the report area is loaded with a report page again, apply the scroll position
+	    if (this.m_shouldApplyStoredScrollPosition &&
+	        !viewer.get_isLoading() &&
+	        viewer.get_reportAreaContentType() == Microsoft.Reporting.WebFormsClient.ReportAreaContent.ReportPage &&
+	        e.get_propertyName() == "isLoading")
+        {
+            // If we have a previously stored scroll position, apply it
+		    var scrollPosition = $get(this.HiddenScrollPositionId).value;
+		    if (scrollPosition.length > 0)
+		    {
+		        var values = scrollPosition.split(" ");
+			    var point = new Sys.UI.Point(parseInt(values[0]), parseInt(values[1]));
+			    viewer.set_reportAreaScrollPosition(point);
+		    }
+
+            // Scroll position is applied.  No need to do it again.            
+            this.m_shouldApplyStoredScrollPosition = false;
+        }
+    },
+    
+    OnReportViewerScrollChange : function(sender, e)
+    {
+        var viewer = $find(this.ReportViewerId);
+        
+	    if (!viewer.get_isLoading() &&
+	        viewer.get_reportAreaContentType() == Microsoft.Reporting.WebFormsClient.ReportAreaContent.ReportPage &&
+	        e.get_propertyName() == "reportAreaScrollPosition")
+        {
+		    var point = viewer.get_reportAreaScrollPosition();
+		    var store = $get(this.HiddenScrollPositionId);
+
+		    store.value = point.x + " " + point.y;
+        }
+    },
+    
+    OnViewerDisposing : function()
+    {
+        this.m_needHookViewerEvents = true;
+    },
+    
+    OnAsyncPostBackLoading : function()
+    {
+        // An async postback is the result of some report interaction.  When it completes, this
+        // class shouldn't consider it a back/forward navigation.  So exit the "loaded" state.
+	    var pageStateField = $get(this.PageStateId);
+        if (pageStateField.value == this._PageStateLoaded)
+        {
+    	    pageStateField.value = "";
+    	    
+    	    // If we performed a correction but that did not result in the apply scroll position
+    	    // flag being cleared, it is because no report was displayed as a result of the correction.
+    	    // In that case, don't save any old scroll position for future report renderings.
+    	    this.m_shouldApplyStoredScrollPosition = false;
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector.registerClass("Microsoft.Reporting.WebFormsClient._BrowserNavigationCorrector", Sys.UI.Control);

@@ -1,0 +1,382 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient.ReportViewer = function()
+{
+    Microsoft.Reporting.WebFormsClient.ReportViewer.initializeBase(this);
+
+    this._internalViewerId = null;
+    this._needHookEvents = true;
+
+    this._onAppLoadDelegate = Function.createDelegate(this, this._onAppLoad);
+    this._onInternalViewerDisposingDelegate = Function.createDelegate(this, this._onInternalViewerDisposing);
+    this._onInternalViewerLoadingDelegate = Function.createDelegate(this, this._onInternalViewerLoading);
+    this._onReportAreaContentChangedDelegate = Function.createDelegate(this, this._onReportAreaContentChanged);
+    this._onReportAreaNewContentVisibleDelegate = Function.createDelegate(this, this._onReportAreaNewContentVisible);
+    this._onReportAreaScrollPositionChangedDelegate = Function.createDelegate(this, this._onReportAreaScrollPositionChanged);
+    this._onDocMapAreaCollapseChangedDelegate = Function.createDelegate(this, this._onDocMapAreaCollapseChanged);
+    this._onPromptAreaCollapseChangedDelegate = Function.createDelegate(this, this._onPromptAreaCollapseChanged);
+}
+
+Microsoft.Reporting.WebFormsClient.ReportViewer.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient.ReportViewer.callBaseMethod(this, "initialize");
+
+        Sys.Application.add_load(this._onAppLoadDelegate);
+    },
+
+    dispose: function()
+    {
+        Microsoft.Reporting.WebFormsClient.ReportViewer.callBaseMethod(this, "dispose");
+
+        if (this._onAppLoadDelegate != null)
+        {
+            Sys.Application.remove_load(this._onAppLoadDelegate);
+            delete this._onAppLoadDelegate;
+            this._onAppLoadDelegate = null;
+        }
+
+        if (this._onInternalViewerDisposingDelegate != null)
+        {
+            var internalViewer = this._tryGetInternalViewer();
+            if (internalViewer != null)
+            {
+                internalViewer.remove_disposing(this._onInternalViewerDisposingDelegate);
+                internalViewer.remove_propertyChanged(this._onReportAreaContentChangedDelegate);
+                internalViewer.remove_propertyChanged(this._onInternalViewerLoadingDelegate);
+                internalViewer.remove_propertyChanged(this._onReportAreaScrollPositionChangedDelegate);
+                internalViewer.remove_reportAreaNewContentVisible(this._onReportAreaNewContentVisibleDelegate);
+                internalViewer.remove_propertyChanged(this._onDocMapAreaCollapseChangedDelegate);
+                internalViewer.remove_propertyChanged(this._onPromptAreaCollapseChangedDelegate);
+            }
+
+            delete this._onInternalViewerDisposingDelegate;
+            this._onInternalViewerDisposingDelegate = null;
+
+            delete this._onReportAreaContentChangedDelegate;
+            this._onReportAreaContentChangedDelegate = null;
+
+            delete this._onInternalViewerLoadingDelegate;
+            this._onInternalViewerLoadingDelegate = null;
+
+            delete this._onReportAreaScrollPositionChangedDelegate;
+            this._onReportAreaScrollPositionChangedDelegate = null;
+
+            delete this._onDocMapAreaCollapseChangedDelegate;
+            this._onDocMapAreaCollapseChangedDelegate = null;
+
+            delete this._onPromptAreaCollapseChangedDelegate;
+            this._onPromptAreaCollapseChangedDelegate = null;
+        }
+    },
+
+    invokePrintDialog: function()
+    {
+        this._ensureReportAreaHasReportPage();
+
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.PrintDialog();
+    },
+
+    exportReport: function(format)
+    {
+        this._ensureReportAreaHasReportPage();
+
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.ExportReport(format);
+    },
+
+    find: function(text)
+    {
+        this._ensureReportAreaHasReportPage();
+
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.Find(text);
+    },
+
+    recalculateLayout: function()
+    {
+        var internalViewer = this._getInternalViewer();
+        // this ensures recalc will get called in IE
+        internalViewer.ResizeViewerReportUsingContainingElement(true);
+    },
+
+    _resetSizeToServerDefault: function()
+    {
+        var internalViewer = this._tryGetInternalViewer();
+        if (internalViewer != null)
+            internalViewer.ResetSizeToServerDefault();
+    },
+
+    findNext: function()
+    {
+        this._ensureReportAreaHasReportPage();
+
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.FindNext();
+    },
+
+    refreshReport: function()
+    {
+        var reportAreaContentType = this.get_reportAreaContentType();
+        var canceled = !this.get_isLoading() && reportAreaContentType == Microsoft.Reporting.WebFormsClient.ReportAreaContent.None;
+
+        // if the user successfully canceled, then there is a report loaded in this viewer,
+        // so allow them to refresh it.
+        if (reportAreaContentType != Microsoft.Reporting.WebFormsClient.ReportAreaContent.ReportPage &&
+            reportAreaContentType != Microsoft.Reporting.WebFormsClient.ReportAreaContent.Error && !canceled)
+        {
+            this._throwExceptionForInvalidState();
+        }
+
+        var internalViewer = this._getInternalViewer();
+        internalViewer.RefreshReport();
+    },
+
+    get_reportAreaContentType: function()
+    {
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.get_reportAreaContentType();
+    },
+
+    get_promptAreaCollapsed: function()
+    {
+        var internalViewer = this._getInternalViewer();
+        return !internalViewer.ArePromptsVisible();
+    },
+
+    set_promptAreaCollapsed: function(value)
+    {
+
+        var internalViewer = this._getInternalViewer();
+
+        var currentPromptAreaVisibility = this.get_promptAreaCollapsed();
+        if (currentPromptAreaVisibility != value)
+        {
+            internalViewer.SetPromptAreaVisibility(!value);
+            this.recalculateLayout();
+        }
+    },
+
+    get_documentMapCollapsed: function()
+    {
+        var internalViewer = this._getInternalViewer();
+        return !internalViewer.AreDocMapAreaVisible();
+    },
+
+    set_documentMapCollapsed: function(value)
+    {
+        var internalViewer = this._getInternalViewer();
+
+        var currentDocMapAreaVisibility = this.get_documentMapCollapsed();
+        if (currentDocMapAreaVisibility != value)
+            internalViewer.SetDocMapAreaVisibility(!value);
+    },
+
+    get_zoomLevel: function()
+    {
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.get_zoomLevel();
+    },
+
+    set_zoomLevel: function(value)
+    {
+        var internalViewer = this._getInternalViewer();
+
+        var currentZoomLevel = this.get_zoomLevel();
+        if (currentZoomLevel != value)
+        {
+            internalViewer.set_zoomLevel(value);
+            this.raisePropertyChanged("zoomLevel");
+        }
+    },
+
+    get_reportAreaScrollPosition: function()
+    {
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.get_reportAreaScrollPosition();
+    },
+
+    set_reportAreaScrollPosition: function(scrollPoint)
+    {
+        if (scrollPoint == null)
+            throw Error.argumentNull("scrollPoint");
+        else if (!Sys.UI.Point.isInstanceOfType(scrollPoint))
+            throw Error.argumentType("scrollPoint", null, Sys.UI.Point);
+
+        var internalViewer = this._getInternalViewer();
+        return internalViewer.set_reportAreaScrollPosition(scrollPoint);
+    },
+
+    get_isLoading: function()
+    {
+        var internalViewer = this._tryGetInternalViewer();
+
+        if (internalViewer == null)
+            return true;
+        else
+            return internalViewer.get_isLoading();
+    },
+
+    _get_direction: function()
+    {
+        // It is ok to access the internal viewer for the direction field while it is loading.
+        var internalViewer = this._tryGetInternalViewer();
+        if (internalViewer == null)
+            throw Error.invalidOperation("Unexpected error: InternalViewer unavailable for _get_direction.");
+
+        return internalViewer.GetDirection();
+    },
+
+    _get_toolBarUpdate : function()
+    {
+        var internalViewer = this._tryGetInternalViewer();
+        if (internalViewer == null)
+            throw Error.invalidOperation("Unexpected error: InternalViewer unavailable for _get_toolBarUpdate.");
+
+        return internalViewer.GetToolBarUpdate();
+    },
+
+    _getInternalViewer: function()
+    {
+        var internalViewer = this._tryGetInternalViewer();
+
+        if (internalViewer == null || this.get_isLoading())
+            throw Error.invalidOperation("The report or page is being updated.  Please wait for the current action to complete.");
+
+        return internalViewer;
+    },
+
+    _tryGetInternalViewer: function()
+    {
+        if (this._internalViewerId != null)
+        {
+            var internalViewerObject = $get(this._internalViewerId);
+            if (internalViewerObject != null)
+                return internalViewerObject.control;
+        }
+            
+        return null;
+    },
+
+    _ensureReportAreaHasReportPage: function()
+    {
+        // This may throw if the viewer is still loading.  That's ok.  It's also
+        // a requirement that the viewer not be loading when a method requires
+        // that a report page be visible.
+        var reportAreaContentType = this.get_reportAreaContentType();
+
+        if (reportAreaContentType != Microsoft.Reporting.WebFormsClient.ReportAreaContent.ReportPage)
+            this._throwExceptionForInvalidState();
+    },
+
+    _throwExceptionForInvalidState: function()
+    {
+        throw Error.invalidOperation("The operation cannot be performed because there is no report loaded.");
+    },
+
+    _onAppLoad: function()
+    {
+        // When a new internal viewer is created, hook up to events exposed by it
+        if (this._needHookEvents)
+        {
+            var internalViewer = this._tryGetInternalViewer();
+            if (internalViewer != null)
+            {
+                internalViewer.add_disposing(this._onInternalViewerDisposingDelegate);
+                internalViewer.add_propertyChanged(this._onReportAreaContentChangedDelegate);
+                internalViewer.add_reportAreaNewContentVisible(this._onReportAreaNewContentVisibleDelegate);
+                internalViewer.add_propertyChanged(this._onInternalViewerLoadingDelegate);
+                internalViewer.add_propertyChanged(this._onReportAreaScrollPositionChangedDelegate);
+                internalViewer.add_propertyChanged(this._onDocMapAreaCollapseChangedDelegate);
+                internalViewer.add_propertyChanged(this._onPromptAreaCollapseChangedDelegate);
+
+                this._needHookEvents = false;
+            }
+        }
+    },
+
+    _onInternalViewerDisposing: function()
+    {
+        // When the internal viewer is disposed, mark that we need to hook up events to the
+        // one that gets created after the postback.
+        this._needHookEvents = true;
+    },
+
+    _onReportAreaContentChanged: function(sender, e)
+    {
+        if (e.get_propertyName() == "reportAreaContentType")
+        {
+            // Propagate the event to users of this class
+            this.raisePropertyChanged("reportAreaContentType");
+        }
+    },
+
+    _onReportAreaNewContentVisible: function(sender, e)
+    {
+        var reportAreaNewContentVisibleHandler = this.get_events().getHandler("reportAreaNewContentVisible");
+        if (reportAreaNewContentVisibleHandler)
+            reportAreaNewContentVisibleHandler(this, e);
+    },
+
+    _add_reportAreaNewContentVisible: function(handler)
+    {
+        this.get_events().addHandler("reportAreaNewContentVisible", handler);
+    },
+
+    _remove_reportAreaNewContentVisible: function(handler)
+    {
+        this.get_events().removeHandler("reportAreaNewContentVisible", handler);
+    },
+
+    _onInternalViewerLoading: function(sender, e)
+    {
+        if (e.get_propertyName() == "isLoading")
+        {
+            // Propagate the event to users of this class
+            this.raisePropertyChanged("isLoading");
+        }
+    },
+
+    _onReportAreaScrollPositionChanged: function(sender, e)
+    {
+        if (e.get_propertyName() == "reportAreaScrollPosition")
+        {
+            // Propagate the event to users of this class
+            this.raisePropertyChanged("reportAreaScrollPosition");
+        }
+    },
+
+    _onDocMapAreaCollapseChanged: function(sender, e)
+    {
+        if (e.get_propertyName() == "documentMapCollapsed")
+        {
+            // Propagate the event to users of this class
+            this.raisePropertyChanged("documentMapCollapsed");
+        }
+    },
+    
+    _onPromptAreaCollapseChanged: function(sender, e)
+    {
+        if (e.get_propertyName() == "promptAreaCollapsed")
+        {
+            // Propagate the event to users of this class
+            this.raisePropertyChanged("promptAreaCollapsed");
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient.ReportViewer.registerClass("Microsoft.Reporting.WebFormsClient.ReportViewer", Sys.Component);
+
+Microsoft.Reporting.WebFormsClient.ReportAreaContent = function() { };
+Microsoft.Reporting.WebFormsClient.ReportAreaContent.prototype =
+{
+    None: 0,
+    ReportPage: 1,
+    Error: 2
+}
+Microsoft.Reporting.WebFormsClient.ReportAreaContent.registerEnum("Microsoft.Reporting.WebFormsClient.ReportAreaContent");

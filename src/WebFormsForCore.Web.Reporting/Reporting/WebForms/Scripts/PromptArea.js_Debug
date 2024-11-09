@@ -1,0 +1,331 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._PromptArea = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._PromptArea.initializeBase(this, [element]);
+
+    this.ReportViewerId = null;
+
+    this.CredentialsLinkId = null;
+    this.ParametersGridID = null;
+    this.ViewReportButtonId = null;
+
+    this.m_activeDropDown = null;
+    this.m_parameterIdList = null;
+    this.m_credentialIdList = null;
+    this.m_hookedEvents = false;
+
+    this.m_onReportViewerLoadingChangedDelegate = Function.createDelegate(this, this.OnReportViewerLoadingChanged);
+}
+
+Microsoft.Reporting.WebFormsClient._PromptArea.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._PromptArea.callBaseMethod(this, "initialize");
+
+        var viewReportButton = $get(this.ViewReportButtonId);
+
+        if (viewReportButton != null)
+        {
+            $addHandlers($get(this.ViewReportButtonId),
+                { "click": this.OnViewReportClick },
+                this);
+        }
+
+        if (this.ReportViewerId != null)
+        {
+            var reportViewer = $find(this.ReportViewerId);
+            if (reportViewer != null)
+                reportViewer.add_propertyChanged(this.m_onReportViewerLoadingChangedDelegate);
+        }
+    },
+
+    dispose: function()
+    {
+        var viewReportButton = $get(this.ViewReportButtonId);
+
+        if (viewReportButton != null)
+            $clearHandlers(viewReportButton);
+
+        if (this.ReportViewerId != null)
+        {
+            var reportViewer = $find(this.ReportViewerId);
+            if (reportViewer != null)
+                reportViewer.remove_propertyChanged(this.m_onReportViewerLoadingChangedDelegate);
+        }
+        
+        $clearHandlers(this.get_element());
+
+        delete this.m_onReportViewerLoadingChangedDelegate;
+        this.m_onReportViewerLoadingChangedDelegate = null;
+
+        Microsoft.Reporting.WebFormsClient._PromptArea.callBaseMethod(this, "dispose");
+    },
+
+    // Custom accessor for complex object type (array)
+    set_ParameterIdList: function(value) { this.m_parameterIdList = value; },
+    get_ParameterIdList: function() { return this.m_parameterIdList; },
+    set_CredentialIdList: function(value) { this.m_credentialIdList = value; },
+    get_CredentialIdList: function() { return this.m_credentialIdList; },
+
+    ShouldValidateParameters: function()
+    {
+        if (this.m_parameterIdList == null)
+            return false;
+
+        // Get the credential link
+        var credentialLink = $get(this.CredentialsLinkId);
+
+        // The credential link is not rendered in 2 cases.
+        // 1 - There are no credentials.  If there are no credentials but there
+        //     is a prompt area at all, then it must have parameters which should
+        //     then be validated.
+        // 2 - The credential prompts are being shown initially because they aren't
+        //     satisfied.  In this case, there are no rendered parameter prompts, so
+        //     it does't hurt to validate all 0 of them.
+        if (credentialLink == null)
+            return true;
+
+        // Initial view was of parameters and it still is
+        return credentialLink.style.display != "none";
+    },
+
+    ShouldValidateCredentials: function()
+    {
+        if (this.m_credentialIdList == null)
+            return false;
+
+        // Get the credential link
+        var credentialLink = $get(this.CredentialsLinkId);
+
+        // The credential link is not rendered in 2 cases.
+        // 1 - There are no credentials.  In this case, validating all 0 of them
+        //     does no harm.
+        // 2 - The credential prompts are being shown initially because they aren't
+        //     satisfied.  In this case, we always want to validate the input boxes.
+        // Therefore, if there is no credential link, validate the credentials.
+        if (credentialLink == null)
+            return true;
+
+        // Switched back from intial view of parameters to credentials
+        return credentialLink.style.display == "none";
+    },
+
+    ValidateInputs: function()
+    {
+        if (this.ShouldValidateCredentials())
+        {
+            for (var i = 0; i < this.m_credentialIdList.length; i++)
+            {
+                var credentialElement = $get(this.m_credentialIdList[i]);
+                var credentialControl = credentialElement.control;
+                if (!credentialControl.ValidateHasValue())
+                    return false;
+            }
+        }
+
+        if (this.ShouldValidateParameters())
+        {
+            for (var i = 0; i < this.m_parameterIdList.length; i++)
+            {
+                var parameterElement = $get(this.m_parameterIdList[i]);
+                var parameterControl = parameterElement.control;
+                if (!parameterControl.ValidateHasValue())
+                    return false;
+            }
+        }
+
+        return true;
+    },
+
+    OnViewReportClick: function(e)
+    {
+        if (!this.ValidateInputs())
+            e.preventDefault();
+    },
+
+    OnChangeCredentialsClick: function()
+    {
+        // Hide the link
+        var credentialLink = $get(this.CredentialsLinkId);
+        credentialLink.style.display = "none";
+
+        // Make sure each row in the table is visible
+        var paramsTable = $get(this.ParametersGridID);
+        for (var i = 0; i < paramsTable.rows.length; i++)
+        {
+            var row = paramsTable.rows[i];
+            var makeVisible = row.attributes.getNamedItem("IsParameterRow") == null;
+            _$RVCommon.SetElementVisibility(row, makeVisible);
+        }
+        
+        // Changing which rows are visible can affect the height of the prompt area.  Need to recalc layout.
+        if (this.ReportViewerId != null)
+        {
+            var reportViewer = $find(this.ReportViewerId);
+            reportViewer.recalculateLayout();
+        }
+    },
+
+    HookParameterEvents: function()
+    {
+        if (this.m_hookedEvents || this.m_parameterIdList == null)
+            return;
+
+        for (var i = 0; i < this.m_parameterIdList.length; i++)
+        {
+            var parameterObject = $get(this.m_parameterIdList[i]).control;
+            if (Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.isInstanceOfType(parameterObject))
+            {
+                parameterObject.get_events().addHandler("OnShowEvent", Function.createDelegate(this, this.OnNewActiveDropDown));
+                parameterObject.get_events().addHandler("OnHideEvent", Function.createDelegate(this, this.OnActiveDropDownHidden));
+            }
+        }
+
+        this.m_hookedEvents = true;
+    },
+
+    OnNewActiveDropDown: function(sender, eventArgs)
+    {
+        // Hide the previously visible dropDown
+        if (this.m_activeDropDown != sender && this.m_activeDropDown != null)
+            this.m_activeDropDown.HideFloatingFrame();
+
+        this.m_activeDropDown = sender;
+    },
+
+    OnActiveDropDownHidden: function(sender, eventArgs)
+    {
+        // Check that it is still listed as active, in case event ordering
+        // caused the show on the new one to fire first
+        if (this.m_activeDropDown == sender)
+            this.m_activeDropDown = null;
+    },
+
+    HideActiveDropDown: function()
+    {
+        if (this.m_activeDropDown != null)
+            this.m_activeDropDown.HideFloatingFrame();
+    },
+
+    OnReportViewerLoadingChanged : function(sender, e)
+    {
+        if (e.get_propertyName() == "isLoading")
+        {
+            var reportViewer = $find(this.ReportViewerId);
+
+            var isLoading = reportViewer.get_isLoading();
+            
+            var shouldEnable = false;
+            if (!isLoading)
+            {
+                var reportAreaContentType = reportViewer.get_reportAreaContentType();
+                shouldEnable = reportAreaContentType != Microsoft.Reporting.WebFormsClient.ReportAreaContent.WaitControl;            
+            }
+
+            this.EnableDisableInput(shouldEnable);
+        }
+    },
+
+    EnableDisableInput: function(shouldEnable)
+    {
+        if (shouldEnable)
+            this.HookParameterEvents();
+
+        // Enable/Disable UI elements.  If enabling and about to trigger a postback
+        // (which would just disable things again), skip the enable.
+        if (!shouldEnable || !Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected)
+        {
+            //Update the ViewReport Button
+            if (this.ViewReportButtonId)
+            {
+                var button = $get(this.ViewReportButtonId);
+                if (button)
+                    button.disabled = !shouldEnable;
+            }
+
+            //Update all the credential controls
+            if (this.m_credentialIdList)
+            {
+                for (var i = 0; i < this.m_credentialIdList.length; i++)
+                {
+                    var credentialElement = $get(this.m_credentialIdList[i]);
+                    var credentialControl = credentialElement.control;
+                    credentialControl.SetEnableState(shouldEnable);
+                }
+            }
+            
+            //Update all the parameter controls
+            if (this.m_parameterIdList)
+            {
+                for (var i = 0; i < this.m_parameterIdList.length; i++)
+                {
+                    var parameterElement = $get(this.m_parameterIdList[i]);
+                    var parameterControl = parameterElement.control;
+                    parameterControl.SetEnableState(shouldEnable);
+                }
+            }
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._PromptArea.registerClass("Microsoft.Reporting.WebFormsClient._PromptArea", Sys.UI.Control);
+
+
+
+// DataSourceCredential /////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient.DataSourceCredential = function(element)
+{
+    Microsoft.Reporting.WebFormsClient.DataSourceCredential.initializeBase(this, [element]);
+    
+    this.UserNameId = null;
+    this.PasswordId = null;
+    this.ValidationMessage = null;
+}
+
+Microsoft.Reporting.WebFormsClient.DataSourceCredential.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient.DataSourceCredential.callBaseMethod(this, "initialize");
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers(this.get_element());
+        
+        Microsoft.Reporting.WebFormsClient.DataSourceCredential.callBaseMethod(this, "dispose");
+    },
+
+    ValidateHasValue : function()
+    {
+        var userControl = $get(this.UserNameId);
+        if (userControl.value == "")
+        {
+            alert(this.ValidationMessage);
+            return false;
+        }
+        return true;
+    },
+    
+    SetEnableState : function(shouldEnable)
+    {
+        if(this.UserNameId)
+        {
+            var userControl = $get(this.UserNameId);
+            userControl.disabled = !shouldEnable;
+        }
+            
+        if(this.PasswordId)
+        {
+            var passwordControl = $get(this.PasswordId)
+            passwordControl.disabled = !shouldEnable;
+        }
+    }    
+}
+
+Microsoft.Reporting.WebFormsClient.DataSourceCredential.registerClass("Microsoft.Reporting.WebFormsClient.DataSourceCredential", Sys.UI.Control);

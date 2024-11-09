@@ -1,0 +1,134 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._HoverImage = function (element)
+{
+    Microsoft.Reporting.WebFormsClient._HoverImage.initializeBase(this, [element]);
+
+    this.OnClickScript = null;
+
+    this.m_reportViewer = null;
+    this.IsRtlVisible = false;
+    this.LTRImageID = null;
+    this.RTLImageID = null;
+}
+
+Microsoft.Reporting.WebFormsClient._HoverImage.prototype =
+{
+    initialize: function ()
+    {
+        Microsoft.Reporting.WebFormsClient._HoverImage.callBaseMethod(this, "initialize");
+        $addHandlers(this.get_element(),
+            { "mouseover": this.OnMouseOver,
+                "mouseout": this.OnMouseOut,
+                "click": this.OnClick },
+            this);
+
+        this.OnMouseOut(null);
+
+        this.SetImageButton();
+    },
+
+    dispose: function ()
+    {
+        $clearHandlers(this.get_element());
+        this.m_reportViewer = null;
+
+        Microsoft.Reporting.WebFormsClient._HoverImage.callBaseMethod(this, "dispose");
+    },
+
+    set_NormalStyles: function (value) { this._normalStyles = value; },
+    get_NormalStyles: function () { return this._normalStyles; },
+
+    set_HoverStyles: function (value) { this._hoverStyles = value; },
+    get_HoverStyles: function () { return this._hoverStyles; },
+
+    set_ReportViewer: function (value)
+    {
+        this.m_reportViewer = value;
+    },
+
+    OnMouseOver: function (e)
+    {
+        if (this.OnClickScript == null)
+            return;
+        if (!this.IsButtonDisabled())
+        {
+            _$RVCommon.setButtonStyle(this.get_element(), this._hoverStyles, "pointer");
+        }
+    },
+
+    OnMouseOut: function (e)
+    {
+        if (!this.IsButtonDisabled())
+        {
+            _$RVCommon.setButtonStyle(this.get_element(), this._normalStyles, "default");
+        }
+    },
+
+    OnClick: function (e)
+    {
+        if (!this.IsButtonDisabled())
+        {
+            if (this.OnClickScript != null)
+                this.OnClickScript();
+        }
+
+        e.preventDefault();
+    },
+
+    SetImageButton: function ()
+    {
+        if (this.m_reportViewer != null)
+        {
+            var direction = this.m_reportViewer._get_direction();
+
+            var needsRtlVisible = direction === "rtl";
+
+            if (needsRtlVisible != this.IsRtlVisible)
+            {
+                var ltrImage = document.getElementById(this.LTRImageID);
+                var rtlImage = document.getElementById(this.RTLImageID);
+
+                if (needsRtlVisible)
+                {
+                    rtlImage.style.display = "";
+                    ltrImage.style.display = "none";
+                }
+                else
+                {
+                    rtlImage.style.display = "none";
+                    ltrImage.style.display = "";
+                }
+
+                this.IsRtlVisible = needsRtlVisible;
+            }
+        }
+    },
+
+    IsButtonDisabled: function ()
+    {
+        var button = this.get_element();
+        var buttonDisabledValue;
+
+        // Button is table element. The HoverImage renders Enabled=false as disabled="disabled" attribute.
+        // Some of the browsers interpred this as boolean disabled property, but is not in the standard for table element. 
+        if (typeof (button.disabled) != "undefined")
+        {
+            return button.disabled;
+        }
+
+        var buttonDisabledValue;
+        if (button.attributes && (typeof (button.attributes["disabled"]) != "undefined"))
+            buttonDisabledValue = button.attributes["disabled"].nodeValue;
+
+        if (buttonDisabledValue == "disabled")
+            return true;
+        else
+            return false;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._HoverImage.registerClass("Microsoft.Reporting.WebFormsClient._HoverImage", Sys.UI.Control);

@@ -1,0 +1,1159 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._InternalReportViewer = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._InternalReportViewer.initializeBase(this, [element]);
+
+    this.ReportViewerId = null;
+    this.ReportAreaId = null;
+    this.DocMapAreaId = null;
+    this.FixedTableId = null;
+    this.TopLevelUpdatePanelId = null;
+    this.DocMapUpdatePanelId = null;
+
+    this.ActionTypeId = null;
+    this.ActionParamId = null;
+    this.HasSizingRow = true;
+
+    this.BaseHeight = null;
+    this.BaseWidth = null;
+
+    this.PromptAreaRowId = null;
+    this.PromptSplitterId = null;
+    this.DocMapSplitterId = null;
+    this.DirectionCacheId = null;
+    this.DocMapHeaderOverflowDivId = null;
+    this.BrowserModeId = null;
+
+    this.UnableToLoadPrintMessage = null;
+
+    this.PostBackToClientScript = null;
+
+    this.ExportUrlBase = null;
+    this.m_printInfo = null;
+
+    this.m_OnAppLoadDelegate = Function.createDelegate(this, this.OnAppLoad);
+    this.m_OnReportAreaContentChangedDelegate = Function.createDelegate(this, this.OnReportAreaContentChanged);
+    this.m_OnAsyncPostBackStartedDelegate = Function.createDelegate(this, this.OnAsyncPostBackStarted);
+    this.m_OnAsyncPostBackEndedDelegate = Function.createDelegate(this, this.OnAsyncPostBackEnded);
+    this.m_OnReportAreaScrollPositionChangedDelegate = Function.createDelegate(this, this.OnReportAreaScrollPositionChanged);
+    this.m_OnReportAreaNewContentVisibleDelegate = Function.createDelegate(this, this.OnReportAreaNewContentVisible);
+    this.m_OnWindowResizeDelegate = Function.createDelegate(this, this.OnWindowResize);
+    
+    //This is the event supported on android and iOS browsers.  However, the actual behavior is inconsistent across devices, so subscribe to both resize and orientationchange.
+    this.m_OnOrientationChangeDelegate = Function.createDelegate(this, this.OnOrientationChange);    
+    this.m_PromptSplitterCollapsingDelegate = Function.createDelegate(this, this.OnPromptSplitterCollapsing);
+    this.m_DocMapSplitterCollapsingDelegate = Function.createDelegate(this, this.OnDocMapSplitterCollapsing);
+    this.m_DocMapSplitterResizingDelegate = Function.createDelegate(this, this.OnDocMapSplitterResizing);
+
+    this.m_onAppLoadCalled = false;
+    this.m_useResizeScript = false;
+    this.m_reportViewer = null;
+    this.m_isLoading = true;
+    this.m_toolBarUpdate = {};
+    this.m_reportAreaContentChanged = false;
+
+    this.m_previousWindowHeight = -1;
+    this.m_previousWindowWidth = -1;
+}
+
+Microsoft.Reporting.WebFormsClient._InternalReportViewer.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._InternalReportViewer.callBaseMethod(this, "initialize");
+        Sys.Application.add_load(this.m_OnAppLoadDelegate);
+    },
+
+    dispose: function()
+    {
+        Microsoft.Reporting.WebFormsClient._InternalReportViewer.callBaseMethod(this, "dispose");
+
+        if (this.m_OnAppLoadDelegate != null)
+        {
+            Sys.Application.remove_load(this.m_OnAppLoadDelegate);
+            delete this.m_OnAppLoadDelegate;
+            this.m_OnAppLoadDelegate = null;
+        }
+
+        if (this.m_OnReportAreaContentChangedDelegate != null)
+        {
+            delete this.m_OnReportAreaContentChangedDelegate;
+            this.m_OnReportAreaContentChangedDelegate = null;
+        }
+
+        if (this.m_OnReportAreaNewContentVisibleDelegate != null)
+        {
+            delete this.m_OnReportAreaNewContentVisibleDelegate;
+            this.m_OnReportAreaNewContentVisibleDelegate = null;
+        }
+
+        if (this.m_OnAsyncPostBackStartedDelegate != null)
+        {
+            var pageRequestManager = this.GetPageRequestManager();
+            if (pageRequestManager != null)
+            {
+                pageRequestManager.remove_beginRequest(this.m_OnAsyncPostBackStartedDelegate);
+                pageRequestManager.remove_endRequest(this.m_OnAsyncPostBackEndedDelegate);
+            }
+
+            delete this.m_OnAsyncPostBackStartedDelegate;
+            this.m_OnAsyncPostBackStartedDelegate = null;
+
+            delete this.m_OnAsyncPostBackEndedDelegate;
+            this.m_OnAsyncPostBackEndedDelegate = null;
+        }
+
+        if (this.m_OnReportAreaScrollPositionChangedDelegate != null)
+        {
+            delete this.m_OnReportAreaScrollPositionChangedDelegate;
+            this.m_OnReportAreaScrollPositionChangedDelegate = null;
+        }
+
+        if (this.m_OnWindowResizeDelegate != null)
+        {
+            if (this.m_useResizeScript)
+                $removeHandler(window, "resize", this.m_OnWindowResizeDelegate);
+
+            delete this.m_OnWindowResizeDelegate;
+            this.m_OnWindowResizeDelegate = null;
+        }
+
+        if (this.m_OnOrientationChangeDelegate != null)
+        {
+            $removeHandler(window, "orientationchange", this.m_OnOrientationChangeDelegate);
+            delete this.m_OnOrientationChangeDelegate;
+            this.m_OnOrientationChangeDelegate = null;
+        }
+
+        if (this._promptSplitter)
+            this._promptSplitter.remove_collapsing(this.m_PromptSplitterCollapsingDelegate);
+        delete this.m_PromptSplitterCollapsingDelegate;
+        this.m_PromptSplitterCollapsingDelegate = null;
+
+        if (this._docMapSplitter)
+        {
+            this._docMapSplitter.remove_collapsing(this.m_DocMapSplitterCollapsingDelegate);
+            this._docMapSplitter.remove_resizing(this.m_DocMapSplitterResizingDelegate);
+        }
+        delete this.m_DocMapSplitterCollapsingDelegate;
+        this.m_DocMapSplitterCollapsingDelegate = null;
+        delete this.m_DocMapSplitterResizingDelegate;
+        this.m_DocMapSplitterResizingDelegate = null;
+
+        if (this._docMapCells != null)
+        {
+            delete this._docMapCells;
+            this._docMapCells = null;
+        }
+    },
+
+    ResetWindowSizeCache: function()
+    {
+        // this is to explicitly force HasWindowChangedSize
+        // to return true, thus forcing the resize code to run in IE
+
+        this.m_previousWindowHeight = -1;
+        this.m_previousWindowWidth = -1;
+    },
+
+    // Custom accessor for complex object type (array)
+    set_PrintInfo: function(value) { this.m_printInfo = value; },
+    get_PrintInfo: function() { return this.m_printInfo; },
+
+    OnAppLoad: function()
+    {
+        if (!this.m_onAppLoadCalled)
+        {
+            var reportAreaElement = $get(this.ReportAreaId);
+            var reportAreaControl = reportAreaElement.control;
+            reportAreaControl.add_contentChanged(this.m_OnReportAreaContentChangedDelegate);
+            reportAreaControl.add_propertyChanged(this.m_OnReportAreaScrollPositionChangedDelegate);
+            reportAreaControl.add_newContentVisible(this.m_OnReportAreaNewContentVisibleDelegate);
+
+            var pageRequestManager = this.GetPageRequestManager();
+            if (pageRequestManager != null)
+            {
+                pageRequestManager.add_beginRequest(this.m_OnAsyncPostBackStartedDelegate);
+                pageRequestManager.add_endRequest(this.m_OnAsyncPostBackEndedDelegate);
+            }
+
+            this.m_useResizeScript = !_$RVCommon.isIEQuirksMode() && parseFloat(this.BaseHeight) != 0 && this.HasSizingRow;
+            if (this.m_useResizeScript) 
+            {
+                $addHandler(window, "resize", this.m_OnWindowResizeDelegate);
+            }
+
+            $addHandler(window, "orientationchange", this.m_OnOrientationChangeDelegate);
+            this.UpdateBrowserMode();
+            this.SetUpdatePanelsDimensions();
+            this.m_onAppLoadCalled = true;
+        }
+
+        if (!this._promptSplitter)
+        {
+            this._promptSplitter = $get(this.PromptSplitterId).control;
+            this._promptSplitter.add_collapsing(this.m_PromptSplitterCollapsingDelegate);
+        }
+
+        if (!this._docMapSplitter)
+        {
+            this._docMapSplitter = $get(this.DocMapSplitterId).control;
+            this._docMapSplitter.add_collapsing(this.m_DocMapSplitterCollapsingDelegate);
+            this._docMapSplitter.add_resizing(this.m_DocMapSplitterResizingDelegate);
+        }
+
+        if (this._docMapCells != null)
+        {
+            delete this._docMapCells;
+            this._docMapCells = null;
+        }
+
+        this._UpdateDocMapAreaUIVisibility();
+
+        this.ResizeViewerReportUsingContainingElement(false);
+
+        // we want IE to call our resize code once again after the page has fully loaded
+        this.ResetWindowSizeCache();
+
+        this.HideSizingRow();
+    },
+
+    HideSizingRow: function()
+    {
+        // the row can only be hidden for IE quirks mode
+        // Generally it can be hidden in pre IE8 standards mode, but this fails in the webpart
+        if (this.HasSizingRow && _$RVCommon.isIEQuirksMode())
+        {
+            var fixedTable = $get(this.FixedTableId);
+            var sizingRow = fixedTable.rows.item(0);
+            sizingRow.style.display = "none";
+        }
+    },
+
+    OnReportAreaContentChanged: function(sender, eventArgs)
+    {
+        this.m_toolBarUpdate = eventArgs.ToolBarUpdate;
+        this.m_reportAreaContentChanged = true;
+
+        // If the report loaded so quickly that the async request hasn't
+        // finished yet, wait for it to complete before enabling things.
+        var pageRequestManager = this.GetPageRequestManager();
+        if (pageRequestManager == null || !pageRequestManager.get_isInAsyncPostBack())
+            this.EnableDisableInput(true);
+    },
+
+    OnReportAreaNewContentVisible: function(sender, eventArgs)
+    {
+        if (this.get_reportAreaContentType() == Microsoft.Reporting.WebFormsClient.ReportAreaContent.ReportPage)
+        {
+            // bring the docmap into view now that the report is ready
+            var docMap = $get(this.DocMapAreaId);
+            _$RVCommon.SetElementVisibility(docMap, true);
+            this._UpdateDocMapAreaUIVisibility();
+        }
+
+        var reportAreaNewContentVisibleHandler = this.get_events().getHandler("reportAreaNewContentVisible");
+        if (reportAreaNewContentVisibleHandler)
+            reportAreaNewContentVisibleHandler(this, eventArgs);
+    },
+
+    OnWindowResize: function()
+    {
+        this.ResizeViewerReportUsingContainingElement(false);
+    },
+
+    OnOrientationChange: function()
+    {
+        this.ResizeViewerReportUsingContainingElement(false);
+    },
+    
+    HasWindowChangedSize: function()
+    {
+        // this method is only relevant to IE
+        if (Sys.Browser.agent != Sys.Browser.InternetExplorer)
+        {
+            // "true" esentially means "go ahead and run the resize code"
+            return true;
+        }
+
+        var width = document.body.clientWidth;
+        var height = document.body.clientHeight;
+
+        var changed = width !== this.m_previousWindowWidth || height !== this.m_previousWindowHeight;
+
+        this.m_previousWindowHeight = height;
+        this.m_previousWindowWidth = width;
+
+        return changed;
+    },
+
+    ResetSizeToServerDefault: function()
+    {
+        // Reset all sizes changed by ResizeViewerReportUsingContainingElement to the way they
+        // appeared before any client side manipulation.
+
+        var reportViewer = $get(this.ReportViewerId);
+        reportViewer.style.height = this.BaseHeight;
+
+        var reportArea = $get(this.ReportAreaId);
+        reportArea.parentNode.style.height = "100%";
+
+        var visibleContainer = $get(reportArea.control.VisibleReportContentContainerId);
+        visibleContainer.style.height = "100%";
+        visibleContainer.style.width = "";
+
+        this.SetLastRowHeight("100%");
+
+        var docMapCells = this.GetDocMapCells();
+        if (docMapCells.sizingElement != null)
+            docMapCells.sizingElement.style.height = "100%";
+    },
+
+    ResizeViewerReportUsingContainingElement: function(forceRecalculate)
+    {
+        var reportViewer = $get(this.ReportViewerId);
+        var reportArea = $get(this.ReportAreaId);
+
+        // It is possible for the window resize event to fire before everything is created.
+        if (reportArea.control == null)
+            return;
+
+        // in IE, we only want to execute this code if the window has truly changed
+        // size in most cases. That is what the HasWindowChangedSize checks for.
+        // Otherwise IE will call the resize handler often, and our handler will cause
+        // them to fire resize even more, leading to crashing the browser
+        if (!forceRecalculate && (!this.m_useResizeScript || !this.HasWindowChangedSize()))
+            return;
+
+        var isHeightPercentage = false;
+
+        if (this.BaseHeight.indexOf('%') >= 0)
+        {
+            isHeightPercentage = true;
+        }
+
+        var reportViewerHeight = -1;
+        var reportAreaHeight = -1;
+
+        if (isHeightPercentage)
+        {
+            var actualHeight = this.GetReportViewerHeight();
+            reportViewerHeight = Math.round(((actualHeight) / 100) * parseFloat(this.BaseHeight));
+        }
+        else
+        {
+            reportViewerHeight = _$RVCommon.convertToPx(this.BaseHeight);
+        }
+
+        var toolbarHeight = this.GetFixedHeight();
+        reportAreaHeight = reportViewerHeight - toolbarHeight;
+
+
+        if ((reportViewerHeight == 0 && isHeightPercentage) ||
+            reportViewerHeight < 0 ||
+            reportAreaHeight < 0 ||
+            (reportViewerHeight < reportAreaHeight))
+        {
+            // At least make the doc map the same height as the report area
+            this.SetDocMapAreaHeight(reportArea.offsetHeight);
+        }
+        else
+        {
+            reportViewer.style.height = reportViewerHeight + "px";
+            reportArea.parentNode.style.height = reportAreaHeight + "px";
+
+            var visibleContainer = $get(reportArea.control.VisibleReportContentContainerId);
+            if (visibleContainer && visibleContainer.style)
+            {
+                var visibleStyle = _$RVCommon.getStyleForElement(visibleContainer);
+
+                //Take into consideration the borders and remove them from the width.  IE Standards mode, Firefox, and Safari need this
+                var sumofborderHeight = _$RVCommon.convertToPx(visibleStyle.borderTopWidth)
+                    + _$RVCommon.convertToPx(visibleStyle.borderBottomWidth);
+                var sumofborderWidth = _$RVCommon.convertToPx(visibleStyle.borderLeftWidth)
+                    + _$RVCommon.convertToPx(visibleStyle.borderRightWidth);
+
+                if (sumofborderHeight > 0 || sumofborderWidth > 0)
+                {
+                    //Do not make the sizes less than the minimum of the data
+                    var reportDivId = reportArea.control.GetReportPage().ReportDivId; //Use the oReportDiv/TABLE to calc the minimum sizing
+                    var minHeight = reportDivId ? $get(reportDivId).childNodes[0].clientHeight : 0;
+                    var minWidth = reportDivId ? $get(reportDivId).childNodes[0].clientWidth : 0;
+
+                    //IE calculates the sizing to need scrollbars if the content is larger than the outer size.
+                    //This makes the content start as zero.
+                    visibleContainer.style.height = 0;
+                    visibleContainer.style.width = 0;
+
+                    var targetHeight = 0;
+                    var targetWidth = 0;
+
+                    //Make sure the visiblecontainer size is at least the size of the report content
+                    if (sumofborderHeight > 0)
+                        targetHeight = Math.max(reportArea.clientHeight - sumofborderHeight, minHeight);
+
+                    if (sumofborderWidth > 0)
+                        targetWidth = Math.max(reportArea.clientWidth - sumofborderWidth, minWidth);
+
+                    if (targetHeight > 0)
+                        visibleContainer.style.height = targetHeight + "px";
+                    if (targetWidth > 0)
+                        visibleContainer.style.width = targetWidth + "px";
+                }
+            }
+
+            this.SetLastRowHeight(reportAreaHeight + "px");
+
+            // Finally set the DocMapArea height.
+            this.SetDocMapAreaHeight(reportAreaHeight);
+        }
+
+        // IE 7 standards mode - when the viewer is in an inline element and there is a doc map, IE
+        // collapses the width of the entire viewer to the width of the splitter (the fixed width column).
+        // To calculate the correct width in this case, hide the splitter and use the width that IE
+        // assigns when only percentage width columns are visible.
+        if (_$RVCommon.isPreIE8StandardsMode() &&   // IE 7 standards mode
+            this.BaseWidth.indexOf('%') > 0 &&      // Percentage width
+            this.HasSizingRow)                      // Not SizeToReportContent
+        {
+            // Hide the doc map
+            this._UpdateDocMapAreaUIVisibility(true);
+
+            // Revert viewer to its original value
+            reportViewer.style.width = this.BaseWidth;
+
+            // Calculate parent width and Set width on viewer
+            reportViewer.style.width = reportViewer.clientWidth + "px";
+
+            // Restore doc map
+            this._UpdateDocMapAreaUIVisibility();
+        }
+
+        this._UpdateDocMapAreaUIWidth(Number.NaN);
+    },
+
+    SetLastRowHeight: function(height)
+    {
+        var result = null;
+        var lastRow = $get(this.FixedTableId).rows.item(this.HasSizingRow ? 4 : 3);
+        for (var cellIndex = 0; cellIndex < lastRow.cells.length; cellIndex++)
+        {
+            if (!result)
+                result = lastRow.cells.item(cellIndex).style.height;
+            lastRow.cells.item(cellIndex).style.height = height;
+        }
+        return result;
+    },
+
+    GetReportViewerHeight: function()
+    {
+        var reportArea = $get(this.ReportAreaId);
+        var top = reportArea.scrollTop;
+        var left = reportArea.scrollLeft;
+        var docMap = this.GetDocMapCells();
+        var docMapTop = 0;
+        var docMapLeft = 0;
+        if (docMap != null && docMap.docMapContainer != null)
+        {
+            docMapTop = docMap.docMapContainer.scrollTop;
+            docMapLeft = docMap.docMapContainer.scrollLeft;
+        }
+
+        var reportViewer = $get(this.ReportViewerId);
+        var height = 0;
+
+        // Remember the current display style for the viewer
+        var viewerDisplayStyle = reportViewer.style.display;
+        var originalHeight = reportViewer.style.height;
+
+        // Hide the viewer so it does not alter the dimensions of its parent.
+        reportViewer.style.display = "none";
+
+        // Set the viewer height back to its original value, otherwise fixed pixel height
+        // will prevent the collapse we need for recalculation in non-IE browsers.
+        reportViewer.style.height = this.BaseHeight;
+
+        // The extra parentNode here is the update panel that encapsulates the reportViewer Control.
+        height = reportViewer.parentNode.parentNode.clientHeight;
+
+        // Make the viewer visible again.
+        reportViewer.style.display = viewerDisplayStyle;
+        reportViewer.style.height = originalHeight;
+
+        if (top > 0 || left > 0)
+        {
+            // With the display = 'none' above, Firefox resets the scroll position.  Scroll back to the previous point.
+            var currentTop = reportArea.scrollTop;
+            var currentLeft = reportArea.scrollLeft;
+            if (top != currentTop)
+                reportArea.scrollTop = top;
+            if (left != currentLeft)
+                reportArea.scrollLeft = left;
+        }
+
+        if (docMapTop > 0 || docMapLeft > 0)
+        {
+            var currentTop = docMap.docMapContainer.scrollTop;
+            var currentLeft = docMap.docMapContainer.scrollLeft;
+            if (docMapTop != currentTop)
+                docMap.docMapContainer.scrollTop = docMapTop;
+            if (docMapLeft != currentLeft)
+                docMap.docMapContainer.scrollLeft = docMapLeft;
+        }
+
+        return height;
+    },
+
+    GetFixedHeight: function()
+    {
+        var height = 0;
+
+        var fixedTable = $get(this.FixedTableId);
+        if (fixedTable != null)
+        {
+            // set last row height 100% so can push the upper rows up;
+            // Preserve scroll position - this method should not alter the display
+            var oldScrollPos = this.get_reportAreaScrollPosition();
+            var oldHeight = this.SetLastRowHeight("100%")
+
+            var rows = fixedTable.rows;
+
+            // Get the offsetHeight of all the rows except the last one as that is the reportArea.
+            // Accessing hidden offsetHeight row causes resize event in IE8 compat.
+            for (var i = 0; i < (rows.length - 1); i++)
+            {
+                if (rows[i].style.display != "none")
+                    height += rows[i].offsetHeight;
+            }
+
+            this.SetLastRowHeight(oldHeight);
+            this.set_reportAreaScrollPosition(oldScrollPos);
+        }
+
+        return height;
+    },
+
+    OnAsyncPostBackStarted: function()
+    {
+        this.EnableDisableInput(false);
+    },
+
+    OnAsyncPostBackEnded: function()
+    {
+        var reportAreaElement = $get(this.ReportAreaId);
+        var reportAreaControl = reportAreaElement.control;
+
+        // Async postback disabled the toolbar.  If no new page was loaded (or
+        // loading completed before the request ended), no report area load event
+        // will follow, so set the toolbar back to enabled here.
+        if (!reportAreaControl.IsLoading())
+            this.EnableDisableInput(true);
+    },
+
+    get_isLoading: function()
+    {
+        return this.m_isLoading;
+    },
+
+    get_reportAreaScrollPosition: function()
+    {
+        var reportAreaElement = $get(this.ReportAreaId);
+        var reportAreaControl = reportAreaElement.control;
+        if (reportAreaControl != null)
+            return reportAreaControl.get_scrollPosition();
+        else
+            return new Sys.UI.Point(0, 0);
+    },
+
+    set_reportAreaScrollPosition: function(scrollPoint)
+    {
+        var reportAreaElement = $get(this.ReportAreaId);
+        var reportAreaControl = reportAreaElement.control;
+        if (reportAreaControl != null)
+            return reportAreaControl.set_scrollPosition(scrollPoint);
+    },
+
+    OnReportAreaScrollPositionChanged: function(sender, e)
+    {
+        if (e.get_propertyName() == "scrollPosition")
+            this.raisePropertyChanged("reportAreaScrollPosition");
+    },
+
+    EnableDisableInput: function(shouldEnable)
+    {
+        if (this.m_isLoading == shouldEnable)
+        {
+            this.m_isLoading = !shouldEnable;
+            this.raisePropertyChanged("isLoading");
+
+            // Fire the report area content changed event
+            if (this.m_reportAreaContentChanged)
+            {
+                this.raisePropertyChanged("reportAreaContentType");
+                this.m_reportAreaContentChanged = false;
+            }
+        }
+
+        // Enable/Disable various viewer regions.  If enabling and about to trigger a postback
+        // (which would just disable things again), skip the enable.
+        if (!shouldEnable || !Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected)
+        {
+            var reportAreaElement = $get(this.ReportAreaId);
+            if (reportAreaElement && reportAreaElement.control)
+                reportAreaElement.control.EnableDisableInput(shouldEnable);
+            this._promptSplitter.SetActive(shouldEnable);
+            this._docMapSplitter.SetActive(shouldEnable);
+
+            var docMap = $get(this.DocMapAreaId).control;
+            if (docMap)
+                docMap.SetActive(shouldEnable);
+        }
+
+        this.ResizeViewerReportUsingContainingElement(false);
+    },
+
+    add_reportContentLoaded: function(handler)
+    {
+        var reportAreaElement = $get(this.ReportAreaId);
+        var reportAreaControl = reportAreaElement.control;
+        reportAreaControl.add_reportContentLoaded(handler);
+    },
+
+    remove_reportContentLoaded: function(handler)
+    {
+        var reportAreaElement = $get(this.ReportAreaId);
+        var reportAreaControl = reportAreaElement.control;
+        reportAreaControl.remove_reportContentLoaded(handler);
+    },
+
+    add_reportAreaNewContentVisible: function(handler)
+    {
+        this.get_events().addHandler("reportAreaNewContentVisible", handler);
+    },
+
+    remove_reportAreaNewContentVisible: function(handler)
+    {
+        this.get_events().removeHandler("reportAreaNewContentVisible", handler);
+    },
+
+    ExportReport: function(format)
+    {
+        if (this.ExportUrlBase == null)
+            return false;
+
+        window.open(this.ExportUrlBase + encodeURIComponent(format), "_blank");
+        return true;
+    },
+
+    // alreadyLoaded:
+    //   - true if we know that the print object was already loaded and we're reusing it
+    //   - false if we just got notified that the print object was loaded
+    //   If the value is true, the check whether the print object is ready is omitted and we fail if it's not available,
+    //   this allows reporting user dialog errors when the user clicks on the Print button for the second
+    //   when it already failed for the first time (disabled ActiveX, Modern IE, ...).
+    Print: function(alreadyLoaded)
+    {
+        var printInfo = this.m_printInfo;
+        if (printInfo == null)
+            return false;
+
+        var printObjectId = this.ReportViewerId + "_PrintObj";
+        var printObj = $get(printObjectId);
+
+        if (printObj && (alreadyLoaded || printObj.readyState == 4 /* Complete */))
+        {
+            if (typeof printObj.Print == "undefined")
+            {
+                alert(this.UnableToLoadPrintMessage);
+                return false;
+            }
+
+            printObj.MarginLeft = printInfo.MarginLeft;
+            printObj.MarginTop = printInfo.MarginTop;
+            printObj.MarginRight = printInfo.MarginRight;
+            printObj.MarginBottom = printInfo.MarginBottom;
+
+            printObj.PageHeight = printInfo.PageHeight;
+            printObj.PageWidth = printInfo.PageWidth;
+
+            printObj.Culture = printInfo.Culture;
+            printObj.UICulture = printInfo.UICulture;
+
+            printObj.UseSingleRequest = printInfo.UseSingleRequest;
+            printObj.UseEmfPlus = true;
+
+            printObj.Print(printInfo.PrintRequestPath, printInfo.PrintRequestQuery, printInfo.ReportDisplayName);
+            return true;
+        }
+        return false;
+    },
+
+    PrintDialog: function()
+    {
+        var printInfo = this.m_printInfo;
+        if (printInfo == null)
+            return false;
+
+        var printObjectId = this.ReportViewerId + "_PrintObj";
+
+        // Load the print control if it hasn't happened already
+        var printObj = $get(printObjectId);
+        if (printObj == null)
+		{
+            try
+            {
+                printObj = document.createElement("OBJECT");
+                printObj.id = printObjectId;
+                printObj.style.display = "none";
+                printObj.ReportViewer = this;
+                // Codebase must be before classid in order to download the control
+                printObj.codeBase = printInfo.CabUrl;
+                printObj.setAttribute("VIEWASTEXT", "");
+                var reportViewer = $get(this.ReportViewerId);
+                var printFunction = function() { this.ReportViewer.Print(false); };
+
+                if (_$RVCommon.isIE10OrLower()) {
+                    printObj.onreadystatechange = printFunction;
+                    //Element must be added before printing occurs as the event can fire before this is added to the window.
+                    reportViewer.appendChild(printObj);
+                    printObj.classid = "CLSID:" + printInfo.CabClsid;
+                } else {
+                    // printObj.onreadystatechange doesn't work on IE11 and beyond. The following is supported.
+                    printObj.addEventListener("readystatechange", printFunction);
+                    // Starting IE11, activex controls embedded in object elements aren't loaded if the classID isn't set before adding them to the tree.
+                    // If this behavior would be in previous versions as well, the onreadystatechange event wouldn't fire.
+                    // That's why the special behavior only for IE11.
+                    printObj.classid = "CLSID:" + printInfo.CabClsid;
+                    reportViewer.appendChild(printObj);
+                }
+
+                return true;
+            }
+            catch (exception)
+            {
+                alert(this.UnableToLoadPrintMessage);
+                return false;
+            }
+        }
+        else
+        {
+            return this.Print(true);
+        }
+    },
+
+    SetPromptAreaVisibility: function(makeVisible)
+    {
+        var parametersRow = $get(this.PromptAreaRowId);
+        if (parametersRow == null)
+            return;
+        _$RVCommon.SetElementVisibility(parametersRow, makeVisible);
+        this._promptSplitter._setCollapsed(!makeVisible);
+        this.raisePropertyChanged("promptAreaCollapsed");
+        this.ResizeViewerReportUsingContainingElement(true);
+    },
+
+    ArePromptsVisible: function()
+    {
+        return !this._promptSplitter._getCollapsed();
+    },
+
+    GetDocMapCells: function()
+    {
+        if (!this._docMapCells)
+        {
+            var fixedTable = $get(this.FixedTableId);
+            this._docMapCells = {
+                docMapHeadCell: this.HasSizingRow ? fixedTable.rows.item(0).cells.item(0) : null,
+                splitterDocMapHeadCell: this.HasSizingRow ? fixedTable.rows.item(0).cells.item(1) : null,
+                docMapCell: fixedTable.rows.item(this.HasSizingRow ? 4 : 3).cells.item(0),
+                splitterDocMapCell: fixedTable.rows.item(this.HasSizingRow ? 4 : 3).cells.item(1),
+                reportArea: $get(this.ReportAreaId),
+                fixedTable: fixedTable,
+                hasNodes: false,
+                docMapTitleRow: null,
+                docMapTitleCell: null,
+                docMapContainerCell: null,
+                docMapContainer: null,
+                docMapTree: null,
+                sizingElement: null
+            }
+            if (this.DocMapAreaId != null)
+            {
+                var docMapArea = $get(this.DocMapAreaId);
+                if (docMapArea)
+                {
+                    var docMapTables = docMapArea.getElementsByTagName("table");
+                    if (docMapTables.length > 0)
+                    {
+                        this._docMapCells.docMapTitleRow = docMapArea.getElementsByTagName("table")[0].rows.item(0);
+                        this._docMapCells.docMapTitleCell = this._docMapCells.docMapTitleRow.cells.item(0);
+                        this._docMapCells.docMapContainerCell = docMapArea.getElementsByTagName("table")[0].rows.item(1).cells.item(0);
+                        this._docMapCells.docMapContainer = this._docMapCells.docMapContainerCell.getElementsByTagName("div")[0];
+                        this._docMapCells.docMapTree = this._docMapCells.docMapContainer.getElementsByTagName("div")[0];
+                        this._docMapCells.hasNodes = true;
+
+                        if (this._docMapCells.docMapContainerCell)
+                            this._docMapCells.sizingElement = this._docMapCells.docMapContainerCell.firstChild;
+                    }
+                }
+            }
+        }
+        return this._docMapCells;
+    },
+
+    //Changes the visibility of the DocMap to 'makeVisible'
+    //Call this when you want to 'expand/collapse' the DocMap area
+    SetDocMapAreaVisibility: function(makeVisible)
+    {
+        var docMapCells = this.GetDocMapCells();
+        if (docMapCells.hasNodes)
+        {
+            this._docMapSplitter._setCollapsed(!makeVisible);
+            this.raisePropertyChanged("documentMapCollapsed");
+        }
+        this._UpdateDocMapAreaUIVisibility();
+    },
+
+    //NOT INTENDED FOR PUBLIC USE.  Call SetDocMapAreaVisibility to set the DocMap Visibility
+    //This updates the HTML DOM to collapse or show the DocMapArea
+    //Call this when the visiblity on the DocMap has changed so the sizing can be correctly calculated.
+    //'hideEverything' == true, causes the entire DocMap UI to be 'display:none' rather than 0px wide.  
+    //This is necessary for resize calculations.  IE6 and 7 standards mode need to use 0px wide drawing, so the table cells
+    //in the same TR are correctly calculated (extra 1px appears on the right-hand-side)
+    _UpdateDocMapAreaUIVisibility: function(hideEverything)
+    {
+        var docMapCells = this.GetDocMapCells();
+
+        var makeVisible = false;
+        if (!hideEverything)
+            makeVisible = !this._docMapSplitter._getCollapsed() && docMapCells.hasNodes;
+
+        var isVisible = makeVisible;
+        if (!hideEverything)
+        {
+            // Use 0px wide to show everything rather than hiding the DocMap, if there are any doc map nodes
+            makeVisible = docMapCells.hasNodes;
+        }
+
+        // Document map visibility
+        if (docMapCells.docMapHeadCell)
+        {
+            _$RVCommon.SetElementVisibility(docMapCells.docMapHeadCell, makeVisible);
+        }
+        _$RVCommon.SetElementVisibility(docMapCells.docMapCell, makeVisible);
+
+        // Splitter visibility
+        if (this._docMapSplitter._getCollapsable() || makeVisible)
+        {
+            if (docMapCells.splitterDocMapHeadCell)
+                _$RVCommon.SetElementVisibility(docMapCells.splitterDocMapHeadCell, docMapCells.hasNodes);
+            _$RVCommon.SetElementVisibility(docMapCells.splitterDocMapCell, docMapCells.hasNodes);
+        }
+
+        if (!hideEverything)
+        {
+            var size = 0;
+            if (isVisible)
+            {
+                //If the DocMap is visible, use the splitter size to set sizing.
+                size = this._docMapSplitter._getSize();
+                if (isNaN(size))
+                {
+                    //If not calculated, ask the UI for the current size available (won't be from a previous call)
+                    size = docMapCells.docMapCell.style.width;
+                }
+            }
+            this._UpdateDocMapAreaUIWidth(size);
+        }
+    },
+
+    AreDocMapAreaVisible: function()
+    {
+        return !this._docMapSplitter._getCollapsed();
+    },
+
+    OnPromptSplitterCollapsing: function(sender, args)
+    {
+        this.SetPromptAreaVisibility(!args.get_collapse())
+    },
+
+    OnDocMapSplitterCollapsing: function(sender, args)
+    {
+        this.SetDocMapAreaVisibility(!args.get_collapse());
+    },
+
+    //NOT INTENDED FOR PUBLIC USE.  Call SetDocMapAreaWidth to set or resize the DocMap Width
+    //This validates the 'size' is an allowable DocMapArea Width
+    //Call this to verify the DocMap Width can be 'size' 
+    _ValidateDocMapAreaWidth: function(size)
+    {
+        // If no sizing row, viewer is set to SizeToReportContent.  Shouldn't need to dynamically adjust
+        // any sub areas of the viewer.
+        if (!this.HasSizingRow)
+            return false;
+
+        var docMapCells = this.GetDocMapCells();
+        if (docMapCells.hasNodes)
+        {
+            if (size >= 0)
+            {
+                if (docMapCells.reportArea)
+                {
+                    var allowedWidth = docMapCells.fixedTable.clientWidth;
+                    allowedWidth -= this._docMapSplitter.get_element().parentNode.clientWidth;
+                    allowedWidth -= (docMapCells.reportArea.offsetWidth - docMapCells.reportArea.clientWidth);
+                    if (size > allowedWidth)
+                    // cannot resize
+                        return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    },
+
+    //Set the DocMapArea to be 'size' wide.
+    //The UI will be resized to fit.
+    //Call this when you need to programmatically change the DocMap Width (e.g. resizing)
+    SetDocMapAreaWidth: function(size)
+    {
+        if (this._ValidateDocMapAreaWidth(size))
+        {
+            if (size >= 0)
+            {
+                this._docMapSplitter._setSize(size);
+            }
+            this._UpdateDocMapAreaUIWidth(size);
+        }
+    },
+
+    //NOT INTENDED FOR PUBLIC USE.  Call SetDocMapAreaWidth to set the DocMap Width
+    //This updates the HTML DOM to display the desired DocMapArea Width
+    //Call this when sizings change and the DocMap needs to calculate it's width
+    _UpdateDocMapAreaUIWidth: function(size)
+    {
+        // If no sizing row, viewer is set to SizeToReportContent.  Shouldn't need to dynamically adjust
+        // any sub areas of the viewer.
+        if (!this._ValidateDocMapAreaWidth(size))
+            return;
+
+        var docMapCells = this.GetDocMapCells();
+        if (docMapCells.hasNodes)
+        {
+            var sizeStr = size + "px";
+            if (isNaN(size))
+                sizeStr = size;
+
+            if (size || size == 0) //If size is not null or equals zero, calculate this.  Number.NaN fails this.
+            {
+                if (docMapCells.docMapHeadCell)
+                {
+                    docMapCells.docMapHeadCell.style.width = sizeStr;
+                }
+                else
+                {
+                    docMapCells.docMapCell.style.width = sizeStr;
+                }
+            }
+
+            // Set the cell width which contains the treeview even if size is NaN.
+            // Size NaN happens when there is no previous resizing (or postaback cached) by the splitter. 
+            // In this case the size is determined by the server rendering.  If not set, doc map content
+            // can extend beyond the splitter in some browsers.
+            docMapCells.docMapContainerCell.style.width = docMapCells.docMapCell.clientWidth + "px";
+            docMapCells.docMapContainer.style.width = docMapCells.docMapCell.clientWidth + "px";
+            $get(this.DocMapHeaderOverflowDivId).style.width = docMapCells.docMapCell.clientWidth + "px";
+        }
+    },
+
+    SetDocMapAreaHeight: function(reportAreaHeight)
+    {
+        if (this.DocMapAreaId != null)
+        {
+            var docMapCells = this.GetDocMapCells();
+
+            // Navigate down the DOM to find the document map header and document map content. 
+            // Then set the height accordingly.
+            if (docMapCells.docMapContainerCell != null)
+            {
+                var docMapContentTd = docMapCells.docMapContainerCell;
+                var docMapTitleHeight = docMapCells.docMapTitleCell.scrollHeight;
+
+                if ((reportAreaHeight - docMapTitleHeight) > 0)
+                {
+                    var sizingElement = docMapCells.sizingElement;
+
+                    if (docMapContentTd.getAttribute("HEIGHT") && !_$RVCommon.isQuirksMode())
+                    {
+                        //Remove the HEIGHT attribute from the TD and parent TR -- Necessary for standards mode (Safari)
+                        docMapContentTd.removeAttribute("HEIGHT");
+                        //TR
+                        docMapContentTd.parentNode.removeAttribute("HEIGHT");
+                    }
+
+                    sizingElement.style.height = (reportAreaHeight - docMapTitleHeight) + "px";
+                }
+            }
+        }
+    },
+
+    OnDocMapSplitterResizing: function(sender, args)
+    {
+        var docMapCells = this.GetDocMapCells();
+        if (docMapCells.hasNodes)
+        {
+            this.SetDocMapAreaWidth(docMapCells.docMapCell.clientWidth + args.get_delta());
+        }
+    },
+
+    Find: function(textToFind)
+    {
+        if (typeof textToFind != "string" || textToFind.length == 0)
+            return;
+
+        this.InvokeInteractivityPostBack("Find", textToFind);
+    },
+
+    // Returns true if the action was entirely handled on the client, false if a postback was required.
+    FindNext: function()
+    {
+        var reportObject = this.GetReportAreaObject();
+
+        // Everything gets hooked up by the load event.  But be safe in case someone
+        // calls this too early.
+        if (reportObject == null)
+            return true;
+
+        // Try to handle the search on the client (next hit is on current page)
+        if (reportObject.HighlightNextSearchHit())
+            return true;
+
+        // Need to post back to get the page with the next hit
+        this.InvokeInteractivityPostBack("FindNext", null);
+        return false;
+    },
+
+    get_zoomLevel: function()
+    {
+        var reportObject = this.GetReportAreaObject();
+        if (reportObject == null)
+            return 100;
+        return reportObject.get_zoomLevel();
+    },
+
+    set_zoomLevel: function(zoomValue)
+    {
+        var reportObject = this.GetReportAreaObject();
+        if (reportObject == null)
+            return;
+        reportObject.set_zoomLevel(zoomValue);
+    },
+
+    RefreshReport: function()
+    {
+        this.InvokeInteractivityPostBack("Refresh", null);
+    },
+
+    get_reportAreaContentType: function()
+    {
+        var reportAreaObject = this.GetReportAreaObject();
+        if (reportAreaObject == null)
+            return Microsoft.Reporting.WebFormsClient.ReportAreaContent.None;
+        return reportAreaObject.get_contentType();
+    },
+
+    OnUserCanceled: function(value)
+    {
+        var reportArea = $find(this.ReportAreaId);
+        reportArea._OnUserCanceled();
+
+        this.EnableDisableInput(true);
+    },
+
+    GetDirection: function()
+    {
+        // Cache the current direction so the server can keep track
+        var directionField = $get(this.DirectionCacheId);
+
+        var viewer = $get(this.ReportViewerId);
+        directionField.value = Microsoft.Reporting.WebFormsClient._InternalReportViewer.GetRTLDirection(viewer);
+        return directionField.value;
+    },
+
+    GetToolBarUpdate: function()
+    {
+        return this.m_toolBarUpdate;
+    },
+
+    GetReportAreaObject: function()
+    {
+        var reportElement = $get(this.ReportAreaId);
+        if (reportElement != null)
+            return reportElement.control;
+        else
+            return null;
+    },
+
+    GetPageRequestManager: function()
+    {
+        if (Sys.WebForms)
+            return Sys.WebForms.PageRequestManager.getInstance();
+        else
+            return null;
+    },
+
+    InvokeInteractivityPostBack: function(actionType, actionParam)
+    {
+        $get(this.ActionTypeId).value = actionType;
+        $get(this.ActionParamId).value = actionParam;
+        this.PostBackToClientScript();
+    },
+
+    UpdateBrowserMode: function()
+    {
+        var browserModeId = this.BrowserModeId;
+        if (browserModeId)
+        {
+            var browserModeField = $get(browserModeId);
+            browserModeField.value = _$RVCommon.isQuirksMode() ? "quirks" : "standards";
+        }
+    },
+
+    SetUpdatePanelsDimensions: function ()
+    {
+        var topLevelUpdatePanel = $get(this.TopLevelUpdatePanelId);
+        if (topLevelUpdatePanel != null)
+        {
+            topLevelUpdatePanel.style.height = "100%";
+            topLevelUpdatePanel.style.width = "100%";
+        }
+
+        var docMapUpdatePanel = $get(this.DocMapUpdatePanelId);
+        if (docMapUpdatePanel != null) {
+            docMapUpdatePanel.style.height = "100%";
+            docMapUpdatePanel.style.width = "100%";
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._InternalReportViewer.registerClass("Microsoft.Reporting.WebFormsClient._InternalReportViewer", Sys.UI.Control);
+
+Microsoft.Reporting.WebFormsClient._InternalReportViewer.GetRTLDirection = function(element)
+{
+    // Retrieve the cascaded direction attribute/style.
+    // The currentStyle property is supported by IE.
+    // Other browsers (Firefox, Safari) must use the
+    // getComputedStyle method.
+    if (element.currentStyle != null)
+        return element.currentStyle.direction;
+    else if (window.getComputedStyle != null)
+    {
+        var cs = window.getComputedStyle(element, null);
+        return cs.getPropertyValue('direction');
+    }
+    return 'ltr';
+}

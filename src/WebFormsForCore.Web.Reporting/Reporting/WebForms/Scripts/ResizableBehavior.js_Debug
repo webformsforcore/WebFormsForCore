@@ -1,0 +1,377 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace('Microsoft.Reporting.WebFormsClient');
+
+Microsoft.Reporting.WebFormsClient.ResizableControlBehavior = function(element)
+{
+    Microsoft.Reporting.WebFormsClient.ResizableControlBehavior.initializeBase(this, [element]);
+
+    this.MinimumWidth = 0;
+    this.MinimumHeight = 0;
+    this.MaximumWidth = 100000;
+    this.MaximumHeight = 100000;
+    this.GripImage = null;
+    this.GripImageRTL = null;
+    this.Overflow = "auto";
+    // Variables
+    this._ctrl = null;
+    this._frame = null;
+    this._handle = null;
+    this._tracking = false;
+    this._lastClientX = 0;
+    this._lastClientY = 0;
+    this._leftOffset = 0;
+    // Delegates
+    this._onmousedownDelegate = null;
+    this._onmousemoveDelegate = null;
+    this._onmouseupDelegate = null;
+    this._onselectstartDelegate = null;
+    this._invalidateDelegate = null;
+    this._tracking = false;
+}
+
+Microsoft.Reporting.WebFormsClient.ResizableControlBehavior.prototype = {
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient.ResizableControlBehavior.callBaseMethod(this, 'initialize');
+
+        this._ctrl = this.get_element();
+
+        this._ctrlLeft = parseInt(this._ctrl.style.left);
+
+        // the frame will contain the control children and will be resizable
+        this._frameContainer = document.createElement("span");
+        this._frameContainer.style.cssText = "margin: 0px; pading: 0px; background-color: window;";
+        this._frame = document.createElement('DIV');
+        this._frame.style.overflow = this.Overflow;
+        this._ctrl.style.overflow = 'visible';
+        this._moveChildren(this._ctrl, this._frame)
+        this._frameContainer.appendChild(this._frame);
+        this._ctrl.appendChild(this._frameContainer);
+        this._frame.style.width = this.MinimumWidth + "px";
+        this._frame.style.height = this.MinimumHeight + "px";
+
+        this._gripImageHolder = document.createElement('DIV');
+        this._gripImageHolder.style.cssText = "height:16px; width: 100%; pading: 0px; margin: 0px; border-top: solid 1px lightgray; background-color: window;";
+        this._frameContainer.appendChild(this._gripImageHolder);
+
+        this._gripImage = document.createElement('IMG');
+        this._gripImage.style.display = "none"
+        this._gripImageHolder.appendChild(this._gripImage);
+
+        this._onmousedownDelegate = Function.createDelegate(this, this._onmousedown);
+        $addHandler(this._gripImage, 'mousedown', this._onmousedownDelegate);
+        this._onmousemoveDelegate = Function.createDelegate(this, this._onmousemove);
+        this._onmouseupDelegate = Function.createDelegate(this, this._onmouseup);
+        this._onselectstartDelegate = Function.createDelegate(this, this._onselectstart);
+
+        // In some browsers (ex.IE quirks mode) this._frame, as brand new item in the DOM, doesn't have offsetXXX calculated yet.
+        // OffsetXXX is used in resizing function. We have to call resizeControl out of the thread once to set initial minimum size.
+        this._invalidateDelegate = Function.createDelegate(this, this._reset);
+        window.setTimeout(this._invalidateDelegate, 0);
+
+    },
+
+    _reset: function()
+    {
+
+        var windowRect = _$RVCommon.windowRect()
+        var isRtl = this._isRTL(this._ctrl);
+        var left = this._ctrlLeft;
+
+        // flip the grip on if the space is less than  this.MinimumWidth
+        if ((Sys.Browser.agent == Sys.Browser.InternetExplorer) && this._isRTL(_$RVCommon.getDocument()))
+        {
+            // IE flips the coord system.
+            left = this._ctrlLeft + (windowRect.scrollWidth - windowRect.left - windowRect.width)
+        }
+
+        var noSpaceLeft = ((left - this.MinimumWidth) < windowRect.left);
+        var noSpaceRight = ((left + this.MinimumWidth * 2) > windowRect.right);
+
+        // if there is no space on both sides or there is enough space on both sides - keep the rtl settings.
+        if ((noSpaceLeft && noSpaceRight) || (!noSpaceLeft && !noSpaceRight))
+            this._gripImageHolder.style.direction = isRtl ? "rtl" : "ltr";
+        else if (isRtl && noSpaceLeft)
+            this._gripImageHolder.style.direction = "ltr";
+        else if (!isRtl && noSpaceRight)
+            this._gripImageHolder.style.direction = "rtl";
+        else
+            this._gripImageHolder.style.direction = isRtl ? "rtl" : "ltr";
+
+        this._setRtlCues();
+        this.set_Size({ width: this.MinimumWidth, height: this.MinimumHeight });
+
+        if (this._frame.childNodes[0].focus)
+            this._frame.childNodes[0].focus();
+        
+    },
+
+    _setRtlCues: function()
+    {
+        var rtl = this._isRTL();
+        // for IE
+        this._gripImage.style.styleFloat = (rtl ? "left" : "right");
+        // for other browsers
+        this._gripImage.style.cssFloat = (rtl ? "left" : "right");
+        if (_$RVCommon.isIEQuirksMode())
+        {
+            // IE in quirks mode due float position shifts the image with 3px.
+            if (rtl)
+                this._gripImage.style.marginLeft = "-3px";
+            else
+                this._gripImage.style.marginRight = "-3px";
+        }
+        this._gripImage.style.cursor = (rtl ? "ne-resize" : "se-resize")
+        this._gripImage.src = (rtl ? this.GripImageRTL : this.GripImage);
+        if (this._gripImage.style.display == "none")
+        {
+            this._gripImage.style.display = "";
+        }
+    },
+
+    dispose: function()
+    {
+        if (this._onmousedownDelegate)
+        {
+            $removeHandler(this._gripImage, 'mousedown', this._onmousedownDelegate);
+            delete this._onmousedownDelegate;
+            this._onmousedownDelegate = null;
+        }
+
+        if (this._tracking)
+        {
+            this._onmouseup();
+            delete this._onmousemoveDelegate;
+            this._onmousemoveDelegate = null;
+            delete this._onmouseupDelegate;
+            this._onmouseupDelegate = null;
+            delete this._onselectstartDelegate;
+            this._onselectstartDelegate = null;
+        }
+
+        if (this._frame)
+        {
+            this._ctrl.removeChild(this._frameContainer);
+            this._moveChildren(this._frame, this._ctrl)
+            this._frame = null;
+        }
+
+        if (this._invalidateDelegate)
+        {
+            delete this._invalidateDelegate;
+            this._invalidateDelegate = null;
+        }
+
+        Microsoft.Reporting.WebFormsClient.ResizableControlBehavior.callBaseMethod(this, 'dispose');
+    },
+
+    _moveChildren: function(fromElement, toElement)
+    {
+        while (fromElement.childNodes.length > 0)
+        {
+            var child = fromElement.childNodes[0];
+            fromElement.removeChild(child);
+            toElement.appendChild(child)
+        }
+    },
+
+    _onmousedown: function(e)
+    {
+        this._tracking = true;
+        this._lastClientX = e.clientX;
+        this._lastClientY = e.clientY;
+        var t = this._getMouseObjects();
+        $addHandler(t.target, 'mousemove', this._onmousemoveDelegate);
+        $addHandler(t.target, 'mouseup', this._onmouseupDelegate);
+        $addHandler(t.target, 'selectstart', this._onselectstartDelegate);
+        if (t.isIE)
+            t.target.setCapture();
+
+        e.preventDefault();
+        return false;
+    },
+
+    _onmousemove: function(e)
+    {
+        if (this._tracking)
+        {
+            var deltaX = (e.clientX - this._lastClientX);
+            var deltaY = (e.clientY - this._lastClientY);
+            this._resizeControl(deltaX, deltaY);
+            this._lastClientX = e.clientX;
+            this._lastClientY = e.clientY;
+        }
+        e.preventDefault();
+        return false;
+    },
+
+    _onmouseup: function(e)
+    {
+        this._tracking = false;
+        this._shadowSize = null;
+        var t = this._getMouseObjects();
+        $removeHandler(t.target, 'mousemove', this._onmousemoveDelegate);
+        $removeHandler(t.target, 'mouseup', this._onmouseupDelegate);
+        $removeHandler(t.target, 'selectstart', this._onselectstartDelegate);
+        if (t.isIE)
+            t.target.releaseCapture();
+        if (e) e.preventDefault();
+        return false;
+    },
+    _getMouseObjects: function()
+    {
+        if (!this._mouseTrackingObject)
+        {
+            var element = this._ctrl;
+            this._mouseTrackingObject =
+            {
+                isIE: Sys.Browser.agent == Sys.Browser.InternetExplorer,
+                target: Sys.Browser.agent == Sys.Browser.InternetExplorer ? element : _$RVCommon.getWindow()
+            }
+        }
+        return this._mouseTrackingObject;
+    },
+    _onselectstart: function(e)
+    {
+        e.preventDefault();
+        return false;
+    },
+
+    _resizeControl: function(deltaX, deltaY)
+    {
+        if (this._frame)
+        {
+            if (this._isRTL())
+            {
+                deltaX = deltaX * -1;
+            }
+
+            if (!this._shadowSize)
+            {
+                this._shadowSize = this.get_Size();
+            }
+
+            // Calculate new frame width/height
+            var currentSize = this._shadowSize;
+
+            var newWidth = Math.min(Math.max(currentSize.width + deltaX, Math.max(this.MinimumWidth, 16)), this.MaximumWidth);
+            var newHeight = Math.min(Math.max(currentSize.height + deltaY, Math.max(this.MinimumHeight, 16)), this.MaximumHeight);
+            this._shadowSize = { width: newWidth, height: newHeight };
+
+            var windowRect = _$RVCommon.windowRect()
+            var adornerHeight = this._gripImageHolder.offsetHeight;
+            // limitMaxTolerance is the number in pixels which decreases the calculated width and height, 
+            // otherwise the scrollbars will appear before reaching the limit. 
+            var limitMaxTolerance = Sys.Browser.agent == Sys.Browser.InternetExplorer ? 2 : 1;
+            var limitWidth = windowRect.right - this._ctrl.offsetLeft - limitMaxTolerance;
+            var limitHeight = windowRect.bottom - this._ctrl.offsetTop - limitMaxTolerance - adornerHeight;
+
+            // Since this._ctrlLeft is not explicitly set in all scenarios, we must check for NaN and default to 0
+            var ctrlLeftPos = isNaN(this._ctrlLeft) ? 0 : this._ctrlLeft;
+            if (this._isRTL())
+            {
+                if (Sys.Browser.agent == Sys.Browser.InternetExplorer && this._isRTL(_$RVCommon.getDocument()))
+                {
+                    // IE reverse the coordinate system in RTL;
+                    limitWidth = ctrlLeftPos + this.MinimumWidth + (windowRect.scrollWidth - windowRect.left - windowRect.width);
+                }
+                else
+                {
+                    limitWidth = ctrlLeftPos + this.MinimumWidth - windowRect.left;
+                }
+            }
+
+            var newWidth = Math.min(newWidth, limitWidth);
+            var newHeight = Math.min(newHeight, limitHeight);
+
+            this._frame.style.width = newWidth + 'px';
+            this._frame.style.height = newHeight + 'px';
+
+            // for IE quirs mode the size of the control have to be set explicitly
+            // and border have to be taken in account because IE box model.
+            if (_$RVCommon.isIEQuirksMode())
+            {
+                var border = (parseInt(this._ctrl.style.borderWidth) || 0) * 2;
+                this._ctrl.style.width = (newWidth + border) + 'px';
+                this._ctrl.style.height = (newHeight + adornerHeight + border) + 'px';
+            }
+            else
+            {
+                if (Sys.Browser.agent == Sys.Browser.InternetExplorer)
+                {
+                    // For IE strict mode we have to set all sizes explicitly.
+                    this._frameContainer.style.width = newWidth + "px";
+                    this._frameContainer.style.height = newHeight + "px";
+                    this._ctrl.style.width = newWidth + "px";
+                    this._ctrl.style.height = (newHeight + adornerHeight) + "px";
+                }
+                else
+                {
+                    // The this._ctrl, as outer container, should be resized automatically 
+                    // to its content (this._frame) if width and height is not set.
+                    this._frameContainer.style.width = "";
+                    this._frameContainer.style.height = "";
+                    this._ctrl.style.width = "";
+                    this._ctrl.style.height = "";
+                }
+
+            }
+            if (this._isRTL())
+            {
+                this._leftOffset = -(newWidth - this.MinimumWidth);
+                this._ctrl.style.left = (ctrlLeftPos + this._leftOffset) + 'px'
+            }
+            this.raiseResizing();
+        }
+    },
+    add_resizing: function(handler)
+    {
+        this.get_events().addHandler('resizing', handler);
+    },
+    remove_resizing: function(handler)
+    {
+        this.get_events().removeHandler('resizing', handler);
+    },
+    raiseResizing: function()
+    {
+        var onResizingHandler = this.get_events().getHandler('resizing');
+        if (onResizingHandler)
+        {
+            onResizingHandler(this, Sys.EventArgs.Empty);
+        }
+    },
+    get_Size: function()
+    {
+        if (this._frame)
+        {
+            return { width: parseInt(this._frame.style.width), height: parseInt(this._frame.style.height), fullHeight: parseInt(this._frame.style.height) + this._gripImageHolder.offsetHeight }
+        }
+        return { width: 0, height: 0 };
+    },
+
+    set_Size: function(value)
+    {
+        var size = this.get_Size();
+        var deltaX = value.width - size.width;
+        var deltaY = value.height - size.height;
+        if (this._isRTL())
+        {
+            deltaX = deltaX * -1;
+        }
+        this._resizeControl(deltaX, deltaY);
+        this.raisePropertyChanged('Size');
+    },
+    _isRTL: function(control)
+    {
+        if (!control)
+        {
+            control = this._gripImageHolder;
+        }
+        return _$RVCommon.getComputedStyle(control,"direction") != "ltr";
+    }
+}
+
+
+Microsoft.Reporting.WebFormsClient.ResizableControlBehavior.registerClass('Microsoft.Reporting.WebFormsClient.ResizableControlBehavior', Sys.UI.Behavior);

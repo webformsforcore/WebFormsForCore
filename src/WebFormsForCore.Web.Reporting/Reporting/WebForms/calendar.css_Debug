@@ -1,0 +1,240 @@
+body, form {
+    margin: 0;
+}
+body {
+    font-family: verdana, arial, helvetica, sans-serif; 
+    background: white;
+    color: black;
+}
+.ms-picker-table {
+	width: 100%;
+}
+.ms-quickLaunch table.ms-picker-table td {
+	border-top:none;
+}
+.ms-picker-header{
+    font-weight:normal;
+    background-repeat:repeat-x;
+    background-color:#d6e8ff;
+}
+.ms-picker-header table.ms-picker-table {
+	width:100%;
+}
+.ms-picker-table .ms-picker-dayheader { 
+	font-family:tahoma;
+	font-size:8pt;
+	color:#727272; 
+	text-align: center;
+	border-bottom:solid 1px #c2dcff;
+ 	border-top:solid 1px #add1ff;	
+	padding:2px 0px 3px 0px;
+	font-weight:normal;
+}
+.ms-picker-week {
+	background-position:top right;
+	background-repeat:repeat-y; 
+	height:22px;
+	width:22px;
+	text-align:center;
+	border-left:solid 1px #e3efff;
+	border-top:solid 1px #e0e0e0;
+}
+
+.ms-picker-week a {
+	color:#3966bf;
+	text-decoration:none;
+}        
+
+.ms-picker-weekRTL {
+	background-position:top left;
+	background-repeat:repeat-y; 
+	height:22px;
+	width:22px;
+	text-align:center;
+	border-right:solid 1px #E6EAF1;
+	border-top:solid 1px #E1E1E1;
+}
+
+.ms-picker-weekRTL a {
+	color:#3966bf;
+	text-decoration:none;
+}        
+
+.ms-picker-weekselected { 
+	width:22px;
+	height:22px;
+	background-color:#ffffff;
+	text-align:center;
+	padding-left:1px;
+	cursor:pointer;
+}
+
+.ms-picker-weekselected a, .ms-picker-weekselected a:hover {
+	color:#000000; 
+	text-decoration:underline;
+}        
+
+.ms-picker-weekselectedRTL { 
+	width:22px;
+	height:22px;
+	background-color:#ffffff;
+	text-align:center;
+	padding-right:1px;
+	cursor:pointer;
+}
+
+.ms-picker-weekselectedRTL a, .ms-picker-weekselectedRTL a:hover {
+	color:#000000; 
+	text-decoration:underline;
+}        
+        
+.ms-picker-weekbox {
+	writing-mode: tb-rl;
+	filter: flipv fliph;
+	padding-right:3px;
+	white-space:nowrap;
+	color:#999999;
+        font-size:8pt;
+        font-family:tahoma;
+
+}
+
+.ms-picker-weekboxRTL {
+	writing-mode: tb-rl;
+	padding-right:3px;
+	white-space:nowrap;
+	color:#999999;
+        font-size:8pt;
+        font-family:tahoma;
+}
+.ms-picker-today, .ms-picker-dayselected, .ms-picker-daycenter, .ms-picker-daycenterOn {
+	height:22px;
+}
+table.ms-picker-table td.ms-picker-today{
+	text-align: center;
+	font-size:8pt;
+	font-family:tahoma;
+	border:solid 1px #ff9932;
+}
+table.ms-picker-table td.ms-picker-dayother, table.ms-picker-table td.ms-picker-daycenterOn, table.ms-picker-table td.ms-picker-daycenter  {
+	text-align:center;
+	font-size:8pt;
+	font-family:tahoma;
+	border:solid 1px #f2f8ff;
+}
+.ms-picker-daycenter a, .ms-picker-today a, .ms-picker-dayselected a { 
+	color: #003399; 
+	text-decoration:none;
+}
+.ms-picker-dayother a {
+	color:#a5a5a5;
+	text-decoration:none;
+}
+
+.ms-picker-dayother a:hover, .ms-picker-daycenterOn a, .mspicker-daycenterOn a:hover {
+	color:#000000;
+	text-decoration:none;
+}
+
+.ms-picker-table .ms-picker-daycenterOn { 
+	background-color:#ffdf88; 
+}
+table.ms-picker-table td.ms-picker-dayselected {
+	text-align:center;
+	font-size:8pt;
+	font-family:tahoma;
+	background-color:#ff9932;
+	border-style:solid;
+	border-width:1px;
+	border-color:#f2f8ff;
+}
+
+.ms-quicklaunch table.ms-picker-table td.ms-picker-monthcenter {
+	color: #7f7f7f; 
+	text-align: center;
+	background-color: #ebf3ff;
+	border: solid 1px #ebf3ff;
+	padding-bottom:3px;
+}
+
+.ms-picker-monthcenter a, .ms-picker-monthcenter  a:active, .ms-picker-monthcenter  a:link,.ms-picker-monthcenter a:visited, .ms-picker-monthcenter a:hover { 
+	font-family: Tahoma;
+	color:#003399;
+	font-size: 8pt; 
+	text-decoration: none;
+}
+
+.ms-quicklaunch table.ms-picker-table td.ms-picker-monthcenterOn {
+	padding-bottom:3px;
+        background-color:#ffda8a;
+        background-repeat:repeat-x;
+	text-align: center;
+	border:solid 1px #d2b47a;
+	cursor: pointer; 
+	padding-bottom:3px;
+}
+
+.ms-picker-monthcenterOn a, .ms-picker-monthcenterOn a:active, .ms-picker-monthcenterOn a:link,.ms-picker-monthcenterOn a:hover, .ms-picker-monthcenterOn a:visited { 
+	color: #000000; 
+	font-family: Tahoma;
+	font-size: 8pt;
+	text-decoration: none;
+	cursor: pointer; 
+}
+
+.ms-quicklaunch table.ms-picker-table td.ms-picker-monthselected {
+        background-color:#ffda8a;
+        background-repeat:repeat-x;
+	text-align: center;
+	border:solid 1px #d2b47a;
+	padding-bottom:3px;
+}
+
+.ms-picker-monthselected a, .ms-picker-monthselected a:active, .ms-picker-monthselected a:link, .ms-picker-monthselected a:hover,.ms-picker-monthselected a:visited {
+	color: #000000; 
+	font-family: Tahoma;
+	font-size: 8pt;
+              text-decoration: none;
+	cursor: pointer; 
+}
+
+table.ms-picker-table td.ms-picker-footer {
+	border-top: 1px solid #c2dcff;
+	font-family: Tahoma;
+	font-size: 8pt;
+	color: #4c4c4c;
+	padding:5px;
+}
+.ms-picker-footer a {
+	color:#003399;
+}
+.ms-picker-footer a:hover {
+	color:#000000;
+	text-decoration:underline;
+}
+.ms-picker-month {
+	font-weight: bold;
+	font-size:8pt;
+	padding:2px 0 5px 0;
+}
+
+.ms-picker-line {
+	border-top: 2px solid #9ba3b5;
+}
+
+.ms-datepickerouter {
+    border:solid 1px #83b0ec;
+}
+
+.ms-rs-calendar-loading { 
+	border-top: 2px solid #8FA4C9; 
+	border-bottom: 1px solid #8FA4C9; 
+	font-family: Verdana; 
+	font-size: 8pt; 
+	color: #333333; 
+	font-weight: bold; 
+	text-align: center;
+        border-left: 1px solid #8FA4C9; 
+        border-right: 1px solid #8FA4C9; 
+        border-bottom: 1px solid #8FA4C9;
+}

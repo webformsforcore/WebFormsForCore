@@ -1,0 +1,370 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Microsoft_ReportingServices_HTMLRenderer_FixedHeader = function(ReportDivId, ReportCellId, ContainerId, IDPrefix)
+{
+    this.ReportCellId = ReportCellId;
+    this.ReportDivId = ReportDivId;
+    this.ContainerId = ContainerId;
+    if (!IDPrefix)
+        IDPrefix = "";
+    this.IDPrefix = IDPrefix;
+}
+Microsoft_ReportingServices_HTMLRenderer_FixedHeader.prototype =
+{
+    CreateFixedRowHeader: function(arr, id)
+    {
+        var tableID = arr[0];
+        if (document.getElementById(this.IDPrefix + id))
+            return;
+        var tNode = document.getElementById(this.IDPrefix + tableID);
+        if (tNode == null)
+            return;
+        tNode = tNode.cloneNode(false);
+        tNode.removeAttribute('id');
+        var tBodyNode = document.createElement("TBODY");
+        var currentRow = document.getElementById(this.IDPrefix + arr[1]);
+        currentRow = currentRow.cloneNode(false);
+        currentRow.removeAttribute('id');
+        for (var x = 2; x < arr.length; x++)
+        {
+            var nextElement = document.getElementById(this.IDPrefix + arr[x]);
+            if (nextElement.tagName.toUpperCase() == "TR")
+            {
+                nextElement = nextElement.cloneNode(false);
+                nextElement.removeAttribute('id');
+                tBodyNode.appendChild(currentRow);
+                currentRow = nextElement;
+            } else
+            {
+                nextElement = nextElement.cloneNode(true);
+                nextElement.removeAttribute('id');
+                currentRow.appendChild(nextElement);
+            }
+        }
+        tBodyNode.appendChild(currentRow);
+        tNode.appendChild(tBodyNode);
+        var parentDiv = document.createElement("DIV");
+        parentDiv.style.display = 'none';
+        parentDiv.style.position = 'absolute';
+        parentDiv.style.top = "0px";
+        parentDiv.style.left = "0px";
+        parentDiv.id = this.IDPrefix + id;
+        parentDiv.appendChild(tNode);
+        var reportDiv = document.getElementById(this.ReportCellId);
+        reportDiv.appendChild(parentDiv);
+        return parentDiv;
+    },
+    CreateFixedColumnHeader: function(arr, id)
+    {
+        var tableID = arr[0];
+        if (document.getElementById(this.IDPrefix + id))
+            return;
+        var tNode = document.getElementById(this.IDPrefix + tableID);
+        if (tNode == null)
+            return;
+        var tNodeOrigWidth = 0;
+        if ((tNode.tagName == "TABLE") &&
+            Microsoft_ReportingServices_HTMLRenderer_IsIE() &&
+            !Microsoft_ReportingServices_HTMLRenderer_IsStandardsMode())
+        {
+            // If we're in IE Quirks mode, save the original column width which enforces a particular text wrapping
+            // behavior.
+            // tNode is a TABLE tag, so its first contained TD is the firstChild (TD) of its firstChild (TR) of its firstChild (TBODY).        
+            var tNodeTDStyleWidth = tNode.firstChild.firstChild.firstChild.style.width;
+            tNodeOrigWidth = Math.round(Microsoft_ReportingServices_HTMLRenderer_ConvertToPx(tNodeTDStyleWidth));
+        }
+        tNode = tNode.cloneNode(false);
+        tNode.removeAttribute('id');
+        var tBodyNode = document.createElement("TBODY");
+        for (var x = 1; x < arr.length; x++)
+        {
+            var nextElement = document.getElementById(this.IDPrefix + arr[x]);
+            nextElement = nextElement.cloneNode(true);
+            nextElement.removeAttribute('id');
+            tBodyNode.appendChild(nextElement);
+        }
+        tNode.appendChild(tBodyNode);
+        var parentDiv = document.createElement("DIV");
+        parentDiv.style.display = 'none';
+        parentDiv.style.position = 'absolute';
+        parentDiv.style.top = "0px";
+        parentDiv.style.left = "0px";
+        parentDiv.id = this.IDPrefix + id;
+        parentDiv.appendChild(tNode);
+        if (tNodeOrigWidth > 0)
+        {
+            // Set the new cloned fixed header node's style width to the width which
+            // corresponds to the text-wrapping behavior for the column header before scrolling.        
+            parentDiv.style.width = tNodeOrigWidth + "px";
+            tNode.style.width = tNodeOrigWidth + "px";
+        }
+        var reportDiv = document.getElementById(this.ReportCellId);
+        reportDiv.appendChild(parentDiv);
+        return parentDiv;
+    },
+    ShowFixedTablixHeaders: function(m, fnh, rg, cg, ch, c1, c2, tr)
+    {
+        var om = document.getElementById(this.IDPrefix + m);
+        var ofnh = document.getElementById(this.IDPrefix + fnh);
+        var org = document.getElementById(this.IDPrefix + rg);
+        var ocg = document.getElementById(this.IDPrefix + cg);
+        var och = document.getElementById(this.IDPrefix + ch);
+        var oc1 = document.getElementById(this.IDPrefix + c1);
+        var oc2 = document.getElementById(this.IDPrefix + c2);
+        var otr = document.getElementById(this.IDPrefix + tr);
+        var rptDiv = document.getElementById(this.ReportDivId);
+        var isIE8StandardsOrLater = Microsoft_ReportingServices_HTMLRenderer_IsIE8OrLater() && Microsoft_ReportingServices_HTMLRenderer_IsStandardsMode();
+        var isIEQuirksMode = Microsoft_ReportingServices_HTMLRenderer_IsIE() && !Microsoft_ReportingServices_HTMLRenderer_IsStandardsMode();
+
+        //Calculate the visual scroll offset
+        var offsetParent = rptDiv;
+        var scT = 0;
+        var scL = 0;
+        var dscT = 0;
+        var clHeight = 0;
+        var clWidth = 0;
+
+        var parentWithAuto = rptDiv;
+        while (parentWithAuto && parentWithAuto.style && 'auto' != parentWithAuto.style.overflow)
+        {
+            parentWithAuto = parentWithAuto.parentNode;
+        }
+
+        if (!parentWithAuto || !parentWithAuto.style)
+        {
+            scT = document.body.scrollTop;
+            scL = document.body.scrollLeft;
+            clHeight = document.body.clientHeight;
+            clWidth = document.body.clientWidth;
+
+            var htmlElement = document.body.parentNode;
+            if (htmlElement && scL == 0 && scT == 0 && (htmlElement.scrollTop != 0 || htmlElement.scrollLeft != 0))
+            {
+                scT = htmlElement.scrollTop;
+                scL = htmlElement.scrollLeft;
+            }
+        }
+        else
+        {
+            offsetParent = parentWithAuto;
+            scT = offsetParent.scrollTop;
+            scL = offsetParent.scrollLeft;
+            clHeight = offsetParent.clientHeight;
+            clWidth = offsetParent.clientWidth;
+        }
+
+        //Calculate the offset of the item with the fixedheader relative to the scrollable area
+        var offL = 0;
+        var offT = 0;
+
+        var o = om;
+        while (o && o.id != rptDiv.id)
+        {
+            if (o.offsetLeft > 0) //Ignore RTL bits
+                offL += o.offsetLeft;
+
+            if (o.offsetTop > 0)
+            {
+                // IE8 standards mode - offsetTop can be negative when column fixedHeaders are moved vertically down.
+                offT += o.offsetTop;
+            }
+            var oOffsetParent = o.offsetParent;
+            //Walk the parents looking for either the ReportDivId or the offsetParent
+            while (o != oOffsetParent && o.id != rptDiv.id)
+            {
+                o = o.parentNode;
+            }
+        }
+        if (!o)
+            o = document.getElementById(this.ContainerId);
+        var rptCell = document.getElementById(this.ReportCellId);
+
+        //Factor in Zoom
+        var zt = rptCell.style.zoom;
+        if (zt && zt.substring(zt.length - 1) == '%')
+        {
+            zm = zt.substring(0, zt.length - 1) / 100;
+        }
+        else
+        {
+            zm = zt;
+        }
+
+        if (!zm || zm == 0) zm = 1;
+
+        var fixedHeaderScaleFactor = zm;
+
+        if (!isIE8StandardsOrLater)
+        {
+            offL *= zm;
+            offT *= zm;
+            fixedHeaderScaleFactor = 1;
+        }
+
+        //Hide any of the FixedHeader regions that shouldn't be visible
+        if (ocg != null) ocg.style.display = 'none';
+        if (org != null) org.style.display = 'none';
+        if (och != null) och.style.display = 'none';
+        var zomoh = om.offsetHeight * zm;
+        if (om.offsetHeight == 0)
+            zomoh = document.body.offsetHeight * zm;
+
+        var zomow = om.offsetWidth * zm;
+        if (om.offsetWidth == 0)
+            zomow = document.body.offsetWidth * zm;
+
+        var zofnhot = Math.round(ofnh.offsetTop / fixedHeaderScaleFactor) * zm;
+
+        var zocow = 0;
+        if (oc1 && oc2)
+        {
+            zocow = ((Math.round(oc2.offsetLeft / fixedHeaderScaleFactor) + oc2.offsetWidth) - Math.round(oc1.offsetLeft / fixedHeaderScaleFactor)) * zm;
+        }
+        // clHeight, clWidth are not scaled in IE8 standards mode, even though offT,scT,offL,scL are.
+        if ((scT >= (offT + zomoh - zofnhot)) || (scT + clHeight * fixedHeaderScaleFactor <= offT))
+        {
+            ocg = null;
+        }
+        if ((scL + clWidth * fixedHeaderScaleFactor - zocow <= offL) || (scL >= offL + zomow - zocow))
+        {
+            org = null;
+        }
+
+        //If none are visible, return
+        if (!ocg && !org)
+        {
+            return;
+        }
+
+        //Update all the sizes
+        if (org != null)
+        {
+            var rows = om.childNodes[0].childNodes;
+            var fhrows = org.childNodes[0].childNodes[0].childNodes;
+            var notIE7 = !Microsoft_ReportingServices_HTMLRenderer_IsIE() || Microsoft_ReportingServices_HTMLRenderer_IsIE8OrLater();
+
+            var i, j;
+            for (i = fhrows.length - 1, j = rows.length - 1; i > 0; i--, j--)
+            {
+                var rowHeight = rows[j].childNodes[0].offsetHeight;
+                if (rows[j].getBoundingClientRect)
+                {
+                    var rowBoundingRect = rows[j].getBoundingClientRect();
+                    var boundingHeight = rowBoundingRect.bottom - rowBoundingRect.top;
+
+                    // Get the max rowspan of all <td> childNodes of this <tr> node.
+                    var maxTDRowSpan = Microsoft_ReportingServices_HTMLRenderer_GetMaxChildRowSpan(rows[j]);
+                    if (maxTDRowSpan > 1)
+                    {
+                        if (j + 1 < rows.length)
+                        {
+                            var nextRowBoundingRect = rows[j + 1].getBoundingClientRect();
+                            // Use the bottom row's top and subtract it from this row's top
+                            // to get the appropriate height of this row.
+                            boundingHeight = nextRowBoundingRect.top - rowBoundingRect.top;
+                        }
+                    }
+
+                    // The bouding rectangle increases proportionally to zoom.
+                    boundingHeight = boundingHeight / zm;
+
+                    if (boundingHeight > rowHeight)
+                        rowHeight = boundingHeight;
+                }
+
+                if (notIE7 && !rows[j].getAttribute("height")) //Do not write in IE6 or 7
+                {
+                    rows[j].setAttribute("height", rowHeight);
+                }
+
+                fhrows[i].childNodes[0].style.height = rowHeight + "px";
+            }
+        }
+        if (och != null)
+        {
+            var rows = om.childNodes[0].childNodes;
+            var fhrows = och.childNodes[0].childNodes[0].childNodes;
+            for (i = 0; i < fhrows.length; i++) fhrows[i].childNodes[0].style.height = rows[i].childNodes[0].offsetHeight + "px";
+        }
+        if (ocg != null)
+        {
+            var cols = om.childNodes[0].childNodes[0];
+            var omFirstChildWidth = om.childNodes[0].clientWidth;
+            // In IE quirks mode, when creating the column fixed header,
+            // the style width is explicitly set on that fixed header. Don't
+            // overwrite the style width if the overwriting value is 0.
+            if (omFirstChildWidth > 0 || !isIEQuirksMode)
+            {
+                ocg.childNodes[0].style.width = omFirstChildWidth + "px";
+            }
+            for (i = 0; i < cols.childNodes.length; i++)
+            {
+                var colsChildWidth = cols.childNodes[i].offsetWidth;
+                if (colsChildWidth > 0 || !isIEQuirksMode)
+                {
+                    var ocgFHChildNode = ocg.childNodes[0].childNodes[0].childNodes[0].childNodes[i];
+                    if (ocgFHChildNode != null)
+                    {
+                        ocgFHChildNode.style.width = colsChildWidth + "px";
+                        if (isIE8StandardsOrLater)
+                        {
+                            ocgFHChildNode.style.minWidth = colsChildWidth + "px";
+                        }
+                    }
+                }
+            }
+        }
+
+        //Position the FixedHeaders
+        if (ocg != null)
+        {
+            ocg.style.zoom = zt;
+            ocg.style.left = Math.round(offL / fixedHeaderScaleFactor) + "px";
+            var zdbch = document.body.clientHeight;
+
+            if (!((offT > scT) && ((scT + zdbch) > offT)))
+            {
+                ocg.style.display = '';
+                var topOffset = scT;
+                ocg.style.top = Math.round(topOffset / fixedHeaderScaleFactor) + "px";
+            }
+        }
+        var zocol = 0;
+        if (oc1)
+        {
+            zocol = oc1.offsetLeft * zm;
+        }
+        if (org != null)
+        {
+            org.style.zoom = zt;
+            zoccw = ((Math.round(oc2.offsetLeft / fixedHeaderScaleFactor) + oc2.offsetWidth) * zm) - Math.max(scL, Math.round(oc1.offsetLeft / fixedHeaderScaleFactor) * zm);
+            zoccw = Math.max(0, zoccw);
+            var zomol = Math.round(om.offsetLeft / fixedHeaderScaleFactor) * zm;
+            if ((scL > (zocol + offL)) && (scL < offL + zomow - zocow))
+            {
+                org.style.display = '';
+                var topOffset = offT - dscT;
+                var leftOffset = scL;
+                org.style.top = Math.round(topOffset / fixedHeaderScaleFactor) + "px";
+                org.style.left = Math.round(leftOffset / fixedHeaderScaleFactor) + "px";
+                org.style.width = zoccw + "px";
+            }
+            else if (((scL + clWidth) < (zocol + zocow + offL)) && (scL + clWidth - zoccw > offL + zomol))
+            {
+                org.style.display = '';
+                org.style.top = Math.round((offT - dscT) / fixedHeaderScaleFactor) + "px";
+                org.style.left = Math.round((scL + clWidth - zoccw) / fixedHeaderScaleFactor) + "px";
+                org.style.width = zoccw + "px";
+            }
+        }
+        if (och != null && org && ocg && org.style.display == '' && ocg.style.display == '')
+        {
+            och.style.zoom = zt;
+            och.style.display = '';
+            och.style.top = ocg.style.top;
+            och.style.left = org.style.left;
+            och.style.width = org.style.width;
+        }
+    }
+}

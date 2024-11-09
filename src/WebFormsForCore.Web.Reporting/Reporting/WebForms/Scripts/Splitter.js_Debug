@@ -1,0 +1,373 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._Splitter = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._Splitter.initializeBase(this, [element]);
+    this.Vertical = true;
+    this.Resizable = true;
+    this.NormalStyle = null;
+    this.HoverStyle = null;
+    this.NormalColor = null;
+    this.HoverColor = null;
+    this.StorePositionField = null;
+    this.StoreCollapseField = null;
+    this.ImageId = null;
+    this.ImageCollapse = null;
+    this.ImageCollapseHover = null;
+    this.ImageExpand = null;
+    this.ImageExpandHover = null;
+    this.Enabled = true;
+
+    this._updating = false;
+    this._image = null;
+    this._StorePositionField = null;
+    this._StoreCollapseField = null;
+    this._onMouseMoveDelegate = null;
+    this._onMouseUpDelegate = null;
+    this._onSelectStartDelegate = null;
+    this.IsCollapsable = true;
+}
+
+Microsoft.Reporting.WebFormsClient._Splitter.prototype = {
+
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._Splitter.callBaseMethod(this, 'initialize');
+
+        this._image = $get(this.ImageId);
+        this._StorePositionField = $get(this.StorePositionField);
+        this._StoreCollapseField = $get(this.StoreCollapseField);
+
+        this._onMouseMoveDelegate = Function.createDelegate(this, this._onMouseMove);
+        this._onMouseUpDelegate = Function.createDelegate(this, this._onMouseUp);
+        this._onSelectStartDelegate = Function.createDelegate(this, this._onSelectStart);
+
+        $addHandlers(this.get_element().parentNode, {
+            "mouseover": this._onMouseOver,
+            "focus": this._onMouseOver,
+            "mouseout": this._onMouseOut,
+            "mousedown": this._onMouseDown,
+            "click": this._onClick
+        },
+                this
+        );
+
+        $addHandlers(this._image, {
+            "click": this._onImageClick,
+            "mouseover": this._onImageMouseOver,
+            "focus": this._onImageMouseOver,
+            "mouseout": this._onImageMouseOut
+        },
+            this
+        );
+    },
+
+    dispose: function()
+    {
+        $clearHandlers(this.get_element().parentNode);
+        $clearHandlers(this._image);
+
+        delete this._onMouseMoveDelegate;
+        delete this._onMouseUpDelegate;
+        delete this._onSelectStartDelegate;
+
+        this._image = null;
+        this._StorePositionField = null;
+        this._StoreCollapseField = null;
+
+        Microsoft.Reporting.WebFormsClient._Splitter.callBaseMethod(this, 'dispose');
+    },
+
+
+    SetActive: function(active)
+    {
+        this.Enabled = active;
+    },
+
+    _setStyle: function(className, color, cursor)
+    {
+        var element = this.get_element();
+        var elementForStyles = element.parentNode;
+
+        elementForStyles.style.cursor = cursor;
+        if (className)
+        {
+            elementForStyles.className = className;
+        }
+        else
+        {
+            elementForStyles.style.backgroundColor = color;
+        }
+    },
+
+    _setImage: function(hovering)
+    {
+        var collapsed = this._getCollapsed();
+        var imgsrc = null;
+        if (hovering)
+        {
+            imgsrc = collapsed ? this.ImageExpandHover : this.ImageCollapseHover;
+        }
+        else
+        {
+            imgsrc = collapsed ? this.ImageExpand : this.ImageCollapse;
+        }
+
+        this._image.src = imgsrc;
+    },
+
+    _onImageClick: function(e)
+    {
+        if (this.Enabled)
+            this.raiseCollapsing(!this._getCollapsed());
+        e.preventDefault();
+        e.stopPropagation(); // Don't let image and splitter both handle the event
+    },
+
+    _onClick: function(e)
+    {
+        if ((!this.Resizable || this._getCollapsed()) && this.Enabled)
+            this.raiseCollapsing(!this._getCollapsed());
+        e.preventDefault();
+        e.stopPropagation(); // Don't let image and splitter both handle the event
+    },
+
+    _setCollapsed: function(value)
+    {
+        this._StoreCollapseField.value = value ? "true" : "false";
+        this._setImage(false);
+    },
+
+    _getCollapsed: function()
+    {
+        return this._StoreCollapseField.value == "true";
+    },
+
+    _getCollapsable: function()
+    {
+        return this.IsCollapsable;
+    },
+
+    _setSize: function(value)
+    {
+        this._StorePositionField.value = value.toString();
+    },
+
+    _getSize: function()
+    {
+        return parseInt(this._StorePositionField.value);
+    },
+
+    _onSelectStart: function(e)
+    {
+        e.preventDefault();
+        return false;
+    },
+
+    _onMouseOut: function(e)
+    {
+        this._setStyle(this.NormalStyle, this.NormalColor, "default");
+        this._setImage(false);
+        e.preventDefault();
+        return false;
+    },
+
+    _onMouseOver: function(e)
+    {
+        if (this.Enabled)
+        {
+            if (!this.Resizable || this._getCollapsed())
+            {
+                this._setStyle(this.HoverStyle, this.HoverColor, "pointer");
+                this._setImage(true);
+            }
+            else
+            {
+                var cursor = this.Vertical ? "w-resize" : "n-resize";
+                this._setStyle(this.NormalStyle, this.NormalColor, cursor);
+            }
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    },
+
+    _onMouseDown: function(e)
+    {
+        if (this.Resizable)
+        {
+            this._lastPosition = { X: e.clientX, Y: e.clientY };
+            var t = this._getMouseObjects();
+            $addHandler(t.target, 'mousemove', this._onMouseMoveDelegate);
+            $addHandler(t.target, 'mouseup', this._onMouseUpDelegate);
+            $addHandler(t.target, 'selectstart', this._onSelectStartDelegate);
+            if (t.isIE)
+                t.target.setCapture();
+        }
+    },
+
+    _onMouseUp: function(e)
+    {
+        if (this.Resizable)
+        {
+            var t = this._getMouseObjects();
+            $removeHandler(t.target, 'mousemove', this._onMouseMoveDelegate);
+            $removeHandler(t.target, 'mouseup', this._onMouseUpDelegate);
+            $removeHandler(t.target, 'selectstart', this._onSelectStartDelegate);
+            if (t.isIE)
+                t.target.releaseCapture();
+        }
+    },
+
+    _onImageMouseOver: function(e)
+    {
+        if (this.Enabled)
+        {
+            this._setStyle(this.HoverStyle, this.HoverColor, "pointer");
+            this._setImage(true);
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    },
+
+    _onImageMouseOut: function(e)
+    {
+        this._setStyle(this.NormalStyle, this.NormalColor, "default");
+        this._setImage(false);
+
+        e.preventDefault();
+        return false;
+    },
+
+    _getMouseObjects: function()
+    {
+        if (!this._mouseTrackingObject)
+        {
+            this._mouseTrackingObject =
+            {
+                isIE: Sys.Browser.agent == Sys.Browser.InternetExplorer,
+                target: Sys.Browser.agent == Sys.Browser.InternetExplorer ? document.body : _$RVCommon.getWindow()
+            }
+        }
+        return this._mouseTrackingObject;
+    },
+
+    _onMouseMove: function(e)
+    {
+        var newPosition = { X: e.clientX, Y: e.clientY };
+        if (this.Resizable && !this._getCollapsed() && this.Enabled)
+        {
+            var delta = 0;
+            if (this.Vertical)
+                delta = (newPosition.X - this._lastPosition.X) * (this._isRTL() ? -1 : 1);
+            else
+                delta = (newPosition.Y - this._lastPosition.Y);
+
+            this.raiseResizing(delta);
+
+            this._lastPosition = newPosition;
+        }
+    },
+    _isRTL: function()
+    {
+        var element = this.get_element();
+        if (Microsoft.Reporting.WebFormsClient._InternalReportViewer.GetRTLDirection)
+        {
+            return Microsoft.Reporting.WebFormsClient._InternalReportViewer.GetRTLDirection(element) == 'rtl';
+        }
+        return false;
+    },
+    add_resizing: function(handler)
+    {
+        this.get_events().addHandler('resizing', handler);
+    },
+    remove_resizing: function(handler)
+    {
+        this.get_events().removeHandler('resizing', handler);
+    },
+    raiseResizing: function(delta)
+    {
+        var onResizingHandler = this.get_events().getHandler('resizing');
+        if (onResizingHandler)
+        {
+            var args = new Microsoft.Reporting.WebFormsClient._SplitterResizeEventArgs();
+            args.set_delta(delta);
+            onResizingHandler(this, args);
+            if (args.get_size() != 0)
+            {
+                this._setSize(args.get_size());
+            }
+        }
+    },
+    add_collapsing: function(handler)
+    {
+        this.get_events().addHandler('collapsing', handler);
+    },
+    remove_collapsing: function(handler)
+    {
+        this.get_events().removeHandler('collapsing', handler);
+    },
+    raiseCollapsing: function(collapse)
+    {
+        var onCollapsingHandler = this.get_events().getHandler('collapsing');
+        if (onCollapsingHandler)
+        {
+            var args = new Microsoft.Reporting.WebFormsClient._SplitterCollapseEventArgs();
+            args.set_collapse(collapse);
+            onCollapsingHandler(this, args);
+            this._setCollapsed(args.get_collapse());
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._Splitter.registerClass('Microsoft.Reporting.WebFormsClient._Splitter', Sys.UI.Control);
+
+
+Microsoft.Reporting.WebFormsClient._SplitterResizeEventArgs = function () {
+    Microsoft.Reporting.WebFormsClient._SplitterResizeEventArgs.initializeBase(this);
+    this._delta = 0;
+    this._size  = 0;
+}
+
+Microsoft.Reporting.WebFormsClient._SplitterResizeEventArgs.prototype = {
+    get_delta: function()
+    {
+        return this._delta;
+    },
+    set_delta: function(value)
+    {
+        this._delta = value;
+    },
+    get_size: function()
+    {
+        return this._size;
+    },
+    set_size: function(value)
+    {
+        this._size = value;
+    }
+}
+Microsoft.Reporting.WebFormsClient._SplitterResizeEventArgs.registerClass('Microsoft.Reporting.WebFormsClient._SplitterResizeEventArgs', Sys.EventArgs);
+
+Microsoft.Reporting.WebFormsClient._SplitterCollapseEventArgs = function () {
+    Microsoft.Reporting.WebFormsClient._SplitterCollapseEventArgs.initializeBase(this);
+    this._collapse = false;
+}
+
+Microsoft.Reporting.WebFormsClient._SplitterCollapseEventArgs.prototype = {
+    get_collapse: function()
+    {
+        return this._collapse;
+    },
+    set_collapse: function(value)
+    {
+        this._collapse = value;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._SplitterCollapseEventArgs.registerClass('Microsoft.Reporting.WebFormsClient._SplitterCollapseEventArgs', Sys.EventArgs);

@@ -1,0 +1,1087 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+// BaseParameterInputControl /////////////////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._BaseParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._BaseParameterInputControl.initializeBase(this, [element]);
+    
+    this.NullCheckBoxId = null;
+    this.NullValueText = null;
+    this.ValidationMessage = null;
+    this.PostBackOnChange = false;
+    this.TriggerPostBackScript = null;
+    this.TextBoxEnabledClass = null;
+    this.TextBoxDisabledClass = null;
+    this.TextBoxDisabledColor = null;
+    
+    this.m_validatorIds = new Array(0);
+    this.m_customInputControlIds = new Array(0);
+}
+
+Microsoft.Reporting.WebFormsClient._BaseParameterInputControl.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._BaseParameterInputControl.callBaseMethod(this, "initialize");
+
+        if (this.NullCheckBoxId != null)
+        {
+            $addHandlers($get(this.NullCheckBoxId),
+                { "click" : this.OnNullCheckClick },
+                this);
+        }
+    },
+    
+    dispose : function()
+    {
+        if (this.NullCheckBoxId != null)
+            $clearHandlers($get(this.NullCheckBoxId));
+        $clearHandlers(this.get_element());
+
+        Microsoft.Reporting.WebFormsClient._BaseParameterInputControl.callBaseMethod(this, "dispose");
+    },
+    
+    // Custom accessor for complex object type (array)
+    set_CustomInputControlIdList : function(value) { this.m_customInputControlIds = value; },
+    get_CustomInputControlIdList : function()      { return this.m_customInputControlIds; },
+    set_ValidatorIdList          : function(value) { this.m_validatorIds = value; },
+    get_ValidatorIdList          : function()      { return this.m_validatorIds; },
+
+    // "Abstract" methods
+    GetCurrentValue : function() { return null; },
+    
+    GetDisplayValue : function()
+    {
+        var currentValue = this.GetCurrentValue();
+        if (currentValue == null)
+            return "";
+        else
+            return currentValue;
+    },
+    
+    SetEnableState : function(enable)
+    {
+        var enableNonNullControls = enable;
+
+        if (this.NullCheckBoxId != null)
+        {
+            this.SetInputControlEnableState(this.NullCheckBoxId, enable);
+            
+            var nullCheckBox = $get(this.NullCheckBoxId);
+            
+            // If enabling, non-null controls are enabled only if null
+            // checkbox is unchecked.  If disabling, non-null controls
+            // should be disabled regardless of the null checkbox state.
+            enableNonNullControls = enable && !nullCheckBox.checked;
+        }
+        
+        // Update associated validators
+        for (var i = 0; i < this.m_validatorIds.length; i++)
+        {
+            this.SetValidatorEnableState(this.m_validatorIds[i], enableNonNullControls);
+        }
+        
+        // Update input controls other than the null check box
+        for (var i = 0; i < this.m_customInputControlIds.length; i++)
+        {
+            this.SetInputControlEnableState(this.m_customInputControlIds[i], enableNonNullControls)
+        }
+    },
+    
+    ValidateHasValue : function()
+    {
+        if (this.GetCurrentValue() == null)
+        {
+            alert(this.ValidationMessage);
+            return false;
+        }
+        else
+            return true;
+    },
+
+    IsNullChecked : function()
+    {
+        if (this.NullCheckBoxId != null)
+            return $get(this.NullCheckBoxId).checked;
+        else
+            return false;
+    },
+    
+    OnNullCheckClick : function(e)
+    {
+        if (this.PostBackOnChange && this.GetCurrentValue() != null)
+            this.TriggerPostBackScript();
+            
+        this.SetEnableState(true);
+    },
+    
+    SetValidatorEnableState : function(validatorId, enable)
+    {
+        var validator = $get(validatorId);
+        if (validator != null)
+        {
+            validator.enabled = enable;
+
+            // Hide disabled validators
+            if (!validator.enabled)
+                ValidatorValidate(validator);
+        }
+    },
+    
+    SetInputControlEnableState : function(controlId, enable)
+    {
+        var control = $get(controlId);
+
+        // ASP sets the disabled tag on a span that contains the radio button
+        if (control.type == "radio" || control.type == "checkbox")
+            control.parentNode.disabled = !enable;
+        else if (control.type == "text")
+        {
+            if (!enable)
+            {
+                control.className = this.TextBoxDisabledClass;
+                control.style.backgroundColor = this.TextBoxDisabledColor;
+            }
+            else
+            {
+                control.className = this.TextBoxEnabledClass;
+                control.style.backgroundColor = "";
+            }
+        }
+
+        control.disabled = !enable;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._BaseParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._BaseParameterInputControl", Sys.UI.Control);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// TextParameterInputControl /////////////////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._TextParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._TextParameterInputControl.initializeBase(this, [element]);
+    
+    this.TextBoxId = null;
+    this.AllowBlank = false;
+}
+
+Microsoft.Reporting.WebFormsClient._TextParameterInputControl.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._TextParameterInputControl.callBaseMethod(this, "initialize");
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers(this.get_element());
+        
+        Microsoft.Reporting.WebFormsClient._TextParameterInputControl.callBaseMethod(this, "dispose");
+    },
+    
+    GetCurrentValue : function()
+    {
+        if (this.IsNullChecked())
+            return this.NullValueText;
+        else
+        {
+            var txtInput = $get(this.TextBoxId);
+            
+            if (txtInput.value == "" && !this.AllowBlank)
+                return null;
+            else
+                return txtInput.value;
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._TextParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._TextParameterInputControl", Microsoft.Reporting.WebFormsClient._BaseParameterInputControl);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// BoolParameterInputControl /////////////////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._BoolParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._BoolParameterInputControl.initializeBase(this, [element]);
+
+    this.TrueCheckId = null;
+    this.FalseCheckId = null;
+
+    this.TrueValueText = null;
+    this.FalseValueText = null;
+}
+
+Microsoft.Reporting.WebFormsClient._BoolParameterInputControl.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._BoolParameterInputControl.callBaseMethod(this, "initialize");
+        
+        // Call the boolean disabled script to ensure the client is in the correct state for non IE browsers
+        if (this.NullCheckBoxId != null)
+        {
+            var isNullChecked = this.IsNullChecked();
+            this.SetInputControlEnableState(this.TrueCheckId, !isNullChecked);
+            this.SetInputControlEnableState(this.FalseCheckId, !isNullChecked);
+        }
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers(this.get_element());
+        
+        Microsoft.Reporting.WebFormsClient._BoolParameterInputControl.callBaseMethod(this, "dispose");
+    },
+    
+    GetCurrentValue : function()
+    {
+        if (this.IsNullChecked())
+            return this.NullValueText;
+        else
+        {
+            var chkTrue = $get(this.TrueCheckId);
+            var chkFalse = $get(this.FalseCheckId);
+
+            if (chkTrue.checked)
+                return this.TrueValueText;
+            else if (chkFalse.checked)
+                return this.FalseValueText;
+            else
+                return null;
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._BoolParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._BoolParameterInputControl", Microsoft.Reporting.WebFormsClient._BaseParameterInputControl);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// ValidValueParameterInputControl ///////////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl.initializeBase(this, [element]);
+    
+    this.DropDownId = null;
+    this.DropDownValidatorId = null;
+    this.m_hasSelectAValue = true;
+}
+
+Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl.callBaseMethod(this, "initialize");
+        
+        this.RemoveSelectAValueIfNotSelected();
+        
+        $addHandlers($get(this.DropDownId),
+            { "change" : this.RemoveSelectAValueIfNotSelected },
+            this);
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers($get(this.DropDownId));
+        
+        Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl.callBaseMethod(this, "dispose");
+    },
+
+    GetCurrentValue : function()
+    {
+        var dropDown = $get(this.DropDownId);
+
+        if (dropDown.selectedIndex > 0 || !this.m_hasSelectAValue)
+            return dropDown.options[dropDown.selectedIndex].text;
+        else
+            return null;
+    },
+    
+    RemoveSelectAValueIfNotSelected : function()
+    {   
+        if (this.m_hasSelectAValue)
+        {
+            var dropDown = $get(this.DropDownId);
+            
+            // If something other than "select a value" is selected
+            if (dropDown.selectedIndex > 0)
+            {
+                // dropDown.offsetWidth can be zero if dropDown is hidden.
+                if (dropDown.offsetWidth > 0)
+                {
+                    // If the "select a value" option is the longest one in the drop down,
+                    // removing it will shrink the size of the dropdown.  This looks strange,
+                    // so maintain the dropdown width.
+                    dropDown.style.width = dropDown.offsetWidth + "px";
+                }
+                
+                dropDown.remove(0);
+                this.m_hasSelectAValue = false;
+                
+                // Now that the "select a value" option is removed,
+                // the drop down validator is no longer necessary.
+                // We cannot just disable the validator, since it
+                // could be re-enabled by some client action.  Instead,
+                // we just set the client validation function to null so
+                // no actual validation occurs.
+                if (this.DropDownValidatorId != null)
+                {
+                    var validator = $get(this.DropDownValidatorId);
+                    if (validator != null)
+                        validator.clientvalidationfunction = null;
+                }
+            }
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._ValidValueParameterInputControl", Microsoft.Reporting.WebFormsClient._BaseParameterInputControl);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// GenericDropDownParameterInputControl //////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.initializeBase(this, [element]);
+    
+    this.EnabledImageSrc = null;
+    this.DisabledImageSrc = null;
+    this.ImageId = null;
+    this.TextBoxId = null;
+    this.FloatingIframeId = null;
+    this.RelativeDivId = null;
+}
+
+Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.callBaseMethod(this, "initialize");
+
+        $addHandlers($get(this.ImageId),
+            { "click" : this.OnDropDownImageClick },
+            this);
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers($get(this.ImageId));
+        $clearHandlers(this.get_element());
+        
+        Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.callBaseMethod(this, "dispose");
+    },
+    
+    OnDropDownImageClick : function(e)
+    {
+        this.ToggleFloatingFrameVisibility();
+        e.stopPropagation();
+        e.preventDefault();
+    },
+    
+    SetEnableState : function(enable)
+    {
+        Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.callBaseMethod(this, "SetEnableState", [enable]);
+
+        var inputCtrl = $get(this.ImageId);
+        this.SelectImage(!inputCtrl.disabled);
+    },
+    
+    SelectImage : function(useEnabledImage)
+    {
+        var inputCtrl = $get(this.ImageId);
+        if (useEnabledImage)
+        {
+            inputCtrl.src = this.EnabledImageSrc;
+            inputCtrl.style.cursor = 'pointer';
+        }
+        else
+        {
+            inputCtrl.src = this.DisabledImageSrc;
+            inputCtrl.style.cursor = 'default';
+        }    
+    },
+    
+    ToggleFloatingFrameVisibility : function()
+    {
+        var floatingIframe = $get(this.FloatingIframeId);
+        if (floatingIframe.style.display == "none")
+            this.ShowFloatingFrame();
+        else
+            this.HideFloatingFrame();
+    },
+    
+    ShowFloatingFrame : function()
+    {
+        var floatingIFrame = $get(this.FloatingIframeId);
+
+        // Position the drop down. This must be done before making the frame visible. Otherwise, 
+        // a scroll bar is likely to appear as a result of showing the frame which would make the 
+        // position invalid.
+        if (this.RelativeDivId == null)
+        {
+            var newDropDownPosition = this.GetDropDownPosition();
+            floatingIFrame.style.left = newDropDownPosition.Left + "px";
+            floatingIFrame.style.top = newDropDownPosition.Top + "px";
+        }
+
+        // only show if the frame is not currently visible.
+        if (floatingIFrame.style.display != "inline")
+        {
+            var visibleTextBox = $get(this.TextBoxId);
+
+            floatingIFrame.style.width = visibleTextBox.offsetWidth + "px";
+            floatingIFrame.style.display = "inline";
+        }
+
+        if (this.RelativeDivId != null)
+        {
+            // set the zIndex of the containing div so the frame doesn't get overlapped
+            // by other elements outside the containing div.
+            var relativeDiv = $get(this.RelativeDivId);
+            relativeDiv.style.zIndex = 1;
+        }
+        else
+        {
+            // poll for changes in screen position
+            this.PollForDropDownMovement();
+        }
+        
+        // Define an OnShowEvent event for consumers of this class.
+        var handler = this.get_events().getHandler("OnShowEvent");
+        if (handler != null)
+            handler(this, Sys.EventArgs.Empty);
+    },
+
+    HideFloatingFrame : function()
+    {
+        var floatingIFrame = $get(this.FloatingIframeId);
+
+        if (this.RelativeDivId != null)
+        {
+            // reset the zIndex
+            var relativeDiv = $get(this.RelativeDivId);
+            relativeDiv.style.zIndex = 0;
+        }
+        
+        floatingIFrame.style.display = "none";
+
+        var handler = this.get_events().getHandler("OnHideEvent");
+        if (handler != null)
+            handler(this, Sys.EventArgs.Empty);
+
+        // When the dropdown collapses, the parameter is done changing value,
+        // so perform the autopost back for dependent parameters.
+        if (this.PostBackOnChange)
+            this.TriggerPostBackScript();
+    },
+    
+    GetDropDownPosition : function()
+    {
+        var visibleTextBox = $get(this.TextBoxId);
+        var floatingIFrame = $get(this.FloatingIframeId);
+
+        // NOTE: In mozilla, x.offsetParent can only be accessed if x is visible.
+        var originalDisplay = floatingIFrame.style.display;
+        floatingIFrame.style.display = "inline";
+        var offsetParent = floatingIFrame.offsetParent;
+        floatingIFrame.style.display = originalDisplay;
+
+        var textBoxPosition = this.GetObjectPosition(visibleTextBox, offsetParent);
+
+        return {Left:textBoxPosition.Left, Top:textBoxPosition.Top + visibleTextBox.offsetHeight};
+    },
+
+    GetObjectPosition : function(obj, relativeToObj)
+    {
+        var totalTop = 0;
+        var totalLeft = 0;
+        
+        var parent = obj.offsetParent;
+        if (parent != null) 
+        {
+            // this loop goes through each step along the offsetParent hierarchy except the last step.
+            // in the last step we do not want to make the scrollTop/scrollLeft correction.
+            while (parent != relativeToObj && parent != null)
+            {
+                // topToTop is the distance from the top of obj to the top of parent.
+                var topToTop = obj.offsetTop - parent.scrollTop;
+                totalTop += topToTop;
+
+                // leftToLeft is the distance from the outer left edge of obj to the outer left edge of parent
+                var leftToLeft = obj.offsetLeft - parent.scrollLeft;
+                totalLeft += leftToLeft;
+
+                obj = parent;
+                parent = parent.offsetParent;
+            }
+        }
+        
+        // The last step is to add in the distance from the top of obj to parent (the object 
+        // that we are measuring relative to).
+        // Therefore the scroll top/left correction is not needed.
+        totalTop += obj.offsetTop;
+        totalLeft += obj.offsetLeft;
+
+        // if the parent != relativeToObj, then it must be null (per the exit conditions of the while
+        // loop). Then the relativeToObject must be the top of the offset hierarchy, which means
+        // either it is null or its parent is null. If neither of these are true, then we have an 
+        // error and obj is not contained within relativeToObj.
+        if (parent != relativeToObj && relativeToObj != null && relativeToObj.offsetParent != null)
+        {
+            // invalid input, obj is not contained within relativeToObj
+            return {Left:0, Top:0};
+        }
+
+        if (parent != relativeToObj && relativeToObj != null)
+        {
+            totalTop -= relativeToObj.offsetTop;
+            totalLeft -= relativeToObj.offsetLeft;
+        }
+
+        return {Left:totalLeft, Top:totalTop};
+    },
+    
+    PollForDropDownMovement : function()
+    {
+        var element = "$get('" + escape(this.get_element().id) + "')";
+        setTimeout("if (" + element + " != null)" + element + ".control.PollingCallback();", 100);
+    },
+
+    PollingCallback : function()
+    {
+        // If the iframe isn't visible, no more events.
+        var floatingIframe = $get(this.FloatingIframeId);
+        if (floatingIframe.style.display != "inline")
+            return;
+
+        // If the text box moved, something on the page resized, so close the editor
+        var expectedIframePos = this.GetDropDownPosition();
+        if (floatingIframe.style.left != expectedIframePos.Left + "px" ||
+            floatingIframe.style.top != expectedIframePos.Top + "px")
+            this.HideFloatingFrame();
+        else
+            this.PollForDropDownMovement();
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl", Microsoft.Reporting.WebFormsClient._BaseParameterInputControl);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// CalendarDropDownParameterInputControl /////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl.initializeBase(this, [element]);
+    
+    this.BaseCalendarUrl = null;
+}
+
+Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl.callBaseMethod(this, "initialize");
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers(this.get_element());
+        
+        Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl.callBaseMethod(this, "dispose");
+    },
+    
+    GetCurrentValue : function()
+    {
+        if (this.IsNullChecked())
+            return this.NullValueText;
+        else
+        {
+            var txtInput = $get(this.TextBoxId);
+            if (txtInput.value == "")
+                return null;
+            else
+                return txtInput.value;
+        }
+    },
+    
+    OnDropDownImageClick : function(e)
+    {
+        Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl.callBaseMethod(this, "OnDropDownImageClick", [e]);
+
+        var calendarUrl = this.BaseCalendarUrl + encodeURIComponent($get(this.TextBoxId).value);
+        this.SetCalendarUrl(calendarUrl, false);
+    },
+    
+    OnCalendarSelection : function(resultfield)
+    {
+        // When the calendar is collapsing as a result of having a date selected, the calendar itself
+        // has the focus.  Move the focus to the calendar button.  Otherwise IE can get into a state
+        // where it won't allow anything to have the focus.
+        var inputCtrl = $get(this.ImageId);
+        inputCtrl.focus();
+        
+        this.ToggleFloatingFrameVisibility();
+
+        this.SetCalendarUrl(this.BaseCalendarUrl + encodeURIComponent(resultfield.value), true);
+    },
+    
+    SetCalendarUrl : function(url, forceReload)
+    {
+        var iframeObject = $get(this.FloatingIframeId).contentWindow;
+        
+        if (!forceReload) 
+        {
+            // If the selected dates are the different then get a new page
+            var currentDate = this.GetSelectedDateFromUrl(iframeObject.document.location.search).toUpperCase();
+            var newDate = this.GetSelectedDateFromUrl(url).toUpperCase();
+            if (currentDate == newDate)
+            {
+                if (iframeObject.document.readyState == "complete")
+                {
+                    // Hide the calendar that is showing and make sure the one with the 
+                    // users selection is showing.
+                    iframeObject.HideUnhide(iframeObject.g_currentShowing, "DatePickerDiv", iframeObject.g_currentID, null);
+                    return;
+                }
+            }
+        }
+
+        if (iframeObject.document.readyState == "complete")
+        {
+            // Show the loading page if navigating to a new calendar
+            iframeObject.Hide(iframeObject.g_currentShowing);
+            iframeObject.Unhide("LoadingDiv");
+        }
+        
+        iframeObject.document.location.replace(url);
+    },
+    
+    GetSelectedDateFromUrl : function(url)
+    {
+        var pos = url.lastIndexOf("selectDate");
+        var date = null;
+        
+        if (pos != -1)
+        {
+            date = url.substring(pos);
+            pos = date.indexOf("=");
+            
+            if (pos == -1)
+                date = null;
+            else
+            {
+                date = date.substring(pos + 1);
+                
+                pos = date.indexOf("&");
+                if (pos != -1)
+                    date = date.substring(0, pos);
+            }
+        }
+        
+        return date;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._CalendarDropDownParameterInputControl", Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// MultiValueParameterInputControl ///////////////////////////////////////////////////////////////////
+Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.initializeBase(this, [element]);
+
+    this.HasValidValueList = false;
+    this.AllowBlank = false;
+    this.FloatingEditorId = null;
+    this.HiddenIndicesId = null;
+    this.TextAreaDelimiter = _$RVCommon.getNewLineDelimiter();
+    this.ListSeparator = null;
+    this.GripImage = null;
+    this.GripImageRTL = null;
+
+    this.m_hiddenIndices = null;
+    this.m_table = null;
+}
+
+Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.callBaseMethod(this, "initialize");
+
+        if (this.HasValidValueList)
+        {
+            // ValidValueList initialization
+            this.m_hiddenIndices = $get(this.HiddenIndicesId);
+            var floatingEditor = $get(this.FloatingEditorId);
+            this.m_table = floatingEditor.getElementsByTagName("TABLE")[0];
+        }
+
+        $addHandlers($get(this.TextBoxId),
+            { "click": this.OnTextBoxClick },
+            this);
+
+        this.UpdateTextBoxWithDisplayValue();
+
+        // remove the checkboxes from the DOM, restore them only when needed (ShowFloatingFrame), this prevents
+        // the checkboxes from posting back in the case where the dropdown was never expanded
+        this.RemoveCheckBoxes();
+    },
+
+    dispose: function()
+    {
+        $clearHandlers(this.get_element());
+        $clearHandlers($get(this.TextBoxId));
+
+        if (this._resizeBehavior)
+        {
+            this._resizeBehavior.dispose();
+            delete this._resizingDelegate;
+        }
+
+        if (this.HasValidValueList)
+        {
+            this.m_hiddenIndices = null;
+            this.m_table = null;
+        }
+
+        Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.callBaseMethod(this, "dispose");
+    },
+
+    OnTextBoxClick: function(e)
+    {
+        this.ShowFloatingFrame();
+        e.stopPropagation();
+    },
+
+    GetCurrentValue: function()
+    {
+        if (this.HasValidValueList)
+            return this.GetCurrentValueFromValidValueList();
+        else
+            return this.GetCurrentValueFromTextEditor();
+    },
+
+    GetCurrentValueFromTextEditor: function()
+    {
+        var span = $get(this.FloatingEditorId);
+        var editor = span.getElementsByTagName("TEXTAREA")[0];
+
+        var valueString = editor.value;
+
+        // Remove the blanks
+        if (!this.AllowBlank)
+        {
+            // Break down the text box string to the individual lines
+            var valueArray = valueString.split(this.TextAreaDelimiter);
+
+            var finalValue = "";
+            for (var i = 0; i < valueArray.length; i++)
+            {
+                // If the string is non-blank, add it
+                if (valueArray[i].length > 0)
+                {
+                    if (finalValue.length > 0)
+                        finalValue += this.ListSeparator;
+                    finalValue += valueArray[i];
+                }
+            }
+
+            if (finalValue.length == 0)
+                return null;
+            else
+                return finalValue;
+        }
+        else
+            return valueString.replace(new RegExp(this.TextAreaDelimiter, "g"), this.ListSeparator);
+    },
+
+    GetCurrentValueFromValidValueList: function()
+    {
+        // using a Sys.StringBuilder to optimize for speed
+        var valueString = new Sys.StringBuilder();
+        var indexString = new Sys.StringBuilder();
+
+        // If there is only one element, it is a real value, not the select all option
+        var startIndex = 0;
+        var length = this.m_table.rows.length; // cache the length
+        if (length > 1)
+            startIndex = 1;
+
+        for (var i = startIndex; i < length; i++)
+        {
+            var rowInfo = this.GetValueForMultiValidValueRow(this.m_table, i);
+
+            if (rowInfo.CheckBox.checked)
+            {
+                valueString.append(this.Trim(rowInfo.Label));
+                indexString.append((i - startIndex).toString());
+            }
+        }
+
+        // hiddenIndices is populated with a comma separated list of indices of the checked checkboxes
+        this.m_hiddenIndices.value = indexString.toString(','); // parameter is the separator
+
+        if (valueString.isEmpty())
+            return null;
+        else
+            return valueString.toString(this.ListSeparator); // parameter is the separator
+    },
+
+    GetValueForMultiValidValueRow: function(table, rowIndex)
+    {
+        // Get the first cell of the row
+        var firstCell = table.rows[rowIndex].cells[0];
+        var span = firstCell.childNodes[0];
+
+        var checkBox = span.childNodes[0];
+
+        // Span is not always generated.
+        var label;
+        if (span.nodeName == "INPUT")
+        {
+            checkBox = span;
+            label = firstCell.childNodes[1];
+        }
+        else
+            label = span.childNodes[1];
+
+        var labelStr = " ";
+        if (label != null)
+        {
+            labelStr = label.innerText || label.textContent;
+
+            // The label can be blank.  If it is zero length, make it a space so that
+            // the text summary a little easier to read.
+            if (typeof (labelStr) !== "string" || labelStr === "")
+                labelStr = " ";
+        }
+
+        return { CheckBox: checkBox, Label: labelStr };
+    },
+
+    // Trim leading and trailing spaces (NBSP) from a string
+    Trim: function(text)
+    {
+        var startpos = text.length;
+        var nbsp = 160; // Remove occurrances of NBSP
+        for (var i = 0; i < text.length; i++)
+        {
+            // Look for &nbsp
+            if (text.charCodeAt(i) != nbsp)
+            {
+                startpos = i;
+                break;
+            }
+        }
+        var endpos = text.length - 1;
+        for (var j = endpos; j >= startpos; j--)
+        {
+            if (text.charCodeAt(j) != nbsp)
+            {
+                endpos = j;
+                break;
+            }
+        }
+        endpos++;
+        return text.substring(startpos, endpos);
+    },
+
+    UpdateTextBoxWithDisplayValue: function()
+    {
+        var textBox = $get(this.TextBoxId);
+        textBox.value = this.GetDisplayValue();
+    },
+
+    RemoveCheckBoxes: function()
+    {
+        if (this.m_table != null)
+        // remove the table of checkboxes from the DOM
+            this.m_table.parentNode.removeChild(this.m_table);
+    },
+
+    RestoreCheckBoxes: function()
+    {
+        if (this.m_table != null)
+        // insert the table back in front of the hidden field
+            this.m_hiddenIndices.parentNode.insertBefore(this.m_table, this.m_hiddenIndices);
+    },
+
+    ShowFloatingFrame: function()
+    {
+        var floatingEditor = $get(this.FloatingEditorId);
+
+        if (this.RelativeDivId == null)
+        {
+            // Position the drop down.  This must be done before calling showing the frame. Otherwise, 
+            // a scroll bar is likely to appear as a result of the frame becoming visible which would make the 
+            // position invalid.
+            var newEditorPosition = this.GetDropDownPosition();
+            floatingEditor.style.left = newEditorPosition.Left + "px";
+            floatingEditor.style.top = newEditorPosition.Top + "px";
+        }
+
+        // only show if the editor is not currently visible. 
+        if (floatingEditor.style.display == "inline")
+            return;
+
+        // Restore the checkboxes into the DOM
+        this.RestoreCheckBoxes();
+
+        // Set drop down and summary string to the same width to make it look like a drop down
+        var visibleTextBox = $get(this.TextBoxId);
+        floatingEditor.style.width = visibleTextBox.offsetWidth + "px";
+
+        floatingEditor.style.display = "inline";
+
+        // Show the iframe
+        Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.callBaseMethod(this, "ShowFloatingFrame");
+
+        // Set the iframe height to our controls height
+        var floatingIFrame = $get(this.FloatingIframeId);
+        floatingIFrame.style.height = floatingEditor.offsetHeight;
+
+        if (!(this._resizeBehavior))
+            this._attachResizeHandle()
+        else
+            this._resizeBehavior._reset();
+    },
+
+    _attachResizeHandle: function()
+    {
+        var floatingEditor = $get(this.FloatingEditorId);
+        if (this.HasValidValueList)
+        {
+            if (floatingEditor.offsetWidth > floatingEditor.scrollWidth &&
+                floatingEditor.offsetHeight > floatingEditor.scrollHeight)
+            {
+                // no need of resizable behavior;
+                return;
+            }
+        }
+
+        // If we have horizontal overflow, horizontal scrollbar appears.
+        // Increase the minimum height, if is less that 200px, so the last row to be visible.
+        // This compensation have to be done only for IE < 8
+        var scrollCompensation = 0;
+        if (Sys.Browser.agent == Sys.Browser.InternetExplorer && Sys.Browser.documentMode < 8)
+        {
+            scrollCompensation = Math.max(0, (floatingEditor.offsetHeight - floatingEditor.clientHeight));
+        }
+        var minimumHeight = Math.min(150, floatingEditor.offsetHeight + scrollCompensation);
+        var minimumWidth = parseInt(floatingEditor.style.width) - parseInt(floatingEditor.style.borderWidth) * 2;
+
+        // the textarea must have overflow set in the server code.
+        var resizeOverfow = this.HasValidValueList ? "auto" : "hidden";
+
+        if (!this.HasValidValueList)
+        {
+            this._textArea = floatingEditor.getElementsByTagName("textarea")[0];
+            // Firefox includes the scrollbars in the padding for text areas, despite outer box model. 
+            if (Sys.Browser.agent == Sys.Browser.Firefox)
+            {
+                this._textArea.style.padding = "0px";
+            }
+        }
+        this._resizeBehavior = $create(Microsoft.Reporting.WebFormsClient.ResizableControlBehavior,
+                {
+                    GripImage: this.GripImage,
+                    GripImageRTL: this.GripImageRTL,
+                    MinimumHeight: minimumHeight,
+                    MinimumWidth: minimumWidth,
+                    Overflow: resizeOverfow,
+                    id: this.FloatingEditorId + "_resize"
+                }, null, null, floatingEditor
+        );
+        this._resizingDelegate = Function.createDelegate(this, this._onResizing)
+        this._resizeBehavior.add_resizing(this._resizingDelegate);
+    },
+
+    _onResizing: function(sender, args)
+    {
+        var floatingEditor = $get(this.FloatingEditorId);
+        var floatingIFrame = $get(this.FloatingIframeId);
+        var size = sender.get_Size();
+        // check if the frame is displayed first to reduce flickering.
+        if (floatingIFrame.style.display != "block")
+        {
+            floatingIFrame.style.display = "block";
+        }
+
+        // The size of the text area have to be set explicitly.
+        if (!this.HasValidValueList && this._textArea)
+        {
+            if (_$RVCommon.isIEQuirksMode())
+            {
+                this._textArea.style.width = size.width + "px";
+                this._textArea.style.height = size.height + "px";
+            }
+            else
+            {
+                // standard box mode include padding;
+                var padding = (parseInt(this._textArea.style.padding) * 2);
+                this._textArea.style.width = size.width - padding + "px";
+                this._textArea.style.height = size.height - padding + "px";
+            }
+        }
+
+        floatingIFrame.style.left = floatingEditor.style.left;
+        floatingIFrame.style.width = size.width + "px";
+        floatingIFrame.style.height = size.fullHeight + "px";
+    },
+
+    HideFloatingFrame: function()
+    {
+        var floatingEditor = $get(this.FloatingEditorId);
+
+        // Hide the editor
+        floatingEditor.style.display = "none";
+
+        // Update the text box
+        this.UpdateTextBoxWithDisplayValue();
+
+        // remove the checkboxes from the DOM
+        this.RemoveCheckBoxes();
+
+        // Hide the iframe
+        Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.callBaseMethod(this, "HideFloatingFrame");
+    },
+
+    SetDefaultChecked: function(src)
+    {
+        // IE6 reverts the checked state to that of the defaultChecked value when removed from the DOM, we need to 
+        // update the value so that the value is correct when retrieved while not in the DOM (i.e. "View Report")
+        if (Sys.Browser.agent == Sys.Browser.InternetExplorer && Sys.Browser.version == 6)
+            src.defaultChecked = src.checked;
+    },
+
+    OnSelectAllClick: function(src)
+    {
+        this.SetDefaultChecked(src);
+        var length = this.m_table.rows.length; // cache the value of the length
+        for (var i = 1; i < length; i++)
+        {
+            var rowInfo = this.GetValueForMultiValidValueRow(this.m_table, i);
+
+            rowInfo.CheckBox.checked = src.checked;
+            this.SetDefaultChecked(rowInfo.CheckBox);
+        }
+    },
+
+    OnValidValueClick: function(src, selectAllCheckBoxId)
+    {
+        if (!src.checked && selectAllCheckBoxId != '')
+        {
+            var selectAllCheckBox = $get(selectAllCheckBoxId);
+            selectAllCheckBox.checked = false;
+            this.SetDefaultChecked(selectAllCheckBox);
+        }
+        this.SetDefaultChecked(src);
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl.registerClass("Microsoft.Reporting.WebFormsClient._MultiValueParameterInputControl", Microsoft.Reporting.WebFormsClient._GenericDropDownParameterInputControl);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////

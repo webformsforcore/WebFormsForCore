@@ -1,0 +1,114 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._SessionKeepAlive = function ()
+{
+    Microsoft.Reporting.WebFormsClient._SessionKeepAlive.initializeBase(this);
+
+    this.KeepAliveUrl = null;
+    this.KeepAliveBody = null;
+    this.KeepAliveIntervalSeconds = 0;
+
+    this.m_keepAliveTimerId = null;
+    this.m_executingKeepAlive = null;
+
+    this.m_isInitialized = false;
+
+    this.m_onTimerIntervalDelegate = Function.createDelegate(this, this.KeepSessionsAlive);
+    this.m_onKeepAliveRequestCompletedDelegate = Function.createDelegate(this, this.OnKeepAliveRequestCompleted);
+
+    this.m_onAppLoadDelegate = Function.createDelegate(this, this.OnAppLoad);
+}
+
+Microsoft.Reporting.WebFormsClient._SessionKeepAlive.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._SessionKeepAlive.callBaseMethod(this, "initialize");
+
+        // Need to wait until app load to avoid async calls colliding with async postback
+        Sys.Application.add_load(this.m_onAppLoadDelegate);
+    },
+
+    dispose: function()
+    {
+        this.CancelKeepAliveTimer();
+
+        if (this.m_executingKeepAlive != null)
+            this.m_executingKeepAlive.abort();
+
+        delete this.m_onTimerIntervalDelegate;
+        this.m_onTimerIntervalDelegate = null;
+
+        delete this.m_onKeepAliveRequestCompletedDelegate;
+        this.m_onKeepAliveRequestCompletedDelegate = null;
+
+        Sys.Application.remove_load(this.m_onAppLoadDelegate);
+        delete this.m_onAppLoadDelegate;
+        this.m_onAppLoadDelegate = null;
+
+        Microsoft.Reporting.WebFormsClient._SessionKeepAlive.callBaseMethod(this, "dispose");
+    },
+
+    OnAppLoad: function()
+    {
+        if (this.m_isInitialized)
+            return;
+
+        if (this.KeepAliveIntervalSeconds != 0)
+        {
+            this.KeepSessionsAlive();
+            this.m_keepAliveTimerId = setInterval(this.m_onTimerIntervalDelegate, this.KeepAliveIntervalSeconds * 1000);
+        }
+
+        this.m_isInitialized = true;
+    },
+
+    KeepSessionsAlive: function()
+    {
+        // Don't ping twice simultaneously
+        if (this.m_executingKeepAlive != null)
+            return;
+
+        var webRequest = new Sys.Net.WebRequest();
+        webRequest.set_url(this.KeepAliveUrl);
+        webRequest.set_httpVerb("POST");
+        if (this.KeepAliveBody != null)
+        {
+            webRequest.set_body(this.KeepAliveBody);
+            // WebKit doesn't allow to set Content-Length explicitly due security reasons.
+            // Content lenght will be determined and set based on actual body length.
+            if (Sys.Browser.agent != Sys.Browser.Safari)
+            {
+                webRequest.get_headers()["Content-Length"] = this.KeepAliveBody.length;
+            }
+        }
+        webRequest.add_completed(this.m_onKeepAliveRequestCompletedDelegate);
+
+        webRequest.invoke();
+        this.m_executingKeepAlive = webRequest.get_executor();
+    },
+
+    OnKeepAliveRequestCompleted: function(executor, eventArgs)
+    {
+        this.m_executingKeepAlive = null;
+
+        if (executor.get_timedOut() || (executor.get_responseAvailable() && executor.get_statusCode() != 200))
+        {
+            this.CancelKeepAliveTimer();
+        }
+    },
+
+    CancelKeepAliveTimer: function()
+    {
+        if (this.m_keepAliveTimerId != null)
+        {
+            clearTimeout(this.m_keepAliveTimerId);
+            this.m_keepAliveTimerId = null;
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._SessionKeepAlive.registerClass("Microsoft.Reporting.WebFormsClient._SessionKeepAlive", Sys.Component);

@@ -1,0 +1,599 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._AsyncWaitControl = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._AsyncWaitControl.initializeBase(this, [element]);
+
+    this.ReportViewerId = null;
+    this.WaitControlId = null;
+    this.FixedTableId = null;
+    this.ClientCanceledId = null;
+    this.DisplayDelay = 0;
+    this.SkipTimer = false;
+    this._postBackElement = null;
+    this.m_triggerIds = null;
+
+    this.m_delayTimerCompletedDelegate = Function.createDelegate(this, this._onDelayStartTimerCompleted);
+    this.m_onReportViewerLoadingChangedDelegate = Function.createDelegate(this, this._onReportViewerLoadingChanged);
+    this.m_onPageRequestBeginRequestDelegate = Function.createDelegate(this, this._onPageRequestBeginRequest);
+    this.m_onPageRequestEndRequestDelegate = Function.createDelegate(this, this._onPageRequestEndRequest);
+
+    this.m_visiblePollingTimer = null;
+
+    this.m_delayTimer = null;
+
+    this.m_waitControl = null;
+
+    this.m_reportViewer;
+
+    this.m_reallyCanceled = false;
+    this.m_waitVisible = false;
+    this.m_transVisible = false;
+}
+
+Microsoft.Reporting.WebFormsClient._AsyncWaitControl.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._AsyncWaitControl.callBaseMethod(this, "initialize");
+        if (this.ReportViewerId)
+        {
+            this.m_reportViewer = $find(this.ReportViewerId);
+
+            if (this.m_reportViewer != null)
+            {
+                this.m_reportViewer.add_propertyChanged(this.m_onReportViewerLoadingChangedDelegate);
+            }
+
+            var pageRequestManager = this._getPageRequestManager();
+            if (pageRequestManager)
+            {
+                pageRequestManager.add_beginRequest(this.m_onPageRequestBeginRequestDelegate);
+                pageRequestManager.add_endRequest(this.m_onPageRequestEndRequestDelegate);
+            }
+
+            this.m_waitControl = $get(this.WaitControlId);
+        }
+    },
+
+    get_TriggerIds: function()
+    {
+        return this.m_triggerIds;
+    },
+
+    set_TriggerIds: function(triggerIds)
+    {
+        this.m_triggerIds = triggerIds;
+    },
+
+    dispose: function()
+    {
+        if (this.m_onReportViewerLoadingChangedDelegate)
+        {
+            this.m_reportViewer.remove_propertyChanged(this.m_onReportViewerLoadingChangedDelegate);
+            this.m_onReportViewerLoadingChangedDelegate = null;
+            delete this.m_onReportViewerLoadingChangedDelegate;
+        }
+
+        var pageRequestManager = this._getPageRequestManager();
+        if (pageRequestManager)
+        {
+            pageRequestManager.remove_beginRequest(this.m_onPageRequestBeginRequestDelegate);
+            pageRequestManager.remove_endRequest(this.m_onPageRequestEndRequestDelegate);
+        }
+
+        if (this.m_onPageRequestBeginRequestDelegate)
+        {
+            this.m_onPageRequestBeginRequestDelegate = null;
+            delete this.m_onPageRequestBeginRequestDelegate;
+        }
+
+        this._clearPollingTimer();
+        this._clearDelayTimer();
+
+        delete this.m_delayTimerCompletedDelegate;
+
+        Microsoft.Reporting.WebFormsClient._AsyncWaitControl.callBaseMethod(this, "dispose");
+    },
+
+    _getPageRequestManager: function()
+    {
+        if (Sys.WebForms && Sys.WebForms.PageRequestManager)
+            return Sys.WebForms.PageRequestManager.getInstance();
+
+        return null;
+    },
+
+    _cancelCurrentPostback: function()
+    {
+        // there is a tricky race condition in this code. If pageRequestManager says we are in
+        // a postback, it's possible for the postback to complete before we call abortPostBack().
+        // That postback will "slip through the cracks", and we won't successfully cancel it.
+        // m_reallycanceled lets us know we really want the current happenings to be canceled.
+        // We listen to pageRequestManager's endRequest event. If m_reallyCanceled is true,
+        // but the postback wasn't aborted, then it slipped through and we force the cancellation
+        // in _onPageRequestEndRequest
+
+        this.m_reallyCanceled = true;
+
+        var pageRequestManager = this._getPageRequestManager();
+        if (pageRequestManager && pageRequestManager.get_isInAsyncPostBack())
+        {
+            // if we are still in a postback, then great, all we have to do is kill it.
+            // The viewer will be non the wiser, and we get a nice clean cancellation.
+            pageRequestManager.abortPostBack();
+
+            if (this._triggeringControlWasForThisViewer() && this._triggeringControlWasAsyncLoadTarget())
+            {
+                // we do need to let the server know a cancel happened, so we'll send that up in this hidden field
+                var cancelField = $get(this.ClientCanceledId);
+                cancelField.value = "true";
+            }
+        }
+        else
+        {
+            // Not in an async postback? then the postback has finished and the report is loading
+            // its images. In this case, the viewer is busy getting the report ready, so we have to actively stop this.
+            this._cancelReportViewerLoading();
+        }
+    },
+
+    _cancelReportViewerLoading: function()
+    {
+        var internalViewer = this.m_reportViewer._tryGetInternalViewer();
+
+        if (internalViewer == null)
+            throw Error.invalidOperation("Unexpected error: InternalViewer unavailable for calling OnUserCanceled.");
+
+        internalViewer.OnUserCanceled();
+    },
+
+    _onPageRequestBeginRequest: function(sender, e)
+    {
+        this._postBackElement = e.get_postBackElement();
+        this.m_reallyCanceled = false;
+    },
+
+    _onPageRequestEndRequest: function(sender, e)
+    {
+        // if user really did cancel, but this postback is claiming
+        // it was never aborted, then our race condition occured, and so
+        // we need to force canceling from here
+        if (!e.get_response().get_aborted() && this.m_reallyCanceled)
+        {
+            this._cancelReportViewerLoading();
+        }
+    },
+
+    _clearDelayTimer: function()
+    {
+        if (this.m_delayTimer != null)
+        {
+            clearTimeout(this.m_delayTimer);
+            this.m_delayTimer = null;
+        }
+    },
+
+    _clearPollingTimer: function()
+    {
+        if (this.m_visiblePollingTimer != null)
+        {
+            clearTimeout(this.m_visiblePollingTimer);
+            this.m_visiblePollingTimer = null;
+        }
+    },
+
+    _triggeringControlWasAsyncLoadTarget: function()
+    {
+        var eventTarget = this._postBackElement;
+
+        if (eventTarget && eventTarget.id.indexOf("Reserved_AsyncLoadTarget") >= 0)
+        {
+            return true;
+        }
+
+        return false;
+    },
+
+    _areRelated: function(ancestor, descendant)
+    {
+        // using the overload of $get to see if descendant is a descendant of ancestor
+        // this is equivalent to ancestor.getElementById(descendant.id)
+        // it will return null if $get fails to find descendant under ancestor
+        return ancestor && descendant && (ancestor == descendant || _$RVCommon.getPostBackTargetElementById(descendant.id, ancestor));
+    },
+
+    _triggeringControlWasForThisViewer: function()
+    {
+        var eventTarget = this._postBackElement;
+
+        // If the postback came from something registered in our triggers list, then we are interested
+        // in it and should react by doing things like showing async spinny.
+        // The viewer itself is registered in this list, so it doesn't need a special case here.
+
+        if (eventTarget)
+        {
+            var triggerIds = this.get_TriggerIds();
+            for (var i = 0; i < triggerIds.length; ++i)
+            {
+                var ancestor = $get(triggerIds[i]);
+
+                if (this._areRelated(ancestor, eventTarget))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    },
+
+    _onReportViewerLoadingChanged: function(sender, e)
+    {
+        if (e.get_propertyName() == "isLoading")
+        {
+            var isLoading = this.m_reportViewer.get_isLoading();
+
+            if (!isLoading)
+            {
+                // If a viewer is about to trigger a postback, don't hide the transparency
+                // Explicitly check for true to force passing in a boolean to 
+                var showTrans = Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected == true;
+
+                // hide the async wait control
+                this.set_visible(showTrans, false);
+                this._clearDelayTimer();
+                this._clearPollingTimer();
+            }
+            else
+            {
+                // the control will tell spinny to dislay immediately if this
+                // is the first time a report is being rendered
+                if (this.SkipTimer)
+                {
+                    this.SkipTimer = false;
+                    this._onDelayStartTimerCompleted();
+                }
+                else
+                {
+                    this.m_delayTimer = setTimeout(this.m_delayTimerCompletedDelegate, this.DisplayDelay);
+                }
+            }
+        }
+    },
+
+    _onDelayStartTimerCompleted: function()
+    {
+        this.set_visible(true, this._triggeringControlWasForThisViewer());
+    },
+
+    set_visible: function(transVisible, waitVisible)
+    {
+        /// <summary>
+        /// This is the "public" entry point to hiding/showing spinny.
+        /// The other methods: _start_visibility_polling and _set_visible_core should not
+        /// be directly called.
+        ///
+        /// Here we just record what the current state of spinny should be, and then
+        /// kick off the polling
+        /// </summary>
+
+        this.m_transVisible = transVisible;
+        this.m_waitVisible = waitVisible;
+
+        this._start_visibility_polling();
+    },
+
+
+    _start_visibility_polling: function()
+    {
+        this._set_visible_core();
+
+        // set a timer that will check and position spinny on a regular interval
+        // this accounts for if the user resizes the window with spinny showing when
+        // the layout uses percentages. A timer is necessary instead of listening to the
+        // resize event because IE does not always fire the event. For simplicity, it was decided
+        // to use the timer for all browsers, as using the resize event in Firefox/Safari didn't buy
+        // enough to warrant the multiple code paths
+        if (this.m_reportViewer.get_isLoading())
+        {
+            // this value influences how this action behaves
+            // longer timeout = smoother overall, but spinny stays in the wrong place longer
+            // shorter timeout = jerkier, but spinny stays in the wrong place shorter
+            // 200 millis seemed about the best compromise between the two on a modern machine
+            var timeoutMillis = 200;
+
+            this.m_visiblePollingTimer = setTimeout(Function.createDelegate(this, this._start_visibility_polling), timeoutMillis);
+        }
+    },
+
+    _set_visible_core: function()
+    {
+        var transVisible = this.m_transVisible;
+        var waitVisible = this.m_waitVisible;
+
+        var element = this.get_element();
+
+        // This is to position spinny correctly in the case of the viewer placed in a non-static
+        // element. See the method below for more details
+        var anchoringParentOffset = this._getAnchoringParentOffsets(element);
+
+        if (transVisible)
+        {
+            var dims = this._getBounds();
+
+            element.style.top = (dims.top - anchoringParentOffset.top) + "px";
+            element.style.left = (dims.left - anchoringParentOffset.left) + "px";
+            element.style.width = dims.width + "px";
+            element.style.height = dims.height + "px";
+        }
+
+        element.style.zIndex = 1000;
+        this.m_waitControl.style.zIndex = 1001;
+
+        Sys.UI.DomElement.setVisible(element, transVisible);
+        Sys.UI.DomElement.setVisible(this.m_waitControl, waitVisible);
+
+        if (transVisible)
+        {
+            this._clip(element);
+        }
+
+        if (waitVisible)
+        {
+            var centering = this._getTopLeftForCenter(this.m_waitControl);
+            this.m_waitControl.style.top = (centering.top - anchoringParentOffset.top) + "px";
+            this.m_waitControl.style.left = (centering.left - anchoringParentOffset.left) + "px";
+
+            this._clip(this.m_waitControl);
+        }
+    },
+
+    _getAnchoringParentOffsets: function(element)
+    {
+        /// <summary>
+        /// This method acquires the element's nearest offset parent's offsets
+        /// from the window. This is used to position spinny correctly.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// If the viewer is placed in an absolute, fixed or relative element,
+        /// then spinny (who is position:absolute) will get its positioning
+        /// anchored off of that element. The normal course of things is to determine
+        /// where spinny should go relative to the window, then position it with those values
+        /// but if spinny has an offset parent, it will get positioned off of that parent and not
+        /// the window, causing spinny to be too far to the left and too far down. This method
+        /// determines that element's offset, and we use these values to subtract spinny's ultimate
+        /// position, to account for this.
+        ///
+        /// NOTES: this method must move up the parentNode hierarchy and not the offsetParent hierarchy
+        /// because Safari and Firefox both do not consider a fixed element to be in the offset hierarchy,
+        /// even though spinny will get anchored off of them
+        ///
+        /// We don't care about whether an ancestor has overflow or not because we are positioning off
+        /// of the ancestor's upper corner, where the overflow is irrelevant. the _clip() method below
+        /// will deal with overflow issues in order to clip spinny accordingly
+        /// </remarks>
+
+
+
+        var top = 0;
+        var left = 0;
+
+        if (element)
+        {
+            var node = element.parentNode;
+
+            while (node && node.style != undefined && !this.HasAnchoringPositionStyle(node))
+            {
+                node = node.parentNode;
+            }
+
+            if (node && node.style != undefined)
+            {
+                var offset = _$RVCommon.documentOffset(node);
+                top = offset.top;
+                left = offset.left;
+            }
+
+            // Now we need to deal with the anchoring node's borders. This is handled
+            // differently for the body versus any other element, and also handled differently by browser mode
+
+            // we purposely skipped the body in the while loop above. If the anchoring element really is the body,
+            // we need to handle it as a special case, instead of the standard case above. We deal with body below.
+            // So if we made it all the way up to document, then really the body is what we are interested in 
+            // for the remainder of the method.
+            if (node == document)
+            {
+                node = document.body;
+            }
+
+            // NOTE: "borderTopWidth" does not work in Firefox/Safari, but "border-top-width" works in everything
+            var borderTopWidth = _$RVCommon.getInt(_$RVCommon.getComputedStyle(node, "border-top-width"));
+            var borderLeftWidth = _$RVCommon.getInt(_$RVCommon.getComputedStyle(node, "border-left-width"));
+
+            if (node == document.body && !_$RVCommon.isPreIE8StandardsMode() && !_$RVCommon.isIEQuirksMode())
+            {
+                // IE8 standards, Firefox and Safari will cause our offsets to be off by the body's border size,
+                // so we need to adjust for that. For quirks mode, this is not needed
+
+                top -= borderTopWidth;
+                left -= borderLeftWidth;
+            }
+            else if (node != document.body)
+            {
+                // for non body nodes in all browsers, we need to take their borders into account
+                top += borderTopWidth;
+                left += borderLeftWidth;
+            }
+        }
+
+        return { top: top, left: left };
+    },
+
+    HasAnchoringPositionStyle: function(element)
+    {
+        // we don't want body to be considered in this method. for body, we basically want this
+        // method to return false, because body is a special case in regards to margins, padding and borders
+        // see above in _getAnchoringParentOffsets how we handle body.
+
+        // Retrieve the CSS positioning style for a given node.  This method takes into account
+        // positioning that is set via a style sheet in addition to inline styles.
+        // The currentStyle property is supported by IE. Other browsers (Firefox, Safari) must use the
+        // getComputedStyle method.
+        var positionStyle = "";
+        if (element.currentStyle != null)
+            positionStyle = element.currentStyle.position;
+        else if (window.getComputedStyle != null)
+        {
+            var cs = window.getComputedStyle(element, null);
+            positionStyle = cs.getPropertyValue('position');
+        }
+
+        return positionStyle == "fixed" || positionStyle == "absolute" || positionStyle == "relative";
+    },
+
+    _clip: function(element)
+    {
+        /// <summary>
+        /// Ensures the given element doesn't extend beyond a constraining parent
+        /// </summary>
+
+
+        // find a parent that has constrained its children's visibility with overflow
+        // two parentNodes here because the first one is the updatepanel of the viewer
+        var parent = $get(this.ReportViewerId).parentNode.parentNode;
+
+        while (parent && this._hasNoOverflowSet(parent))
+        {
+            parent = parent.parentNode;
+        }
+
+        // if found one, set this element's clip to ensure it
+        // does not go out beyond its parent
+        if (parent)
+        {
+            var pbounds = _$RVCommon.getBounds(parent);
+            var ebounds = _$RVCommon.getBounds(element);
+
+            if (parent.scrollWidth > parent.clientWidth
+                && parent.style.overflow != "hidden"
+                && parent.style.overflowX != "hidden"
+                && !_$RVCommon.isSafari()) // safari already accounts for scrollbars when reporting sizes
+            {
+                // has horizontal scrollbar
+                pbounds.height -= 18;
+                pbounds.bottom -= 18;
+            }
+
+            if (parent.scrollHeight > parent.clientHeight
+                && parent.style.overflow != "hidden"
+                && parent.style.overflowY != "hidden"
+                && !_$RVCommon.isSafari())  // safari already accounts for scrollbars when reporting sizes
+            {
+                // has vertical scrollbar
+                pbounds.width -= 18;
+                pbounds.right -= 18;
+            }
+
+            var topClip = ebounds.top < pbounds.top ? pbounds.top - ebounds.top : 0;
+            var leftClip = ebounds.left < pbounds.left ? pbounds.left - ebounds.left : 0;
+
+            var bottomClip = ebounds.height - (ebounds.bottom - pbounds.bottom);
+            var rightClip = ebounds.width - (ebounds.right - pbounds.right);
+
+            // rect(top, right, bottom, left)
+            // clip works non-intuitively. top and left define the upper left corner of the clipping rectangle
+            // relative to the element. bottom and right define the bottom right corner, relative
+            // to the element. It doesn't work like padding and margin do.
+            var clip = "rect(" + topClip + "px," + rightClip + "px," + bottomClip + "px," + leftClip + "px)";
+            element.style.clip = clip;
+        }
+    },
+
+    _hasNoOverflowSet: function(element)
+    {
+        if (
+        (element == null)
+            ||
+            (element.style == undefined)
+            ||
+            (
+            element.style.overflow != "hidden"
+            && element.style.overflow != "scroll"
+            && element.style.overflow != "auto"
+            && element.style.overflowX != "hidden"
+            && element.style.overflowX != "scroll"
+            && element.style.overflowX != "auto"
+            && element.style.overflowY != "hidden"
+            && element.style.overflowY != "scroll"
+            && element.style.overflowY != "auto"
+            )
+        )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    },
+
+    _getTopLeftForCenter: function(element)
+    {
+        var dims = this._getBounds();
+        var elemDims = _$RVCommon.getBounds(element);
+
+        var top = dims.top + dims.height / 2.0 - elemDims.height / 2.0;
+        var left = dims.left + dims.width / 2.0 - elemDims.width / 2.0;
+
+
+        // clamp async spinny within the bounds of the viewer
+        // basically we are saying nothing the viewer produces (ie spinny)
+        // will invade above or just behind in the document, for below and
+        // just ahead in the document, we make no promise
+        var isRtl = this.m_reportViewer._get_direction() == "rtl";
+
+        if (isRtl)
+        {
+            var elementRight = left + elemDims.width;
+            var viewerRight = dims.left + dims.width;
+            if (elementRight > viewerRight)
+            {
+                left -= elementRight - viewerRight;
+            }
+        }
+        else if (left < 0)
+        {
+            left = 0;
+        }
+
+
+        if (top < 0)
+        {
+            top = 0;
+        }
+
+        return { top: top, left: left };
+    },
+
+    _getBounds: function()
+    {
+        var fixedTable = $get(this.FixedTableId);
+
+        var offsets = _$RVCommon.documentOffset(fixedTable);
+        var top = offsets.top;
+        var left = offsets.left;
+
+        var lastRow = fixedTable.rows.item(fixedTable.rows.length - 1);
+
+        top += fixedTable.clientHeight - lastRow.offsetHeight;
+
+        return { left: left, top: top, width: fixedTable.clientWidth, height: lastRow.offsetHeight };
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._AsyncWaitControl.registerClass("Microsoft.Reporting.WebFormsClient._AsyncWaitControl", Sys.UI.Control);

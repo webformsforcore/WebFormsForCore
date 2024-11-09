@@ -1,0 +1,101 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._TextButton = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._TextButton.initializeBase(this, [element]);
+
+    this.IsActive = false;
+    this.OnClickScript = null;
+
+    this.ActiveLinkStyle = null;
+    this.DisabledLinkStyle = null;
+
+    this.ActiveLinkColor = null;
+    this.DisabledLinkColor = null;
+    this.ActiveHoverLinkColor = null;
+}
+
+Microsoft.Reporting.WebFormsClient._TextButton.prototype = 
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._TextButton.callBaseMethod(this, "initialize");
+
+        $addHandlers(this.get_element(),
+            { "mouseover" : this.OnMouseOver,
+              "mouseout"  : this.OnMouseOut,
+              "click"     : this.OnClick },
+            this);
+
+        this.OnMouseOut(null);
+    },
+    
+    dispose : function()
+    {
+        $clearHandlers(this.get_element());
+        
+        Microsoft.Reporting.WebFormsClient._TextButton.callBaseMethod(this, "dispose");
+    },
+    
+    OnMouseOver : function(e)
+    {
+        if (this.ActiveLinkStyle != null)
+            return;
+            
+        var link = this.get_element();
+
+        if (this.IsActive)
+        {
+            link.style.textDecoration = "underline";
+            link.style.color = this.ActiveHoverLinkColor;
+            link.style.cursor = "pointer";
+        }
+        else
+            link.style.cursor = "default";
+    },
+    
+    OnMouseOut : function(e)
+    {
+        if (this.ActiveLinkStyle != null)
+            return;
+
+        var link = this.get_element();
+
+        if (this.IsActive)
+            link.style.color = this.ActiveLinkColor;
+        else
+            link.style.color = this.DisabledLinkColor;
+        link.style.textDecoration = "none";
+    },
+    
+    OnClick : function(e)
+    {
+        if (this.OnClickScript != null && this.IsActive)
+            this.OnClickScript();
+
+        e.preventDefault();
+    },
+    
+    SetActive : function(makeActive)
+    {
+        var button = this.get_element();
+            
+        this.IsActive = makeActive;
+        
+        // If using styles, update style name
+        if (this.ActiveLinkStyle != null)
+        {
+            if (this.IsActive)
+                button.className = this.ActiveLinkStyle;
+            else
+                button.className = this.DisabledLinkStyle;
+        }
+        
+        this.OnMouseOut(null);
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._TextButton.registerClass("Microsoft.Reporting.WebFormsClient._TextButton", Sys.UI.Control);

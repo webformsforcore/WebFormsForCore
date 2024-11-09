@@ -1,0 +1,374 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._DocMapArea = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._DocMapArea.initializeBase(this, [element]);
+
+    this.RootNodeId = null;
+    this.SelectedNodeHiddenFieldId = null;
+    this.TriggerPostBack = null;
+    this.IsLTR = true;
+    this.ReportViewerId = null;
+
+    this.m_active = true;
+    this.m_selectedNode = null;
+    this.m_originalTextNodeColor = null;
+    this.m_originalTextNodeBackColor = null;
+}
+
+Microsoft.Reporting.WebFormsClient._DocMapArea.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._DocMapArea.callBaseMethod(this, "initialize");
+        
+        if (this.RootNodeId != null)
+        {
+            this.SetDirectionForTree();
+            
+            var rootNode = $get(this.RootNodeId);
+            var textNode = this.GetTextNodeFromTreeNode(rootNode);
+
+            // Save the original text node color and back color
+            this.m_originalTextNodeColor = textNode.style.color;
+            if (this.m_originalTextNodeColor == null)
+                this.m_originalTextNodeColor = "";                
+            this.m_originalTextNodeBackColor = textNode.style.backgroundcolor;
+            if (this.m_originalTextNodeBackColor == null)
+                this.m_originalTextNodeBackColor = "";
+
+            this.MarkNodeAsSelected(rootNode);
+        }
+    },
+
+    dispose: function()
+    {
+        Microsoft.Reporting.WebFormsClient._DocMapArea.callBaseMethod(this, "dispose");
+        this.m_selectedTextNode = null;
+    },
+
+    SetActive: function(active)
+    {
+        this.m_active = active;
+    },
+
+    ExpandCollapseNode : function(treeNode)
+    {
+        if (!this.m_active)
+            return;
+
+        var wasExpanded = this.IsNodeExpanded(treeNode);
+
+        // Toggle visibility on the child nodes and images.  Only toggle immediate children
+        var childNodes = treeNode.childNodes;
+        for (var i = 0; i < childNodes.length; i++)
+        {
+            var childNode = childNodes[i];
+            if (childNode.tagName === "DIV" ||  // Child nodes
+                childNode.tagName === "INPUT")  // Expand/collapse images
+            {
+                this.ToggleNodeVisibility(childNode);
+            }
+        }
+        
+        // If the node is being collapsed and the currently selected node is a child
+        // of that node, move the selection to the parent
+        if (wasExpanded)
+        {
+            var allChildren = treeNode.getElementsByTagName("div");
+            for (var i = 0; i < allChildren.length; i++)
+            {
+                if (allChildren[i] == this.m_selectedNode)
+                {
+                    this.MarkNodeAsSelected(treeNode);
+                    break;
+                }
+            }
+        }
+    },
+
+    IsNodeExpanded : function(treeNode)
+    {
+        // Look for a visible child tree node (DIV)
+        var childNodes = treeNode.childNodes;
+        for (var i = 0; i < childNodes.length; i++)
+        {
+            var childNode = childNodes[i];
+            
+            if (childNode.tagName === "DIV")
+                return childNode.style.display !== "none";
+        }
+        
+        // Leaf node
+        return true;
+    },
+    
+    IsLeafNode : function(treeNode)
+    {
+        var childNodes = treeNode.getElementsByTagName("DIV");
+        return childNodes.length === 0;
+    },
+    
+    ToggleNodeVisibility : function(node)
+    {
+        var isCurrentlyVisible = node.style.display !== "none";            
+        _$RVCommon.SetElementVisibility(node, !isCurrentlyVisible);
+    },
+    
+    OnTextNodeEnter : function(textNode)
+    {
+        if (!this.IsTextNodeSelected(textNode))
+        {
+            textNode.style.color = "highlighttext";
+            textNode.style.backgroundColor = "highlight";
+        }
+    },
+    
+    OnTextNodeLeave : function(textNode)
+    {
+        if (!this.IsTextNodeSelected(textNode))
+        {
+            textNode.style.color = this.m_originalTextNodeColor;
+            textNode.style.backgroundColor = this.m_originalTextNodeBackColor;
+        }
+    },
+    
+    IsTextNodeSelected : function(textNode)
+    {
+        return this.m_selectedNode != null && textNode == this.GetTextNodeFromTreeNode(this.m_selectedNode);
+    },
+    
+    OnAnchorNodeSelected : function(anchorNode)
+    {
+        this.OnTreeNodeSelected(anchorNode.parentNode);
+    },
+    
+    OnTreeNodeSelected : function(treeNode)
+    {
+        var docMapId = treeNode.attributes.getNamedItem("DocMapId").value;
+        this.MarkNodeAsSelected(treeNode);
+        $get(this.SelectedNodeHiddenFieldId).value = docMapId;
+        this.TriggerPostBack();
+    },
+    
+    MarkNodeAsSelected : function(treeNode)
+    {
+        // Remove old selection
+        if (this.m_selectedNode != null)
+        {
+            var selectedTextNode = this.GetTextNodeFromTreeNode(this.m_selectedNode);
+
+            selectedTextNode.style.color = this.m_originalTextNodeColor;
+            selectedTextNode.style.backgroundColor = this.m_originalTextNodeBackColor;
+
+            this.m_selectedNode = null;
+        }
+        
+        if (treeNode != null)
+        {
+            this.m_selectedNode = treeNode;
+            
+            var selectedTextNode = this.GetTextNodeFromTreeNode(treeNode);
+            
+            selectedTextNode.style.color = "highlighttext";
+            selectedTextNode.style.backgroundColor = "highlight";
+            
+            try
+            {
+                selectedTextNode.focus();
+                
+                // Update scroll position.  Ensure the tree node is visible
+                var scrollableDiv = treeNode.offsetParent;
+                if (scrollableDiv.scrollTop > selectedTextNode.offsetTop)
+                    scrollableDiv.scrollTop = selectedTextNode.offsetTop - 1; // -1 for just a little padding
+                else if (scrollableDiv.scrollTop + scrollableDiv.offsetHeight < selectedTextNode.offsetTop + selectedTextNode.offsetHeight)
+                    scrollableDiv.scrollTop = selectedTextNode.offsetTop + selectedTextNode.offsetHeight - scrollableDiv.offsetHeight + 1; // +1 for just a little padding
+            }
+            catch (e)
+            {
+                // focus will throw if the item can't get the focus (e.g. the node is hidden).
+                // Since we are only setting focus to be consistent with the selection, this is
+                // ok - if the user can't see the focus rectangle, it won't be inconsistent
+            }
+        }
+    },
+    
+    GetTextNodeFromTreeNode : function(treeNode)
+    {
+        var anchorNode = treeNode.getElementsByTagName("a")[0];
+        return anchorNode.getElementsByTagName("span")[0];
+    },
+    
+    SetDirectionForTree : function()
+    {
+        // If the server rendered the incorrect direction, fix it.
+        var reportViewer = $find(this.ReportViewerId);
+        var direction = reportViewer._get_direction();
+        if ((direction === "ltr" && !this.IsLTR) || (direction === "rtl" && this.IsLTR))
+        {
+            var docMapArea = this.get_element();
+
+            // Swap the margins for each child tree node
+            var childNodes = docMapArea.getElementsByTagName("DIV");
+            for (var i = 0; i < childNodes.length; i++)
+            {
+                var treeNode = childNodes[i];
+                
+                var oldMarginRight = treeNode.style.marginRight;
+                treeNode.style.marginRight = treeNode.style.marginLeft;
+                treeNode.style.marginLeft = oldMarginRight;
+            }
+
+            this.IsLTR = !this.IsLTR;
+        }
+    },
+    
+    OnKeyDown : function(e)
+    {
+        if (!this.m_active)
+            return;
+
+        if (e.altKey == true)
+            return;
+
+        switch (e.keyCode)
+        {
+            case 187: //=
+                if (!e.shiftKey)
+                    break;
+
+            case 107: //+
+                if (!this.IsLeafNode(this.m_selectedNode) && !this.IsNodeExpanded(this.m_selectedNode))
+                    this.ExpandCollapseNode(this.m_selectedNode);
+                e.returnValue = false;
+                break;
+
+            case 189: //-
+                if (e.shiftKey)
+                    break;
+
+            case 109: //-
+                if (!this.IsLeafNode(this.m_selectedNode) && this.IsNodeExpanded(this.m_selectedNode))
+                    this.ExpandCollapseNode(this.m_selectedNode);
+                e.returnValue = false;
+                break;
+
+            case Sys.UI.Key.right:
+                e.returnValue = false;
+                if (!this.IsLeafNode(this.m_selectedNode))
+                {
+                    if (!this.IsNodeExpanded(this.m_selectedNode))
+                        this.ExpandCollapseNode(this.m_selectedNode);
+                    else
+                    {
+                        // Select the first child
+                        var firstChild = this.m_selectedNode.getElementsByTagName("DIV")[0];
+                        this.MarkNodeAsSelected(firstChild);
+                    }
+                }
+                break;
+
+            case Sys.UI.Key.down:
+                // Find visible child
+                if (!this.IsLeafNode(this.m_selectedNode) && this.IsNodeExpanded(this.m_selectedNode))
+                {
+                    var firstChild = this.m_selectedNode.getElementsByTagName("DIV")[0];
+                    this.MarkNodeAsSelected(firstChild);
+                }
+                else
+                {
+                    // Find next sibling.  If no sibling, go up a level and look for a sibling there
+                    var parent = this.m_selectedNode;
+                    var rootNode = $get(this.RootNodeId);
+                    while (parent != rootNode)
+                    {
+                        // Advance up the hierarchy
+                        var nodeToFindNextSiblingOf = parent;
+                        parent = parent.parentNode;
+
+                        // Find the index of the current selected node                        
+                        var children = parent.childNodes;
+                        for (var i = 0; i < children.length; i++)
+                        {
+                            if (children[i] == nodeToFindNextSiblingOf)
+                                break;
+                        }
+
+                        // Select the next sibling if this is not the last node                        
+                        if (i + 1 < children.length)
+                        {
+                            this.MarkNodeAsSelected(children[i + 1]);
+                            break;
+                        }
+                    }
+                }
+                e.returnValue = false;
+                break;
+
+            case Sys.UI.Key.left:
+                if (this.IsLeafNode(this.m_selectedNode) || !this.IsNodeExpanded(this.m_selectedNode))
+                {
+                    // Move to parent node
+                    if (this.m_selectedNode != $get(this.RootNodeId))
+                        this.MarkNodeAsSelected(this.m_selectedNode.parentNode);
+                }
+                else
+                {
+                    // An expanded node - collapse it
+                    this.ExpandCollapseNode(this.m_selectedNode);
+                }
+                e.returnValue = false;
+                break;
+
+            case Sys.UI.Key.up:
+                if (this.m_selectedNode != $get(this.RootNodeId))
+                {
+                    var siblings = this.m_selectedNode.parentNode.childNodes;
+                    
+                    // Find the index of the current selected node                        
+                    for (var i = 0; i < siblings.length; i++)
+                    {
+                        if (siblings[i] == this.m_selectedNode)
+                            break;
+                    }
+
+                    // Find the immediately previous sibling to the selected node
+                    if (i > 0 && siblings[i - 1].tagName === "DIV")
+                    {
+                        var previousSibling = siblings[i - 1];
+                        
+                        // If the previous sibling is expanded, find its last expanded child
+                        var trav = previousSibling;
+                        while (trav != null && !this.IsLeafNode(trav) && this.IsNodeExpanded(trav))
+                        {
+                            var travChildren = trav.childNodes;
+                            for (var i = travChildren.length - 1; i >= 0; i--)
+                            {
+                                if (travChildren[i].tagName === "DIV")
+                                {
+                                    trav = travChildren[i];
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        this.MarkNodeAsSelected(trav);
+                    }
+                    else
+                        this.MarkNodeAsSelected(this.m_selectedNode.parentNode);
+                }
+                e.returnValue = false;
+                break;
+
+            case Sys.UI.Key.enter:
+                this.OnTreeNodeSelected(this.m_selectedNode);
+                e.returnValue = false;
+                break;
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._DocMapArea.registerClass("Microsoft.Reporting.WebFormsClient._DocMapArea", Sys.UI.Control);

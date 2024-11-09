@@ -1,0 +1,57 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._ScriptSwitchImage = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._ScriptSwitchImage.initializeBase(this, [element]);
+    
+    this.m_image1 = null;
+    this.m_image2 = null;
+}
+
+Microsoft.Reporting.WebFormsClient._ScriptSwitchImage.prototype =
+{
+    set_Image1: function (value) { this.m_image1 = value; },
+    get_Image1: function () { return this.m_image1; },
+    set_Image2: function (value) { this.m_image2 = value; },
+    get_Image2: function () { return this.m_image2; },
+
+    dispose: function ()
+    {
+        this.m_image1 = null;
+        this.m_image2 = null;
+        Microsoft.Reporting.WebFormsClient._ScriptSwitchImage.callBaseMethod(this, "dispose");
+    },
+
+    ShowImage: function (shouldShowImage1)
+    {
+        if (this.m_image1 == null || this.m_image2 == null)
+            return;
+
+        if (shouldShowImage1)
+        {
+            this.m_image1.style.display = "";
+            this.m_image2.style.display = "none";
+        }
+        else
+        {
+            this.m_image2.style.display = "";
+            this.m_image1.style.display = "none";
+        }
+    },
+
+    SetOnClickHandler: function (forImage1, handler)
+    {
+        var image;
+        if (forImage1)
+            image = this.m_image1;
+        else
+            image = this.m_image2;
+
+        image.control.OnClickScript = handler;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._ScriptSwitchImage.registerClass("Microsoft.Reporting.WebFormsClient._ScriptSwitchImage", Sys.UI.Control);

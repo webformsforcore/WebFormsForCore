@@ -1,0 +1,370 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._DropDownMenu = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._DropDownMenu.initializeBase(this, [element]);
+    this.NormalStyles = null;
+    this.HoverStyles = null;
+    this.ButtonId = null;
+    this.MenuId = null;
+    this.ButtonImages = null;
+    this.ArrowImages = null;
+    this._Enabled = false;
+
+    this._hideMenuDelegate = Function.createDelegate(this, this._hideMenu)
+    this._keyDownDelegate = Function.createDelegate(this, this._onMenuKeyDown)
+
+    this._button = null;
+    this._buttonLink = null;
+    this._menu = null;
+    this._adorner = null;
+    this._menuItemElements = null;
+    this._selectedItem = null;
+    this._ButtonImages = null;
+    this._ArrowImages = null;
+}
+
+Microsoft.Reporting.WebFormsClient._DropDownMenu.prototype = {
+
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._DropDownMenu.callBaseMethod(this, 'initialize');
+        var element = this.get_element();
+        this._button = $get(this.ButtonId);
+        this._menu = $get(this.MenuId);
+        $addHandlers(this._button,
+            { "mouseover": this._onButtonMouseOver,
+                "mouseout": this._onButtonMouseOut,
+                "click": this._onButtonClick
+            },
+            this);
+        // initialize button style
+        _$RVCommon.setButtonStyle(this._button.parentNode, this._normalStyles, "default");
+
+
+        // The only hyperlink in the button can accept and handles the keyboard.
+        this._buttonLink = $get(this.ButtonId + "Link");
+        $addHandlers(this._buttonLink, { "click": this._onButtonClick, keydown: this._onButtonKeyDown }, this);
+
+        this._adorner = document.createElement("div");
+        this._adorner.style.position = "absolute";
+        this._adorner.style.zIndex = -1;
+        this._adorner.style.top = "0px"
+        this._adorner.style.left = "0px";
+        this._adorner.style.width = "26px";
+        this._adorner.style.opacity = "0.05";
+        this._adorner.style.filter = 'alpha(opacity=5)';
+
+        this._adorner.style.backgroundColor = "black";
+        this._menu.appendChild(this._adorner);
+
+        // initialize menu style
+        var elements = this._menu.getElementsByTagName("a");
+        this._menuItemElements = new Array();
+        this._selectedItem = null;
+        if (elements.length > 0)
+        {
+            var isRtl = this._isRTL();
+            for (var index = 0; index < elements.length; index++)
+            {
+                $addHandlers(elements[index],
+                { "mouseover": this._onMenuItemMouseOver,
+                    "focus": this._onMenuItemMouseOver,
+                    "click": this._onMenuItemClick
+                },
+                this);
+                if (!isRtl)
+                {
+                    elements[index].style.paddingLeft = "32px";
+                }
+                else
+                {
+                    elements[index].style.paddingRight = "32px";
+                }
+                this._menuItemElements[this._menuItemElements.length] = elements[index];
+            }
+        }
+        Sys.UI.DomElement.setVisible(this._menu, false)
+        this._ButtonImages = this._loadImages(this.ButtonImages);
+        this._ArrowImages = this._loadImages(this.ArrowImages);
+    },
+
+    dispose: function()
+    {
+        $clearHandlers(this._button);
+        $clearHandlers(this._buttonLink);
+        $clearHandlers(this._menu);
+        for (var index = 0; index < this._menuItemElements.length; index++)
+        {
+            $clearHandlers(this._menuItemElements[index]);
+        }
+        delete this._hideMenuDelegate;
+        delete this._keyDownDelegate;
+
+        this._button = null;
+        this._buttonLink = null;
+        this._menu = null;
+        this._adorner = null;
+        this._menuItemElements = null;
+        this._selectedItem = null;
+        this._ButtonImages = null;
+        this._ArrowImages = null;
+
+        Microsoft.Reporting.WebFormsClient._DropDownMenu.callBaseMethod(this, 'dispose');
+    },
+
+    set_NormalStyles: function(value) { this._normalStyles = value; },
+    get_NormalStyles: function() { return this._normalStyles; },
+
+    set_HoverStyles: function(value) { this._hoverStyles = value; },
+    get_HoverStyles: function() { return this._hoverStyles; },
+
+    _loadImages: function(imagesInfo)
+    {
+        var images = Sys.Serialization.JavaScriptSerializer.deserialize(imagesInfo)
+        images._Enabled = document.createElement("img")
+        images._Enabled.src = images.EnabledUrl;
+        images._Disabled = document.createElement("img")
+        images._Disabled.src = images.DisabledUrl;
+        return images;
+    },
+
+    get_Enabled: function()
+    {
+        return this._Enabled;
+    },
+
+    set_Enabled: function(value)
+    {
+        if (this._ButtonImages)
+        {
+            if (value)
+            {
+                $get(this.ButtonId + "Img").src = this._ButtonImages.EnabledUrl;
+                $get(this.ButtonId + "ImgDown").src = this._ArrowImages.EnabledUrl;
+            }
+            else
+            {
+                $get(this.ButtonId + "Img").src = this._ButtonImages.DisabledUrl;
+                $get(this.ButtonId + "ImgDown").src = this._ArrowImages.DisabledUrl;
+            }
+            // property disabled of type boolean is defined in W3C DOM Level 1
+            this._buttonLink.disabled = !(value == true);
+            this._buttonLink.style.cursor = this._buttonLink.disabled ? "default" : "pointer";
+            this._hideMenu(null);
+            this._Enabled = value;
+            this.raisePropertyChanged('Enabled');
+        }
+        else
+        {
+            this._Enabled = value;
+        }
+    },
+
+    SetActive: function(value)
+    {
+        this.set_Enabled(value);
+    },
+    /// Open menu button handlers
+    _onButtonMouseOver: function(e)
+    {
+        if (this._Enabled)
+        {
+            _$RVCommon.setButtonStyle(this._button.parentNode, this._hoverStyles, "pointer");
+            e.preventDefault();
+        }
+    },
+
+    _onButtonMouseOut: function(e)
+    {
+        if (Sys.UI.DomElement.getVisible(this._menu)) return;
+        _$RVCommon.setButtonStyle(this._button.parentNode, this._normalStyles, "default");
+        e.preventDefault();
+    },
+
+    _onButtonClick: function(e)
+    {
+        if (this._Enabled)
+            this._showMenu(true);
+
+        e.preventDefault();
+    },
+    _onButtonKeyDown: function(e)
+    {
+        if (e.keyCode == Sys.UI.Key.space)
+        {
+            this._onButtonClick(e);
+            e.preventDefault();
+        }
+    },
+
+    // Menu utility and events
+    _isMenuVisible: function()
+    {
+        return this._menu && Sys.UI.DomElement.getVisible(this._menu)
+    },
+
+    _showMenu: function()
+    {
+        if (!this._isMenuVisible())
+        {
+            Sys.UI.DomElement.setVisible(this._menu, true);
+            this._adorner.style.height = this._menu.clientHeight + "px";
+            if (this._isRTL())
+            {
+                this._adorner.style.left = (this._menu.clientWidth - 24) + "px"
+            }
+
+            this._ensureIsOnScreen(this._menu, this._button);
+
+            this._selectMenuItem(this._menuItemElements[0])
+            $addHandler(document, "mousedown", this._hideMenuDelegate);
+            $addHandler(document, "keydown", this._keyDownDelegate);
+        }
+    },
+
+    _ensureIsOnScreen: function(element, anchor)
+    {
+        // make sure any previous value gets cleared, as
+        // it's possible to exit this method not wanting to make any adjustments
+        element.style.left = "";
+        element.style.right = "";
+
+        var elementDims = _$RVCommon.getBounds(element);
+        var anchorDims = _$RVCommon.getBounds(anchor);
+
+        // how far over from the left edge of the physical window is the anchor
+        // in both RTL and LTR mode, this method always measures from left side of window to left edge of element    
+        var anchorWindowOffsetLeft = anchor.getBoundingClientRect().left;
+
+        if (this._isRTL())
+        {
+            // if the space between the left edge of the window and the anchor
+            // is less than the size of the element
+            if (anchorWindowOffsetLeft < elementDims.width)
+            {
+                // then nudge it to the right
+                // style.left is ignored in RTL mode
+                element.style.right = (anchorWindowOffsetLeft - elementDims.width + anchorDims.width) + "px";
+            }
+        }
+        else // in LTR mode
+        {
+            var winDims = _$RVCommon.windowRect();
+            var outerEdge = anchorWindowOffsetLeft + elementDims.width;
+
+            // if the right side of this element is beyond the right side of the window
+            if (outerEdge > winDims.clientWidth)
+            {
+                // nudge it back to the left to fix it
+                element.style.left = (winDims.clientWidth - outerEdge) + "px";
+            }
+        }
+    },
+
+    _hideMenu: function(e)
+    {
+        if (this._isMenuVisible() && (e == null || e.target != this._selectedItem))
+        {
+            Sys.UI.DomElement.setVisible(this._menu, false);
+            $removeHandler(document, "mousedown", this._hideMenuDelegate);
+            $removeHandler(document, "keydown", this._keyDownDelegate);
+            // takes the button in normal visual state
+            _$RVCommon.setButtonStyle(this._button.parentNode, this._normalStyles, "default");
+        }
+    },
+
+    _onMenuKeyDown: function(e)
+    {
+        var index = Array.indexOf(this._menuItemElements, this._selectedItem)
+        if (index != -1)
+        {
+            if (e.keyCode == Sys.UI.Key.down || e.keyCode == Sys.UI.Key.left)
+            {
+                index = (index < this._menuItemElements.length - 1) ? index + 1 : 0;
+                this._selectMenuItem(this._menuItemElements[index])
+            }
+            else if (e.keyCode == Sys.UI.Key.up || e.keyCode == Sys.UI.Key.right)
+            {
+                index = (index > 0) ? index - 1 : this._menuItemElements.length - 1;
+                this._selectMenuItem(this._menuItemElements[index])
+            }
+            else if (e.keyCode == Sys.UI.Key.esc || e.keyCode == Sys.UI.Key.tab)
+            {
+                this._hideMenu();
+            }
+            else if (e.keyCode == Sys.UI.Key.enter)
+            {
+                this._menuItemElements[index].click();
+            }
+        }
+        e.preventDefault();
+    },
+
+    // Menu item utility and avents
+    _onMenuItemClick: function()
+    {
+        this._hideMenu(null);
+    },
+
+    _onMenuItemMouseOver: function(e)
+    {
+        if (e.target && e.target.tagName && e.target.tagName.toUpperCase() == "A")
+        {
+            this._selectMenuItem(e.target);
+        }
+        e.preventDefault();
+    },
+
+    _selectMenuItem: function(element)
+    {
+        if (element)
+        {
+            // This element will be selected so force focus to allow the screen reader to read it.
+            // Even if this element was already selected, as in the case of opening the drop down
+            // menu multiple times, trigger the screen reader to read it again.
+            element.focus();
+        }
+
+        if (this._selectedItem == element)
+        {
+            return;
+        }
+        this._selectedItem = null;
+        if (element)
+        {
+            _$RVCommon.setButtonStyle(element.parentNode, this._hoverStyles, "pointer");
+            element._selected = true;
+            if (element.style.display !== "none") {
+                try { element.focus(); } catch (exception) { } 
+            }            
+            this._selectedItem = element;
+        }
+        // unselect all other menu items.
+        for (var index = 0; index < this._menuItemElements.length; index++)
+        {
+            if (this._menuItemElements[index] != element &&
+                 (this._menuItemElements[index]._selected || typeof (this._menuItemElements[index]._selected) == "undefined")
+                )
+            {
+                _$RVCommon.setButtonStyle(this._menuItemElements[index].parentNode, this._normalStyles, "default");
+                this._menuItemElements[index]._selected = false;
+            }
+        }
+    },
+
+    _isRTL: function()
+    {
+        var element = this.get_element();
+        if (Microsoft.Reporting.WebFormsClient._InternalReportViewer.GetRTLDirection)
+        {
+            return Microsoft.Reporting.WebFormsClient._InternalReportViewer.GetRTLDirection(element) == 'rtl';
+        }
+        return false;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._DropDownMenu.registerClass('Microsoft.Reporting.WebFormsClient._DropDownMenu', Sys.UI.Control);

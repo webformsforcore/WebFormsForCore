@@ -1,0 +1,747 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._ReportArea = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._ReportArea.initializeBase(this, [element]);
+
+    // MaintainPosition
+    this.m_previousViewportOffset = null; // Previous distance of the alignment object from the upper left corner of the visible area
+
+    // AvoidScrolling
+    this.m_previousScrollOffset = null;
+
+    this.VisibleReportContentContainerId = null;
+    this.ReportControlId = null;
+    this.NonReportContentId = null;
+    this.ScrollPositionId = null;
+    this.ReportAreaVisibilityStateId = null;
+
+    // Only used for checking when the report page changes.  Use this.GetReportPage() to access the visible element.
+    this.m_currentReportPage = null;
+
+    this.m_contentTypeToMakeVisibleOnNextLoad = Microsoft.Reporting.WebFormsClient.ReportAreaContent.None;
+    this.m_isNewContentForNonReportContentArea = false;
+
+    this.m_lastReportPageCellId = null;
+
+    this.m_hookReportObjectLoadedDelegate = Function.createDelegate(this, this.HookReportObjectLoaded);
+    this.m_onReportPageLoadedDelegate = Function.createDelegate(this, this.OnReportPageLoaded);
+
+    this.m_userCanceled = false;
+}
+
+Microsoft.Reporting.WebFormsClient._ReportArea.prototype =
+{
+    initialize: function()
+    {
+        Microsoft.Reporting.WebFormsClient._ReportArea.callBaseMethod(this, "initialize");
+
+        // Listen for new instances of the report object from async postbacks
+        Sys.Application.add_load(this.m_hookReportObjectLoadedDelegate);
+
+        $addHandlers(this.get_element(),
+            { "scroll": this.OnScroll,
+                "resize": this.OnScroll
+            },
+            this);
+    },
+
+    dispose: function()
+    {
+        if (this.VisibleReportContentContainerId)
+        {
+            //Remove the report from the visible container to speed up ASP.Net dispose.
+            //ASP.Net walks the DOM looking for dispose calls.  Since the report is solely HTML,
+            //there are no controls to dispose, so it's safe to remove.
+            var visibleContainer = $get(this.VisibleReportContentContainerId);
+            if (visibleContainer && visibleContainer.childNodes.length > 0)
+            {
+                visibleContainer.removeChild(visibleContainer.childNodes[0]);
+            }
+        }
+
+        $clearHandlers(this.get_element());
+
+        Sys.Application.remove_load(this.m_hookReportObjectLoadedDelegate);
+        delete this.m_hookReportObjectLoadedDelegate;
+
+        delete this.m_onReportPageLoadedDelegate;
+
+        Microsoft.Reporting.WebFormsClient._ReportArea.callBaseMethod(this, "dispose");
+    },
+
+    HookReportObjectLoaded: function()
+    {
+        var reportPage = this.GetReportPage();
+        if (reportPage != null && reportPage != this.m_currentReportPage)
+        {
+            // Save off the old report cell ID before removing the reference to the last report page.
+            this.m_lastReportCellId = null;
+            if (this.m_currentReportPage != null)
+                this.m_lastReportCellId = this.m_currentReportPage.ReportCellId;
+
+            this.m_currentReportPage = reportPage;
+
+            // event will be disconnected by report object dispose
+            reportPage.add_allContentLoaded(this.m_onReportPageLoadedDelegate);
+        }
+    },
+
+    IsLoading: function()
+    {
+        var reportPage = this.GetReportPage();
+        return reportPage == null || reportPage.IsLoading();
+    },
+
+    //Start a timer in case the call to MakeReportVisible ThreadAborts.  The MakeReportVisible will keep creating timers until the Renderer code completes and the spinny hides.
+    ListenForRenderingTimeout: function(targetReportArea)
+    {
+        if (!targetReportArea)
+            return;
+
+        var timeoutFunction = function()
+        {
+            //When the timeout fires, "this" will be the window, so the ReportArea must be a variable.
+            if (targetReportArea.m_renderingTimeout != null)
+            {
+                targetReportArea.m_renderingTimeout = null;
+                targetReportArea.MakeReportVisible();
+            }
+
+        };
+        targetReportArea.m_renderingTimeout = setTimeout(timeoutFunction, 1);
+    },
+
+    OnReportPageLoaded: function()
+    {
+        var reportPage = this.GetReportPage();
+
+        this.SwapReport(reportPage);
+        this.SetRegionVisibility();
+
+        this.MakeReportVisible();
+    },
+
+    MakeReportVisible: function()
+    {
+        var reportPage = this.GetReportPage();
+
+        //The ReportDivId will be null when a report hasn't been loaded.
+        if (reportPage.ReportDivId)
+        {
+            //Start a timer.  If OnReportVisible ThreadAborts, the timer will kick-in and re-execute this code.
+            //Only listen for a timeout if the Report could show.
+            this.ListenForRenderingTimeout(this);
+        }
+
+        //OnReportVisible will run through all the HTMLRenderer script.  If a ThreadAbort occurs, the Timeout will fire and re-execute the logic.
+        //The script updates with width/heights of items only when changing is necessary.  As the script will execute and update a certain portion of the items,
+        //It will continue to make progress with each timeout until it completes within one Thread execution.
+        reportPage.OnReportVisible();
+
+        //If the timer still exists, it's no longer necessary as all the rendering logic is correctly updated.
+        if (this.m_renderingTimeout)
+        {
+            clearTimeout(this.m_renderingTimeout);
+            this.m_renderingTimeout = null;
+        }
+
+        var newContentVisibleHandler = this.get_events().getHandler("newContentVisible");
+        if (newContentVisibleHandler)
+            newContentVisibleHandler(this, Sys.EventArgs.Empty);
+
+        this.ScrollToTarget(reportPage);
+
+        reportPage.OnReportScrolled();
+
+        // Always raise the area changed event
+        var areaLoadedHandler = this.get_events().getHandler("contentChanged");
+        if (areaLoadedHandler)
+        {
+            var eventArgs = new Sys.EventArgs();
+            eventArgs.ToolBarUpdate = reportPage.get_ToolBarUpdate();
+
+            areaLoadedHandler(this, eventArgs);
+        }
+
+        // Clear state that was saved for the report page swap so that
+        // it doesn't affect the next page swap.
+        this.m_previousViewportOffset = null;
+        this.m_previousScrollOffset = null;
+    },
+
+    get_scrollPosition: function()
+    {
+        var scrollableArea = this.get_element();
+        return new Sys.UI.Point(scrollableArea.scrollLeft, scrollableArea.scrollTop);
+    },
+
+    set_scrollPosition: function(scrollPoint)
+    {
+        var reportAreaElement = this.get_element();
+        reportAreaElement.scrollTop = scrollPoint.y;
+        reportAreaElement.scrollLeft = scrollPoint.x;
+
+        this.raisePropertyChanged("scrollPosition");
+    },
+
+    // This value is not reliable until the page has loaded or the contentsChanged event has fired.
+    get_contentType: function()
+    {
+        this.LoadNewReportAreaVisibilityState();
+        return this.m_contentTypeToMakeVisibleOnNextLoad;
+    },
+
+    // ContentChanged event - fires after the contents of the report area have changed and
+    // are fully loaded.
+    add_contentChanged: function(handler)
+    {
+        this.get_events().addHandler("contentChanged", handler);
+    },
+    remove_contentChanged: function(handler)
+    {
+        this.get_events().removeHandler("contentChanged", handler);
+    },
+
+    LoadNewReportAreaVisibilityState: function()
+    {
+        if (this.m_userCanceled)
+        {
+            // this is a specific form of "canceled", m_userCanceled is true if the report got sent to the client
+            // and the user decided to cancel once images were loading. In that case, we've already been given new
+            // data on what is in the report area, but it's now bad data because the user canceled. So instead,
+            // tell everyone the report area is empty (which it is, the cancelling forced it to be).
+            this.m_contentTypeToMakeVisibleOnNextLoad = Microsoft.Reporting.WebFormsClient.ReportAreaContent.None;
+            this.m_isNewContentForNonReportContentArea = false;
+        }
+        else
+        {
+            var reportAreaVisibilityState = $get(this.ReportAreaVisibilityStateId);
+
+            var newContentTypeAttr = reportAreaVisibilityState.attributes.getNamedItem("NewContentType");
+            this.m_contentTypeToMakeVisibleOnNextLoad = eval(newContentTypeAttr.value);
+
+            var nonReportContentAttr = reportAreaVisibilityState.attributes.getNamedItem("ForNonReportContentArea");
+            this.m_isNewContentForNonReportContentArea = eval(nonReportContentAttr.value);
+        }
+    },
+
+    SetRegionVisibility: function()
+    {
+        this.LoadNewReportAreaVisibilityState();
+        this.SetSingleRegionVisibility(this.NonReportContentId, this.m_isNewContentForNonReportContentArea);
+    },
+
+    SetSingleRegionVisibility: function(regionElementId, makeVisible)
+    {
+        var regionElement = $get(regionElementId);
+        if (makeVisible)
+            regionElement.style.display = "";
+        else
+            regionElement.style.display = "none";
+    },
+
+    GetReportPage: function()
+    {
+        var reportElement = $get(this.ReportControlId);
+        if (reportElement != null)
+            return reportElement.control;
+        else
+            return null;
+    },
+
+    SwapReport: function(reportPage)
+    {
+        var visibleReportContentContainer = $get(this.VisibleReportContentContainerId);
+
+        // If there is old report content
+        if (visibleReportContentContainer.childNodes.length > 0)
+        {
+            // Save off scroll state before removing the old content
+            if (this.CanScrollReportArea())
+            {
+                var scrollableArea = this.get_element();
+
+                if (reportPage.AvoidScrollChange)
+                {
+                    this.m_previousScrollOffset = { Left: scrollableArea.scrollLeft, Top: scrollableArea.scrollTop };
+                }
+                else if (reportPage.PreviousViewNavigationAlignmentId != null && this.m_lastReportCellId != null)
+                {
+                    // Get the old target position and zoom rate
+                    var previousZoom = reportPage.GetZoomFromReportCell(this.m_lastReportCellId);
+                    var alignmentTargetOffset = this.CalculateElementOffset(reportPage.PreviousViewNavigationAlignmentId, previousZoom);
+
+                    // Calculate the old offset within the viewport
+                    var previousViewportOffsetLeft = alignmentTargetOffset.Left - scrollableArea.scrollLeft;
+                    var previousViewportOffsetTop = alignmentTargetOffset.Top - scrollableArea.scrollTop;
+                    this.m_previousViewportOffset = { Left: previousViewportOffsetLeft, Top: previousViewportOffsetTop };
+                }
+            }
+
+            // Remove the old content
+            var currentVisibleContent = visibleReportContentContainer.childNodes[0];
+            visibleReportContentContainer.removeChild(currentVisibleContent);
+        }
+
+        // Have new content to render
+        if (reportPage.ReportDivId != null)
+        {
+            var reportContent = $get(reportPage.ReportDivId);
+            var reportParent = reportContent.parentNode;
+
+            reportParent.removeChild(reportContent);
+            if (visibleReportContentContainer.style.display == "none")
+                visibleReportContentContainer.style.display = "";
+            visibleReportContentContainer.appendChild(reportContent);
+        }
+        else if (visibleReportContentContainer.style.display == "")
+            visibleReportContentContainer.style.display = "none";
+
+    },
+
+    ScrollToTarget: function(reportPage)
+    {
+        // If the report area scroll independently, scroll only that area
+        if (this.CanScrollReportArea())
+        {
+            var newScrollTop = 0;
+            var newScrollLeft = 0;
+            var zoomRate = 1;
+
+            if (reportPage.NavigationId != null)
+            {
+                // AvoidScrollingFromOrigin (e.g. new search page)
+                if (reportPage.AvoidScrollFromOrigin)
+                {
+                    this.BringElementIntoView(reportPage.NavigationId, { Left: 0, Top: 0 });
+                    return;
+                }
+
+                // AvoidScrolling (e.g. first search hit and it's on the current page)
+                else if (this.m_previousScrollOffset != null)
+                {
+                    this.BringElementIntoView(reportPage.NavigationId, this.m_previousScrollOffset);
+                    return;
+                }
+
+                // MaintainPosition with target / AlignedToTopLeft
+                else
+                {
+                    // Align to top left (e.g. bookmark / docmap)
+                    var targetElementOffset = this.CalculateElementOffset(reportPage.NavigationId, reportPage.GetCurrentZoomFactor());
+                    newScrollTop = targetElementOffset.Top;
+                    newScrollLeft = targetElementOffset.Left;
+
+                    // MaintainPosition with target (e.g. toggle / sort) 
+                    if (this.m_previousViewportOffset != null)
+                    {
+                        newScrollLeft -= this.m_previousViewportOffset.Left;
+                        newScrollTop -= this.m_previousViewportOffset.Top;
+                    }
+                }
+            }
+
+            // Maintain position without target (e.g. no more search hits)
+            else if (this.m_previousScrollOffset != null)
+            {
+                newScrollTop = this.m_previousScrollOffset.Top;
+                newScrollLeft = this.m_previousScrollOffset.Left;
+            }
+
+            // Scroll to a specific pixel position (e.g. back from drillthrough, auto refresh)
+            else if (reportPage.SpecificScrollPosition != null)
+            {
+                var scrollPosition = this._DeserializeScrollPosition(reportPage.SpecificScrollPosition);
+
+                newScrollTop = scrollPosition.y;
+                newScrollLeft = scrollPosition.x;
+            }
+
+            // Return to origin (e.g. standard page navigation)
+            else
+                ;
+
+            // Scroll position can be of type float due to zoom rate
+            newScrollLeft = parseInt(newScrollLeft);
+            newScrollTop = parseInt(newScrollTop);
+            this.set_scrollPosition(new Sys.UI.Point(newScrollLeft, newScrollTop));
+        }
+        else if (reportPage.NavigationId != null)
+        {
+            this.ScrollWebForm(reportPage.NavigationId);
+        }
+    },
+
+    CanScrollReportArea: function()
+    {
+        var reportAreaElement = this.get_element();
+        return reportAreaElement.style.overflow === "auto";
+    },
+
+    ScrollWebForm: function(navigationId)
+    {
+        window.location.replace("#" + navigationId);
+    },
+
+    CalculateElementOffset: function(elementId, zoomRate)
+    {
+        var scrollableArea = this.get_element();
+        var iterator = $get(elementId);
+
+        var totalTop = 0;
+        var totalLeft = 0;
+
+        // Sum the offsets until reaching the scroll container to find the total offset.
+        // Firefox skips the visible container and goes straight to the table cell.
+        while (iterator != null && iterator != scrollableArea && iterator != scrollableArea.parentNode)
+        {
+            totalTop += iterator.offsetTop;
+            totalLeft += iterator.offsetLeft;
+
+            iterator = iterator.offsetParent;
+        }
+
+        return { Left: totalLeft * zoomRate, Top: totalTop * zoomRate };
+    },
+
+    BringElementIntoView: function(elementId, initialScrollPosition)
+    {
+        var scrollableArea = this.get_element();
+        var reportPage = this.GetReportPage();
+
+        if (initialScrollPosition == null)
+            initialScrollPosition = { Left: scrollableArea.scrollLeft, Top: scrollableArea.scrollTop };
+
+        // Get the visible extents
+        var visibleWidth = scrollableArea.offsetWidth;
+        var visibleHeight = scrollableArea.offsetHeight;
+
+        // Get the element position
+        var elementPosition = this.CalculateElementOffset(elementId, reportPage.GetCurrentZoomFactor());
+
+        // Assume the element is visible
+        var newScrollTop = initialScrollPosition.Top;
+        var newScrollLeft = initialScrollPosition.Left;
+
+        // Check horizontal visibility
+        if (newScrollLeft > elementPosition.Left || (newScrollLeft + visibleWidth) < elementPosition.Left)
+        {
+            // Set to centered
+            newScrollLeft = elementPosition.Left - visibleWidth / 2;
+        }
+
+        // Check vertical visibility
+        if (newScrollTop > elementPosition.Top || (newScrollTop + visibleHeight) < elementPosition.Top)
+        {
+            // Set to 1/3 down from the top
+            newScrollTop = elementPosition.Top - visibleHeight / 3;
+        }
+
+        scrollableArea.scrollTop = newScrollTop;
+        scrollableArea.scrollLeft = newScrollLeft;
+    },
+
+    HighlightNextSearchHit: function()
+    {
+        // Safety check for existence since this instance isn't called based off of an event on the report object
+        var reportPage = this.GetReportPage();
+        if (reportPage == null)
+            return true;
+
+        var targetId = reportPage.HighlightNextSearchHit();
+        if (targetId == null)
+            return false;
+
+        if (this.CanScrollReportArea())
+            this.BringElementIntoView(targetId, null);
+        else
+            this.ScrollWebForm(targetId);
+
+        return true;
+    },
+
+    get_zoomLevel: function()
+    {
+        var reportPage = this.GetReportPage();
+        if (reportPage != null)
+            return reportPage.get_zoomLevel();
+        else
+            return 100;
+    },
+
+    set_zoomLevel: function(zoomValue)
+    {
+        // Safety check for existence since this instance isn't called based off of an event on the report object
+        var reportPage = this.GetReportPage();
+        if (reportPage != null)
+            reportPage.set_zoomLevel(zoomValue);
+    },
+
+    OnScroll: function()
+    {
+        // FixedHeaders
+        var reportPage = this.GetReportPage();
+        if (reportPage)
+        {
+            reportPage.OnScroll();
+        }
+
+        // Keep track of the scroll position for the server control
+        var serializedScrollPos = this._SerializeScrollPosition(this.get_scrollPosition());
+        var scrollHiddenField = $get(this.ScrollPositionId);
+        scrollHiddenField.value = serializedScrollPos;
+
+        this.raisePropertyChanged("scrollPosition");
+    },
+
+    _OnUserCanceled: function()
+    {
+        this.m_userCanceled = true;
+        
+        var reportPage = this.GetReportPage();
+        if(reportPage)
+            reportPage._OnUserCanceled();
+    },
+
+    _DeserializeScrollPosition: function(serializedValue)
+    {
+        var top = 0;
+        var left = 0;
+
+        // Split the string
+        var values = serializedValue.split(" ");
+        if (values.length == 2)
+        {
+            // Parse the individual values as ints
+
+            var i = parseInt(values[0], 10);
+            if (!isNaN(i))
+                left = i;
+
+            i = parseInt(values[1], 10);
+            if (!isNaN(i))
+                top = i;
+        }
+
+        return new Sys.UI.Point(left, top);
+    },
+
+    _SerializeScrollPosition: function(scrollPoint)
+    {
+        return scrollPoint.x + " " + scrollPoint.y;
+    },
+
+    EnableDisableInput: function(shouldEnable)
+    {
+        var reportPage = this.GetReportPage();
+        if (reportPage)
+            reportPage.EnableDisableInput(shouldEnable);
+    },
+
+    add_newContentVisible: function (handler)
+    {
+        this.get_events().addHandler("newContentVisible", handler);
+    },
+
+    remove_newContentVisible: function (handler)
+    {
+        this.get_events().removeHandler("newContentVisible", handler);
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._ReportArea.registerClass("Microsoft.Reporting.WebFormsClient._ReportArea", Sys.UI.Control);
+
+Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.initializeBase(this, [element]);
+
+    this.PostBackForAsyncLoad = null;
+    this.m_onAppLoadDelegate = Function.createDelegate(this, this.OnAppLoad);
+    this.m_asyncLoadDelegate = Function.createDelegate(this, this.TriggerPostBack);
+    this.m_beginAsyncLoadDelegate = Function.createDelegate(this, this.TryBeginTriggerPostBack);
+    this.m_postBackTriggered = false;
+}
+
+Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.prototype =
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.callBaseMethod(this, "initialize");
+
+        // Ensures that only one report viewer on the page causes a postback for async rendering.
+        // Otherwise, multiple postback requests will be initiated and aborted if multiple async viewers
+        // are on a single webform.
+        if (!Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected)
+        {
+            Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected = true;
+
+            Sys.Application.add_load(this.m_onAppLoadDelegate);
+        }
+    },
+
+    dispose : function()
+    {
+        if (this.m_asyncLoadDelegate != null)
+        {
+            Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected = false;
+
+            delete this.m_asyncLoadDelegate;
+            this.m_asyncLoadDelegate = null;
+        }
+
+        if (this.m_onAppLoadDelegate != null)
+        {
+            Sys.Application.remove_load(this.m_onAppLoadDelegate);
+
+            delete this.m_onAppLoadDelegate;
+            this.m_onAppLoadDelegate = null;
+        }
+
+        if (this.m_beginAsyncLoadDelegate != null)
+        {
+            _$RVReportAreaAsyncLoadIsReadyTracker.remove_isReadyChanged(this.m_beginAsyncLoadDelegate);
+
+            delete this.m_beginAsyncLoadDelegate;
+            this.m_beginAsyncLoadDelegate = null;
+        }
+
+        Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.callBaseMethod(this, "dispose");
+    },
+
+    OnAppLoad : function()
+    {
+        if (_$RVReportAreaAsyncLoadIsReadyTracker.getIsReady())
+        {
+            this.TryBeginTriggerPostBack();
+        }
+        else
+        {
+            _$RVReportAreaAsyncLoadIsReadyTracker.add_isReadyChanged(this.m_beginAsyncLoadDelegate);
+        }
+    },
+
+    TryBeginTriggerPostBack : function()
+    {
+        if (!this.m_postBackTriggered)
+        {
+            // Call async load on a timer to ensure that the entire Sys.Application.load event is executed
+            // before triggering another postback.  During async postbacks, initialize gets called in its
+            // own setTimeout, so this timer can't be fired until actually in the Sys.Application.load event.
+            // Additional note: With another bug fix, we also are waiting on the window.onload event and
+            // queueing the delegate in the dispatcher is critical to allowing the other window.onload 
+            // event handlers to execute completely.
+            setTimeout(this.m_asyncLoadDelegate, 0);
+        }
+    },
+
+    TriggerPostBack : function()
+    {
+        // Ensure only one async load target caused a postback.  Dispose should take care of this, but
+        // check for safety in case of errors on the client.
+        if (!this.m_postBackTriggered)
+        {
+            var isInAsyncPostBack = false;
+            if (Sys.WebForms)
+            {
+                var pageRequestManager = Sys.WebForms.PageRequestManager.getInstance();
+                isInAsyncPostBack = pageRequestManager.get_isInAsyncPostBack();
+            }
+
+            // Ensure nothing else caused an async postback already
+            if (!isInAsyncPostBack)
+            {
+                this.PostBackForAsyncLoad();
+                this.m_postBackTriggered = true;
+                Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.AsyncTriggerSelected = false;
+            }
+        }
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget.registerClass("Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadTarget", Sys.UI.Control);
+
+// The purpose of this class is to track the load state of the page.  It will notify the ReportArea when it 
+// can perform the postback to fetch the report data.  We track ready state by looking for Sys.Application.load
+// and also window.onload.
+Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker = function()
+{
+    Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker.initializeBase(this);
+
+    this.m_appLoaded = false;
+    this.m_windowLoaded = false;
+    this.m_appLoadDelegate = Function.createDelegate(this, this.onAppLoad);
+    this.m_windowLoadDelegate = Function.createDelegate(this, this.onWindowLoad);
+}
+
+Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker.prototype =
+{
+    initialize : function()
+    {
+        Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker.callBaseMethod(this, "initialize");
+
+        Sys.Application.add_load(this.m_appLoadDelegate);
+
+        if (window.addEventListener)
+            window.addEventListener("load", this.m_windowLoadDelegate, true);
+        else
+            window.attachEvent("onload", this.m_windowLoadDelegate);
+    },
+    
+    getIsReady : function()
+    {
+        return this.m_appLoaded && this.m_windowLoaded;
+    },
+
+    tryRaiseIsReadyStateChanged : function()
+    {
+        if (this.getIsReady())
+        {
+            var readyStateChangedHandler = this.get_events().getHandler("isReadyStateChanged");
+            if (readyStateChangedHandler)
+            {
+                var eventArgs = new Sys.EventArgs();
+                eventArgs.isReady = true;
+                readyStateChangedHandler(this, eventArgs);
+            }
+        }
+    },
+
+    onAppLoad : function()
+    {
+        this.m_appLoaded = true;
+
+        this.tryRaiseIsReadyStateChanged();
+
+        Sys.Application.remove_load(this.m_appLoadDelegate);
+    },
+
+    onWindowLoad : function()
+    {
+        this.m_windowLoaded = true;
+
+        this.tryRaiseIsReadyStateChanged();
+
+        if (window.removeEventListener)
+            window.removeEventListener("load", this.m_windowLoadDelegate, true);
+        else
+            window.detachEvent("onload", this.m_windowLoadDelegate);
+    },
+
+    add_isReadyChanged : function(handler)
+    {
+        this.get_events().addHandler("isReadyStateChanged", handler);
+    },
+
+    remove_isReadyChanged : function(handler)
+    {
+        this.get_events().removeHandler("isReadyStateChanged", handler);
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker.registerClass("Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker", Sys.Component);
+
+var _$RVReportAreaAsyncLoadIsReadyTracker = $create(Microsoft.Reporting.WebFormsClient._ReportAreaAsyncLoadIsReadyTracker);

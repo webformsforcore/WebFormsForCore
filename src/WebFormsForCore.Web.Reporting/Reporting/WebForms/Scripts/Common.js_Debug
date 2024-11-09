@@ -1,0 +1,323 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._Common = function()
+{
+    this.getStyleForElement = function(element)
+    {
+        var visibleStyle = element.currentStyle; //IE only
+        if (!visibleStyle)
+        {
+            if (document.defaultView && document.defaultView.getComputedStyle) //Firefox only
+                visibleStyle = document.defaultView.getComputedStyle(element, "");
+            else
+                visibleStyle = element.style;
+        }
+
+        return visibleStyle;
+    },
+
+    this.getComputedStyle = function(element, styleName)
+    {
+        // Retrieve the cascaded direction attribute/style.
+        // The currentStyle property is supported by IE.
+        // Other browsers (Firefox, Safari) must use the
+        // getComputedStyle method.
+        if (element.currentStyle != null)
+        {
+            // converts for ex. border-left-width in borderLeftWidth
+            styleName = styleName.replace(/-\D/gi, function(s) { return s.charAt(s.length - 1).toUpperCase(); });
+            return element.currentStyle[styleName];
+        }
+        else if (window.getComputedStyle != null)
+        {
+            var cs = window.getComputedStyle(element, null);
+            return cs.getPropertyValue(styleName);
+        }
+        return null;
+    },
+
+    this.getPxPerInch = function()
+    {
+        if (!this.DPI)
+        {
+            this.DPI = Microsoft_ReportingServices_HTMLRenderer_PxPerInch();
+        }
+        return this.DPI;
+    },
+
+    this.convertToPx = function(value)
+    {
+        if (!value)
+            return 0;
+        var lowerValue = value.toString().toLowerCase();
+        if (lowerValue.indexOf("pt") > -1)
+        {
+            return Math.ceil(parseInt(value) / 72 * this.getPxPerInch());
+        }
+        else if (lowerValue.indexOf("px") > -1)
+        {
+            return parseInt(value);
+        }
+        return 0;
+    },
+
+    this.windowRect = function()
+    {
+        var docElementWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement : document.body;
+        var docElementScroll = document.documentElement && document.documentElement.scrollLeft ? document.documentElement : document.body;
+
+        var windowWidth = window.innerWidth != null ? window.innerWidth : docElementWidth ? docElementWidth.clientWidth : 0;
+        var windowHeight = window.innerHeight != null ? window.innerHeight : docElementWidth ? docElementWidth.clientHeight : 0;
+        var windowLeft = typeof (window.pageXOffset) != 'undefined' ? window.pageXOffset : docElementScroll ? docElementScroll.scrollLeft : 0;
+        var windowTop = typeof (window.pageYOffset) != 'undefined' ? window.pageYOffset : docElementScroll ? docElementScroll.scrollTop : 0;
+
+        var windowScrollWidth = docElementScroll ? docElementScroll.scrollWidth : 0;
+        var windowScrollHeight = docElementScroll ? docElementScroll.scrollHeight : 0;
+
+        var isVScroll = Sys.Browser.agent == Sys.Browser.InternetExplorer ? false : windowHeight < windowScrollHeight;
+        var isHScroll = Sys.Browser.agent == Sys.Browser.InternetExplorer ? false : windowWidth < windowScrollWidth;
+
+        return {
+            top: windowTop,
+            left: windowLeft,
+            bottom: windowTop + windowHeight - (isHScroll ? 18 : 0),
+            right: windowLeft + windowWidth - (isVScroll ? 18 : 0),
+            width: windowWidth,
+            height: windowHeight,
+            scrollWidth: Math.max(windowWidth, windowScrollWidth),
+            scrollHeight: Math.max(windowHeight, windowScrollHeight),
+            clientWidth: windowWidth - (isVScroll ? 18 : 0),
+            clientHeight: windowHeight - (isHScroll ? 18 : 0)
+        };
+    },
+
+    this.isQuirksMode = function()
+    {
+        // document.compatMode dom property now works for latest versions of safari/FF/IE.
+        return document.compatMode == "BackCompat";
+    },
+
+    this.isSafari = function()
+    {
+        return Sys.Browser.agent == Sys.Browser.Safari;
+    },
+
+    this.isIEQuirksMode = function()
+    {
+        return Sys.Browser.agent == Sys.Browser.InternetExplorer && this.isQuirksMode();
+    },
+
+    this.isPreIE8StandardsMode = function()
+    {
+        if (Sys.Browser.agent != Sys.Browser.InternetExplorer)
+            return false;
+
+        if (Sys.Browser.version <= 7)
+            return document.compatMode == "CSS1Compat";
+        else
+            return Sys.Browser.documentMode == 7; // See isIE8StandardMode for definition of documentMode
+    },
+
+    this.isIE8StandardsMode = function()
+    {
+        // documentMode is
+        // 5 for quirks mode
+        // 7 for IE7 standards mode
+        // 8 for IE8 standards mode
+        return Sys.Browser.agent == Sys.Browser.InternetExplorer && Sys.Browser.version >= 8 && Sys.Browser.documentMode == 8;
+    },
+
+    this.isIE10OrLower = function ()
+    {
+        // Starting IE11, the MSIE term isn't included in the user agent string.
+        return !!navigator.userAgent.match(/MSIE/)
+    },
+
+    this.getNewLineDelimiter = function()
+    {
+        if (!this.m_newLineDelimiter)
+        {
+            // Some browsers use \n as the new line delimiter, some use \r\n.  Assigning \n to the text
+            // area will cause the browser to convert it to \r\n if needed.
+            var textArea = document.createElement("textarea");
+            textArea.value = "\n";
+            this.m_newLineDelimiter = textArea.value;
+        }
+
+        return this.m_newLineDelimiter;
+    },
+
+    this.getDocument = function(element)
+    {
+        if (element)
+            return element.ownerDocument || element.document || element;
+        return document;
+    },
+
+    this.getWindow = function(element)
+    {
+        var doc = this.getDocument(element);
+        return doc.defaultView || doc.parentWindow;
+    },
+
+    this.setButtonStyle = function(element, style, cursor)
+    {
+        if (style.CssClass)
+        {
+            element.className = style.CssClass;
+        }
+        else
+        {
+            element.style.border = style.Border;
+            if (Sys.Browser.agent == Sys.Browser.InternetExplorer && Sys.Browser.version < 7)
+            {
+                if (element.style.borderColor.toLowerCase() == "transparent")
+                {
+                    element.style.padding = element.style.borderWidth;
+                    element.style.border = "";
+                }
+                else
+                    element.style.padding = "0px";
+            }
+            element.style.backgroundColor = style.Color;
+            element.style.cursor = cursor;
+        }
+    },
+
+    this.SetElementVisibility = function(element, makeVisible)
+    {
+        if (makeVisible)
+            element.style.display = "";
+        else
+            element.style.display = "none";
+
+    },
+
+    this.documentOffset = function(element)
+    {
+        /// <summary>
+        /// Returns the offset in pixels of the given element from the body
+        /// </summary>
+
+        if (!element || !element.ownerDocument)
+        {
+            throw Error.argumentNull("element");
+        }
+
+        var box = element.getBoundingClientRect();
+        var doc = element.ownerDocument;
+        var body = doc.body;
+        var docElem = doc.documentElement;
+
+        // docElem.clientTop = non IE, body.clientTop = IE
+        var clientTop = docElem.clientTop || body.clientTop || 0;
+        var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+
+        // pageX/YOffset = FF, safari   docElem.scrollTop/Left = IE standards   body.scrollTop/Left = IE quirks
+        var top = box.top + (self.pageYOffset || docElem.scrollTop || body.scrollTop || 0) - clientTop;
+        var left = box.left + (self.pageXOffset || docElem.scrollLeft || body.scrollLeft || 0) - clientLeft;
+
+        return { top: top, left: left };
+    },
+
+    this.getBounds = function(element)
+    {
+        /// <summary>
+        /// Returns the overall dimensions of an element: top and left offsets from the body,
+        /// as well as the width and height of the element
+        /// </summary>
+
+        if (element == null)
+        {
+            throw Error.argumentNull("element");
+        }
+
+        var width = Math.max(this.getFloat(this.getComputedStyle(element, "width")), element.clientWidth);
+        width += this.getFloat(element.style.marginLeft) + this.getFloat(element.style.marginRight);
+        width += this.getFloat(element.style.borderLeftWidth) / 2.0 + this.getFloat(element.style.borderRightWidth) / 2.0;
+
+        var height = Math.max(this.getFloat(this.getComputedStyle(element, "height")), element.clientHeight);
+        height += this.getFloat(element.style.marginTop) + this.getFloat(element.style.marginBottom);
+        height += this.getFloat(element.style.borderBottomWidth) / 2.0 + this.getFloat(element.style.borderTopWidth) / 2.0;
+
+        var offset = this.documentOffset(element);
+
+        return { left: offset.left, top: offset.top, width: Math.round(width), height: Math.round(height), right: offset.left + Math.round(width), bottom: offset.top + Math.round(height) };
+    },
+
+    this.getFloat = function(value)
+    {
+        /// <summary>
+        /// Attempts to parse the incoming value into a float.
+        /// If it can't, returns zero.
+        /// </summary>
+
+        var parsed = parseFloat(value);
+
+        if (isNaN(parsed))
+        {
+            return 0;
+        }
+
+        return parsed;
+    },
+
+    this.getInt = function(value)
+    {
+        /// <summary>
+        /// Attempts to parse the incoming value into an int.
+        /// If it can't, returns zero.
+        /// </summary>
+
+        var parsed = parseInt(value);
+
+        if (isNaN(parsed))
+        {
+            return 0;
+        }
+
+        return parsed;
+    },
+
+    // Based on Sys.UI.DomElement.getElementById, but without the array shifting and with some
+    // optimizations knowing that the id is a postback target
+    this.getPostBackTargetElementById = function(id, element)
+    {
+        if (!element)
+            return document.getElementById(id);
+        if (element.getElementById)
+            return element.getElementById(id);
+
+        var nodeQueue = [element];
+        var frontIndex = 0;
+
+        while (frontIndex < nodeQueue.length)
+        {
+            node = nodeQueue[frontIndex++];
+            if (node.id == id)
+            {
+                return node;
+            }
+
+            // The postback target can't be an option in a select, so no need to enumerate them all
+            if (node.tagName != "SELECT")
+            {
+                var childNodes = node.childNodes;
+                for (i = 0; i < childNodes.length; i++)
+                {
+                    node = childNodes[i];
+                    if (node.nodeType == 1)
+                    {
+                        nodeQueue.push(node);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+}
+
+var _$RVCommon = new Microsoft.Reporting.WebFormsClient._Common();

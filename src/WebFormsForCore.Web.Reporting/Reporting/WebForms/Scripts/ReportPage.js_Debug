@@ -1,0 +1,502 @@
+// <copyright company="Microsoft">
+//     Copyright (c) Microsoft.  All rights reserved.
+// </copyright>
+Type.registerNamespace("Microsoft.Reporting.WebFormsClient");
+
+Microsoft.Reporting.WebFormsClient._ReportPage = function(element)
+{
+    Microsoft.Reporting.WebFormsClient._ReportPage.initializeBase(this, [element]);
+
+    // Script methods to invoke sync or async postbacks for interactivity
+    this.TriggerSyncInteractivity = null;
+    this.TriggerAsyncInteractivity = null;
+    this.InteractivityMode = null;
+
+    // Hidden fields to store interactivity info during the postback
+    this.ActionTypeId = null;
+    this.ActionParamId = null;
+
+    this.SearchHitPrefix = null;
+    this.m_nextSearchHit = 1;
+
+    this.NavigationId = null;
+
+    // MaintainPosition
+    this.PreviousViewNavigationAlignmentId = null; // Try to align this.NavigationId to this id from the old page.
+
+    // AvoidScrolling
+    this.AvoidScrollChange = false;
+    this.AvoidScrollFromOrigin = false;
+
+    // Specific position scrolling
+    this.SpecificScrollPosition = null;
+
+    this.HiddenZoomLevelId = null;
+    this.LoadMessage = null;
+
+    this.ReportDivId = null;
+    this.ReportCellId = null;
+    this.ScrollableContainerId = null;
+
+    this.m_allContentLoaded = false;
+    this.m_loadDelegate = Function.createDelegate(this, this._PollForAllContentLoaded);
+
+    this.ReportStyles = null;
+    this.ReportPageStyles = null;
+    this.StyleElementId = null;
+
+    this.PrefixId = null;
+
+    this.ScrollScript = null;
+    this.m_fixedHeader = null;
+
+    this.m_executingAction = null;
+    this.m_toolbarUpdate = null;
+
+    this.ConstFullPage = "FullPage";
+    this.ConstPageWidth = "PageWidth";
+
+    this.m_userCanceled = false;
+}
+
+Microsoft.Reporting.WebFormsClient._ReportPage.prototype =
+{
+    initialize: function ()
+    {
+        Microsoft.Reporting.WebFormsClient._ReportPage.callBaseMethod(this, "initialize");
+
+        // Don't update the DOM until the load event (causes a race condition in Firefox
+        // with hash based scrolling between the location.replace and the browser page update).
+        Sys.Application.add_load(this.m_loadDelegate);
+    },
+
+    dispose: function ()
+    {
+        Sys.Application.remove_load(this.m_loadDelegate);
+        delete this.m_loadDelegate;
+
+        Microsoft.Reporting.WebFormsClient._ReportPage.callBaseMethod(this, "dispose");
+    },
+
+    // Custom accessor for complex object type (array)
+    set_ToolBarUpdate: function (value) { this.m_toolbarUpdate = value; },
+    get_ToolBarUpdate: function () { return this.m_toolbarUpdate; },
+
+    // AllContentLoaded event - indicates that all content is loaded (may be none if there is no actual report page)
+    add_allContentLoaded: function (handler)
+    {
+        this.get_events().addHandler("allContentLoaded", handler);
+    },
+    remove_allContentLoaded: function (handler)
+    {
+        this.get_events().removeHandler("allContentLoaded", handler);
+    },
+
+    IsLoading: function ()
+    {
+        return !this.m_allContentLoaded;
+    },
+
+    _OnUserCanceled: function ()
+    {
+        this.m_userCanceled = true;
+    },
+
+    _PollForAllContentLoaded: function ()
+    {
+        if (this.m_userCanceled)
+        {
+            // user has decided to cancel loading this report, so force the browsers to stop loading the images
+            if (this.ReportDivId)
+            {
+                var reportDiv = $get(this.ReportDivId);
+
+                if (reportDiv)
+                {
+                    // this will force IE and FireFox to stop loading all
+                    // images from the reportDiv on down
+                    reportDiv.innerHTML = "";
+                }
+            }
+
+            return;
+        }
+
+        // Validate that the report content is loaded if there is report content
+        if (this.ReportDivId != null)
+        {
+            // A report page is not loaded until all of the images are
+            var reportDiv = $get(this.ReportDivId);
+
+            // It's possible for the user to cause postbacks so rapidly that this method
+            // is being called against the nth postback while the nth+1's ReportDiv has been
+            // loaded. This will lead to a null ref exception against reportDiv, as this
+            // code is trying to load a ReportDiv that no longer exists.
+            // This happens very rarely, and only under ideal conditions when postbacks
+            // can be triggered very rapidly. But still checking if we actually got a report div
+            // here just to be safe.
+            if (reportDiv)
+            {
+                var images = reportDiv.getElementsByTagName("IMG");
+
+                for (var i = 0; i < images.length; i++)
+                {
+                    var img = images[i];
+                    if (!img.complete && !img.errored)
+                    {
+                        setTimeout(Function.createDelegate(this, this._PollForAllContentLoaded), 250);
+                        return;
+                    }
+                }
+            }
+        }
+
+        this._OnAllContentLoaded();
+    },
+
+    _OnAllContentLoaded: function ()
+    {
+        if (this.m_allContentLoaded)
+            return;
+        this.m_allContentLoaded = true;
+
+        // Raise content changed event
+        var handler = this.get_events().getHandler("allContentLoaded");
+        if (handler)
+            handler(this);
+    },
+
+    OnReportVisible: function ()
+    {
+        this._OutputStyleStream();
+        this._UpdateRenderer();
+        this._ApplyZoom(this.get_zoomLevel());
+    },
+
+    _OutputStyleStream: function ()
+    {
+        var headElementsCollection = document.getElementsByTagName("HEAD");
+        var headElement = null;
+
+        // Ensure the HEAD element exists.  If not, create one.
+        if (headElementsCollection.length == 0)
+        {
+            headElement = document.createElement("HEAD");
+            document.documentElement.insertBefore(headElement, document.documentElement.firstChild);
+        }
+        else
+            headElement = headElementsCollection[0];
+
+        var oldStyleElement = document.getElementById(this.StyleElementId);
+
+        // Remove the current STYLE element, if it already exists.
+        if (oldStyleElement != null)
+            headElement.removeChild(oldStyleElement);
+
+        if (this.ReportDivId)
+        {
+            var reportDiv = $get(this.ReportDivId);
+            var pageStyleContainerId = reportDiv.parentNode.id;
+            if (pageStyleContainerId)
+            {
+                var pageStyles = this.ReportPageStyles;
+                if (!pageStyles)
+                    pageStyles = "";
+                var pageStyle = "#" + pageStyleContainerId + " { " + pageStyles + "}";
+                if (this.ReportStyles)
+                    this.ReportStyles += pageStyle;
+                else
+                    this.ReportStyles = pageStyle;
+
+                // When the viewer had an iFrame,
+                // fonts would fall back to Times New Roman as that is the browser default. 
+                // Now that we render as part of the page, they fall back to whatever
+                // is defind in the stylesheet for the page, in the case of
+                // ReportManager/Server, that is verdana. We want to maintain
+                // falling back to Times New Roman, so inject that font style here
+                // if an element in the report specifies a font that can't be found,
+                // the browser will work up the parent chain and get here to find TNR
+                this.ReportStyles += " #" + this.ReportDivId + ", #" + this.ReportDivId + " TABLE { font-family: Times New Roman; }";
+            }
+        }
+
+        // If we have any styles, create a STYLE element
+        // using the styles and place it in the page head.
+        if (this.ReportStyles != null)
+        {
+            var newStyleElement = document.createElement("STYLE");
+            newStyleElement.type = "text/css";
+            newStyleElement.id = this.StyleElementId;
+
+            if (newStyleElement.styleSheet != null)
+                newStyleElement.styleSheet.cssText = this.ReportStyles;
+            else
+                newStyleElement.appendChild(document.createTextNode(this.ReportStyles));
+
+            headElement.appendChild(newStyleElement);
+        }
+
+    },
+
+    OnReportScrolled: function ()
+    {
+        if (this.LoadMessage != null)
+            alert(this.LoadMessage);
+    },
+
+    InvokeReportAction: function (actionType, actionParam)
+    {
+        if (!this._IsInputDisabled())
+        {
+            // Save interactivity info for postback
+            $get(this.ActionTypeId).value = actionType;
+            $get(this.ActionParamId).value = this._TranslateAction(actionType, actionParam);
+
+            if (this.InteractivityMode === "AlwaysSynchronous" ||
+                (this.InteractivityMode === "SynchronousOnDrillthrough" && actionType === "Drillthrough"))
+            {
+                this.TriggerSyncInteractivity();
+            }
+            else
+                this.TriggerAsyncInteractivity();
+        }
+    },
+
+    HighlightNextSearchHit: function ()
+    {
+        if (this.SearchHitPrefix == null)
+            return null;
+
+        // Unhighlight previous hit, if any.
+        if (this.m_nextSearchHit > 0)
+        {
+            var name = this.SearchHitPrefix + (this.m_nextSearchHit - 1);
+            var hitElem = $get(name);
+            var count = 0;
+            // Clean up the background for a find across multiple textRuns
+            while (hitElem != null)
+            {
+                hitElem.style.backgroundColor = "";
+                hitElem.style.color = "";
+                hitElem = $get(name + "_" + (++count));
+            }
+        }
+
+        // Highlight current hit and navigate to it.
+        var name = this.SearchHitPrefix + (this.m_nextSearchHit);
+        var hitElem = $get(name);
+        if (hitElem == null)
+            return null;
+        var count = 0;
+        // Clean up the background for a find across multiple textRuns
+        while (hitElem != null)
+        {
+            hitElem.style.backgroundColor = "highlight";
+            hitElem.style.color = "highlighttext";
+            hitElem = $get(name + "_" + (++count));
+        }
+
+        this.m_nextSearchHit++;
+
+        // Return the navigation target
+        return name;
+    },
+
+    _ApplyZoom: function (zoomValue)
+    {
+        // Get the report cell
+        if (this.ReportCellId == null)
+            return;
+        var reportCell = $get(this.ReportCellId);
+
+        if ((zoomValue != this.ConstPageWidth) && (zoomValue != this.ConstFullPage))
+            reportCell.style.zoom = zoomValue + "%";
+        else
+        {
+            var scrollContainer = $get(this.ScrollableContainerId);
+            if (scrollContainer == null || scrollContainer.style.overflow != "auto")
+                return;
+
+            if (zoomValue != this.ConstPageWidth)
+            {
+                if ((reportCell.offsetWidth * scrollContainer.offsetHeight) < (reportCell.offsetHeight * scrollContainer.offsetWidth))
+                    this._ApplyCalculatedZoom(reportCell, scrollContainer.offsetHeight, reportCell.offsetHeight);
+                else
+                    this._ApplyCalculatedZoom(reportCell, scrollContainer.offsetWidth, reportCell.offsetWidth);
+            }
+            else
+            {
+                var vbar = scrollContainer.offsetHeight != scrollContainer.clientHeight;
+                var proceed = (reportCell.offsetWidth > 0);
+                for (var iter = 0; (iter <= 1) & proceed; ++iter)
+                {
+                    zoomValue = this._ApplyCalculatedZoom(reportCell, scrollContainer.clientWidth, reportCell.offsetWidth);
+                    proceed = vbar != ((reportCell.offsetHeight * zoomValue) > scrollContainer.offsetHeight);
+                }
+            }
+        }
+
+        //Recalc imageconsolidation for IE7.  
+        //IE7 standards uses absolutely positioned images that need to scale with zoom.
+        //IE7/8 quirks and IE8 standards automatically scale the images.
+        if (Microsoft_ReportingServices_HTMLRenderer_ScaleImageUpdateZoom)
+        {
+            if (_$RVCommon.isPreIE8StandardsMode())
+            {
+                var fitProp = new Microsoft_ReportingServices_HTMLRenderer_FitProportional();
+                fitProp.ResizeImages(this.ReportDivId, this.ReportCellId);
+                Microsoft_ReportingServices_HTMLRenderer_ScaleImageUpdateZoom(this.PrefixId, this.ReportDivId, this.ReportCellId);
+            }
+        }
+
+        this.OnScroll();
+    },
+
+    // Set a zoom value that is calculated based on the report width/height
+    _ApplyCalculatedZoom: function (reportCell, div, rep)
+    {
+        if (rep <= 0)
+            return 1.0;
+        var z = (div - 1) / rep;
+        reportCell.style.zoom = z;
+        return z;
+    },
+
+    // Gets the actual current zoom value as a fraction (1.0, 2.0, etc) regardless of whether
+    // the zoom mode is percentage or FullPage/PageWidth
+    GetCurrentZoomFactor: function ()
+    {
+        return this.GetZoomFromReportCell(this.ReportCellId);
+    },
+
+    GetZoomFromReportCell: function (cellId)
+    {
+        var reportCell = $get(cellId);
+
+        // If very rapid postbacks are occuring, it's possible
+        // to end up in a situation where cellId refers to an element
+        // that no longer exists (it's been replaced with new content and
+        // the script descriptors have not ran to update the client side objects)
+        // so checking if reportCell is null before proceeding here.
+        if (reportCell)
+        {
+            var zoom = reportCell.style.zoom;
+            if (zoom == null) //Must check for null, because in firefox zoom is not a supported css property and is not set.
+            {
+                return 1.0;
+            }
+            if (typeof zoom === "number")
+            {
+                return zoom;
+            }
+            var zoomStr = String(zoom); 
+            if (zoomStr != "")
+            {
+            	if (zoomStr.charAt(zoomStr.length - 1) === "%")
+                {
+                    zoomStr = zoomStr.substr(0, zoomStr.length - 1); // Remove % sign
+                    return zoomStr / 100.0;
+                }
+                var zoomFloat = parseFloat(zoomStr);
+                return zoomFloat != null ? zoomFloat : 1.0;
+            }
+        }
+
+        return 1.0;
+    },
+
+    get_zoomLevel: function ()
+    {
+        var hiddenZoomLevelElement = $get(this.HiddenZoomLevelId);
+        return hiddenZoomLevelElement.value;
+    },
+
+    set_zoomLevel: function (newZoomLevel)
+    {
+        // Validate newZoomLevel
+        if (newZoomLevel != this.ConstPageWidth && newZoomLevel != this.ConstFullPage)
+        {
+            // Validate percentage zoom
+            var newZoomAsInt = parseInt(newZoomLevel, 10)
+            if (isNaN(newZoomAsInt) || newZoomAsInt <= 0)
+                throw Error.argumentOutOfRange("zoomLevel", newZoomLevel, "The zoom level must be a positive integer or '" + this.ConstPageWidth + "' or '" + this.ConstFullPage + "'.");
+            else
+                newZoomLevel = newZoomAsInt; // Normalize the value
+        }
+
+        // Apply the zoom value
+        this._ApplyZoom(newZoomLevel);
+
+        // Save the value for the postback
+        var hiddenZoomLevelElement = $get(this.HiddenZoomLevelId);
+        hiddenZoomLevelElement.value = newZoomLevel;
+    },
+
+    //FitProportional
+    _UpdateRenderer: function ()
+    {
+        if (this.ReportDivId)
+        {
+            var fitProp = new Microsoft_ReportingServices_HTMLRenderer_FitProportional();
+            fitProp.ResizeImages(this.ReportDivId, this.ReportCellId);
+
+            if (Microsoft_ReportingServices_HTMLRenderer_ScaleImageConsolidation)
+                Microsoft_ReportingServices_HTMLRenderer_ScaleImageConsolidation(this.PrefixId, this.ReportDivId, this.ReportCellId);
+
+            if (Microsoft_ReportingServices_HTMLRenderer_ScaleImageForFit)
+                Microsoft_ReportingServices_HTMLRenderer_ScaleImageForFit(this.PrefixId, this.ReportDivId);
+
+            if (Microsoft_ReportingServices_HTMLRenderer_GrowRectangles)
+                Microsoft_ReportingServices_HTMLRenderer_GrowRectangles(this.PrefixId, this.ReportDivId);
+
+            if (Microsoft_ReportingServices_HTMLRenderer_FitVertText)
+                Microsoft_ReportingServices_HTMLRenderer_FitVertText(this.PrefixId, this.ReportDivId);
+        }
+    },
+
+    OnScroll: function ()
+    {
+        if (this.ScrollScript)
+        {
+            var firstTime = !this.m_fixedHeader;
+            if (firstTime)
+            {
+                this.m_fixedHeader = new Microsoft_ReportingServices_HTMLRenderer_FixedHeader(this.ReportDivId, this.ReportCellId,
+                    $get(this.ReportDivId).parentNode.id, this.PrefixId);
+            }
+            this.ScrollScript(firstTime);
+        }
+    },
+
+    EnableDisableInput: function (shouldEnable)
+    {
+        if (shouldEnable)
+            this.m_executingAction = null;
+        else
+            this.m_executingAction = true;
+    },
+
+    _IsInputDisabled: function ()
+    {
+        return this.m_executingAction == true;
+    },
+
+    _TranslateAction: function (actionType, actionParam)
+    {
+        var completeActionParam;
+        if (actionType == "Sort")
+        {
+            if (window.event && window.event.shiftKey)
+                completeActionParam = actionParam + "_T";
+            else
+                completeActionParam = actionParam + "_F";
+        }
+        else
+            completeActionParam = actionParam;
+
+        return completeActionParam;
+    }
+}
+
+Microsoft.Reporting.WebFormsClient._ReportPage.registerClass("Microsoft.Reporting.WebFormsClient._ReportPage", Sys.UI.Control);
+
