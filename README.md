@@ -15,6 +15,8 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <!-- Set base intermediate output path, so NET Core build does not conflict with NetFX build. -->
+    <BaseIntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</BaseIntermediateOutputPath>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
@@ -43,6 +45,7 @@ If your project also needs `System.Web.Extensions` or `System.Web.Optimization` 
 - `System.Web.Services`: `EstrellasDeEsperanza.WebFormsForCore.Web.Services`
 - `System.Web.Extensions`: `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions`
 - `System.Web.Optimization`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization`
+- `System.Web.Mobile`: `EstrellasDeEsperanza.Web.Mobile`
 - `Microsoft.AspNet.Web.Optimization.WebForms`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms`
 - `WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
 - `System.Drawing`: `EstrellasDeEsperanza.WebFormsForCore.Drawing`

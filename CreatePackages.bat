@@ -1,4 +1,4 @@
-SET PackageVersion=1.1.1-beta
+SET PackageVersion=1.1.2-beta
 SET Configuration=Debug
 
 REM msbuild /p:Configuration=%Configuration%
@@ -25,6 +25,8 @@ dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Web.Optimization
 dotnet pack WebFormsForCore.Web.Optimization.csproj --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Web.Optimization.WebForms
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
+cd ..\WebFormsForCore.Web.Mobile
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Web.RegularExpressions
 dotnet pack --include-symbols -o ..\..\nupkg --no-build

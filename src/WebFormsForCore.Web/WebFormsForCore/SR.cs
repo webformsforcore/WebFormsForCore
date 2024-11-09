@@ -1,9 +1,4 @@
-﻿#region Assembly System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
-// C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Web.dll
-// Decompiled with ICSharpCode.Decompiler 8.1.1.7464
-#endregion
-
-using System.Globalization;
+﻿using System.Globalization;
 using System.Resources;
 using System.Threading;
 
