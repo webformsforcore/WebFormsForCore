@@ -29,9 +29,9 @@ dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Web.Mobile
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Web.RegularExpressions
-dotnet pack --include-symbols -o ..\..\nupkg --no-build
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Web.Services
-dotnet pack --include-symbols -o ..\..\nupkg --no-build
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.WebGrease
-dotnet pack WebFormsForCore.WebGrease.csproj --include-symbols -o ..\..\nupkg --no-build
+dotnet pack WebFormsForCore.WebGrease.csproj --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\..

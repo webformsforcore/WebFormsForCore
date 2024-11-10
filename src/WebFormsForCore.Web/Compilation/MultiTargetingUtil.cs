@@ -40,8 +40,9 @@ namespace System.Web.Compilation {
 		internal static Version Version35 = new Version(3, 5);
 		internal static Version Version40 = new Version(4, 0);
         internal static Version Version45 = new Version(4, 5);
-        internal static Version Version80 = new Version(8, 0);
-        private static FrameworkName s_targetFrameworkName = null;
+		internal static Version Version60 = new Version(6, 0);
+		internal static Version Version80 = new Version(8, 0);
+		private static FrameworkName s_targetFrameworkName = null;
         private static string s_configTargetFrameworkMoniker = null;
         private static object s_configTargetFrameworkMonikerLock = new object();
         private static bool s_initializedConfigTargetFrameworkMoniker = false;
@@ -516,10 +517,26 @@ namespace System.Web.Compilation {
             }
         }
 
-        /// <summary>
-        /// Enable use of RAR only in CBM scenarios
-        /// </summary>
-        internal static bool EnableReferenceAssemblyResolution {
+		internal static bool IsTargetFramework8OrAbove
+		{
+			get
+			{
+				return TargetFrameworkVersion >= Version80;
+			}
+		}
+
+		internal static bool IsTargetFramework6OrAbove
+		{
+			get
+			{
+				return TargetFrameworkVersion >= Version60;
+			}
+		}
+
+		/// <summary>
+		/// Enable use of RAR only in CBM scenarios
+		/// </summary>
+		internal static bool EnableReferenceAssemblyResolution {
             get {
                 return BuildManagerHost.InClientBuildManager; // Enable only in CBM scenarios.
             }

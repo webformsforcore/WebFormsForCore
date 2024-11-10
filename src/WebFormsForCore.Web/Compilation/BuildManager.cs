@@ -3282,23 +3282,39 @@ namespace System.Web.Compilation {
 
         private Assembly ResolveAssembly(object sender, ResolveEventArgs e) {
 
-            if (_assemblyResolveMapping == null)
-                return null;
+            Assembly assembly = null;
+			string name = e.Name;
+			
+            if (_assemblyResolveMapping != null)
+            {
+                assembly = (Assembly)_assemblyResolveMapping[name];
 
-            string name = e.Name;
-            Assembly assembly = (Assembly)_assemblyResolveMapping[name];
+                // Return the assembly if we have it in our mapping (VSWhidbey 276776)
+                if (assembly != null)
+                {
+                    return assembly;
+                }
 
-            // Return the assembly if we have it in our mapping (VSWhidbey 276776)
-            if (assembly != null) {
-                return assembly;
+                // Get the normalized assembly name from random name (VSWhidbey 380793)
+                String normalizedName = GetNormalizedCodeAssemblyName(name);
+                if (normalizedName != null)
+                {
+                    return (Assembly)_assemblyResolveMapping[normalizedName];
+                }
             }
 
-            // Get the normalized assembly name from random name (VSWhidbey 380793)
-            String normalizedName = GetNormalizedCodeAssemblyName(name);
-            if (normalizedName != null) {
-                return (Assembly)_assemblyResolveMapping[normalizedName];
+#if NETCOREAPP
+			// Search assembly in requesting assemblies path
+			var ic = e.Name.IndexOf(',');
+			if (ic >= 0) name = e.Name.Substring(0, ic).Trim();
+			else name = e.Name.Trim();
+            if (!name.EndsWith(".resources") && name.StartsWith(AssemblyNamePrefix))
+            {
+                var reqPath = Path.GetDirectoryName(e.RequestingAssembly.Location);
+                var assemblyFile = Path.Combine(reqPath, name + ".dll");
+                if (File.Exists(assemblyFile)) return Assembly.LoadFrom(assemblyFile);
             }
-
+#endif
             return null;
         }
 

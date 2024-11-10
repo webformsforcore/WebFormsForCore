@@ -46,6 +46,7 @@ namespace System.Web.Hosting
 		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx", ".asax" };
         public string[] DefaultDocuments { get; set; } = new string[] { "default.aspx" };
 
+        public Compilation.ClientBuildManager ClientBuildManager { get; set; } 
 		public AppDomain AppDomain
         {
             get { return AppDomain.CurrentDomain; }
@@ -58,6 +59,7 @@ namespace System.Web.Hosting
 		public AspNetCoreHost()
         {
             HostingEnvironment.RegisterObject(this);
+
         }
 
         public bool DisableDirectoryListing

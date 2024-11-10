@@ -400,7 +400,8 @@ namespace System.Resources
 				{
 					if (type == typeof(ResXNullRef))
 						fromDataNodeInfo = (object)null;
-					else if (typeName.IndexOf("System.Byte[]") != -1 && typeName.IndexOf("mscorlib") != -1)
+					else if (typeName.IndexOf("System.Byte[]") != -1 &&
+						(typeName.IndexOf("mscorlib") != -1 || typeName.IndexOf("System.Runtime") != -1))
 					{
 						fromDataNodeInfo = (object)ResXDataNode.FromBase64WrappedString(dataNodeInfo.ValueData);
 					}
