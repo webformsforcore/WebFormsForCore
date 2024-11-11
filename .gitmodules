@@ -19,3 +19,6 @@
 [submodule "src/WebGrease"]
 	path = src/WebGrease
 	url = https://github.com/Licshee/WebGrease.git
+[submodule "src/WebFormsForCore.AjaxControlToolkit"]
+	path = src/WebFormsForCore.AjaxControlToolkit
+	url = https://github.com/simonegli8/WebFormsForCore.AjaxControlToolkit
