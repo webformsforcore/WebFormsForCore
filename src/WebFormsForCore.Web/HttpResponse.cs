@@ -3120,7 +3120,6 @@ namespace System.Web {
 #if NETFRAMEWORK
             Thread.CurrentThread.Abort(new HttpApplication.CancelModuleException(false));
 #else
-			/*
 			// when cannot abort execution, flush and supress further output
 			_endRequiresObservation = true;
 
@@ -3133,7 +3132,7 @@ namespace System.Web {
 				{
 					_context.ApplicationInstance.CompleteRequest();
 				}
-			} */
+			}
 
 			throw new ResponseEndException(new HttpApplication.CancelModuleException(false));
 #endif

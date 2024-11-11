@@ -82,6 +82,11 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.11.0" />
+    </ItemGroup>
+
     <Target Name="CopyCompilers" BeforeTargets="ResolveReferences" Condition="$(TargetFramework) != 'net48'">
         <ItemGroup>
             <CompilerItems Include="$(PkgMicrosoft_Net_Compilers_Toolset)\tasks\netcore\bincore\**\*.*" />

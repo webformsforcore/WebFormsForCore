@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Text;
 
 namespace System.CodeDom.Compiler
@@ -58,42 +59,48 @@ namespace System.CodeDom.Compiler
 				outputWriter.WriteLine(args);
 				outputWriter.WriteLine();
 				outputWriter.WriteLine();
+				int exitCode;
 
-				var psi = new ProcessStartInfo(cmd, args)
-				{
-					WorkingDirectory = currentDir,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true
-				};
-
-				using (Process p = Process.Start(psi))
-				{
-					p.OutputDataReceived += (s, e) =>
-					{
-						if (e.Data != null)
+				var file = Path.GetFileNameWithoutExtension(cmd);
+				if (file.Equals("dotnet", StringComparison.OrdinalIgnoreCase) && WebFormsForCore.Compilers.Compiler.Run(cmd, args, currentDir, outputWriter, out exitCode)) {
+					return exitCode;
+				}
+				else {
+					var psi = new ProcessStartInfo(cmd, args)
 						{
-							outputWriter.WriteLine(e.Data);
-						}
-					};
-					p.ErrorDataReceived += (s, e) =>
+							WorkingDirectory = currentDir,
+							RedirectStandardOutput = true,
+							RedirectStandardError = true
+						};
+
+					using (Process p = Process.Start(psi))
 					{
-						if (e.Data != null)
+						p.OutputDataReceived += (s, e) =>
 						{
-							errorWriter.WriteLine(e.Data);
+							if (e.Data != null)
+							{
+								outputWriter.WriteLine(e.Data);
+							}
+						};
+						p.ErrorDataReceived += (s, e) =>
+						{
+							if (e.Data != null)
+							{
+								errorWriter.WriteLine(e.Data);
+							}
+						};
+
+						p.BeginOutputReadLine();
+						p.BeginErrorReadLine();
+
+						if (!p.WaitForExit(ProcessTimeOut))
+						{
+							throw new ExternalException("Timeout error.");
 						}
-					};
 
-					p.BeginOutputReadLine();
-					p.BeginErrorReadLine();
-
-					if (!p.WaitForExit(ProcessTimeOut))
-					{
-						throw new ExternalException("Timeout error.");
+						p.WaitForExit();
+						return p.ExitCode;
 					}
-
-					p.WaitForExit();
-
-					return p.ExitCode;
 				}
 			}
 		}
