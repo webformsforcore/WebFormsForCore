@@ -68,6 +68,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Mobile"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.Reporting", "src\WebFormsForCore.Web.Reporting\WebFormsForCore.Web.Reporting.csproj", "{FDE6C5ED-1F40-471C-862B-0FDFB8CF462B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit", "src\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj", "{676B3449-93F7-4102-8DF0-FB51911675D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit.HtmlEditor.Sanitizer", "src\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit.HtmlEditor.Sanitizer\AjaxControlToolkit.HtmlEditor.Sanitizer.csproj", "{4F19469B-3352-4D93-89E2-4B79FD7086A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit.StaticResources", "src\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit.StaticResources\AjaxControlToolkit.StaticResources.csproj", "{820694DF-C225-46B6-BA38-C5FEFBD79AEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -282,6 +288,42 @@ Global
 		{FDE6C5ED-1F40-471C-862B-0FDFB8CF462B}.Release|x64.Build.0 = Release|Any CPU
 		{FDE6C5ED-1F40-471C-862B-0FDFB8CF462B}.Release|x86.ActiveCfg = Release|Any CPU
 		{FDE6C5ED-1F40-471C-862B-0FDFB8CF462B}.Release|x86.Build.0 = Release|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Debug|x64.Build.0 = Debug|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Debug|x86.Build.0 = Debug|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Release|x64.ActiveCfg = Release|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Release|x64.Build.0 = Release|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Release|x86.ActiveCfg = Release|Any CPU
+		{676B3449-93F7-4102-8DF0-FB51911675D6}.Release|x86.Build.0 = Release|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Release|x64.Build.0 = Release|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F19469B-3352-4D93-89E2-4B79FD7086A6}.Release|x86.Build.0 = Release|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Debug|x64.Build.0 = Debug|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Debug|x86.Build.0 = Debug|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Release|x64.ActiveCfg = Release|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Release|x64.Build.0 = Release|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Release|x86.ActiveCfg = Release|Any CPU
+		{820694DF-C225-46B6-BA38-C5FEFBD79AEB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
