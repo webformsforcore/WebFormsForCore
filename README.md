@@ -39,7 +39,9 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 ```
 Remove the old `Reference` references or put them in a condition only for `net48`.
 
-If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions` or `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization` etc. The following packages are available:
+If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the
+corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions` or 
+`EstrellasDeEsperanza.WebFormsForCore.Web.Optimization` etc. The following packages are available:
 - `System.Configuration`: `EstrellasDeEsperanza.WebFormsForCore.Configuration`
 - `System.Web`: `EstrellasDeEsperanza.WebFormsForCore.Web`
 - `System.Web.Services`: `EstrellasDeEsperanza.WebFormsForCore.Web.Services`
@@ -49,6 +51,7 @@ If your project also needs `System.Web.Extensions` or `System.Web.Optimization` 
 - `Microsoft.AspNet.Web.Optimization.WebForms`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms`
 - `WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
 - `System.Drawing`: `EstrellasDeEsperanza.WebFormsForCore.Drawing`
+- `AjaxControlToolkit`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit`
 
 System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is
 missing.

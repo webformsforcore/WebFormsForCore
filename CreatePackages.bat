@@ -34,4 +34,11 @@ cd ..\WebFormsForCore.Web.Services
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.WebGrease
 dotnet pack WebFormsForCore.WebGrease.csproj --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
-cd ..\..
+cd ..\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit
+dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration%
+cd ..\AjaxControlToolkit.HtmlEditor.Sanitizer
+dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration%
+cd ..\AjaxControlToolkit.StaticResources
+dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration%
+
+cd ..\..\..
