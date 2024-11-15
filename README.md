@@ -1,12 +1,14 @@
 # WebFormsForCore
-
 A library to run WebForms apps on ASP.NET Core. This library provides a port
 of the System.Web libraries of .NET Framework to .NET 8. With this library,
 you can run WebForms websites directly in ASP.NET Core, also on Linux, altough Linux
 support is not yet stable.
 
-# Usage
+# Support
+If you need support porting your project to NET Core & WebFormsForCore, we provide support for
+20$ per hour. Please contact us via [Messenger](https://m.me/simon.jakob.egli).
 
+# Usage
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
 
 First convert your Project to a SDK Project. For the moment, please also keep the old non SDK style project, as WebFormsForCore does not yet properly support generation of the Designer.cs files from aspx. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. After conversion change the target framework of your project to `net8.0`. You might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
@@ -94,7 +96,6 @@ public class Program
 ```
 
 # Conflicts with Existing Packages
-
 Currently there might be some conflicts with the packages System.Web.dll & System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent import of the old dll's include the following in your csproj:
 
 ```
