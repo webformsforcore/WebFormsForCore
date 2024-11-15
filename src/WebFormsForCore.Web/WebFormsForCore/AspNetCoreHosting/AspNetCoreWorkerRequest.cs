@@ -12,9 +12,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Text;
+using System.Diagnostics;
 using System.Web;
 using System.Web.Hosting;
 using Microsoft.Win32.SafeHandles;
+using Microsoft.Extensions.Primitives;
 using System.Security.Principal;
 using Microsoft.AspNetCore;
 using Core = Microsoft.AspNetCore.Http;
@@ -31,6 +33,8 @@ namespace System.Web.Hosting
 		private static readonly char[] BadPathChars = new[] { '%', '>', '<', ':', '\\' };
 
 		private static readonly string[] DefaultFileNames = new[] { "default.aspx", "default.htm", "default.html" };
+
+		private TaskCompletionSource<bool> Completed = new TaskCompletionSource<bool>();
 
 		private static readonly char[] IntToHex = new[]
 			{
@@ -104,7 +108,7 @@ namespace System.Web.Hosting
 
 		Core.HttpContext Context;
 		public AspNetCoreWorkerRequest(AspNetCoreHost host, Core.HttpContext context)
-			: base(String.Empty, String.Empty, null)
+			: base(string.Empty, string.Empty, null)
 		{
 			this.Host = host;
 			Context = context;
@@ -117,7 +121,8 @@ namespace System.Web.Hosting
 
 		public override void EndOfRequest()
 		{
-			Context.Response.CompleteAsync();
+			Context.Response.CompleteAsync()
+				.ContinueWith(t => Completed.SetResult(true));
 		}
 
 		public override void FlushResponse(bool finalFlush)
@@ -143,7 +148,7 @@ namespace System.Web.Hosting
 		public override string GetLocalAddress() => Context.Connection.LocalIpAddress.ToString();
 		public override int GetLocalPort() => Context.Connection.LocalPort;
 		public override string GetPathInfo() => pathInfo;
-		public override byte[] GetPreloadedEntityBody() => body;
+		public override byte[] GetPreloadedEntityBody() => null;
 		public override string GetQueryString() {
 			var str = Context.Request.QueryString.ToString();
 			if (str.StartsWith("?")) return str.Substring(1);
@@ -243,10 +248,7 @@ namespace System.Web.Hosting
 		}
 
 		public override bool IsClientConnected() => true;
-		public override bool IsEntireEntityBodyIsPreloaded()
-		{
-			return (contentLength == bodyLength);
-		}
+		public override bool IsEntireEntityBodyIsPreloaded() => false;
 		public override string MapPath(string path)
 		{
 			string mappedPath;
@@ -300,7 +302,7 @@ namespace System.Web.Hosting
 		}
 
 		[AspNetHostingPermission(SecurityAction.Assert, Level = AspNetHostingPermissionLevel.Medium)]
-		public void Process()
+		public async Task Process()
 		{
 			// read the request
 			if (!TryParseRequest())
@@ -323,6 +325,8 @@ namespace System.Web.Hosting
 				// Hand the processing over to HttpRuntime
 				// Run processing in separate ASP.NET Worker Thread
 				HttpRuntime.ProcessRequest(this);
+
+				await Completed.Task;
 			}
 		}
 
@@ -396,15 +400,11 @@ namespace System.Web.Hosting
 						//contentType = CommonExtensions.GetContentType(pathTranslated);
 					}
 					value = contentType ?? value;
-					break;
+					Context.Response.ContentType = value;
+					return;
 			}
 
-			Context.Response.Headers[GetKnownResponseHeaderName(index)] = value;
-		}
-
-		public void SetResponseHeader(string name, string value)
-		{
-			Context.Response.Headers[name] = value;
+			SendUnknownResponseHeader(GetKnownResponseHeaderName(index), value);
 		}
 
 		public override void SendResponseFromFile(string filename, long offset, long length)
@@ -464,7 +464,13 @@ namespace System.Web.Hosting
 			if (headersSent)
 				return;
 
-			Context.Response.Headers[name] = value;
+			if (Context.Response.Headers.ContainsKey(name)) {
+				var header = Context.Response.Headers[name];
+				Context.Response.Headers[name] = StringValues.Concat(header, value);
+			} else
+			{
+				Context.Response.Headers[name] = value;
+			}
 		}
 
 		private bool IsBadPath()
@@ -523,18 +529,31 @@ namespace System.Web.Hosting
 			foreach (var header in Context.Request.Headers)
 			{
 				string name = header.Key;
-				string value = header.Value;
+				var strValues = header.Value;
+				string str;
+				switch (strValues.Count)
+				{
+					case 0:
+						str = (string)null;
+						break;
+					case 1:
+						str = strValues[0];
+						break;
+					default:
+						str = string.Join(';', strValues);
+						break;
+				}
 
 				// remember
 				int knownIndex = GetKnownRequestHeaderIndex(name);
 				if (knownIndex >= 0)
 				{
-					knownRequestHeaders[knownIndex] = value;
+					knownRequestHeaders[knownIndex] = str;
 				}
 				else
 				{
 					headers.Add(name);
-					headers.Add(value);
+					headers.Add(str);
 				}
 			}
 
@@ -620,6 +639,8 @@ namespace System.Web.Hosting
 
 		private void PrepareResponse()
 		{
+			Context.Response.Headers.Clear();
+			//Context.Response.Cookies.Clear();
 		}
 
 		private void Reset()

@@ -52,6 +52,8 @@ corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Exte
 - `WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
 - `System.Drawing`: `EstrellasDeEsperanza.WebFormsForCore.Drawing`
 - `AjaxControlToolkit`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit`
+- `AjaxControlToolkit.HtmlEditor.Sanitizer`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit.HtmlEditor.Sanitizer`
+- `AjaxControlToolkit.StaticResources`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit.StaticResources`
 
 System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is
 missing.

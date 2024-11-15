@@ -541,6 +541,7 @@ namespace System.Web {
             //
             // Request completion (force skipping all steps until RequestEnd
             //
+
             _stepManager.CompleteRequest();
         }
 
@@ -2240,7 +2241,7 @@ namespace System.Web {
                     // hiding ThreadAbortException behind it
 
                     if (e is ThreadAbortException &&
-                        ((Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0) || 
+                        ((Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0) ||
                         e is ResponseEndException)
                     {
                         // Response.End from a COM+ component that re-throws ThreadAbortException
@@ -2289,6 +2290,8 @@ namespace System.Web {
 				// Response.End
 				error = null;
 				_stepManager.CompleteRequest();
+
+                throw;
 			}
 
 			completedSynchronously = true;

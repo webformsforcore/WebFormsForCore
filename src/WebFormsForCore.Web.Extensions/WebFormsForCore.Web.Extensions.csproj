@@ -54,9 +54,9 @@
         <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
         <ProjectReference Include="..\WebFormsForCore.Web.Services\WebFormsForCore.Web.Services.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
-        <PackageReference Include="CoreWCF.Http" Version="1.5.2" />
-        <PackageReference Include="CoreWCF.Primitives" Version="1.5.2" />
-        <PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />
+        <PackageReference Include="CoreWCF.Http" Version="1.6.0" />
+        <PackageReference Include="CoreWCF.Primitives" Version="1.6.0" />
+        <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net48'">
@@ -73,11 +73,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0">
             <Aliases>NET</Aliases>
         </PackageReference>
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
         <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     </ItemGroup>
 
     <ItemGroup>

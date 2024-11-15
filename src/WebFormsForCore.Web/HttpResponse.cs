@@ -13,6 +13,7 @@ namespace System.Web {
     using System.Threading;
     using System.Threading.Tasks;
     using System.Runtime.Serialization;
+    using System.Runtime.ExceptionServices;
     using System.IO;
     using System.Collections;
     using System.Collections.Specialized;
@@ -34,7 +35,7 @@ namespace System.Web {
     /// </devdoc>
     public delegate String HttpResponseSubstitutionCallback(HttpContext context);
 
-    public class ResponseEndException: Exception
+    public class ResponseEndException: OperationCanceledException
     {
         public ResponseEndException(): base() { }
         public ResponseEndException(Exception innerException) : base("", innerException) { }
@@ -3089,6 +3090,21 @@ namespace System.Web {
         /// </devdoc>
         public void End() {
             if (_context.IsInCancellablePeriod) {
+#if NETCOREAPP
+                // when cannot abort execution, flush and supress further output
+                _endRequiresObservation = true;
+
+				if (!_flushing)
+				{ // ignore Reponse.End while flushing (in OnPreSendHeaders)
+					Flush();
+					_ended = true;
+
+					if (_context.ApplicationInstance != null)
+					{
+						_context.ApplicationInstance.CompleteRequest();
+					}
+				}
+#endif
                 AbortCurrentThread();
             }
             else {
@@ -3114,29 +3130,27 @@ namespace System.Web {
             }
         }
 
+        ExceptionDispatchInfo _responseEndException = null;
         [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "Known issue, but required for proper operation of ASP.NET.")]
         [SecurityPermission(SecurityAction.Assert, ControlThread = true)]
         private void AbortCurrentThread() {
 #if NETFRAMEWORK
             Thread.CurrentThread.Abort(new HttpApplication.CancelModuleException(false));
 #else
-			// when cannot abort execution, flush and supress further output
-			_endRequiresObservation = true;
-
-			if (!_flushing)
-			{ // ignore Reponse.End while flushing (in OnPreSendHeaders)
-				Flush();
-				_ended = true;
-
-				if (_context.ApplicationInstance != null)
-				{
-					_context.ApplicationInstance.CompleteRequest();
-				}
-			}
-
-			throw new ResponseEndException(new HttpApplication.CancelModuleException(false));
+            try
+            {
+                throw new ResponseEndException(new HttpApplication.CancelModuleException(false));
+            } catch (Exception ex)
+            {
+                _responseEndException = ExceptionDispatchInfo.Capture(ex);
+                throw;
+            }
 #endif
+		}
 
+        internal void RethrowIfResponseEnd()
+        {
+            if (_responseEndException != null) _responseEndException.Throw();
 		}
 
 		/*

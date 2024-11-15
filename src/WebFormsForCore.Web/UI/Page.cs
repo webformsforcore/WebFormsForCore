@@ -5204,6 +5204,8 @@ window.onload = WebForm_RestoreScrollPosition;
 							ProcessRequestEndTrace();
 					}
 					catch { }
+
+					throw;
 				}
 				finally
 				{
@@ -5269,6 +5271,8 @@ window.onload = WebForm_RestoreScrollPosition;
 							ProcessRequestEndTrace();
 					}
 					catch { }
+
+					throw;
 				}
 				finally
 				{

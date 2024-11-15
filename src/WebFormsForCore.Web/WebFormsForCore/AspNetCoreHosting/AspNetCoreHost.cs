@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Security.Permissions;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Runtime.Loader;
 using System.Reflection;
 using System.Linq;
@@ -266,11 +267,11 @@ namespace System.Web.Hosting
             return IsVirtualPathInApp(path, out isClientScriptPath);
         }
 
-        public void ProcessRequest(Core.HttpContext context)
+        public async Task ProcessRequest(Core.HttpContext context)
         {
             AddPendingCall();
 
-            new AspNetCoreWorkerRequest(this, context).Process();
+            await new AspNetCoreWorkerRequest(this, context).Process();
 
             RemovePendingCall();
         }

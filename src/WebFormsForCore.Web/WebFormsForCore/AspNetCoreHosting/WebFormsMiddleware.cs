@@ -80,7 +80,7 @@ namespace Microsoft.AspNetCore.Builder
 			{
 				AllowSynchronousIO(context);
 
-				host.ProcessRequest(context);
+				await host.ProcessRequest(context);
 			} else {
 				await next.Invoke(context);
 			}

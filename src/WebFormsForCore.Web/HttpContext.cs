@@ -1852,6 +1852,8 @@ namespace System.Web {
                 }
                 finally {
                     EndCancellablePeriod();  // request can be cancelled until this point
+
+                    Response.RethrowIfResponseEnd();
                 }
 
                 WaitForExceptionIfCancelled();  // wait outside of finally
@@ -1881,6 +1883,8 @@ namespace System.Web {
 					throw new HttpException(SR.GetString(SR.Request_timed_out),
 										null, WebEventCodes.RuntimeErrorRequestAbort);
 				}
+
+                throw;
 			}
 		}
 
