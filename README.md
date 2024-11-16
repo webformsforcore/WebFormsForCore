@@ -7,6 +7,8 @@ support is not yet stable.
 # Support
 If you need support porting your project to NET Core & WebFormsForCore, we provide support for
 20$ per hour. Please contact us via [Messenger](https://m.me/simon.jakob.egli).
+There is also a tutorial on Youtube on [how to convert a sample WebForms application to
+WebFormsForCore](https://youtu.be/Zyb4WBlaUwA).
 
 # Usage
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
