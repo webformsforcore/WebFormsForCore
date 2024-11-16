@@ -11,7 +11,14 @@ If you need support porting your project to NET Core & WebFormsForCore, we provi
 # Usage
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
 
-First convert your Project to a SDK Project. For the moment, please also keep the old non SDK style project, as WebFormsForCore does not yet properly support generation of the Designer.cs files from aspx. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. After conversion change the target framework of your project to `net8.0`. You might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
+First convert your Project to a SDK Project. For the moment, please also keep the old non SDK style
+project, as WebFormsForCore does not yet properly support generation of the Designer.cs files from 
+aspx. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that
+tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory
+of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. If
+the converter complains about an unsupported project type, remove the <ProjectTypeGuid> property from
+the project first. After conversion change the target framework of your project to `net8.0`. You
+might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
 Change the OutputPath for `net8.0` to `bin_dotnet`:
 ```
 <PropertyGroup>
@@ -86,7 +93,7 @@ public class Program
 
 		app.UseWebForms();
 
-		app.MapDefaultControllerRoute();
+		//app.MapDefaultControllerRoute();
 			
 		app.Run();
 
