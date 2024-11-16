@@ -121,6 +121,10 @@ namespace System.Web.UI
 					_asyncResult = ar;
 				}
 			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
 			catch (Exception e)
 			{
 				Debug.Trace("Async", "Task failed to start");

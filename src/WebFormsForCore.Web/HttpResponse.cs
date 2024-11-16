@@ -750,8 +750,12 @@ namespace System.Web {
             FlushAsyncResult ar = new FlushAsyncResult(callback, state);
             try {
                 Flush(false);
-            }
-            catch(Exception e) {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch (Exception e) {
                 ar.SetError(e);
             }
             ar.Complete(0, HResults.S_OK, IntPtr.Zero, synchronous: true);
@@ -2504,8 +2508,13 @@ namespace System.Web {
                     // redirect without response.end
                     Redirect(url, false /*endResponse*/);
                 }
-            }
-            catch {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch
+			{
                 return RedirectToErrorPageStatus.Failed;
             }
 
@@ -2732,7 +2741,7 @@ namespace System.Web {
         // Helper method to get absolute physical filename from the argument to WriteFile
         private String GetNormalizedFilename(String fn) {
             // If it's not a physical path, call MapPath on it
-            if (!UrlPath.IsAbsolutePhysicalPath(fn)) {
+            if (!UrlPath.IsAbsolutePhysicalPathSmart(fn)) {
                 if (Request != null)
                     fn = Request.MapPath(fn); // relative to current request
                 else

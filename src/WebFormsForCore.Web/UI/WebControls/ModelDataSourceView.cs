@@ -842,8 +842,12 @@ namespace System.Web.UI.WebControls {
                             affectedRecords = operationTaskInt.Result;
                         }
                     }
-                }
-                catch (Exception ex) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception ex) {
                     operationThrew = true;
                     if (!callback(affectedRecords, ex)) {
                         // Nobody handled the operation error so re-throw

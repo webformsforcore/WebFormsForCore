@@ -571,8 +571,12 @@ namespace System.Web {
 
                                 try {
                                     asyncHandler.EndProcessRequest(ar);
-                                }
-                                catch (Exception e) {
+								}
+								catch (ResponseEndException e)
+								{
+									throw;
+								}
+								catch (Exception e) {
                                     error = e;
                                 }
                             }
@@ -606,8 +610,12 @@ namespace System.Web {
                                     if (blockedThread && !_context.SyncContext.AllowAsyncDuringSyncStages) {
                                         throw new InvalidOperationException(SR.GetString(SR.Server_execute_blocked_on_async_handler));
                                     }
-                                }
-                                catch (Exception e) {
+								}
+								catch (ResponseEndException e)
+								{
+									throw;
+								}
+								catch (Exception e) {
                                     error = e;
                                 }
                             }
@@ -624,14 +632,23 @@ namespace System.Web {
                         using (new DisposableHttpContextWrapper(_context)) {
                             try {
                                 handler.ProcessRequest(_context);
-                            }
-                            catch (Exception e) {
+							}
+							catch (ResponseEndException e)
+							{
+								throw;
+							}
+							catch (Exception e) {
                                 error = e;
                             }
                         }
                     }
-                }
-                finally {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				finally
+				{
                     _context.ServerExecuteDepth--;
 
                     // Restore the handlers;

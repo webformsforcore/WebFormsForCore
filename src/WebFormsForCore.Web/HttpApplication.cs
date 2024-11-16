@@ -621,6 +621,10 @@ namespace System.Web {
                 try {
                     handler(this, AppEvent);
                 }
+                catch (ResponseEndException e)
+                {
+                    throw;
+                }
                 catch (Exception e) {
                     if (_context != null) {
                         _context.AddError(e);
@@ -634,8 +638,12 @@ namespace System.Web {
             if (handler != null) {
                 try {
                     handler(this, AppEvent);
-                }
-                catch (Exception e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception e) {
                     WebBaseEvent.RaiseRuntimeError(e, this);
                 }
             }
@@ -646,8 +654,12 @@ namespace System.Web {
             if (handler != null) {
                 try {
                     handler(this, AppEvent);
-                }
-                catch (Exception e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception e) {
                     RecordError(e);
                 }
             }
@@ -658,6 +670,10 @@ namespace System.Web {
             if (handler != null) {
                 try {
                     handler(this, AppEvent);
+                }
+                catch (ResponseEndException e)
+                {
+                    throw;
                 }
                 catch (Exception e) {
                     RecordError(e);
@@ -1554,6 +1570,10 @@ namespace System.Web {
                         SetAppLevelCulture();
                         InvokeMethodWithAssert(method, paramCount, eventSource, eventArgs);
                     }
+                    catch (ResponseEndException e)
+                    {
+                        throw;
+                    }
                     catch (Exception e) {
                         // dereference reflection invocation exceptions
                         Exception eActual;
@@ -1680,10 +1700,16 @@ namespace System.Web {
                         }
                         _hideRequestResponse = true;
 
-                        try {
+                        try
+                        {
                             Init();
                         }
-                        catch (Exception e) {
+                        catch (ResponseEndException e)
+                        {
+                            throw;
+                        }
+                        catch (Exception e)
+                        {
                             RecordError(e);
                         }
                     }
@@ -1807,6 +1833,10 @@ namespace System.Web {
 
             try {
                 Dispose();
+            }
+            catch (ResponseEndException e)
+            {
+                throw;
             }
             catch (Exception e) {
                 RecordError(e);
@@ -1956,6 +1986,10 @@ namespace System.Web {
 
                 try {
                     addMethod.Invoke(target, new Object[1]{handlerDelegate});
+                }
+                catch (ResponseEndException e)
+                {
+                    throw;
                 }
                 catch {
                     if (HttpRuntime.UseIntegratedPipeline) {
@@ -2225,6 +2259,10 @@ namespace System.Web {
                         completedSynchronously = false;
                         return null;
                     }
+                }
+                catch (ResponseEndException e)
+                {
+                    throw;
                 }
                 catch (Exception e)
                 {
@@ -3162,7 +3200,12 @@ namespace System.Web {
 
                 try {
                     InvokeEndHandler(ar);
-                } catch (Exception e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception e) {
                     error = e;
                 }
 
@@ -3463,7 +3506,13 @@ namespace System.Web {
                 try {
                     try {
                         InvokeEndHandler(ar);
-                    } finally {
+					}
+					catch (ResponseEndException e)
+					{
+						throw;
+					}
+					finally
+					{
                         SuppressPostEndRequestIfNecessary(context);
 
                         // In Integrated mode, generate the necessary response headers
@@ -3913,8 +3962,12 @@ namespace System.Web {
 
                         try {
                             threadContext = app.OnThreadEnter();
-                        }
-                        catch (Exception e) {
+						}
+						catch (ResponseEndException e)
+						{
+							throw;
+						}
+						catch (Exception e) {
                             if (error == null)
                                 error = e;
                         }

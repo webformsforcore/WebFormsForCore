@@ -2114,7 +2114,7 @@ namespace System.Web.UI {
         /// accept either type of path for the same attribute.
         ///
         internal void ResolvePhysicalOrVirtualPath(string path, out VirtualPath virtualPath, out string physicalPath) {
-            if (System.Web.Util.UrlPath.IsAbsolutePhysicalPath(path)) {
+            if (System.Web.Util.UrlPath.IsAbsolutePhysicalPathSmart(path)) {
                 physicalPath = path;
                 virtualPath = null;
             }
@@ -2176,7 +2176,7 @@ namespace System.Web.UI {
             // Need to Trim it since MapPath no longer allows trailing space (VSWhidbey 441210)
             path = path.Trim();
 
-            if (UrlPath.IsAbsolutePhysicalPath(path)) {
+            if (UrlPath.IsAbsolutePhysicalPathSmart(path)) {
                 // Absolute physical path
                 physicalPath = path;
             }

@@ -764,79 +764,183 @@ namespace System.Web.Configuration {
             return null;
         }
 
-        private Assembly LoadAssemblyHelper(string assemblyName, bool starDirective) {
-            // The trust should always be set before we load any assembly (VSWhidbey 317295)
-            System.Web.Util.Debug.Assert(HttpRuntime.TrustLevel != null);
+		private Assembly LoadAssemblyHelper(string assemblyName, bool starDirective)
+		{
+			// The trust should always be set before we load any assembly (VSWhidbey 317295)
+			System.Web.Util.Debug.Assert(HttpRuntime.TrustLevel != null);
 
-            Assembly retAssembly = null;
-            // Load the assembly and add it to the dictionary.
-            try {
-                retAssembly = System.Reflection.Assembly.Load(assemblyName);
-            }
-            catch (Exception e) {
+			Assembly retAssembly = null;
+			// Load the assembly and add it to the dictionary.
+			try
+			{
+				retAssembly = System.Reflection.Assembly.Load(assemblyName);
+			}
+			catch (Exception e)
+			{
 
-                // Check if this assembly came from the '*' directive
-                bool ignoreException = false;
+				// Check if this assembly came from the '*' directive
+				bool ignoreException = false;
 
-                if (starDirective) {
-                    int hresult = System.Runtime.InteropServices.Marshal.GetHRForException(e);
+				if (starDirective)
+				{
+					int hresult = System.Runtime.InteropServices.Marshal.GetHRForException(e);
 
-                    // This is expected to fail for unmanaged DLLs that happen
-                    // to be in the bin dir.  Ignore them.
+					// This is expected to fail for unmanaged DLLs that happen
+					// to be in the bin dir.  Ignore them.
 
-                    // Also, if the DLL is not an assembly, ignore the exception (ASURT 93073, VSWhidbey 319486)
+					// Also, if the DLL is not an assembly, ignore the exception (ASURT 93073, VSWhidbey 319486)
 
-                    // Test for COR_E_ASSEMBLYEXPECTED=0x80131018=-2146234344
-                    if (hresult == -2146234344) {
-                        ignoreException = true;
-                    }
+					// Test for COR_E_ASSEMBLYEXPECTED=0x80131018=-2146234344
+					if (hresult == -2146234344)
+					{
+						ignoreException = true;
+					}
+				}
+
+				if (BuildManager.IgnoreBadImageFormatException)
+				{
+					var badImageFormatException = e as BadImageFormatException;
+					if (badImageFormatException != null)
+					{
+						ignoreException = true;
+					}
+				}
+
+				if (!ignoreException)
+				{
+					string Message = e.Message;
+					if (String.IsNullOrEmpty(Message))
+					{
+						// try and make a better message than empty string
+						if (e is FileLoadException)
+						{
+							Message = SR.GetString(SR.Config_base_file_load_exception_no_message, "assembly");
+						}
+						else if (e is BadImageFormatException)
+						{
+							Message = SR.GetString(SR.Config_base_bad_image_exception_no_message, assemblyName);
+						}
+						else
+						{
+							Message = SR.GetString(SR.Config_base_report_exception_type, e.GetType().ToString()); // at least this is better than no message
+						}
+					}
+					// default to section if the assembly is not in the collection 
+					// which may happen it the assembly is being loaded from the bindir
+					// and not named in configuration.
+					String source = ElementInformation.Properties["assemblies"].Source;
+					int lineNumber = ElementInformation.Properties["assemblies"].LineNumber;
+
+					// If processing the * directive, look up the line information for it
+					if (starDirective)
+						assemblyName = "*";
+
+					if (Assemblies[assemblyName] != null)
+					{
+						source = Assemblies[assemblyName].ElementInformation.Source;
+						lineNumber = Assemblies[assemblyName].ElementInformation.LineNumber;
+					}
+					throw new ConfigurationErrorsException(Message, e, source, lineNumber);
+				}
+			}
+
+			System.Web.Util.Debug.Trace("LoadAssembly", "Successfully loaded assembly '" + assemblyName + "'");
+
+			return retAssembly;
+		}
+		private Assembly LoadAssemblyFromFileHelper(string assemblyName, string assemblyFile, bool starDirective)
+		{
+			// The trust should always be set before we load any assembly (VSWhidbey 317295)
+			System.Web.Util.Debug.Assert(HttpRuntime.TrustLevel != null);
+
+			Assembly retAssembly = null;
+			// Load the assembly and add it to the dictionary.
+			try
+			{
+                try
+                {
+                    retAssembly = System.Reflection.Assembly.Load(assemblyName);
                 }
-
-                if (BuildManager.IgnoreBadImageFormatException) {
-                    var badImageFormatException = e as BadImageFormatException;
-                    if (badImageFormatException != null) {
-                        ignoreException = true;
-                    }
+                catch (FileNotFoundException ex)
+                {
+                    retAssembly = System.Reflection.Assembly.LoadFrom(assemblyFile);
                 }
+			}
+			catch (Exception e)
+			{
 
-                if (!ignoreException) {
-                    string Message = e.Message;
-                    if (String.IsNullOrEmpty(Message)) {
-                        // try and make a better message than empty string
-                        if (e is FileLoadException) {
-                            Message = SR.GetString(SR.Config_base_file_load_exception_no_message, "assembly");
-                        }
-                        else if (e is BadImageFormatException) {
-                            Message = SR.GetString(SR.Config_base_bad_image_exception_no_message, assemblyName);
-                        }
-                        else {
-                            Message = SR.GetString(SR.Config_base_report_exception_type, e.GetType().ToString()); // at least this is better than no message
-                        }
-                    }
-                    // default to section if the assembly is not in the collection 
-                    // which may happen it the assembly is being loaded from the bindir
-                    // and not named in configuration.
-                    String source = ElementInformation.Properties["assemblies"].Source;
-                    int lineNumber = ElementInformation.Properties["assemblies"].LineNumber;
+				// Check if this assembly came from the '*' directive
+				bool ignoreException = false;
 
-                    // If processing the * directive, look up the line information for it
-                    if (starDirective)
-                        assemblyName = "*";
+				if (starDirective)
+				{
+					int hresult = System.Runtime.InteropServices.Marshal.GetHRForException(e);
 
-                    if (Assemblies[assemblyName] != null) {
-                        source = Assemblies[assemblyName].ElementInformation.Source;
-                        lineNumber = Assemblies[assemblyName].ElementInformation.LineNumber;
-                    }
-                    throw new ConfigurationErrorsException(Message, e, source, lineNumber);
-                }
-            }
+					// This is expected to fail for unmanaged DLLs that happen
+					// to be in the bin dir.  Ignore them.
 
-            System.Web.Util.Debug.Trace("LoadAssembly", "Successfully loaded assembly '" + assemblyName + "'");
+					// Also, if the DLL is not an assembly, ignore the exception (ASURT 93073, VSWhidbey 319486)
 
-            return retAssembly;
-        }
+					// Test for COR_E_ASSEMBLYEXPECTED=0x80131018=-2146234344
+					if (hresult == -2146234344)
+					{
+						ignoreException = true;
+					}
+				}
 
-        internal Assembly[] LoadAllAssembliesFromAppDomainBinDirectory() {
+				if (BuildManager.IgnoreBadImageFormatException)
+				{
+					var badImageFormatException = e as BadImageFormatException;
+					if (badImageFormatException != null)
+					{
+						ignoreException = true;
+					}
+				}
+
+				if (!ignoreException)
+				{
+					string Message = e.Message;
+					if (String.IsNullOrEmpty(Message))
+					{
+						// try and make a better message than empty string
+						if (e is FileLoadException)
+						{
+							Message = SR.GetString(SR.Config_base_file_load_exception_no_message, "assembly");
+						}
+						else if (e is BadImageFormatException)
+						{
+							Message = SR.GetString(SR.Config_base_bad_image_exception_no_message, assemblyName);
+						}
+						else
+						{
+							Message = SR.GetString(SR.Config_base_report_exception_type, e.GetType().ToString()); // at least this is better than no message
+						}
+					}
+					// default to section if the assembly is not in the collection 
+					// which may happen it the assembly is being loaded from the bindir
+					// and not named in configuration.
+					String source = ElementInformation.Properties["assemblies"].Source;
+					int lineNumber = ElementInformation.Properties["assemblies"].LineNumber;
+
+					// If processing the * directive, look up the line information for it
+					if (starDirective)
+						assemblyName = "*";
+
+					if (Assemblies[assemblyName] != null)
+					{
+						source = Assemblies[assemblyName].ElementInformation.Source;
+						lineNumber = Assemblies[assemblyName].ElementInformation.LineNumber;
+					}
+					throw new ConfigurationErrorsException(Message, e, source, lineNumber);
+				}
+			}
+
+			System.Web.Util.Debug.Trace("LoadAssembly", "Successfully loaded assembly '" + assemblyName + "'");
+
+			return retAssembly;
+		}
+
+		internal Assembly[] LoadAllAssembliesFromAppDomainBinDirectory() {
             // Get the path to the bin directory
             string binPath = HttpRuntime.BinDirectoryInternal;
             FileInfo[] binDlls;
@@ -857,14 +961,15 @@ namespace System.Web.Configuration {
                     list = new ArrayList(binDlls.Length);
 
                     for (int i = 0; i < binDlls.Length; i++) {
-                        string assemblyName = Util.GetAssemblyNameFromFileName(binDlls[i].Name);
+                        string assemblyFile = binDlls[i].FullName;
+						string assemblyName = Util.GetAssemblyNameFromFileName(binDlls[i].Name);
 
                         // Don't autoload generated assemblies in bin (VSWhidbey 467936)
                         if (assemblyName.StartsWith(BuildManager.WebAssemblyNamePrefix, StringComparison.Ordinal))
                             continue;
 
                         if (!GetAssembliesCollection().IsRemoved(assemblyName)) {
-                            assembly = LoadAssemblyHelper(assemblyName, true);
+                            assembly = LoadAssemblyFromFileHelper(assemblyName, assemblyFile, true);
                         }
                         if (assembly != null) {
                             list.Add(assembly);

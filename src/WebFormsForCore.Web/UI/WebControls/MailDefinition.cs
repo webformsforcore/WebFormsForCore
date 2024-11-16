@@ -209,7 +209,7 @@ namespace System.Web.UI.WebControls {
             string bodyFileName = BodyFileName;
             if (!String.IsNullOrEmpty(bodyFileName)) {
                 string path = bodyFileName;
-                if (!UrlPath.IsAbsolutePhysicalPath(path)) {
+                if (!UrlPath.IsAbsolutePhysicalPathSmart(path)) {
                     // Relative so we need to add the template source directory to the path
                     path = UrlPath.Combine(owner.AppRelativeTemplateSourceDirectory, path);
                 }
@@ -286,7 +286,7 @@ namespace System.Web.UI.WebControls {
                         if (String.IsNullOrEmpty(path)) {
                             throw ExceptionUtil.PropertyNullOrEmpty("EmbeddedMailObject.Path");
                         }
-                        if (!UrlPath.IsAbsolutePhysicalPath(path)) {
+                        if (!UrlPath.IsAbsolutePhysicalPathSmart(path)) {
                             VirtualPath virtualPath = VirtualPath.Combine(owner.TemplateControlVirtualDirectory,
                                 VirtualPath.Create(path));
                             path = virtualPath.AppRelativeVirtualPathString;

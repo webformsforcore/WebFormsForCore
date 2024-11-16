@@ -192,7 +192,7 @@ internal abstract class DependencyParser : BaseParser {
 
         if (StringUtil.EqualsIgnoreCase(pathType, "file")) {
             
-            if (UrlPath.IsAbsolutePhysicalPath(filename)) {
+            if (UrlPath.IsAbsolutePhysicalPathSmart(filename)) {
                 // If it's an absolute physical path, use it as is
                 newPhysicalPath = filename;
 

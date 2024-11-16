@@ -102,7 +102,7 @@ namespace System.Web {
                 if (!String.IsNullOrEmpty(url)) {
                     if (HttpRuntime.AppDomainAppVirtualPath != null) {
 
-                        if (!UrlPath.IsAbsolutePhysicalPath(url)) {
+                        if (UrlPath.IsVirtualPath(url)) {
                             url = UrlPath.Combine(HttpRuntime.AppDomainAppVirtualPathString, url);
 
                             // Normalize url

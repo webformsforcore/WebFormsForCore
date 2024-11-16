@@ -773,7 +773,7 @@ namespace System.Web {
                 // URL needs to be trimmed. VSWhidbey 411041
                 url = url.Trim();
 
-                if (!UrlPath.IsAbsolutePhysicalPath(url)) {
+                if (!UrlPath.IsAbsolutePhysicalPathSmart(url)) {
                     if (UrlPath.IsRelativeUrl(url)) {
                         url = UrlPath.Combine(HttpRuntime.AppDomainAppVirtualPathString, url);
                     }

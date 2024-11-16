@@ -242,6 +242,11 @@ namespace System.Web.Hosting
 			return Host.GetProcessUser();
 		}
 
+		public override string GetAppPoolID()
+		{
+			return Host.PhysicalPath.GetHashCode().ToString("X");
+		}
+
 		public override bool HeadersSent()
 		{
 			return headersSent;
@@ -324,7 +329,9 @@ namespace System.Web.Hosting
 
 				// Hand the processing over to HttpRuntime
 				// Run processing in separate ASP.NET Worker Thread
-				HttpRuntime.ProcessRequest(this);
+				await Task.Factory.StartNew(() =>
+					HttpRuntime.ProcessRequest(this),
+					TaskCreationOptions.LongRunning);
 
 				await Completed.Task;
 			}

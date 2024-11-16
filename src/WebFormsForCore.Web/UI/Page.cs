@@ -5145,6 +5145,10 @@ window.onload = WebForm_RestoreScrollPosition;
 			{
 				ProcessRequest(true /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/);
 			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
 			finally
 			{
 				// restore culture
@@ -6300,6 +6304,10 @@ window.onload = WebForm_RestoreScrollPosition;
 					throw new InvalidOperationException(SR.GetString(SR.Page_CallBackTargetInvalid, callbackControlID));
 				}
 			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
 			catch (Exception e)
 			{
 				Response.Clear();
@@ -6343,6 +6351,10 @@ window.onload = WebForm_RestoreScrollPosition;
 				{
 					throw new InvalidOperationException(SR.GetString(SR.Page_CallBackTargetInvalid, callbackControlID));
 				}
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
 			}
 			catch (Exception e)
 			{
@@ -6417,6 +6429,10 @@ window.onload = WebForm_RestoreScrollPosition;
 					Response.Write(index);
 					Response.Write("].xmlRequest.readyState=4;parent.WebForm_CallbackComplete();</script>");
 				}
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
 			}
 			catch (Exception e)
 			{
@@ -6888,6 +6904,10 @@ window.onload = WebForm_RestoreScrollPosition;
 						}
 					}
 				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
 				catch (Exception e)
 				{
 					_error = e;
@@ -6947,6 +6967,10 @@ window.onload = WebForm_RestoreScrollPosition;
 							// async completion
 							return;
 						}
+						catch (ResponseEndException e)
+						{
+							throw;
+						}
 						catch (Exception e)
 						{
 							if (onPageThread && _syncContext.PendingOperationsCount == 0)
@@ -7005,6 +7029,10 @@ window.onload = WebForm_RestoreScrollPosition;
 					{
 						_page.Context.InvokeCancellableCallback(new WaitCallback(o => { _page.ProcessRequest(false /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/); }), null);
 					}
+					catch (ResponseEndException e)
+					{
+						throw;
+					}
 					catch (Exception e)
 					{
 						if (onPageThread)
@@ -7049,6 +7077,10 @@ window.onload = WebForm_RestoreScrollPosition;
 				try
 				{
 					((EndEventHandler)_endHandlers[_currentHandler])(ar);
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
 				}
 				catch (Exception e)
 				{
@@ -7152,6 +7184,10 @@ window.onload = WebForm_RestoreScrollPosition;
 						{
 							await _asyncTaskManager.ExecuteTasksAsync(this, EventArgs.Empty, cancellationToken, _context.SyncContext, _context.ApplicationInstance);
 						}
+						catch (ResponseEndException e)
+						{
+							throw;
+						}
 						finally
 						{
 							// Homogenize any exceptions due to request timeout into a TimeoutException.
@@ -7161,6 +7197,10 @@ window.onload = WebForm_RestoreScrollPosition;
 							}
 						}
 					}
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
 				}
 				catch (Exception ex)
 				{
@@ -7206,6 +7246,10 @@ window.onload = WebForm_RestoreScrollPosition;
 			try
 			{
 				_context.InvokeCancellableCallback(new WaitCallback(this.AsyncPageProcessRequestBeforeAsyncPointCancellableCallback), null);
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
 			}
 			catch (Exception e)
 			{

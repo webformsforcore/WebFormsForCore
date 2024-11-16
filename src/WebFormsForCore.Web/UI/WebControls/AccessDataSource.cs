@@ -226,7 +226,7 @@ namespace System.Web.UI.WebControls {
             if (filename.Length == 0) {
                 return null;
             }
-            if (!System.Web.Util.UrlPath.IsAbsolutePhysicalPath(filename)) {
+            if (!System.Web.Util.UrlPath.IsAbsolutePhysicalPathSmart(filename)) {
                 // Root relative path
                 if (DesignMode) {
                     // This exception should never be thrown - the designer always maps paths

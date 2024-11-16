@@ -129,7 +129,27 @@ namespace System.Web.Util
 		internal static bool IsAbsolutePhysicalPath(string path)
 		{
 			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
+			else return path.StartsWith("/");
+		}
+		internal static bool IsAbsolutePhysicalPathSmart(string path)
+		{
+			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
 			else return path.StartsWith("/") && Path.Exists(path);
+		}
+		internal static bool IsAbsolutePhysicalOrVirtualPath(string path)
+		{
+			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
+			else return path.StartsWith("/");
+		}
+		internal static bool IsAbsolutePhysicalPathAndWindows(string path)
+		{
+			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
+			else return false;
+		}
+		internal static bool IsVirtualPath(string path)
+		{
+			if (OSInfo.IsWindows) return !IsAbsoluteWindowsPhysicalPath(path);
+			else return true;
 		}
 		internal static bool IsAbsoluteWindowsPhysicalPath(string path)
 		{

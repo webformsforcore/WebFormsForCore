@@ -620,8 +620,12 @@ namespace System.Web {
             // user code will no longer run), we'll just log the error.
             try {
                 _requestCompletedQueue.FireAndComplete(action => action(this));
-            }
-            catch (Exception e) {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch (Exception e) {
                 WebBaseEvent.RaiseRuntimeError(e, this);
             }
             finally {
@@ -655,8 +659,12 @@ namespace System.Web {
             // user code will no longer run), we'll just log the error.
             try {
                 _pipelineCompletedQueue.FireAndComplete(disposable => disposable.Dispose());
-            }
-            catch (Exception e) {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch (Exception e) {
                 WebBaseEvent.RaiseRuntimeError(e, null);
             }
         }

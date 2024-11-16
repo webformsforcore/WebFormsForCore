@@ -65,8 +65,12 @@ namespace System.Web.UI {
                         MethodInfo methodInfo = entry.PropertyInfo.GetSetMethod();
                         Util.InvokeMethod(methodInfo, control, parameters);
                     }
-                }
-                catch (Exception e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception e) {
                     Debug.Fail(e.Message);
                 }
 #pragma warning disable 1058
@@ -149,8 +153,12 @@ namespace System.Web.UI {
 
                         SetSimpleProperty(entry, control);
                     }
-                }
-                catch (Exception e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception e) {
                     Debug.Fail(e.Message);
                 }
 #pragma warning disable 1058

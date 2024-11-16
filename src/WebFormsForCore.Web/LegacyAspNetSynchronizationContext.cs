@@ -60,12 +60,21 @@ namespace System.Web {
                 threadContext = _application.OnThreadEnter();
                 try {
                     callback(state);
-                }
-                catch (Exception e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (Exception e) {
                     _error = ExceptionDispatchInfo.Capture(e);
                 }
-            }
-            finally {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			finally
+			{
                 if (threadContext != null) {
                     threadContext.DisassociateFromCurrentThread();
                 }

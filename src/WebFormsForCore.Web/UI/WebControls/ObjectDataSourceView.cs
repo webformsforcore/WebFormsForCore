@@ -1667,8 +1667,12 @@ namespace System.Web.UI.WebControls {
             }
             try {
                 returnValue = method.MethodInfo.Invoke(instance, parameterValues);
-            }
-            catch (Exception ex) {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch (Exception ex) {
                 // Collect output parameters
                 IDictionary outputParameters = GetOutputParameters(method.MethodInfo.GetParameters(), parameterValues);
                 ObjectDataSourceStatusEventArgs statusEventArgs = new ObjectDataSourceStatusEventArgs(returnValue, outputParameters, ex);

@@ -694,14 +694,23 @@ namespace System.Web
                                 // Make sure that the <processModel> section has no errors
                                 ProcessModelSection processModel = RuntimeConfig.GetMachineConfig().ProcessModel;
                             }
-                        }
-                        finally {
+						}
+						catch (ResponseEndException e)
+						{
+							throw;
+						}
+						finally
+						{
                             Thread.CurrentThread.CurrentUICulture = savedUICulture;
                             SetCurrentThreadCultureWithAssert(savedCulture);
                         }
                     }
-                }
-                catch (ConfigurationException e) {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch (ConfigurationException e) {
                     error = e;
                 }
                 catch (Exception e) {
@@ -1706,8 +1715,13 @@ namespace System.Web
                 // First request initialization
                 try {
                     EnsureFirstRequestInit(context);
-                }
-                catch {
+				}
+				catch (ResponseEndException e)
+				{
+					throw;
+				}
+				catch
+				{
                     // If we are handling a DEBUG request, ignore the FirstRequestInit exception.
                     // This allows the HttpDebugHandler to execute, and lets the debugger attach to
                     // the process (VSWhidbey 358135)
@@ -1739,10 +1753,11 @@ namespace System.Web
                     app.ProcessRequest(context);
                     FinishRequest(context.WorkerRequest, context, null);
                 }
-            }
-            catch (Exception e) {
+			}
+			catch (Exception e) {
                 context.Response.InitResponseWriter();
                 FinishRequest(wr, context, e);
+                if (e is ResponseEndException) throw;
             }
         }
 
@@ -1796,8 +1811,12 @@ namespace System.Web
                     try {
                         // this sends the actual content in most cases
                         response.FinalFlushAtTheEndOfRequestProcessing();
-                    }
-                    catch (Exception eFlush) {
+					}
+					catch (ResponseEndException ex)
+					{
+						throw;
+					}
+					catch (Exception eFlush) {
                         e = eFlush;
                     }
                 }
@@ -1815,8 +1834,13 @@ namespace System.Web
                         try {
                             ReportAppOfflineErrorMessage(response, _appOfflineMessage);
                             response.FinalFlushAtTheEndOfRequestProcessing();
-                        }
-                        catch {
+						}
+						catch (ResponseEndException ex)
+						{
+							throw;
+						}
+						catch
+						{
                         }
                     }
                     else {
@@ -1827,15 +1851,24 @@ namespace System.Web
                                 try {
                                     // try to report error in a way that could possibly throw (a config exception)
                                     response.ReportRuntimeError(e, true /*canThrow*/, false);
-                                }
-                                catch (Exception eReport) {
+								}
+								catch (ResponseEndException ex)
+								{
+									throw;
+								}
+								catch (Exception eReport) {
                                     // report the config error in a way that would not throw
                                     response.ReportRuntimeError(eReport, false /*canThrow*/, false);
                                 }
 
                                 response.FinalFlushAtTheEndOfRequestProcessing();
                             }
-                            catch {
+							catch (ResponseEndException ex)
+							{
+								throw;
+							}
+							catch
+							{
                             }
                         }
                     }
@@ -1917,8 +1950,13 @@ namespace System.Web
             // Release all resources
             try {
                 Dispose();
-            }
-            catch {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch
+			{
             }
 
             Thread.Sleep(250);
@@ -2137,8 +2175,12 @@ namespace System.Web
 
             try {
                 context.AsyncAppHandler.EndProcessRequest(ar);
-            }
-            catch (Exception e) {
+			}
+			catch (ResponseEndException e)
+			{
+				throw;
+			}
+			catch (Exception e) {
                 context.AddError(e);
             }
             finally {

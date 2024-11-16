@@ -950,7 +950,7 @@ namespace System.Web.Compilation
 
 			string pragmaFile = null;
 
-			if (UrlPath.IsAbsolutePhysicalPath(virtualPath))
+			if (UrlPath.IsAbsolutePhysicalPathSmart(virtualPath))
 			{
 
 				// Due to config system limitations, we can end up with virtualPath
