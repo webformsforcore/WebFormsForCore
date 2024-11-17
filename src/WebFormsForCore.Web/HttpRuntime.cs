@@ -1754,10 +1754,15 @@ namespace System.Web
                     FinishRequest(context.WorkerRequest, context, null);
                 }
 			}
+            catch (ResponseEndException e)
+            {
+				context.Response.InitResponseWriter();
+				FinishRequest(wr, context, null);
+				// don't rethrow RepsonseEndException here, as it just ends the request 
+			}
 			catch (Exception e) {
                 context.Response.InitResponseWriter();
                 FinishRequest(wr, context, e);
-                if (e is ResponseEndException) throw;
             }
         }
 
