@@ -120,7 +120,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 
 					var dll = Assembly.GetExecutingAssembly().Location;
 
-					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" \"{assemblies}\" " +
+					var startInfo = new ProcessStartInfo("dotnet.exe", $"fakestrongname \"{dll}\" \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
 						$"\"{Source?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;

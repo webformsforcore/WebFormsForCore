@@ -270,7 +270,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
         <!--<FakeStrongNameAssemblies Include="$(IntermediateOutputPath)ref\$(AssemblyName).Fake.dll" Visible="false" />-->
     </ItemGroup>
 
-    <Target Name="FakeStrongName" Condition="$(TargetFramework) != 'net48'"
+    <Target Name="FakeStrongName" Condition="$(TargetFramework) != 'net48' And $(StrongNamePublicKeyToken) != ''"
 		AfterTargets="CoreCompile">
 
         <FakeStrongName Assemblies="@(StrongNameAssemblies)"
