@@ -22,3 +22,6 @@
 [submodule "src/WebFormsForCore.AjaxControlToolkit"]
 	path = src/WebFormsForCore.AjaxControlToolkit
 	url = https://github.com/simonegli8/WebFormsForCore.AjaxControlToolkit
+[submodule "src/Redesigner"]
+	path = src/Redesigner
+	url = https://github.com/simonegli8/Redesigner
