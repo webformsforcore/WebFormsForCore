@@ -72,6 +72,8 @@
         <PackageReference Include="Microsoft.Build" Version="15.9.20" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
         <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+        
     </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework) == 'net48'">

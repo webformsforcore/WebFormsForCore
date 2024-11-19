@@ -132,7 +132,7 @@ namespace Redesigner.Library
 			var dllsPath = Path.GetDirectoryName(dllFullPath);
 			if (File.Exists(Path.Combine(dllsPath, "System.Web.Extensions.dll")))
 				assemblyNames.Add(SystemWebExtensionsAssemblyName);
-			assemblyNames.Add(dllFullPath);
+			if (File.Exists(dllFullPath)) assemblyNames.Add(dllFullPath);
 			string assemblyDirectory = Path.GetDirectoryName(dllFullPath);
 			assemblyLoader.PreloadAssemblies(compileContext, assemblyNames, assemblyDirectory);
 			assemblyLoader.PrimaryAssembly = assemblyLoader[dllFullPath];

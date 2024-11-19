@@ -36,6 +36,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Service
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Serialization.Formatters", "src\WebFormsForCore.Serialization.Formatters\WebFormsForCore.Serialization.Formatters.csproj", "{39F3145C-2672-46DA-BEB9-CCC97D10E2C7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Build", "src\WebFormsForCore.Build\WebFormsForCore.Build.csproj", "{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}"
 EndProject
@@ -49,30 +52,63 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Extensions", "src\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj", "{E9D0BAC0-C7DC-4412-B332-ED0CBA64D170}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.TestApp", "src\WebFormsForCore.TestApp\WebFormsForCore.TestApp.csproj", "{B4E7CBD6-8EB7-4BD9-B90D-3EE146436848}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Optimization", "src\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj", "{A9A0CBBC-D668-44D0-AF11-27FEF898D8F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.WebGrease", "src\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj", "{B30618C1-864F-44AA-8D00-D3AC4F7B3506}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Optimization.WebForms", "src\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj", "{459C184B-6598-486D-AE1B-9614DC6C658F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Infrastructure", "src\WebFormsForCore.Web.Infrastructure\WebFormsForCore.Web.Infrastructure.csproj", "{D12012F2-55A8-4F5A-92EE-2F2724F7F9EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Drawing", "src\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj", "{3B2D70EA-C80F-4E5A-B594-4C18AD5C5921}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Compilers", "src\WebFormsForCore.Compilers\WebFormsForCore.Compilers.csproj", "{B3673DD7-5B5D-492A-ACA9-D7BDE8BAAA4F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFormsForCore.Web.Mobile", "src\WebFormsForCore.Web.Mobile\WebFormsForCore.Web.Mobile.csproj", "{A51BAB4C-2B35-457A-A9F5-DE542EEE067D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.Reporting", "src\WebFormsForCore.Web.Reporting\WebFormsForCore.Web.Reporting.csproj", "{FDE6C5ED-1F40-471C-862B-0FDFB8CF462B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit", "src\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj", "{676B3449-93F7-4102-8DF0-FB51911675D6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit.HtmlEditor.Sanitizer", "src\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit.HtmlEditor.Sanitizer\AjaxControlToolkit.HtmlEditor.Sanitizer.csproj", "{4F19469B-3352-4D93-89E2-4B79FD7086A6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit.StaticResources", "src\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit.StaticResources\AjaxControlToolkit.StaticResources.csproj", "{820694DF-C225-46B6-BA38-C5FEFBD79AEB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29FAEAAA-157D-43C5-A1AA-6C26CA56F69A} = {29FAEAAA-157D-43C5-A1AA-6C26CA56F69A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

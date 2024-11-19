@@ -96,7 +96,7 @@ namespace {1} {{
 		{
 			compileContext.Verbose("");
 			compileContext.Verbose("Generating designer file for {0} with the {1} controls found in the markup.",
-				markupInfo.ClassType.FullName, markupInfo.OutputControls.Count());
+				markupInfo.ClassType?.FullName ?? "", markupInfo.OutputControls.Count());
 
 			// Get the actual runtime version from the System.Web assembly itself.
 			string runtimeVersion = markupInfo.Assemblies[Common.SystemWebAssemblyName].ImageRuntimeVersion;
@@ -107,7 +107,7 @@ namespace {1} {{
 
 			// Construct the initial part of the .designer.cs file.
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.AppendFormat(DesignerStart, runtimeVersion + ".0", markupInfo.ClassType.Namespace, markupInfo.ClassType.Name);
+			stringBuilder.AppendFormat(DesignerStart, runtimeVersion + ".0", markupInfo.ClassType?.Namespace ?? "", markupInfo.ClassType?.Name ?? "");
 
 			// We must skip Content declarations, since those are not emitted as output.
 			Type contentControl = typeof(System.Web.UI.WebControls.Content);

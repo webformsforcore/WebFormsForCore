@@ -244,7 +244,7 @@ namespace Redesigner.Library
 							// We matched a registered user control, so we have to partially parse it to find out
 							// what namespace in the website assembly is associated with it.
 							Assembly assembly = assemblies.PrimaryAssembly;
-							Type type = assembly.GetType(tagRegistration.Typename);
+							Type type = assembly?.GetType(tagRegistration.Typename);
 
 							// Make sure we found it, and that it's actually a UserControl of some kind.
 							if (type == null || !typeof(System.Web.UI.UserControl).IsAssignableFrom(type)) break;

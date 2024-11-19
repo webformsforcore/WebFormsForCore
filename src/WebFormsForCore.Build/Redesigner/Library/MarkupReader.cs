@@ -784,7 +784,7 @@ namespace Redesigner.Library
 			else
 			{
 				// Find the .NET class type that matches the given classname of the code-behind.
-				mainDirectiveType = _assemblies.PrimaryAssembly.GetType(inherits);
+				mainDirectiveType = _assemblies.PrimaryAssembly?.GetType(inherits);
 				if (mainDirectiveType == null)
 				{
 					Warning("Main <%@ ... %> directive says this markup inherits \"{0}\", but that class does not exist in the compiled website DLL.", inherits);
