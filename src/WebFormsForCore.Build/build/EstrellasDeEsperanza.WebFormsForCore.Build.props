@@ -4,6 +4,7 @@
     <ItemGroup>
         <AspNetControls Include="**\*.aspx" />
         <AspNetControls Include="**\*.ascx" />
+        <AspNetControls Include="**\*.master" />
     </ItemGroup>
 
 </Project>

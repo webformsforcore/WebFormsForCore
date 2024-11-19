@@ -124,27 +124,31 @@ namespace Redesigner.Library
 		private static Assembly TryToLoadAssembly(ICompileContext compileContext, string name)
 		{
 			Assembly assembly;
+			string fileName = name;
+			var comma = fileName.IndexOf(',');
+			if (comma >= 0) fileName = fileName.Substring(0, comma);
 
 			try
 			{
-				assembly = Assembly.Load(name);
-				compileContext.Verbose("Found it in the GAC.");
+				compileContext.Verbose("Looking for assembly as a file in directory of website DLL.");
+				assembly = Assembly.LoadFrom(fileName);
+				compileContext.Verbose("Found it in the website directory.");
 			}
 			catch (Exception)
 			{
 				try
 				{
-					compileContext.Verbose("Assembly is not in GAC, trying again as a file in directory of website DLL.");
-					assembly = Assembly.LoadFrom(name);
+					compileContext.Verbose("Trying again with '.dll' added onto the end of the assembly name.");
+					assembly = Assembly.LoadFrom(fileName + ".dll");
 					compileContext.Verbose("Found it in the website directory.");
 				}
 				catch (Exception)
 				{
 					try
 					{
-						compileContext.Verbose("Trying again with '.dll' added onto the end of the assembly name.");
-						assembly = Assembly.LoadFrom(name + ".dll");
-						compileContext.Verbose("Found it in the website directory.");
+						compileContext.Verbose("Trying again looking in GAC.");
+						assembly = Assembly.Load(name);
+						compileContext.Verbose("Found it in the GAC.");
 					}
 					catch (Exception)
 					{

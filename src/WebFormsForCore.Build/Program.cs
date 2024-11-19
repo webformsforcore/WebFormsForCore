@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using Microsoft.Build.Utilities;
 using Microsoft.Build;
 
@@ -30,6 +31,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				case "createdesignerfiles":
 					var task2 = new CreateAspDesignerFiles();
 					task2.LogToConsole = true;
+					task2.SeparateProcess = false;
 					task2.Assembly = new TaskItem(args[1]);
 					task2.Directory = new TaskItem(args[2]);
 					task2.Files = args[3].Split(';')

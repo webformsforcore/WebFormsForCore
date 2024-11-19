@@ -149,9 +149,9 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					}
 					var assemblies = string.Join(";", a);
 
-					var dll = Path.Combine(AssemblyPath, "EstrellasDeEsperanza.WebFormsForCore.Build.dll");
+					var dll = Path.GetFullPath(Path.Combine(AssemblyPath, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
 
-					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" \"{assemblies}\" " +
+					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
 						$"\"{Source?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;
@@ -164,15 +164,21 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					{
 						if (args.Data != null) LogMessage(args.Data);
 					};
+					bool hasErrors = false;
 					p.ErrorDataReceived += (sender, args) =>
 					{
-						if (args.Data != null) LogError(args.Data);
+						if (args.Data != null)
+						{
+							hasErrors = true;
+							LogError(args.Data);
+						}
 					};
 					p.EnableRaisingEvents = true;
 					p.Start();
 					p.BeginOutputReadLine();
 					p.BeginErrorReadLine();
 					p.WaitForExit(30000);
+					return !hasErrors;
 				}
 				else
 				{

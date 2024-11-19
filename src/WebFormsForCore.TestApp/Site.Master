@@ -58,6 +58,7 @@
             <hr />
             <footer>
                 <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+                <asp:HyperLink ID="testlink" runat="server" NavigateUrl="http://google.com" />
             </footer>
         </div>
     </form>

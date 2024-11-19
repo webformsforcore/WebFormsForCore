@@ -47,7 +47,8 @@ namespace Redesigner.Library
 		/// <summary>
 		/// The canonical name of the "System.Web" assembly.
 		/// </summary>
-		public const string SystemWebAssemblyName = "System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+		public const string SystemWebAssemblyName = "System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+		public const string SystemWebExtensionsAssemblyName = "System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 
 		/// <summary>
 		/// The standard tag registrations that are always included, regardless of whether they
@@ -64,6 +65,37 @@ namespace Redesigner.Library
 				Namespace = "System.Web.UI.WebControls",
 				TagPrefix = "asp",
 			},
+			new TagRegistration
+			{
+				Kind = TagRegistrationKind.Namespace,
+				AssemblyFilename = SystemWebAssemblyName,
+				Namespace = "System.Web.UI.WebControls.WebParts",
+				TagPrefix = "asp",
+			}
+		};
+		private static readonly IEnumerable<TagRegistration> _extensionTagRegistrations = new List<TagRegistration>
+		{
+			new TagRegistration
+			{
+				Kind = TagRegistrationKind.Namespace,
+				AssemblyFilename = SystemWebExtensionsAssemblyName,
+				Namespace = "System.Web.UI",
+				TagPrefix = "asp",
+			},
+			new TagRegistration
+			{
+				Kind = TagRegistrationKind.Namespace,
+				AssemblyFilename = SystemWebExtensionsAssemblyName,
+				Namespace = "System.Web.UI.WebControls",
+				TagPrefix = "asp",
+			},
+			new TagRegistration
+			{
+				Kind = TagRegistrationKind.Namespace,
+				AssemblyFilename = SystemWebExtensionsAssemblyName,
+				Namespace = "System.Web.UI.WebControls.Expressions",
+				TagPrefix = "asp",
+			}
 		};
 
 		/// <summary>
@@ -97,6 +129,9 @@ namespace Redesigner.Library
 			assemblyNames.AddRange(_standardTagRegistrations.Where(r => !string.IsNullOrEmpty(r.AssemblyFilename)).Select(r => r.AssemblyFilename).Distinct());
 			assemblyNames.AddRange(webConfigReader.TagRegistrations.Where(r => !string.IsNullOrEmpty(r.AssemblyFilename)).Select(r => r.AssemblyFilename).Distinct());
 			string dllFullPath = Path.GetFullPath(websiteDllFileName);
+			var dllsPath = Path.GetDirectoryName(dllFullPath);
+			if (File.Exists(Path.Combine(dllsPath, "System.Web.Extensions.dll")))
+				assemblyNames.Add(SystemWebExtensionsAssemblyName);
 			assemblyNames.Add(dllFullPath);
 			string assemblyDirectory = Path.GetDirectoryName(dllFullPath);
 			assemblyLoader.PreloadAssemblies(compileContext, assemblyNames, assemblyDirectory);
@@ -105,6 +140,8 @@ namespace Redesigner.Library
 			// Add the default tag registrations, including those from System.Web and any declared in the "web.config".
 			List<TagRegistration> tagRegistrations = new List<TagRegistration>();
 			tagRegistrations.AddRange(_standardTagRegistrations);
+			if (File.Exists(Path.Combine(dllsPath, "System.Web.Extensions.dll")))
+				tagRegistrations.AddRange(_extensionTagRegistrations);
 			tagRegistrations.AddRange(webConfigReader.TagRegistrations);
 
 			// Spin through any user controls that were declared in the web.config and connect them to their actual
@@ -144,7 +181,7 @@ namespace Redesigner.Library
 			string designer;
 			string designerFilename = filename + ".designer.cs";
 
-			// Load the markup from the .aspx or .ascx file.
+			// Load the markup from the .aspx, .ascx or .master file.
 			MarkupReader markup = new MarkupReader();
 			MarkupInfo markupInfo;
 			try
@@ -227,6 +264,7 @@ namespace Redesigner.Library
 			assemblyNames.AddRange(_standardTagRegistrations.Where(r => !string.IsNullOrEmpty(r.AssemblyFilename)).Select(r => r.AssemblyFilename).Distinct());
 			assemblyNames.AddRange(webConfigReader.TagRegistrations.Where(r => !string.IsNullOrEmpty(r.AssemblyFilename)).Select(r => r.AssemblyFilename).Distinct());
 			string dllFullPath = Path.GetFullPath(websiteDllFileName);
+			string dllsPath = Path.GetDirectoryName(dllFullPath);
 			assemblyNames.Add(dllFullPath);
 			string assemblyDirectory = Path.GetDirectoryName(dllFullPath);
 			assemblyLoader.PreloadAssemblies(compileContext, assemblyNames, assemblyDirectory);
@@ -235,6 +273,8 @@ namespace Redesigner.Library
 			// Add the default tag registrations, including those from System.Web and any declared in the "web.config".
 			List<TagRegistration> tagRegistrations = new List<TagRegistration>();
 			tagRegistrations.AddRange(_standardTagRegistrations);
+			if (File.Exists(Path.Combine(dllsPath, "System.Web.Extensions.dll")))
+				tagRegistrations.AddRange(_extensionTagRegistrations);
 			tagRegistrations.AddRange(webConfigReader.TagRegistrations);
 
 			// Spin through any user controls that were declared in the web.config and connect them to their actual

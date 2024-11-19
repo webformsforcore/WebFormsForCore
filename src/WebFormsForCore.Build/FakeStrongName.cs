@@ -93,7 +93,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				return false;
 			}
 
-			var keyFileName = Key?.ItemSpec;
+			var keyFileName = Key?.ItemSpec ?? string.Empty;
 			if (NeedsKey && (string.IsNullOrEmpty(keyFileName) || !File.Exists(keyFileName)))
 			{
 				LogError("Need to specify a valid *.snk key file in Key.");
@@ -119,8 +119,9 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					var assemblies = string.Join(";", a);
 
 					var dll = Assembly.GetExecutingAssembly().Location;
+					dll = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(dll)!, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
 
-					var startInfo = new ProcessStartInfo("dotnet.exe", $"fakestrongname \"{dll}\" \"{assemblies}\" " +
+					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
 						$"\"{Source?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;
@@ -133,15 +134,21 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					{
 						if (args.Data != null) LogMessage(args.Data);
 					};
+					bool hasErrors = false;
 					p.ErrorDataReceived += (sender, args) =>
 					{
-						if (args.Data != null) LogError(args.Data);
+						if (args.Data != null)
+						{
+							hasErrors = true;
+							LogError(args.Data);
+						}
 					};
 					p.EnableRaisingEvents = true;
 					p.Start();
 					p.BeginOutputReadLine();
 					p.BeginErrorReadLine();
 					p.WaitForExit(30000);
+					return !hasErrors;
 				}
 				else
 				{
@@ -190,7 +197,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 								//File.Delete(assemblyFileName);
 								//File.Delete(pdbFile);
 								var writerParameters = new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols };
-								Stream pdbWriteStream = null;
+								Stream? pdbWriteStream = null;
 								
 								if (withSymbols)
 								{

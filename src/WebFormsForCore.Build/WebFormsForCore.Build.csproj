@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>net48;net8.0;netstandard2.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <LangVersion>12</LangVersion>
         <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Build</AssemblyName>
         <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -30,10 +30,12 @@
         <AssemblyVersion>8.0.1</AssemblyVersion>
         <FileVersion>8.0.1</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeSymbols>false</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
@@ -46,33 +48,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="System.Web\**" />
-      <EmbeddedResource Remove="System.Web\**" />
-      <None Remove="System.Web\**" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Compile Remove="AssemblyPatcher.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.deps.json" />
-        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.runtimeconfig.json" />
-        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.targets" />
+        <None Remove="FakeStrongName.targets" />
         <None Remove="netstandard.dll" />
         <None Remove="System.Runtime.dll" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.deps.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.runtimeconfig.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.targets">
+        <None Include="FakeStrongName.targets">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
+            <Pack>False</Pack>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -86,6 +75,17 @@
     </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework) == 'net48'">
+        <Reference Include="System" />
+        <Reference Include="System.Console" />
+        <Reference Include="System.Runtime" />
+        <Reference Include="System.Collections" />
+        <Reference Include="System.Linq" />
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Xml.XDocument" />
+        <Reference Include="System.Text.RegularExpressions" />
+        <Reference Include="System.Diagnostics.Process" />
+        <Reference Include="System.ComponentModel.Primitives" />
         <Reference Include="System.Web" />
     </ItemGroup>
 
@@ -98,10 +98,19 @@
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="..\..\README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
+        <None Include="..\..\README.md" PackagePath="\" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\net8.0" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\net8.0" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\net48" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\net48" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\netstandard2.0" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\netstandard2.0" Pack="True" />
+        <None Include="lib\net8.0\_._" PackagePath="lib\net8.0" Pack="True" />
+        <None Include="lib\net48\_._" PackagePath="lib\net48" Pack="True" />
+        <None Include="lib\netstandard2.0\_._" PackagePath="lib\netstandard2.0" Pack="True" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\**\*.*" PackagePath="build\net8.0\%(RecursiveDir)" Pack="True" Link="lib\net8.0\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net48\**\*.*" PackagePath="build\net48\%(RecursiveDir)" Pack="True" Link="lib\net48\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\**\*.*" PackagePath="build\netstandard2.0\%(RecursiveDir)" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />
     </ItemGroup>
 
 </Project>

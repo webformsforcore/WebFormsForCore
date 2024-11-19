@@ -515,22 +515,23 @@ namespace Redesigner.Library
 				if ((match = _textRegex.Match(_text, _src)).Success)
 				{
 					// Found a literal; skip it, but count its newlines to make sure we report errors correctly.
-					Error("Found plain text before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first text in the file.");
+					Error("Found plain text before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first text in the file.");
 				}
 				else if (!_isInScriptTag && (match = _directiveRegex.Match(_text, _src)).Success)
 				{
 					// Found a <%@ ... %> directive.
 					Tag tag = new Tag(match, true);
 
-					if (string.IsNullOrEmpty(tag.TagName) || tag.TagName == "page" || tag.TagName == "control")
+					if (string.IsNullOrEmpty(tag.TagName) || tag.TagName == "page" || tag.TagName == "control" ||
+						tag.TagName == "master")
 						return tag;
 
-					Error("Found a <%@ ... %> directive before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first directive in the file.");
+					Error("Found a <%@ ... %> directive before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first directive in the file.");
 				}
 				else if (_includeRegex.Match(_text, _src).Success)
 				{
 					// Found a <!-- #include --> server-side include.
-					Error("Found an <!-- #include --> before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first directive in the file.");
+					Error("Found an <!-- #include --> before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first directive in the file.");
 				}
 				else if (_commentRegex.Match(_text, _src).Success)
 				{
@@ -541,23 +542,23 @@ namespace Redesigner.Library
 				}
 				else if (!_isInScriptTag && _expressionRegex.Match(_text, _src).Success)
 				{
-					Error("Found a <%= ... %> expression before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first directive in the file.");
+					Error("Found a <%= ... %> expression before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first directive in the file.");
 				}
 				else if (!_isInScriptTag && _databindingRegex.Match(_text, _src).Success)
 				{
-					Error("Found a <%# ... %> expression before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first directive in the file.");
+					Error("Found a <%# ... %> expression before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first directive in the file.");
 				}
 				else if (!_isInScriptTag && _codeRegex.Match(_text, _src).Success)
 				{
-					Error("Found a <% ... %> code block before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first directive in the file.");
+					Error("Found a <% ... %> code block before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first directive in the file.");
 				}
 				else if (!_isInScriptTag && _lastGreaterThanIndex > _src && _tagRegex.Match(_text, _src).Success)
 				{
-					Error("Found a <...> tag before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first content in the file.");
+					Error("Found a <...> tag before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first content in the file.");
 				}
 				else if (_endTagRegex.Match(_text, _src).Success)
 				{
-					Error("Found a </...> tag before the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first content in the file.");
+					Error("Found a </...> tag before the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first content in the file.");
 				}
 				else
 				{
@@ -571,7 +572,7 @@ namespace Redesigner.Library
 				}
 			} while (_src < _text.Length);
 
-			Error("Missing the main <%@ Page ... %> or <%@ Control ... %> directive.  Please make sure the main directive is the first content in the file.");
+			Error("Missing the main <%@ Page ... %>, <%@ Control ... %> or <%@ Master ... %> directive.  Please make sure the main directive is the first content in the file.");
 			return null;
 		}
 
@@ -710,7 +711,7 @@ namespace Redesigner.Library
 		{
 			Tag tag = new Tag(match, true);
 
-			if (string.IsNullOrEmpty(tag.TagName) || tag.TagName == "page" || tag.TagName == "control")
+			if (string.IsNullOrEmpty(tag.TagName) || tag.TagName == "page" || tag.TagName == "control" || tag.TagName == "master")
 			{
 				Verbose("Found main directive: <%@ {0} %>", tag);
 				ProcessMainDirective(tag);

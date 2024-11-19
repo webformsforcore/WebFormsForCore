@@ -23,11 +23,12 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
 
-		public TaskItem[] Files { get; set; } = new TaskItem[0];
-		public TaskItem Assembly { get; set; }
-		public TaskItem Directory { get; set; }
+		public ITaskItem[] Files { get; set; } = new TaskItem[0];
+		public ITaskItem Assembly { get; set; }
+		public ITaskItem Directory { get; set; }
 		public string TargetFramework { get; set; }
 		public bool LogToConsole { get; set; } = false;
+		public bool SeparateProcess { get; set; } = true;
 
 		public bool IsTargetNetFX => TargetFramework.CompareTo("net4999") < 0;
 		public bool IsTargetNetCore => TargetFramework.CompareTo("net5") >= 0;
@@ -37,11 +38,12 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 #if !NETSTANDARD
 		public class MSBuildCompileContext: ICompileContext
 		{
-			public CreateAspDesignerFiles Task { get; set; }
+			public Task Task { get; set; }
+			public bool LogToConsole => (bool)Task.GetType().GetProperty("LogToConsole").GetValue(Task);
 			public int FilenameCount { get; set; }
 			public int VerboseNesting { get; set; }
 			public bool HasErrors { get; private set; } = false;
-			public MSBuildCompileContext(CreateAspDesignerFiles task) { Task = task; }
+			public MSBuildCompileContext(Task task) { Task = task; }
 			public void BeginTask(int filenameCount) => FilenameCount = filenameCount;
 			public void BeginFile(string filename) => LogMessage(MessageImportance.Low, $"Creating designer file for {filename}");
 			public void EndFile(string filename, bool succeeded) {
@@ -56,19 +58,19 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			}
 
 			public void LogMessage(MessageImportance importance, string format, params object[] args) {
-				if (Task.LogToConsole) Console.WriteLine(string.Format(format, args));
+				if (LogToConsole) Console.WriteLine(string.Format(format, args));
 				else Task.Log.LogMessage(importance, format, args);
 			}
 			public void LogMessage(string format, params object[] args) {
-				if (Task.LogToConsole) Console.WriteLine(string.Format(format, args));
+				if (LogToConsole) Console.WriteLine(string.Format(format, args));
 				else Task.Log.LogMessage(format, args);
 			}
 			public void LogWarning(string format, params object[] args) {
-				if (Task.LogToConsole) Console.WriteLine(string.Format(format, args));
+				if (LogToConsole) Console.WriteLine(string.Format(format, args));
 				else Task.Log.LogWarning(format, args);
 			}
 			public void LogError(string format, params object[] args) {
-				if (Task.LogToConsole) Console.Error.WriteLine(string.Format(format, args));
+				if (LogToConsole) Console.Error.WriteLine(string.Format(format, args));
 				else Task.Log.LogError(format, args);
 			}
 
@@ -92,7 +94,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 
 					var codeExt = isCS ? ".cs" : ".vb";
 					var codeFile = file + codeExt;
-					var designerFile = $"{file}.Designer{codeExt}";
+					var designerFile = $"{file}.designer{codeExt}";
 
 					return !File.Exists(designerFile) ||
 						File.GetLastWriteTimeUtc(designerFile) < info.LastWriteTimeUtc;
@@ -103,22 +105,79 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			return false;
 		}
 
+		public bool RunCommand(string cmd, string args)
+		{
+			var startInfo = new ProcessStartInfo(cmd, args);
+			startInfo.CreateNoWindow = true;
+			startInfo.UseShellExecute = false;
+			startInfo.RedirectStandardError = true;
+			startInfo.RedirectStandardOutput = true;
+			var p = new Process();
+			p.StartInfo = startInfo;
+			p.OutputDataReceived += (sender, args) =>
+			{
+				if (args.Data != null) Log.LogMessage(args.Data);
+			};
+			bool hasErrors = false;
+			p.ErrorDataReceived += (sender, args) =>
+			{
+				if (args.Data != null)
+				{
+					hasErrors = true;
+					Log.LogError(args.Data);
+				}
+			};
+			p.EnableRaisingEvents = true;
+			p.Start();
+			p.BeginOutputReadLine();
+			p.BeginErrorReadLine();
+			return p.WaitForExit(30000) && !hasErrors;
+		}
+
+		public bool RunProcess(string dll, string WebRootPath, IEnumerable<string> aspFiles)
+		{
+			if (IsTargetNetCore)
+			{
+				//LogMessage($"Starting dotnet...");
+				var files = string.Join(";", aspFiles);
+
+				var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				var assembly = Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
+
+				return RunCommand("dotnet.exe", $"\"{assembly}\" createdesignerfiles \"{dll}\" \"{WebRootPath}\" \"{files}\"");
+
+			}
+			else if (IsTargetNetFX)
+			{
+				var files = string.Join(";", aspFiles);
+
+				var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				var assembly = Path.GetFullPath(Path.Combine(path, "..\\net48\\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe"));
+
+				return RunCommand(assembly, $"createdesignerfiles \"{dll}\" \"{WebRootPath}\" \"{files}\"");
+			}
+			return true;
+		}
+
 		public bool GenerateDesignerFiles(string dll, string WebRootPath, IEnumerable<string> aspFiles)
 		{
-			aspFiles = aspFiles.Where(ShouldCreateCodeFromAsp);
+			aspFiles = aspFiles
+				.Where(ShouldCreateCodeFromAsp)
+				.ToArray();
+
+			if (!aspFiles.Any()) return true;
+
 			// Begin doing the actual compiling task.
 #if NETSTANDARD
-			if (IsNetFX && IsTargetNetFX || IsCore && IsTargetNetCore ||
-				IsCore && IsTargetNetFX)
+			if (!SeparateProcess && (IsNetFX && IsTargetNetFX || IsCore && IsTargetNetCore))
 			{
-
 				Assembly buildAssembly;
 				var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 				if (IsCore) buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll")));
-				else buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net48\\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.dll")));
+				else buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net48\\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe")));
 
-				var contextType = buildAssembly.GetType("EstrellasDeEsperanza.WebFormsForCore.Build.CreateAspDesignerFiles.MSBuildCompileContext");
-				var context = Activator.CreateInstance(contextType, this);
+				var contextType = buildAssembly.GetType("EstrellasDeEsperanza.WebFormsForCore.Build.CreateAspDesignerFiles+MSBuildCompileContext");
+				var context = Activator.CreateInstance(contextType, (Task)this);
 
 				var common = buildAssembly.GetType("Redesigner.Library.Common");
 				var generateDesignerFiles = common.GetMethod("GenerateDesignerFiles");
@@ -126,50 +185,21 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 
 				var hasErrors = contextType.GetProperty("HasErrors");
 				return (bool)hasErrors.GetValue(context);
-			} else if (IsNetFX && IsTargetNetCore)
-			{
-				//LogMessage($"Starting dotnet...");
-				var files = string.Join(";", aspFiles);
-
-				bool hasErrors = false;
-				var startInfo = new ProcessStartInfo("dotnet.exe", $"createdesignerfiles \"{dll}\"  \"{WebRootPath}\" \"{files}\"");
-				startInfo.CreateNoWindow = true;
-				startInfo.UseShellExecute = false;
-				startInfo.RedirectStandardError = true;
-				startInfo.RedirectStandardOutput = true;
-				var p = new Process();
-				p.StartInfo = startInfo;
-				p.OutputDataReceived += (sender, args) =>
-				{
-					if (args.Data != null) Log.LogMessage(args.Data);
-				};
-				p.ErrorDataReceived += (sender, args) =>
-				{
-					if (args.Data != null)
-					{
-						hasErrors = true;
-						Log.LogError(args.Data);
-					}
-				};
-				p.EnableRaisingEvents = true;
-				p.Start();
-				p.BeginOutputReadLine();
-				p.BeginErrorReadLine();
-				p.WaitForExit(30000);
-				return hasErrors;
-			}
-			return true;
+			} else return RunProcess(dll, WebRootPath, aspFiles);
 #else
-			var context = new MSBuildCompileContext(this);
-			Common.GenerateDesignerFiles(context, aspFiles, WebRootPath, dll);
-			return !context.HasErrors;
+			if (!SeparateProcess)
+			{
+				var context = new MSBuildCompileContext(this);
+				Common.GenerateDesignerFiles(context, aspFiles, WebRootPath, dll);
+				return !context.HasErrors;
+			} else return RunProcess(dll, WebRootPath, aspFiles);
 #endif
 		}
 
 		public override bool Execute()
 		{
 			return !Files.Any() ||
-				GenerateDesignerFiles(Assembly.ItemSpec, Directory.ItemSpec, Files.Select(file => file.ItemSpec));
+				GenerateDesignerFiles(Assembly.ItemSpec.Replace("\\\\", "\\"), Directory.ItemSpec, Files.Select(file => file.ItemSpec));
 		}
 	}
 }
