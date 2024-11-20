@@ -73,8 +73,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) != 'net48'">
-        <Reference Include="$(OutputPath)\csc.dll" Visible="false" />
-        <Reference Include="$(OutputPath)\vbc.dll" Visible="false" />
+        <Reference Include="..\WebFormsForCore.Compilers\bin\$(Configuration)\$(TargetFramework)\csc.dll" Visible="false" />
+        <Reference Include="..\WebFormsForCore.Compilers\bin\$(Configuration)\$(TargetFramework)\vbc.dll" Visible="false" />
     </ItemGroup>
 
     <ItemGroup>
@@ -96,6 +96,7 @@
         <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
         <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" Aliases="NET" />
         <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
         <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.1" />
         <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
@@ -144,7 +145,7 @@
     <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
         <ItemGroup>
             <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
-            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8.0.0\\'))" />
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8\.0\..\\'))" />
             <!-- Do not import System.Web from dotnet -->
             <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
             <!-- Do not import System.Drawing from dotnet -->
