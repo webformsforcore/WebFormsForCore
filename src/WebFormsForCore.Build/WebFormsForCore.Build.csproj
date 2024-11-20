@@ -24,7 +24,7 @@
         <Copyright>Estrellas de Esperanza</Copyright>
         <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl> https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryUrl>https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
         <AssemblyVersion>8.0.1</AssemblyVersion>
