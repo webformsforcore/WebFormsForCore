@@ -909,7 +909,7 @@ namespace System.Web
             AppDomain appDomain = Thread.GetDomain();
 
             string codegenBase;
-            
+
             // devdiv 1038337. Passing the corresponding IsDevelopmentEnvironment flag to ConstructSimpleAppName
             string simpleAppName = System.Web.Hosting.AppManagerAppDomainFactory.ConstructSimpleAppName(
                 AppDomainAppVirtualPath, HostingEnvironment.IsDevelopmentEnvironment);
@@ -995,30 +995,37 @@ namespace System.Web
 #if !FEATURE_PAL
             }
             else {
+
+#if NETFRAMEWORK
                 tempDirectory = Path.Combine(s_installDirectory, codegenDirName);
-			}
+#else
+                tempDirectory = null;
+#endif
+            }
 #endif // !FEATURE_PAL
 
-			// If we don't have write access to the codegen dir, use the TEMP dir instead.
-			// This will allow non-admin users to work in hosting scenarios (e.g. Venus, aspnet_compiler)
-			if (!System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory)) {
+            // If we don't have write access to the codegen dir, use the TEMP dir instead.
+            // This will allow non-admin users to work in hosting scenarios (e.g. Venus, aspnet_compiler)
+            if (string.IsNullOrEmpty(tempDirectory) || !System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory)) {
 
                 // Don't do this if we are not in a CBM scenario and we're in a service (!UserInteractive), 
                 // as TEMP could point to unwanted places.
 
+#if NETFRAMEWORK
 #if !FEATURE_PAL // always fail here
                 if ((!BuildManagerHost.InClientBuildManager) && (!Environment.UserInteractive))
 #endif // !FEATURE_PAL
                 {
-                    throw new HttpException(SR.GetString(SR.No_codegen_access,
+					throw new HttpException(SR.GetString(SR.No_codegen_access,
                         System.Web.UI.Util.GetCurrentAccountName(), tempDirectory));
                 }
+#endif
 
                 tempDirectory = Path.GetTempPath();
                 Debug.Assert(System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory));
                 tempDirectory = Path.Combine(tempDirectory, codegenDirName);
             }
-
+  
             _tempDir = tempDirectory;
 
             codegenBase = Path.Combine(tempDirectory, simpleAppName, GetDeterministicHashCode(_appDomainAppPath).ToString("x"));

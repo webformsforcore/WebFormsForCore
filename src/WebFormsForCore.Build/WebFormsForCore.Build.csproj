@@ -9,10 +9,9 @@
         <PreserveCompilationContext>true</PreserveCompilationContext>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <OutputType>Exe</OutputType>
-        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <StartupObject>EstrellasDeEsperanza.WebFormsForCore.Build.Program</StartupObject>
-        <OutputPath>..\..\lib\WebFormsForCore.Build</OutputPath>
         <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
 
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Build</PackageId>
@@ -37,14 +36,23 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+        <AssemblySearchPath_UseOutDir>false</AssemblySearchPath_UseOutDir>
+        <AssemblySearchPath_UseCandidateAssemblyFiles>false</AssemblySearchPath_UseCandidateAssemblyFiles>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework) == 'net48'">
         <AssemblyName>$(AssemblyName).NetFX</AssemblyName>
+        <OutputPath>..\..\lib\WebFormsForCore.Build\net48</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework) == 'net8.0'">
         <AssemblyName>$(AssemblyName).NetCore</AssemblyName>
+        <OutputPath>..\..\lib\WebFormsForCore.Build\net8.0</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+        <OutputPath>..\..\lib\WebFormsForCore.Build\netstandard2.0</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -73,11 +81,11 @@
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
         <PackageReference Include="Mono.Cecil" Version="0.11.6" />
         <PackageReference Include="System.Private.Uri" Version="4.3.2" />
-        
     </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework) == 'net48'">
-        <Reference Include="System" />
+        <!--<Reference Include="System.Web" Version="4.0.0.0" />-->
+        <Reference Include="System" Version="4.0.0.0" />
         <Reference Include="System.Console" />
         <Reference Include="System.Runtime" />
         <Reference Include="System.Collections" />
@@ -92,13 +100,13 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.2.0" />
+        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.2.2" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
         <Compile Remove="Redesigner\**\*.cs" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <None Include="..\..\README.md" PackagePath="\" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\net8.0" Pack="True" />
@@ -110,6 +118,8 @@
         <None Include="lib\net8.0\_._" PackagePath="lib\net8.0" Pack="True" />
         <None Include="lib\net48\_._" PackagePath="lib\net48" Pack="True" />
         <None Include="lib\netstandard2.0\_._" PackagePath="lib\netstandard2.0" Pack="True" />
+    </ItemGroup>
+    <ItemGroup Condition="$(Packaging) == 'True'">
         <None Include="..\..\lib\WebFormsForCore.Build\net8.0\**\*.*" PackagePath="build\net8.0\%(RecursiveDir)" Pack="True" Link="lib\net8.0\%(RecursiveDir)\%(Filename).%(Extension)" />
         <None Include="..\..\lib\WebFormsForCore.Build\net48\**\*.*" PackagePath="build\net48\%(RecursiveDir)" Pack="True" Link="lib\net48\%(RecursiveDir)\%(Filename).%(Extension)" />
         <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\**\*.*" PackagePath="build\netstandard2.0\%(RecursiveDir)" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />

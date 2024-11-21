@@ -1,4 +1,4 @@
-SET PackageVersion=1.2.1
+SET PackageVersion=1.2.2
 SET Configuration=Debug
 
 REM msbuild /p:Configuration=%Configuration%
@@ -7,7 +7,7 @@ cd  src
 cd WebFormsForCore.Compilers
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Build
-dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%;Packaging=True
 cd ..\WebFormsForCore.Configuration
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%
 cd ..\WebFormsForCore.Drawing
