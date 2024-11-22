@@ -57,7 +57,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				else LogMessage(MessageImportance.High, $"Failed creating designer file for {filename}");
 				filename = "";
 			}
-			public void Verbose(string format, params object[] args) => LogMessage(MessageImportance.Low, format, args);
+			public void Verbose(string format, params object[] args) => LogMessage(MessageImportance.Normal, format, args);
 			public void Warning(string format, params object[] args) => LogWarning(format, args);
 			public void Error(string format, params object[] args) {
 				HasErrors = true;
@@ -90,7 +90,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			public void LogError(string format, params object[] args) {
 				var line = LineNumber(format, args);
 				if (LogToConsole) Console.Error.WriteLine($"{filename} ({line}): {string.Format(format, args)}");
-				else Task.Log.LogError("", "", "", filename, line, 0, line, 1, format, args);
+				else Task.Log.LogWarning("", "", "", filename, line, 0, line, 1, format, args);
 			}
 
 		}
@@ -160,7 +160,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					string file, msg;
 					ParseMessage(args.Data, out file, out line, out warnign, out msg);
 					if (warnign) Log.LogWarning("", "", "", file, line, 0, line, 1, msg);
-					else Log.LogMessage("", "", "", file, line, 0, line, 1, MessageImportance.High, msg);
+					else Log.LogMessage("", "", "", file, line, 0, line, 1, MessageImportance.Normal, msg);
 				}
 			};
 			bool hasErrors = false;
@@ -173,7 +173,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					int line;
 					string file, msg;
 					ParseMessage(args.Data, out file, out line, out warnign, out msg);
-					Log.LogError("", "", "", file, line, 0, line, 1, msg);
+					Log.LogWarning("", "", "", file, line, 0, line, 1, msg);
 				}
 			};
 			p.EnableRaisingEvents = true;

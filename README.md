@@ -1,12 +1,11 @@
 # WebFormsForCore
 A library to run WebForms apps on ASP.NET Core. This library provides a port
 of the System.Web libraries of .NET Framework to .NET 8. With this library,
-you can run WebForms websites directly in ASP.NET Core, also on Linux, altough Linux
-support is not yet stable.
+you can run WebForms websites directly in ASP.NET Core, also on Linux.
 
 # Support
 If you need support porting your project to NET Core & WebFormsForCore, we provide support for
-20$ per hour. Please contact us via [Messenger](https://m.me/simon.jakob.egli).
+40$ per hour. Please contact us via [Messenger](https://m.me/simon.jakob.egli).
 There is also a tutorial on Youtube on [how to convert a sample WebForms application to
 WebFormsForCore](https://youtu.be/Zyb4WBlaUwA).
 
@@ -71,7 +70,7 @@ missing.
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
 SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build`. If you import
 this package, outdated `*.designer.cs` files will be created after build. This only works for C#, not for
-VisualBasic. Also, the visual designers in VisualStudio for controls are not supported and won't work.
+VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't work.
 
 Finally configure ASP-NET Core to use WebForms in the initialization code Program.cs like so:
 ```

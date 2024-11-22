@@ -32,6 +32,7 @@ namespace System.Web.Hosting
 
 		private static readonly char[] BadPathChars = new[] { '%', '>', '<', ':', '\\' };
 
+		// TODO read default files from web.config
 		private static readonly string[] DefaultFileNames = new[] { "default.aspx", "default.htm", "default.html" };
 
 		private TaskCompletionSource<bool> Completed = new TaskCompletionSource<bool>();
@@ -122,7 +123,11 @@ namespace System.Web.Hosting
 		public override void EndOfRequest()
 		{
 			Context.Response.CompleteAsync()
-				.ContinueWith(t => Completed.SetResult(true));
+				.ContinueWith(t =>
+				{
+					Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
+					Completed.SetResult(true);
+				});
 		}
 
 		public override void FlushResponse(bool finalFlush)
@@ -329,11 +334,25 @@ namespace System.Web.Hosting
 
 				// Hand the processing over to HttpRuntime
 				// Run processing in separate ASP.NET Worker Thread
-				await Task.Factory.StartNew(() =>
-					HttpRuntime.ProcessRequest(this),
-					TaskCreationOptions.LongRunning);
+				var completed = Completed.Task;
+				await Task.Factory.StartNew(async () =>
+					{
+						try
+						{
+							HttpRuntime.ProcessRequest(this);
+						} catch
+						{	
+							Debugger.Break();
+						}
+					
+						await completed;
 
-				await Completed.Task;
+						Debug.WriteLine($"Request {Context.Request.Path} thread finished.");
+					},
+					TaskCreationOptions.LongRunning)
+					.Unwrap();
+
+				Debug.WriteLine($"Request {Context.Request.Path} finished.");
 			}
 		}
 
