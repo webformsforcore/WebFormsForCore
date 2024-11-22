@@ -13,9 +13,8 @@ WebFormsForCore](https://youtu.be/Zyb4WBlaUwA).
 # Usage
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
 
-First convert your Project to a SDK Project. For the moment, please also keep the old non SDK style
-project, as WebFormsForCore does not yet properly support generation of the Designer.cs files from 
-aspx. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that
+First convert your Project to a SDK Project. Please keep a backup of the old non SDK style
+project. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that
 tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory
 of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. If
 the converter complains about an unsupported project type, remove the `<ProjectTypeGuid>` property from
@@ -69,6 +68,11 @@ corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Exte
 System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is
 missing.
 
+If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
+SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build`. If you import
+this package, outdated `*.designer.cs` files will be created after build. This only works for C#, not for
+VisualBasic. Also, the visual designers in VisualStudio for controls are not supported and won't work.
+
 Finally configure ASP-NET Core to use WebForms in the initialization code Program.cs like so:
 ```
 #if NETCOREAPP
@@ -105,15 +109,19 @@ public class Program
 ```
 
 # Conflicts with Existing Packages
-Currently there might be some conflicts with the packages System.Web.dll & System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent import of the old dll's include the following in your csproj:
+Currently there might be some conflicts with the packages System.Web.dll, System.Drawing.dll &
+System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent
+import of the old dll's include the following in your csproj:
 
 ```
 <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
         <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
-        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8\.0\..\\'))" />
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8[.0-9]+\\'))" />
         <!-- Do not import System.Web -->
         <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+        <!-- Do not import System.Drawing -->
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Drawing' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
     </ItemGroup>
 </Target>
 ```

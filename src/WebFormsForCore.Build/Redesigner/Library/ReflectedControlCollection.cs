@@ -82,14 +82,14 @@ namespace Redesigner.Library
 		/// <param name="allowedTypes">The allowed types that can be returned.  If you want to accept
 		/// all possible types, pass in a list containing just typeof(object).</param>
 		/// <returns>The found control type.</returns>
-		public ReflectedControl GetControl(ICompileContext compileContext, Tag tag, IEnumerable<Type> allowedTypes)
+		public ReflectedControl GetControl(ICompileContext compileContext, Tag tag, IEnumerable<Type> allowedTypes, bool net45OrAbove)
 		{
 			bool isNormalServerControl = tag.TagName.Contains(":");
 
 			if (isNormalServerControl && _reflectedControls.ContainsKey(tag.TagName))
 				return _reflectedControls[tag.TagName];
 
-			ReflectedControl reflectedControl = new ReflectedControl(compileContext, tag, _tagRegistrations, _assemblies, allowedTypes);
+			ReflectedControl reflectedControl = new ReflectedControl(compileContext, tag, _tagRegistrations, _assemblies, allowedTypes, net45OrAbove);
 
 			if (isNormalServerControl && tag.TagName.Contains(":"))
 			{

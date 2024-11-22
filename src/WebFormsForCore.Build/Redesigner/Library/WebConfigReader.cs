@@ -29,7 +29,9 @@
 //
 //-------------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -53,6 +55,8 @@ namespace Redesigner.Library
 		/// </summary>
 		public IEnumerable<TagRegistration> TagRegistrations { get; private set; }
 
+		public bool Net45OrAbove { get; private set; }
+
 		#endregion
 
 		#region Methods
@@ -60,8 +64,16 @@ namespace Redesigner.Library
 		/// <summary>
 		/// Load the web.config file found at the given filename.
 		/// </summary>
-		public void LoadWebConfig(ICompileContext compileContext, string filename, string rootPath)
+		public void LoadWebConfig(ICompileContext compileContext, string filename, string rootPath, out bool net45OrAbove)
 		{
+			if (!File.Exists(filename))
+			{
+				TagRegistrations = new List<TagRegistration>();
+				WebConfig = new();
+				net45OrAbove = true;
+				return;
+			}
+
 			compileContext.Verbose("Loading and processing \"{0}\"...", filename);
 			compileContext.VerboseNesting++;
 
@@ -71,6 +83,14 @@ namespace Redesigner.Library
 				XDocument webConfig = XDocument.Load(filename);
 
 				compileContext.Verbose("\"{0}\" loaded as an XDocument.", filename);
+
+				var targetFrameworkString = (string)webConfig.Element("configuration")
+					?.Element("system.web")
+					?.Element("compilation")
+					?.Attribute("targetFramework") ?? "8.0";
+				Version targetFramework;
+				if (!Version.TryParse(targetFrameworkString, out targetFramework)) targetFramework = new Version(8, 0);
+				net45OrAbove = targetFramework >= new Version(4, 5);
 
 				// Find the <add> declarations in the <configuration><system.web><controls> section.
 				IEnumerable<XElement> adds = ExtractAddSectionFromWebConfig(webConfig, filename);
@@ -147,23 +167,28 @@ namespace Redesigner.Library
 
 			XElement configuration = webConfig.Element("configuration");
 			if (configuration == null)
-				throw new RedesignerException("\"{0}\" is missing its required <configuration> section.", filename);
+				return Enumerable.Empty<XElement>();
+				// throw new RedesignerException("\"{0}\" is missing its required <configuration> section.", filename);
 
 			XElement systemWeb = configuration.Element("system.web");
 			if (systemWeb == null)
-				throw new RedesignerException("\"{0}\" is missing its required <configuration><system.web> section.", filename);
+				return Enumerable.Empty<XElement>();
+				// throw new RedesignerException("\"{0}\" is missing its required <configuration><system.web> section.", filename);
 
 			XElement pages = systemWeb.Element("pages");
 			if (pages == null)
-				throw new RedesignerException("\"{0}\" is missing its required <configuration><system.web><pages><controls> section.", filename);
+				return Enumerable.Empty<XElement>();
+				// throw new RedesignerException("\"{0}\" is missing its required <configuration><system.web><pages><controls> section.", filename);
 
 			XElement controls = pages.Element("controls");
 			if (controls == null)
-				throw new RedesignerException("\"{0}\" is missing its required <configuration><system.web><pages><controls> section.", filename);
+				return Enumerable.Empty<XElement>();
+				// throw new RedesignerException("\"{0}\" is missing its required <configuration><system.web><pages><controls> section.", filename);
 
 			IEnumerable<XElement> adds = controls.Elements();
 			if (adds == null)
-				throw new RedesignerException("\"{0}\" contains no <add> control declarations in its <configuration><system.web><pages><controls> section.", filename);
+				return Enumerable.Empty<XElement>();
+				//throw new RedesignerException("\"{0}\" contains no <add> control declarations in its <configuration><system.web><pages><controls> section.", filename);
 
 			return adds;
 		}

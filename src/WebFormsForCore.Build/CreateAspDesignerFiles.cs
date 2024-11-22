@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Reflection;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 #if !NETSTANDARD
 		public class MSBuildCompileContext: ICompileContext
 		{
+			private string filename;
 			public Task Task { get; set; }
 			public bool LogToConsole => (bool)Task.GetType().GetProperty("LogToConsole").GetValue(Task);
 			public int FilenameCount { get; set; }
@@ -45,10 +47,15 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			public bool HasErrors { get; private set; } = false;
 			public MSBuildCompileContext(Task task) { Task = task; }
 			public void BeginTask(int filenameCount) => FilenameCount = filenameCount;
-			public void BeginFile(string filename) => LogMessage(MessageImportance.Low, $"Creating designer file for {filename}");
+			public void BeginFile(string filename)
+			{
+				this.filename = filename;
+				LogMessage(MessageImportance.Low, $"Creating designer file for {filename}");
+			}
 			public void EndFile(string filename, bool succeeded) {
 				if (succeeded) LogMessage(MessageImportance.High, $"Successfully created designer file for {filename}");
 				else LogMessage(MessageImportance.High, $"Failed creating designer file for {filename}");
+				filename = "";
 			}
 			public void Verbose(string format, params object[] args) => LogMessage(MessageImportance.Low, format, args);
 			public void Warning(string format, params object[] args) => LogWarning(format, args);
@@ -57,21 +64,33 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				LogError(format, args);
 			}
 
+			public int LineNumber(string format, params object[] args)
+			{
+				var msg = string.Format(format, args);
+				var lineNo = Regex.Match(msg, "Line (?<line>[0-9]+):");
+				if (lineNo.Success) return int.Parse(lineNo.Groups["line"].Value);
+				return 0;
+			}
+
 			public void LogMessage(MessageImportance importance, string format, params object[] args) {
-				if (LogToConsole) Console.WriteLine(string.Format(format, args));
-				else Task.Log.LogMessage(importance, format, args);
+				var line = LineNumber(format, args);
+				if (LogToConsole) Console.WriteLine($"{filename} ({line}): {string.Format(format, args)}");
+				else Task.Log.LogMessage("", "", "", filename, line, 0, line, 1, importance, format, args);
 			}
 			public void LogMessage(string format, params object[] args) {
-				if (LogToConsole) Console.WriteLine(string.Format(format, args));
-				else Task.Log.LogMessage(format, args);
+				var line = LineNumber(format, args);
+				if (LogToConsole) Console.WriteLine($"{filename} ({line}): {string.Format(format, args)}");
+				else Task.Log.LogMessage("", "", "", filename, line, 0, line, 1, format, args);
 			}
 			public void LogWarning(string format, params object[] args) {
-				if (LogToConsole) Console.WriteLine(string.Format(format, args));
-				else Task.Log.LogWarning(format, args);
+				var line = LineNumber(format, args);
+				if (LogToConsole) Console.WriteLine($"{filename} ({line}): warning: {string.Format(format, args)}");
+				else Task.Log.LogWarning("", "", "", filename, line, 0, line, 1, format, args);
 			}
 			public void LogError(string format, params object[] args) {
-				if (LogToConsole) Console.Error.WriteLine(string.Format(format, args));
-				else Task.Log.LogError(format, args);
+				var line = LineNumber(format, args);
+				if (LogToConsole) Console.Error.WriteLine($"{filename} ({line}): {string.Format(format, args)}");
+				else Task.Log.LogError("", "", "", filename, line, 0, line, 1, format, args);
 			}
 
 		}
@@ -105,6 +124,24 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			return false;
 		}
 
+		public void ParseMessage(string msg, out string file, out int line, out bool warning, out string message)
+		{
+			var m = Regex.Match(msg, @"(?<file>.*?)\s+\((?<line>[0-9]+)\):\s*(?<warning>Warning:\s*)?(?<msg>.*$)");
+			if (m.Success)
+			{
+				file = m.Groups["file"].Value;
+				line = int.Parse(m.Groups["line"].Value);
+				warning = m.Groups["warning"].Success;
+				message = m.Groups["msg"].Value;
+			} else
+			{
+				file = "";
+				line = 0;
+				warning = false;
+				message = msg;
+			}
+		}
+
 		public bool RunCommand(string cmd, string args)
 		{
 			var startInfo = new ProcessStartInfo(cmd, args);
@@ -116,7 +153,15 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			p.StartInfo = startInfo;
 			p.OutputDataReceived += (sender, args) =>
 			{
-				if (args.Data != null) Log.LogMessage(args.Data);
+				if (args.Data != null)
+				{
+					bool warnign;
+					int line;
+					string file, msg;
+					ParseMessage(args.Data, out file, out line, out warnign, out msg);
+					if (warnign) Log.LogWarning("", "", "", file, line, 0, line, 1, msg);
+					else Log.LogMessage("", "", "", file, line, 0, line, 1, MessageImportance.High, msg);
+				}
 			};
 			bool hasErrors = false;
 			p.ErrorDataReceived += (sender, args) =>
@@ -124,7 +169,11 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				if (args.Data != null)
 				{
 					hasErrors = true;
-					Log.LogError(args.Data);
+					bool warnign;
+					int line;
+					string file, msg;
+					ParseMessage(args.Data, out file, out line, out warnign, out msg);
+					Log.LogError("", "", "", file, line, 0, line, 1, msg);
 				}
 			};
 			p.EnableRaisingEvents = true;
@@ -198,8 +247,9 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 
 		public override bool Execute()
 		{
-			return !Files.Any() ||
-				GenerateDesignerFiles(Assembly.ItemSpec.Replace("\\\\", "\\"), Directory.ItemSpec, Files.Select(file => file.ItemSpec));
+			if (Files.Any()) GenerateDesignerFiles(Assembly.ItemSpec.Replace("\\\\", "\\"), Directory.ItemSpec, Files.Select(file => file.ItemSpec));
+			
+			return true;
 		}
 	}
 }

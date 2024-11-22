@@ -134,6 +134,10 @@ namespace System.Web.Configuration {
         static int s_useServerConfig = -1;
         static internal bool UseServerConfig {
             get {
+#if NETCOREAPP
+                return false;
+#endif
+
                 if (s_useServerConfig == -1) {
                     int useServerConfig = 0;
                     // Must use web server config if there is no hosting environment

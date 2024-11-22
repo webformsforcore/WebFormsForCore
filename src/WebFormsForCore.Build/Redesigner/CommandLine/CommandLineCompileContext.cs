@@ -43,6 +43,8 @@ namespace Redesigner.CommandLine
 
 		private int _filenameCount;
 
+		private string _filename;
+
 		public CommandLineCompileContext(string programName, CommandLineArguments commandLineArguments)
 		{
 			_commandLineArguments = commandLineArguments;
@@ -61,6 +63,7 @@ namespace Redesigner.CommandLine
 		/// <param name="filename">The name of the file to display.</param>
 		public void BeginFile(string filename)
 		{
+			this._filename = filename;
 			if (_filenameCount > 1 && !_commandLineArguments.Verbose && !_commandLineArguments.Quiet)
 			{
 				Console.WriteLine(filename + "...");
@@ -99,7 +102,7 @@ namespace Redesigner.CommandLine
 			else
 			{
 				string message = string.Format(format, args);
-				Console.WriteLine(string.Format("{0} {1}", Common.RepeatString("-", VerboseNesting + 1), message));
+				Console.WriteLine(string.Format("{0} {1}: {2}", Common.RepeatString("-", VerboseNesting + 1), _filename, message));
 			}
 		}
 
@@ -111,7 +114,7 @@ namespace Redesigner.CommandLine
 			if (_commandLineArguments.Quiet) return;
 
 			string message = string.Format(format, args);
-			Console.WriteLine(_programName + ": Warning: " + message);
+			Console.WriteLine(_programName + ": " + _filename + ": Warning: " + message);
 		}
 
 		/// <summary>
@@ -126,7 +129,7 @@ namespace Redesigner.CommandLine
 			}
 
 			string message = string.Format(format, args);
-			Console.WriteLine(_programName + ": " + message);
+			Console.WriteLine(_programName + ": " + _filename + ": " + message);
 
 			if (_commandLineArguments.Verbose)
 			{

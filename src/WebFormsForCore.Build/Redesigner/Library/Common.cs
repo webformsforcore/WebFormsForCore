@@ -112,9 +112,10 @@ namespace Redesigner.Library
 
 			// Load and parse the "web.config".
 			WebConfigReader webConfigReader = new WebConfigReader();
+			bool net45OrAbove = true;
 			try
 			{
-				webConfigReader.LoadWebConfig(compileContext, Path.Combine(rootPath, WebConfigFilename), rootPath);
+				webConfigReader.LoadWebConfig(compileContext, Path.Combine(rootPath, WebConfigFilename), rootPath, out net45OrAbove);
 			}
 			catch (Exception e)
 			{
@@ -161,7 +162,7 @@ namespace Redesigner.Library
 				compileContext.VerboseNesting++;
 
 				compileContext.BeginFile(filename);
-				bool succeeded = GenerateDesignerForFilename(compileContext, filename, tagRegistrations, assemblyLoader, assemblyDirectory, rootPath);
+				bool succeeded = GenerateDesignerForFilename(compileContext, filename, tagRegistrations, assemblyLoader, assemblyDirectory, rootPath, net45OrAbove);
 				result &= succeeded;
 				compileContext.EndFile(filename, succeeded);
 
@@ -176,7 +177,7 @@ namespace Redesigner.Library
 		/// Generate a replacement .designer.cs file for the given markup file, overwriting the existing
 		/// .designer.cs file if there is one.
 		/// </summary>
-		public static bool GenerateDesignerForFilename(ICompileContext compileContext, string filename, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, string assemblyDirectory, string rootPath)
+		public static bool GenerateDesignerForFilename(ICompileContext compileContext, string filename, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, string assemblyDirectory, string rootPath, bool net45OrAbove)
 		{
 			string designer;
 			string designerFilename = filename + ".designer.cs";
@@ -186,7 +187,7 @@ namespace Redesigner.Library
 			MarkupInfo markupInfo;
 			try
 			{
-				markupInfo = markup.LoadMarkup(compileContext, filename, tagRegistrations, assemblies, assemblyDirectory, rootPath);
+				markupInfo = markup.LoadMarkup(compileContext, filename, tagRegistrations, assemblies, assemblyDirectory, rootPath, net45OrAbove);
 			}
 			catch (Exception e)
 			{
@@ -247,9 +248,10 @@ namespace Redesigner.Library
 
 			// Load and parse the "web.config".
 			WebConfigReader webConfigReader = new WebConfigReader();
+			bool net45OrAbove = true;
 			try
 			{
-				webConfigReader.LoadWebConfig(compileContext, Path.Combine(rootPath, WebConfigFilename), rootPath);
+				webConfigReader.LoadWebConfig(compileContext, Path.Combine(rootPath, WebConfigFilename), rootPath, out net45OrAbove);
 			}
 			catch (Exception e)
 			{
@@ -295,7 +297,7 @@ namespace Redesigner.Library
 				compileContext.VerboseNesting++;
 
 				compileContext.BeginFile(filename);
-				bool succeeded = VerifyDesignerForFilename(compileContext, filename, tagRegistrations, assemblyLoader, assemblyDirectory, rootPath);
+				bool succeeded = VerifyDesignerForFilename(compileContext, filename, tagRegistrations, assemblyLoader, assemblyDirectory, rootPath, net45OrAbove);
 				result &= succeeded;
 				compileContext.EndFile(filename, succeeded);
 
@@ -311,7 +313,7 @@ namespace Redesigner.Library
 		/// Verify the current .designer.cs file for the given markup file.
 		/// </summary>
 		/// <returns>True if the file passes inspection, false if it fails.</returns>
-		public static bool VerifyDesignerForFilename(ICompileContext compileContext, string filename, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, string assemblyDirectory, string rootPath)
+		public static bool VerifyDesignerForFilename(ICompileContext compileContext, string filename, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, string assemblyDirectory, string rootPath, bool net45OrAbove)
 		{
 			DesignerInfo designerInfo;
 			string designerFilename = filename + ".designer.cs";
@@ -321,7 +323,7 @@ namespace Redesigner.Library
 			MarkupInfo markupInfo;
 			try
 			{
-				markupInfo = markup.LoadMarkup(compileContext, filename, tagRegistrations, assemblies, assemblyDirectory, rootPath);
+				markupInfo = markup.LoadMarkup(compileContext, filename, tagRegistrations, assemblies, assemblyDirectory, rootPath, net45OrAbove);
 			}
 			catch (Exception e)
 			{

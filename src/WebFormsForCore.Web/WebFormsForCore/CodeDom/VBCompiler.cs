@@ -141,11 +141,46 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
                 // swallow any exceptions if we cannot find the assembly
             }
 
-            if (systemRuntimeAssemblyPath != null) {
-                allArgsBuilder.Append(string.Format("/R:\"{0}\" ", systemRuntimeAssemblyPath));
+            if (systemRuntimeAssemblyPath != null && !parameters.ReferencedAssemblies.Contains(systemRuntimeAssemblyPath))
+            {
+                parameters.ReferencedAssemblies.Add(systemRuntimeAssemblyPath);
             }
 
-            foreach (string s in parameters.ReferencedAssemblies) {
+			// Bug: Explicitly add Microsoft.VisualBasic as a reference.
+			string visualBasicAssemblyPath = null;
+			try
+			{
+				var visualBasicAssembly = Assembly.Load("Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+				visualBasicAssemblyPath = visualBasicAssembly.Location;
+			}
+			catch
+			{
+				// swallow any exceptions if we cannot find the assembly
+			}
+
+			if (visualBasicAssemblyPath != null && !parameters.ReferencedAssemblies.Contains(visualBasicAssemblyPath))
+			{
+				parameters.ReferencedAssemblies.Add(visualBasicAssemblyPath);
+			}
+
+			// Bug: Explicitly add System as a reference.
+			string systemAssemblyPath = null;
+			try
+			{
+				var systemAssembly = Assembly.Load("System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+				systemAssemblyPath = systemAssembly.Location;
+			}
+			catch
+			{
+				// swallow any exceptions if we cannot find the assembly
+			}
+
+			if (systemAssemblyPath != null && !parameters.ReferencedAssemblies.Contains(systemAssemblyPath))
+			{
+				parameters.ReferencedAssemblies.Add(systemAssemblyPath);
+			}
+
+			foreach (string s in parameters.ReferencedAssemblies) {
 
                 // Ignore any Microsoft.VisualBasic.dll, since Visual Basic implies it (bug 72785)
                 string fileName = Path.GetFileName(s);

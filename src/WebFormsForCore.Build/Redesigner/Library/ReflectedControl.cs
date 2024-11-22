@@ -119,7 +119,7 @@ namespace Redesigner.Library
 		/// <param name="allowedTypes">The allowable types of control that may be returned.  If the matching
 		/// .NET class type for this control does not match one of these types (or is not derivable from one
 		/// of these types), this constructor will throw an exception.</param>
-		public ReflectedControl(ICompileContext compileContext, Tag tag, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, IEnumerable<Type> allowedTypes)
+		public ReflectedControl(ICompileContext compileContext, Tag tag, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, IEnumerable<Type> allowedTypes, bool net45OrAbove)
 		{
 			// Decode the tag declaration.
 			DecodeFullTagNameWithPrefix(tag.TagName, out TagPrefix, out TagName);
@@ -128,7 +128,7 @@ namespace Redesigner.Library
 			if (string.IsNullOrEmpty(TagPrefix))
 			{
 				TagRegistration = _htmlTagRegistration;
-				ControlType = FindMatchingHtmlControlType(tag);
+				ControlType = FindMatchingHtmlControlType(tag, net45OrAbove);
 			}
 			else
 			{
@@ -285,7 +285,7 @@ namespace Redesigner.Library
 		/// </summary>
 		/// <param name="tag">The tag to find an HTML server control for.</param>
 		/// <returns>The matching HTML server control.</returns>
-		private static Type FindMatchingHtmlControlType(Tag tag)
+		private static Type FindMatchingHtmlControlType(Tag tag, bool net45OrAbove)
 		{
 			switch (tag.TagName)
 			{
@@ -303,6 +303,23 @@ namespace Redesigner.Library
 				case "tr":			return typeof(System.Web.UI.HtmlControls.HtmlTableRow);
 				case "textarea":	return typeof(System.Web.UI.HtmlControls.HtmlTextArea);
 				case "title":		return typeof(System.Web.UI.HtmlControls.HtmlTitle);
+				// NET Framework 4.5 and above
+				case "audio":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlAudio) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "video":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlVideo) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "track":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlTrack) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "source":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlSource) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "iframe":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlIframe) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "embed":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlEmbed) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "area":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlArea) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
+				case "html":		return net45OrAbove ? typeof(System.Web.UI.HtmlControls.HtmlElement) :
+						typeof(System.Web.UI.HtmlControls.HtmlGenericControl);
 
 				case "input":
 					string type = tag["type"];

@@ -205,7 +205,7 @@ namespace Redesigner.Library
 		/// <param name="assemblyDirectory">The disk directory where additional assemblies (including the website's DLL) may be found.</param>
 		/// <param name="rootPath">The disk directory of the root path of the website.</param>
 		/// <returns>A collection of public control declarations and the main directive from the top of the file.</returns>
-		public MarkupInfo LoadMarkup(ICompileContext compileContext, string filename, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, string assemblyDirectory, string rootPath)
+		public MarkupInfo LoadMarkup(ICompileContext compileContext, string filename, IEnumerable<TagRegistration> tagRegistrations, AssemblyLoader assemblies, string assemblyDirectory, string rootPath, bool net45OrAbove)
 		{
 			_compileContext = compileContext;
 
@@ -223,7 +223,7 @@ namespace Redesigner.Library
 			_tagRegistrations = tagRegistrations.ToList();
 			_reflectedControlCollection = new ReflectedControlCollection(_tagRegistrations, assemblies);
 
-			LoadMarkupInternal(filename);
+			LoadMarkupInternal(filename, net45OrAbove);
 
 			return new MarkupInfo
 			{
@@ -288,7 +288,7 @@ namespace Redesigner.Library
 		/// recursive inclusions.
 		/// </summary>
 		/// <param name="filename">The disk path to the file to include.</param>
-		private void LoadMarkupInternal(string filename)
+		private void LoadMarkupInternal(string filename, bool net45OrAbove)
 		{
 			string markupText;
 
@@ -307,7 +307,7 @@ namespace Redesigner.Library
 
 			PushState(filename, markupText);
 
-			ParseText(null, null);
+			ParseText(null, null, net45OrAbove);
 
 			PopState();
 		}
@@ -401,7 +401,7 @@ namespace Redesigner.Library
 		/// That any tags found are implicitly runat="server" tags, and that they must be instances of (or inherit
 		/// from) the given type of tags.  This parameter is primarily for use during processing of nested
 		/// IEnumerable properties.</param>
-		private void ParseText(string untilEndTag, IEnumerable<Type> requiredTagTypes)
+		private void ParseText(string untilEndTag, IEnumerable<Type> requiredTagTypes, bool net45OrAbove)
 		{
 			do
 			{
@@ -429,7 +429,7 @@ namespace Redesigner.Library
 
 					// We have to process server-side includes, since they may produce more <%@ Register %> directives
 					// or more controls that we need a .designer entry for.
-					ProcessInclude(match);
+					ProcessInclude(match, net45OrAbove);
 
 					int end = match.Index + match.Length;
 					_line += CountNewlines(_text, _src, end);
@@ -472,7 +472,7 @@ namespace Redesigner.Library
 					_line += CountNewlines(_text, _src, end);
 					_src = end;
 
-					ProcessTag(match, requiredTagTypes);
+					ProcessTag(match, requiredTagTypes, net45OrAbove);
 				}
 				else if ((match = _endTagRegex.Match(_text, _src)).Success)
 				{
@@ -581,7 +581,7 @@ namespace Redesigner.Library
 		/// that server control's end tag.
 		/// </summary>
 		/// <param name="reflectedControl">The type of server control whose properties we are parsing.</param>
-		private void ParseChildrenAsProperties(ReflectedControl reflectedControl)
+		private void ParseChildrenAsProperties(ReflectedControl reflectedControl, bool net45OrAbove)
 		{
 			int startLine = _line;
 
@@ -617,7 +617,7 @@ namespace Redesigner.Library
 
 					// We have to process server-side includes, since they may produce more <%@ Register %> directives
 					// or more controls that we need a .designer entry for.
-					ProcessInclude(match);
+					ProcessInclude(match, net45OrAbove);
 
 					int end = match.Index + match.Length;
 					_line += CountNewlines(_text, _src, end);
@@ -663,7 +663,7 @@ namespace Redesigner.Library
 					int end = match.Index + match.Length;
 					_line += CountNewlines(_text, _src, end);
 					_src = end;
-					ParseTagAsProperty(match, reflectedControl);
+					ParseTagAsProperty(match, reflectedControl, net45OrAbove);
 				}
 				else if ((match = _endTagRegex.Match(_text, _src)).Success)
 				{
@@ -887,7 +887,7 @@ namespace Redesigner.Library
 		/// Process a server-side &lt;!-- include --%gt;.
 		/// </summary>
 		/// <param name="match">The capture groups collected when this include's regular-expression was matched on the input.</param>
-		private void ProcessInclude(Match match)
+		private void ProcessInclude(Match match, bool net45OrAbove)
 		{
 			string pathtype = match.Groups["pathtype"].Value;
 			string filename = match.Groups["filename"].Value;
@@ -910,7 +910,7 @@ namespace Redesigner.Library
 			}
 
 			// Recursively load the additional markup and keep going with the parse.
-			LoadMarkupInternal(Path.GetFullPath(filename));
+			LoadMarkupInternal(Path.GetFullPath(filename), net45OrAbove);
 		}
 
 		/// <summary>
@@ -921,7 +921,7 @@ namespace Redesigner.Library
 		/// If non-null, this specifies two different things simultaneously:  That this tag is implicitly a runat="server"
 		/// tag, and that it must be an instance of (or inherit from) one of the given types.  This parameter is primarily
 		/// for use during processing of nested IEnumerable properties.</param>
-		private void ProcessTag(Match match, IEnumerable<Type> requiredTagTypes)
+		private void ProcessTag(Match match, IEnumerable<Type> requiredTagTypes, bool net45OrAbove)
 		{
 			// Decide if this is a server control or just a plain HTML tag.
 			Tag tag = new Tag(match);
@@ -943,7 +943,7 @@ namespace Redesigner.Library
 			// If this is a server tag --- a server-control or user-control declaration --- then go process it as one.
 			if (isServerTag)
 			{
-				ProcessServerTag(tag, requiredTagTypes);
+				ProcessServerTag(tag, requiredTagTypes, net45OrAbove);
 			}
 		}
 
@@ -955,7 +955,7 @@ namespace Redesigner.Library
 		/// If non-null, this specifies two different things simultaneously:  That this tag is implicitly a runat="server"
 		/// tag, and that it must be an instance of (or inherit from) one of the given types.  This parameter is primarily
 		/// for use during processing of nested IEnumerable properties.</param>
-		private void ProcessServerTag(Tag tag, IEnumerable<Type> requiredTagTypes)
+		private void ProcessServerTag(Tag tag, IEnumerable<Type> requiredTagTypes, bool net45OrAbove)
 		{
 			// Get the control's ID, if one has been assigned.
 			string id = tag["id"];
@@ -965,7 +965,7 @@ namespace Redesigner.Library
 			ReflectedControl reflectedControl;
 			try
 			{
-				reflectedControl = _reflectedControlCollection.GetControl(_compileContext, tag, requiredTagTypes ?? _justControlTypes);
+				reflectedControl = _reflectedControlCollection.GetControl(_compileContext, tag, requiredTagTypes ?? _justControlTypes, net45OrAbove);
 			}
 			catch (Exception e)
 			{
@@ -988,7 +988,7 @@ namespace Redesigner.Library
 			// If this is a self-closing tag, we're done; otherwise, parse and process anything inside this.
 			if (!tag.IsEmpty)
 			{
-				ProcessServerTagContents(tag, requiredTagTypes != null, reflectedControl);
+				ProcessServerTagContents(tag, requiredTagTypes != null, reflectedControl, net45OrAbove);
 			}
 		}
 
@@ -1000,7 +1000,7 @@ namespace Redesigner.Library
 		/// this tag does not explicitly state that they should be (as is the case in a server control being
 		/// stored in an IEnumerable property of a parent server control).</param>
 		/// <param name="reflectedControl">The metadata about this control, needed for identifying and filling in its properties.</param>
-		private void ProcessServerTagContents(Tag tag, bool mustParseChildrenAsProperties, ReflectedControl reflectedControl)
+		private void ProcessServerTagContents(Tag tag, bool mustParseChildrenAsProperties, ReflectedControl reflectedControl, bool net45OrAbove)
 		{
 			_compileContext.VerboseNesting++;
 			_controlStack.Add(tag.TagName);
@@ -1011,7 +1011,7 @@ namespace Redesigner.Library
 			Verbose("This server control has ParseChildren(true), either explicitly or implicitly (by being part of a collection).");
 			Verbose("Beginning special parse of children as properties.");
 
-			ParseChildrenAsProperties(reflectedControl);
+			ParseChildrenAsProperties(reflectedControl, net45OrAbove);
 
 			Verbose("End of special parse of children as properties.");
 
@@ -1063,7 +1063,7 @@ namespace Redesigner.Library
 		/// </summary>
 		/// <param name="match">The capture groups collected when this tag's regular-expression was matched on the input.</param>
 		/// <param name="reflectedControl">The metadata about the parent control class that this tag is supposed to be a property on.</param>
-		private void ParseTagAsProperty(Match match, ReflectedControl reflectedControl)
+		private void ParseTagAsProperty(Match match, ReflectedControl reflectedControl, bool net45OrAbove)
 		{
 			//
 			// There are four scenarios here we have to consider:
@@ -1098,7 +1098,7 @@ namespace Redesigner.Library
 
 				// There's no direct property, but this control has a default collection property, so this child
 				// control will be stuffed into that collection by ASP.NET.  
-				ParseTagIntoDefaultCollection(tag, reflectedControl);
+				ParseTagIntoDefaultCollection(tag, reflectedControl, net45OrAbove);
 				return;
 			}
 
@@ -1114,28 +1114,28 @@ namespace Redesigner.Library
 				if (reflectedControlProperty.TemplateInstanceAttribute != null && reflectedControlProperty.TemplateInstanceAttribute.Instances == System.Web.UI.TemplateInstance.Single)
 				{
 					Verbose("This control property uses [TemplateInstance(TemplateInstance.Single)]; recursing.");
-					ParseText(tagName, null);
+					ParseText(tagName, null, net45OrAbove);
 				}
 				else
 				{
 					Verbose("This control property is an ITemplate whose child controls do not belong in the designer file.");
 					bool wasGeneratingOutput = _shouldGenerateOutput;
 					_shouldGenerateOutput = false;
-					ParseText(tagName, null);
+					ParseText(tagName, null, net45OrAbove);
 					_shouldGenerateOutput = wasGeneratingOutput;
 				}
 			}
 			else if (reflectedControlProperty.IsCollectionProperty)
 			{
 				Verbose("This control property is a list whose immediate children belong in the designer file.");
-				ParseText(tagName, reflectedControlProperty.CollectionItemTypes);
+				ParseText(tagName, reflectedControlProperty.CollectionItemTypes, net45OrAbove);
 			}
 			else
 			{
 				Verbose("This control property has children, but neither it nor its children belong in the designer file.");
 				bool wasGeneratingOutput = _shouldGenerateOutput;
 				_shouldGenerateOutput = false;
-				ParseText(tagName, null);
+				ParseText(tagName, null, net45OrAbove);
 				_shouldGenerateOutput = wasGeneratingOutput;
 			}
 		}
@@ -1145,7 +1145,7 @@ namespace Redesigner.Library
 		/// </summary>
 		/// <param name="tag">The tag that we are attempting to parse.</param>
 		/// <param name="reflectedControl">The control with the collection into which this tag will be placed.</param>
-		private void ParseTagIntoDefaultCollection(Tag tag, ReflectedControl reflectedControl)
+		private void ParseTagIntoDefaultCollection(Tag tag, ReflectedControl reflectedControl, bool net45OrAbove)
 		{
 			string tagName = tag.TagName;
 
@@ -1153,7 +1153,7 @@ namespace Redesigner.Library
 			Verbose("This <{0}> tag describes a control that belongs in the default control collection, \"{1}\".",
 				tagName, reflectedControlProperty.PropertyName);
 
-			ReflectedControl childControl = _reflectedControlCollection.GetControl(_compileContext, tag, _allTypes);
+			ReflectedControl childControl = _reflectedControlCollection.GetControl(_compileContext, tag, _allTypes, net45OrAbove);
 
 			if (childControl == null)
 			{
@@ -1173,7 +1173,7 @@ namespace Redesigner.Library
 
 			if (tag.IsEmpty) return;
 
-			ParseText(tagName, reflectedControlProperty.CollectionItemTypes);
+			ParseText(tagName, reflectedControlProperty.CollectionItemTypes, net45OrAbove);
 		}
 
 		#endregion
