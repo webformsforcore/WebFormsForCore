@@ -37,6 +37,8 @@ namespace System.Web.Hosting
 
 		private TaskCompletionSource<bool> Completed = new TaskCompletionSource<bool>();
 
+		private AutoResetEvent CompletedEvent = new AutoResetEvent(false);
+
 		private static readonly char[] IntToHex = new[]
 			{
 				'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
@@ -122,12 +124,19 @@ namespace System.Web.Hosting
 
 		public override void EndOfRequest()
 		{
-			Context.Response.CompleteAsync()
-				.ContinueWith(t =>
-				{
-					Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
-					Completed.SetResult(true);
-				});
+/*			try
+			{
+				Context.Response.CompleteAsync()
+					.ContinueWith(t =>
+					{*/
+						Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
+						//CompletedEvent.Set();
+						Completed.SetResult(true);
+					/*});
+			} catch
+			{
+				Debugger.Break();
+			}*/
 		}
 
 		public override void FlushResponse(bool finalFlush)
@@ -334,25 +343,21 @@ namespace System.Web.Hosting
 
 				// Hand the processing over to HttpRuntime
 				// Run processing in separate ASP.NET Worker Thread
-				var completed = Completed.Task;
-				await Task.Factory.StartNew(async () =>
+				//var completed = Completed.Task;
+				await Task.Factory.StartNew(() =>
 					{
-						try
-						{
-							HttpRuntime.ProcessRequest(this);
-						} catch
-						{	
-							Debugger.Break();
-						}
-					
-						await completed;
-
-						Debug.WriteLine($"Request {Context.Request.Path} thread finished.");
+						Thread.CurrentThread.Name = $"ASP.NET WorkerThread {Context.Request.Path}";
+						Debug.WriteLine($"Start ProcessRequest {Context.Request.Path}");
+						HttpRuntime.ProcessRequest(this);
+						Debug.WriteLine($"End ProcessRequest {Context.Request.Path}");
 					},
-					TaskCreationOptions.LongRunning)
-					.Unwrap();
+					TaskCreationOptions.LongRunning);
 
-				Debug.WriteLine($"Request {Context.Request.Path} finished.");
+				Debug.WriteLine($"Waiting {Context.Request.Path} to finish");
+
+				await Completed.Task;
+
+				Debug.WriteLine($"Request {Context.Request.Path} finished");
 			}
 		}
 

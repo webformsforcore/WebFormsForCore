@@ -1721,7 +1721,9 @@ namespace System.Web
             try {
                 // First request initialization
                 try {
+                    System.Diagnostics.Debug.WriteLine($"EnsureFirstRequestInit {context.Request.Path} Start");
                     EnsureFirstRequestInit(context);
+					System.Diagnostics.Debug.WriteLine($"EnsureFirstRequestInit {context.Request.Path} End");
 				}
 				catch (ResponseEndException e)
 				{
@@ -1753,13 +1755,16 @@ namespace System.Web
                     // asynchronous handler
                     IHttpAsyncHandler asyncHandler = (IHttpAsyncHandler)app;
                     context.AsyncAppHandler = asyncHandler;
-                    asyncHandler.BeginProcessRequest(context, _handlerCompletionCallback, context);
+					System.Diagnostics.Debug.WriteLine($"BeginProcessRequest {context.Request.Path} Start");
+					asyncHandler.BeginProcessRequest(context, _handlerCompletionCallback, context);
                 }
                 else {
-                    // synchronous handler
-                    app.ProcessRequest(context);
-                    FinishRequest(context.WorkerRequest, context, null);
-                }
+					// synchronous handler
+					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.Path} Start");
+					app.ProcessRequest(context);
+					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.Path} End");
+					FinishRequest(context.WorkerRequest, context, null);
+				}
 			}
             catch (ResponseEndException e)
             {
@@ -1816,8 +1821,10 @@ namespace System.Web
 
             SetExecutionTimePerformanceCounter(context);
 
-            // Flush in case of no error
-            if (e == null) {
+			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.Path} Start");
+
+			// Flush in case of no error
+			if (e == null) {
                 // impersonate around PreSendHeaders / PreSendContent
                 using (new ClientImpersonationContext(context, false)) {
                     try {
@@ -1920,13 +1927,16 @@ namespace System.Web
             // Schedule more work if some requests are queued
             if (_requestQueue != null)
                 _requestQueue.ScheduleMoreWorkIfNeeded();
-        }
 
-        //
-        // Make sure shutdown happens only once
-        //
+			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.Path} End");
 
-        private bool InitiateShutdownOnce() {
+		}
+
+		//
+		// Make sure shutdown happens only once
+		//
+
+		private bool InitiateShutdownOnce() {
             if (_shutdownInProgress)
                 return false;
 
@@ -2183,6 +2193,9 @@ namespace System.Web
          * Async completion of managed pipeline (called at most one time).
          */
         private void OnHandlerCompletion(IAsyncResult ar) {
+
+            System.Diagnostics.Debug.WriteLine($"OnHandlerCompletion on {Thread.CurrentThread.Name}");
+
             HttpContext context = (HttpContext)ar.AsyncState;
 
             try {
