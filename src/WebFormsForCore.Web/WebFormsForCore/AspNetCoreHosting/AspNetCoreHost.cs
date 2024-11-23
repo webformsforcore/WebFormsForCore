@@ -43,9 +43,10 @@ namespace System.Web.Hosting
 		private string processUser;
 
         private string virtualPath;
-        public bool HandleAllRequestsAsLegacy { get; set; } = true;
-		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx", ".asax" };
-        public string[] DefaultDocuments { get; set; } = new string[] { "default.aspx" };
+        public bool HandleAllRequestsWithWebForms { get; set; } = false;
+		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx" };
+        public string[] ProhibitedExtensions { get; set; } = new string[] { ".razor", ".cshtml", ".vbhtml", ".cs", ".vb", ".resx", ".resource", ".master", ".asax", ".ascx", "web.config", "appsettings.json" };
+        public string[] DefaultDocuments { get; set; } = new string[] { "default.aspx", "Default.aspx", "index.htm", "index.html", "Index.html", "Index.htm" };
 
         public Compilation.ClientBuildManager ClientBuildManager { get; set; } 
 		public AppDomain AppDomain
@@ -240,9 +241,12 @@ namespace System.Web.Hosting
         {
             var path = context.Request.Path.Value;
 
-			if (LegacyExtensions.Any(ext => path.EndsWith(ext))) return true;
-			
-            if (Directory.Exists(MapPath(path)))
+			if (LegacyExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return true;
+
+            if (ProhibitedExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return false;
+
+            var mappedPath = MapPath(path);
+            if (Directory.Exists(mappedPath))
             {
 				if (path.EndsWith('/')) path = path.Substring(0, path.Length - 1);
 				var defaultDoc = DefaultDocuments
@@ -256,9 +260,9 @@ namespace System.Web.Hosting
                 }
             }
 
-			if (HandleAllRequestsAsLegacy) return true;
-
-			return false;
+			return HandleAllRequestsWithWebForms || 
+                File.Exists(mappedPath) &&
+                !(Path.GetDirectoryName(mappedPath) == AppDomain.CurrentDomain.BaseDirectory);
 		}
 
 		public bool IsVirtualPathInApp(String path)

@@ -7,6 +7,7 @@
 namespace System.Configuration {
     using System.Configuration.Internal;
     using System.IO;
+    using System.Text.RegularExpressions;
     using System.Linq;
     using System.Security.Policy;
     using System.Security.Permissions;
@@ -100,14 +101,30 @@ namespace System.Configuration {
                     if (!File.Exists(s_machineConfigFilePath) ||
                         File.GetLastWriteTimeUtc(s_machineConfigFilePath) < linkerTimeStamp)
                     {
-						using (var machineConfig = assembly
+                        using (var machineConfig = assembly
                             .GetManifestResourceNames()
                             .Where(name => name == MachineConfigFilename || name.EndsWith($".{MachineConfigFilename}"))
                             .Select(name => assembly.GetManifestResourceStream(name))
                             .FirstOrDefault())
-                        using (var file = new FileStream(s_machineConfigFilePath, FileMode.Create, FileAccess.Write))
                         {
-                            machineConfig.CopyTo(file);
+                            var path = Path.GetDirectoryName(assembly.Location);
+                            if (File.Exists(Path.Combine(path, "System.Web.Mobile.dll")))
+                            {
+                                using (var reader = new StreamReader(machineConfig))
+                                {
+                                    var txt = reader.ReadToEnd();
+                                    // Uncomment Mobile sections
+                                    txt = Regex.Replace(txt, @"<!--@Mobile\s*(.*?)\s*-->", "$1", RegexOptions.Singleline);
+                                    File.WriteAllText(s_machineConfigFilePath, txt);
+                                }
+                            }
+                            else
+                            {
+                                using (var file = new FileStream(s_machineConfigFilePath, FileMode.Create, FileAccess.Write))
+                                {
+                                    machineConfig.CopyTo(file);
+                                }
+                            }
                         }
                     }
                 }

@@ -53,14 +53,16 @@ namespace Microsoft.AspNetCore.Builder
 			if (context != AssemblyLoadContext.Default) context.Unload();
 		}
 
-		public WebFormsMiddleware(Core.RequestDelegate next)
+		public WebFormsMiddleware(Core.RequestDelegate next, Action<WebFormsOptions> optionsBuilder)
 		{
 			this.next = next;
-			var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+			var path = AppDomain.CurrentDomain.BaseDirectory;
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString())) path = path.Substring(0, path.Length - 1);
 			PhysicalPath = Path.GetDirectoryName(path);
 			//PhysicalPath = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(Assembly.GetEntryAssembly().CodeBase).AbsolutePath));
 			VirtualPath = "/";
+
+			optionsBuilder?.Invoke(new WebFormsOptions(this));
 
 			Host.Configure(VirtualPath, PhysicalPath);
 		}
@@ -88,11 +90,25 @@ namespace Microsoft.AspNetCore.Builder
 
 		public virtual bool IsLegacyRequest(Core.HttpContext context) => host.IsLegacyRequest(context);
 	}
+
+	public class WebFormsOptions
+	{
+
+		WebFormsMiddleware Instance;
+
+		public WebFormsOptions(WebFormsMiddleware instance) { Instance = instance; }
+		public WebFormsOptions DefaultDocuments(params string[] docs) { Instance.Host.DefaultDocuments = docs; return this; }
+		public WebFormsOptions VirtualPath(string path) { Instance.VirtualPath = path; return this; }
+		public WebFormsOptions PhysicalPath(string path) { Instance.PhysicalPath = path; return this; }
+		public WebFormsOptions HandleAllRequestsWithWebForms() { Instance.Host.HandleAllRequestsWithWebForms = true; return this; }
+	}
+
 	public static class WebFormsMiddlewareExtensions
 	{
-		public static IApplicationBuilder UseWebForms(this IApplicationBuilder builder)
+		public static IApplicationBuilder UseWebForms(this IApplicationBuilder builder, Action<WebFormsOptions> optionsBuilder = null)
 		{
-			return builder.UseMiddleware<WebFormsMiddleware>();
+			if (optionsBuilder == null) optionsBuilder = options => { };
+			return builder.UseMiddleware<WebFormsMiddleware>(optionsBuilder);
 		}
 	}
 }

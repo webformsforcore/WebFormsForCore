@@ -96,9 +96,9 @@ public class Program
 
 		//app.UseAuthorization();
 
-		app.UseWebForms();
-
 		//app.MapDefaultControllerRoute();
+		
+        app.UseWebForms();
 			
 		app.Run();
 

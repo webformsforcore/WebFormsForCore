@@ -1768,6 +1768,7 @@ namespace System.Web
 			}
             catch (ResponseEndException e)
             {
+                System.Diagnostics.Debug.WriteLine("Catch ResponseEndException");
 				context.Response.InitResponseWriter();
 				FinishRequest(wr, context, null);
 				// don't rethrow RepsonseEndException here, as it just ends the request 
