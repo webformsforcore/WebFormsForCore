@@ -279,7 +279,7 @@ namespace System.Web.UI
 				// Clear the error for Response.End
 				_error = null;
 
-				throw;
+				// Don't retrow since the call to Thread.ResetAbort
 			}
 			catch (Exception e)
 			{

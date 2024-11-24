@@ -136,16 +136,6 @@ namespace System.Web.Util
 			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
 			else return path.StartsWith("/") && Path.Exists(path);
 		}
-		internal static bool IsAbsolutePhysicalOrVirtualPath(string path)
-		{
-			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
-			else return path.StartsWith("/");
-		}
-		internal static bool IsAbsolutePhysicalPathAndWindows(string path)
-		{
-			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
-			else return false;
-		}
 		internal static bool IsVirtualPath(string path)
 		{
 			if (OSInfo.IsWindows) return !IsAbsoluteWindowsPhysicalPath(path);
@@ -181,7 +171,7 @@ namespace System.Web.Util
 		{
 
 			// Check if it looks like a physical path (UNC shares and C:)
-			if (IsAbsolutePhysicalPath(path))
+			if (IsAbsoluteWindowsPhysicalPath(path))
 			{
 				throw new HttpException(SR.GetString(SR.Physical_path_not_allowed, path));
 			}

@@ -1845,20 +1845,25 @@ namespace System.Web {
         }
 
         // call a delegate within cancellable period (possibly throwing timeout exception)
-        internal void InvokeCancellableCallback(WaitCallback callback, Object state) {
-            if (IsInCancellablePeriod) {
+        internal void InvokeCancellableCallback(WaitCallback callback, Object state)
+        {
+            if (IsInCancellablePeriod)
+            {
                 // call directly
                 callback(state);
                 return;
             }
 
-            try {
+            try
+            {
                 BeginCancellablePeriod();  // request can be cancelled from this point
 
-                try {
+                try
+                {
                     callback(state);
                 }
-                finally {
+                finally
+                {
                     EndCancellablePeriod();  // request can be cancelled until this point
 
                     Response.RethrowIfResponseEnd();
@@ -1866,10 +1871,12 @@ namespace System.Web {
 
                 WaitForExceptionIfCancelled();  // wait outside of finally
             }
-            catch (ThreadAbortException e) {
+            catch (ThreadAbortException e)
+            {
                 if (e.ExceptionState != null &&
                     e.ExceptionState is HttpApplication.CancelModuleException &&
-                    ((HttpApplication.CancelModuleException)e.ExceptionState).Timeout) {
+                    ((HttpApplication.CancelModuleException)e.ExceptionState).Timeout)
+                {
 
                     Thread.ResetAbort();
                     PerfCounters.IncrementCounter(AppPerfCounter.REQUESTS_TIMED_OUT);
@@ -1878,23 +1885,23 @@ namespace System.Web {
                                         null, WebEventCodes.RuntimeErrorRequestAbort);
                 }
             }
-			catch (ResponseEndException e)
-			{
-				if (e.InnerException != null &&
-					e.InnerException is HttpApplication.CancelModuleException &&
-					((HttpApplication.CancelModuleException)e.InnerException).Timeout)
-				{
+            catch (ResponseEndException e)
+            {
+                if (e.InnerException != null &&
+                    e.InnerException is HttpApplication.CancelModuleException &&
+                    ((HttpApplication.CancelModuleException)e.InnerException).Timeout)
+                {
 
-					//Thread.ResetAbort();
-					PerfCounters.IncrementCounter(AppPerfCounter.REQUESTS_TIMED_OUT);
+                    //Thread.ResetAbort();
+                    PerfCounters.IncrementCounter(AppPerfCounter.REQUESTS_TIMED_OUT);
 
-					throw new HttpException(SR.GetString(SR.Request_timed_out),
-										null, WebEventCodes.RuntimeErrorRequestAbort);
-				}
+                    throw new HttpException(SR.GetString(SR.Request_timed_out),
+                                        null, WebEventCodes.RuntimeErrorRequestAbort);
+                }
 
                 throw;
-			}
-		}
+            }
+        }
 
 		internal void PushTraceContext() {
             if (_traceContextStack == null) {

@@ -93,11 +93,13 @@ namespace Microsoft.AspNetCore.Builder
 
 	public class WebFormsOptions
 	{
-
 		WebFormsMiddleware Instance;
 
 		public WebFormsOptions(WebFormsMiddleware instance) { Instance = instance; }
+		public WebFormsOptions HandleExtensions(params string[] extensions) { Instance.Host.HandleExtensions = extensions; return this; }
+		public WebFormsOptions AddHandleExtensions(params string[] extensions) { Instance.Host.HandleExtensions = Instance.Host.HandleExtensions.Concat(extensions).ToArray(); return this; }
 		public WebFormsOptions DefaultDocuments(params string[] docs) { Instance.Host.DefaultDocuments = docs; return this; }
+		public WebFormsOptions AddDefaultDocuments(params string[] docs) { Instance.Host.DefaultDocuments = Instance.Host.DefaultDocuments.Concat(docs).ToArray(); return this; }
 		public WebFormsOptions VirtualPath(string path) { Instance.VirtualPath = path; return this; }
 		public WebFormsOptions PhysicalPath(string path) { Instance.PhysicalPath = path; return this; }
 		public WebFormsOptions HandleAllRequestsWithWebForms() { Instance.Host.HandleAllRequestsWithWebForms = true; return this; }
@@ -107,6 +109,7 @@ namespace Microsoft.AspNetCore.Builder
 	{
 		public static IApplicationBuilder UseWebForms(this IApplicationBuilder builder, Action<WebFormsOptions> optionsBuilder = null)
 		{
+			AssemblyLoaderNetCore.Init();
 			if (optionsBuilder == null) optionsBuilder = options => { };
 			return builder.UseMiddleware<WebFormsMiddleware>(optionsBuilder);
 		}

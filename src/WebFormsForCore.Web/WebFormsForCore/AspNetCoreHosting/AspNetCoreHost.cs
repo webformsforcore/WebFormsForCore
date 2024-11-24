@@ -44,9 +44,9 @@ namespace System.Web.Hosting
 
         private string virtualPath;
         public bool HandleAllRequestsWithWebForms { get; set; } = false;
-		public string[] LegacyExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx" };
+		public string[] HandleExtensions { get; set; } = new string[] { ".aspx", ".ashx", ".asmx", ".axd" };
         public string[] ProhibitedExtensions { get; set; } = new string[] { ".razor", ".cshtml", ".vbhtml", ".cs", ".vb", ".resx", ".resource", ".master", ".asax", ".ascx", "web.config", "appsettings.json" };
-        public string[] DefaultDocuments { get; set; } = new string[] { "default.aspx", "Default.aspx", "index.htm", "index.html", "Index.html", "Index.htm" };
+        public string[] DefaultDocuments { get; set; } = new string[] { "index.htm", "index.html", "Index.html", "Index.htm", "Default.htm", "iistart.htm", "Default.aspx", "default.aspx" };
 
         public Compilation.ClientBuildManager ClientBuildManager { get; set; } 
 		public AppDomain AppDomain
@@ -240,22 +240,25 @@ namespace System.Web.Hosting
         public bool IsLegacyRequest(Core.HttpContext context)
         {
             var path = context.Request.Path.Value;
+            string pathWithoutSlash = path;
+            if (path.EndsWith("/")) pathWithoutSlash = path.Substring(0, path.Length - 1);
+            if (path == "") path = "/";
+            if (path != "/") path = pathWithoutSlash;
 
-			if (LegacyExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return true;
+			if (HandleExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return true;
 
             if (ProhibitedExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return false;
 
             var mappedPath = MapPath(path);
             if (Directory.Exists(mappedPath))
             {
-				if (path.EndsWith('/')) path = path.Substring(0, path.Length - 1);
 				var defaultDoc = DefaultDocuments
-                    .Select(doc => path + "/" + doc)
-                    .Where(file => File.Exists(MapPath(file)))
+                    .Select(doc => new { Mapped = Path.Combine(mappedPath, doc), Virtual = $"{pathWithoutSlash}/{doc}" })
+                    .Where(doc => File.Exists(doc.Mapped))
                     .FirstOrDefault();
                 if (defaultDoc != null)
                 {
-                    context.Request.Path = defaultDoc;
+                    context.Request.Path = defaultDoc.Virtual;
                     return true;
                 }
             }

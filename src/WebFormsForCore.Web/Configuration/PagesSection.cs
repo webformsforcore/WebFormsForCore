@@ -465,7 +465,7 @@ namespace System.Web.Configuration {
                     String masterPageFile = MasterPageFile;
 
                     if (!String.IsNullOrEmpty(masterPageFile)) {
-                        if (UrlPath.IsAbsolutePhysicalPathAndWindows(masterPageFile)) {
+                        if (UrlPath.IsAbsoluteWindowsPhysicalPath(masterPageFile)) {
                             throw new ConfigurationErrorsException(
                                 SR.GetString(SR.Physical_path_not_allowed, masterPageFile),
                                 ElementInformation.Properties["masterPageFile"].Source,

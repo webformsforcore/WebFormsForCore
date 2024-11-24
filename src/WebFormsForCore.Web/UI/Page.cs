@@ -6904,10 +6904,6 @@ window.onload = WebForm_RestoreScrollPosition;
 						}
 					}
 				}
-				catch (ResponseEndException e)
-				{
-					throw;
-				}
 				catch (Exception e)
 				{
 					_error = e;
@@ -6915,8 +6911,9 @@ window.onload = WebForm_RestoreScrollPosition;
 					_asyncResult.Complete(onPageThread, null /*result*/, _error);
 
 					if (!onPageThread &&
-						e is ThreadAbortException &&
-						((ThreadAbortException)e).ExceptionState is HttpApplication.CancelModuleException)
+						((e is ThreadAbortException &&
+						((ThreadAbortException)e).ExceptionState is HttpApplication.CancelModuleException) ||
+						e is ResponseEndException))
 					{
 						// don't leave this threadpool thread with CancelModuleException
 						// as thread state - it might lead to AppDomainUnloadedException

@@ -1721,9 +1721,7 @@ namespace System.Web
             try {
                 // First request initialization
                 try {
-                    System.Diagnostics.Debug.WriteLine($"EnsureFirstRequestInit {context.Request.Path} Start");
                     EnsureFirstRequestInit(context);
-					System.Diagnostics.Debug.WriteLine($"EnsureFirstRequestInit {context.Request.Path} End");
 				}
 				catch (ResponseEndException e)
 				{
@@ -1755,14 +1753,14 @@ namespace System.Web
                     // asynchronous handler
                     IHttpAsyncHandler asyncHandler = (IHttpAsyncHandler)app;
                     context.AsyncAppHandler = asyncHandler;
-					System.Diagnostics.Debug.WriteLine($"BeginProcessRequest {context.Request.Path} Start");
+					System.Diagnostics.Debug.WriteLine($"BeginProcessRequest {context.Request.PathWithQueryString} Start");
 					asyncHandler.BeginProcessRequest(context, _handlerCompletionCallback, context);
                 }
                 else {
 					// synchronous handler
-					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.Path} Start");
+					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.PathWithQueryString} Start");
 					app.ProcessRequest(context);
-					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.Path} End");
+					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.PathWithQueryString} End");
 					FinishRequest(context.WorkerRequest, context, null);
 				}
 			}
@@ -1822,7 +1820,7 @@ namespace System.Web
 
             SetExecutionTimePerformanceCounter(context);
 
-			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.Path} Start");
+			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.PathWithQueryString} Start");
 
 			// Flush in case of no error
 			if (e == null) {
@@ -1929,7 +1927,7 @@ namespace System.Web
             if (_requestQueue != null)
                 _requestQueue.ScheduleMoreWorkIfNeeded();
 
-			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.Path} End");
+			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.PathWithQueryString} End");
 
 		}
 
@@ -2195,9 +2193,9 @@ namespace System.Web
          */
         private void OnHandlerCompletion(IAsyncResult ar) {
 
-            System.Diagnostics.Debug.WriteLine($"OnHandlerCompletion on {Thread.CurrentThread.Name}");
-
             HttpContext context = (HttpContext)ar.AsyncState;
+
+			System.Diagnostics.Debug.WriteLine($"OnHandlerCompletion on {Thread.CurrentThread.Name} for {context.Request.PathWithQueryString}");
 
             try {
                 context.AsyncAppHandler.EndProcessRequest(ar);
@@ -2218,11 +2216,11 @@ namespace System.Web
             FinishRequest(context.WorkerRequest, context, context.Error);
         }
 
-        /*
+		/*
          * Notification from worker request that it is done writing from buffer
          * so that the buffers can be recycled
          */
-        private void EndOfSendCallback(HttpWorkerRequest wr, Object arg) {
+		private void EndOfSendCallback(HttpWorkerRequest wr, Object arg) {
             Debug.Trace("PipelineRuntime", "HttpRuntime.EndOfSendCallback");
             HttpContext context = (HttpContext)arg;
             context.Request.Dispose();

@@ -10,7 +10,7 @@
  * Copyright (c) 2004 Microsoft Corporation
  */
 
-namespace System.Web {
+namespace System.Web;
 
 using System.Web.Util;
 using System.Security.Permissions;
@@ -118,7 +118,4 @@ public static class VirtualPathUtility {
     public static string MakeRelative(string fromPath, string toPath) {
         return UrlPath.MakeRelative(fromPath, toPath);
     }
-}
-
-
 }

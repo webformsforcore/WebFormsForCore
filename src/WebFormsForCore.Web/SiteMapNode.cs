@@ -374,7 +374,7 @@ namespace System.Web {
                 return null;
             }
 
-            if (UrlPath.IsAbsolutePhysicalPathAndWindows(url)) {
+            if (UrlPath.IsAbsoluteWindowsPhysicalPath(url)) {
                 return null;
             }
 

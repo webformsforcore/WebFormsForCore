@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace System.Web.Hosting
 {
-	public class AspNetCoreWorkerRequest : SimpleWorkerRequest
+	public class AspNetCoreWorkerRequest : SimpleWorkerRequest, IAspNetCoreWorkerRequest
 	{
 		private const int MaxChunkLength = 64 * 1024;
 
@@ -55,7 +55,7 @@ namespace System.Web.Hosting
 				"/appwebreferences"
 			};
 
-		private readonly AspNetCoreHost Host;
+		public AspNetCoreHost Host { get; private set; }
 
 		private string allRawHeaders;
 
@@ -109,7 +109,7 @@ namespace System.Web.Hosting
 
 		private string verb;
 
-		Core.HttpContext Context;
+		public Core.HttpContext Context { get; private set; }
 		public AspNetCoreWorkerRequest(AspNetCoreHost host, Core.HttpContext context)
 			: base(string.Empty, string.Empty, null)
 		{
@@ -124,19 +124,13 @@ namespace System.Web.Hosting
 
 		public override void EndOfRequest()
 		{
-/*			try
-			{
-				Context.Response.CompleteAsync()
-					.ContinueWith(t =>
-					{*/
-						Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
-						//CompletedEvent.Set();
-						Completed.SetResult(true);
-					/*});
-			} catch
-			{
-				Debugger.Break();
-			}*/
+			Context.Response.CompleteAsync()
+				.ContinueWith(t =>
+				{
+					Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
+					if (t.Exception != null) Completed.SetException(t.Exception);
+					else Completed.SetResult(true);
+				});
 		}
 
 		public override void FlushResponse(bool finalFlush)
