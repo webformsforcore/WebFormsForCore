@@ -15,9 +15,9 @@
         <Product>WebFormsForCore.WebGrease</Product>
         <Description>A port of ASP.NET WebForms to .NET 8</Description>
         <Copyright>Estrellas de Esperanza</Copyright>
-        <PackageProjectUrl>https://github.com/simonegli8/WebFormsForCore</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/simonegli8/WebFormsForCore</RepositoryUrl>
+        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
         <AssemblyVersion>8.0.0.0</AssemblyVersion>
