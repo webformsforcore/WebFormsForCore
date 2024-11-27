@@ -1,13 +1,20 @@
-# WebFormsForCore
+# WebFormsForCore 
 A library to run WebForms apps on ASP.NET Core. This library provides a port
 of the System.Web libraries of .NET Framework to .NET 8. With this library,
 you can run WebForms websites directly in ASP.NET Core, also on Linux.
-
+    
 # Support
-If you need support porting your project to NET Core & WebFormsForCore, we provide support for
-40$ per hour. Please contact us via [Messenger](https://m.me/simon.jakob.egli).
-There is also a tutorial on Youtube on [how to convert a sample WebForms application to
-WebFormsForCore](https://youtu.be/Zyb4WBlaUwA).
+If you need support porting your project to .NET Core & WebFormsForCore, we provide support for
+40$ per hour. Please contact us via the LiveChat button on this page or via [WhatsApp](https://wa.me/41775080285).
+There is also a tutorial on Youtube on [how to convert a sample WebForms application to WebFormsForCore](https://youtu.be/Zyb4WBlaUwA). 
+
+# Source Code
+You can find the source code of [WebFormsForCore on GitHub](https://github.com/webformsforcore/WebFormsForCore). It is 
+licensed under a MIT license. We welcome contributions, please have a look into the issues if you want to contribute.
+
+# Donating
+If you like WebFormsForCore, and it helped you save a lot of work, please consider to
+[sponsor us on GitHub](https://github.com/sponsors/webformsforcore)  or [donate to us with PayPal](https://www.paypal.com/donate/?hosted_button_id=KQCGG3NDJRR2S).
 
 # Usage
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
@@ -40,7 +47,7 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 </PropertyGroup>
 ``` 
 
- Then, for `net8.0`, import the WebFormsForCore packages like so:
+Then, for `net8.0`, import the WebFormsForCore packages like so:
 ```
 <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.0.0" />
@@ -64,7 +71,7 @@ corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Exte
 - `AjaxControlToolkit.HtmlEditor.Sanitizer`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit.HtmlEditor.Sanitizer`
 - `AjaxControlToolkit.StaticResources`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit.StaticResources`
 
-System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is
+System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is 
 missing.
 
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
@@ -82,27 +89,16 @@ using Microsoft.Extensions.DependencyInjection;
 public class Program
 {
 
-	public static void Main(string[] args)
-	{
-		var builder = WebApplication.CreateBuilder(args);
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-		// Add services to the container.
-		builder.Services.AddRazorPages();
-		builder.Services.AddControllersWithViews();
-
-		var app = builder.Build();
-
-		app.UseStaticFiles();
-
-		//app.UseAuthorization();
-
-		//app.MapDefaultControllerRoute();
-		
+        var app = builder.Build();
+        
         app.UseWebForms();
-			
-		app.Run();
-
-	}
+            
+        app.Run();
+    }
 }
 #endif
 ```
