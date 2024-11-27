@@ -25,3 +25,6 @@
 [submodule "src/Redesigner"]
 	path = src/Redesigner
 	url = https://github.com/simonegli8/Redesigner
+[submodule "www"]
+	path = www
+	url = https://github.com/webformsforcore/webformsforcore.github.io
