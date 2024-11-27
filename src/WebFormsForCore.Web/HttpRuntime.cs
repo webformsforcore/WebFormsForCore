@@ -1753,22 +1753,30 @@ namespace System.Web
                     // asynchronous handler
                     IHttpAsyncHandler asyncHandler = (IHttpAsyncHandler)app;
                     context.AsyncAppHandler = asyncHandler;
-					System.Diagnostics.Debug.WriteLine($"BeginProcessRequest {context.Request.PathWithQueryString} Start");
-					asyncHandler.BeginProcessRequest(context, _handlerCompletionCallback, context);
+#if DebugWF4C
+                    System.Diagnostics.Debug.WriteLine($"BeginProcessRequest {context.Request.PathWithQueryString} Start");
+#endif
+                    asyncHandler.BeginProcessRequest(context, _handlerCompletionCallback, context);
                 }
                 else {
-					// synchronous handler
-					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.PathWithQueryString} Start");
-					app.ProcessRequest(context);
-					System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.PathWithQueryString} End");
-					FinishRequest(context.WorkerRequest, context, null);
-				}
+                    // synchronous handler
+#if DebugWF4C
+                    System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.PathWithQueryString} Start");
+#endif
+                    app.ProcessRequest(context);
+#if DebugWF4C
+                    System.Diagnostics.Debug.WriteLine($"ProcessRequest {context.Request.PathWithQueryString} End");
+#endif
+                    FinishRequest(context.WorkerRequest, context, null);
+                }
 			}
             catch (ResponseEndException e)
             {
+#if DebugWF4C
                 System.Diagnostics.Debug.WriteLine("Catch ResponseEndException");
-				context.Response.InitResponseWriter();
-				FinishRequest(wr, context, null);
+#endif
+                context.Response.InitResponseWriter();
+                FinishRequest(wr, context, null);
 				// don't rethrow RepsonseEndException here, as it just ends the request 
 			}
 			catch (Exception e) {
@@ -1820,10 +1828,11 @@ namespace System.Web
 
             SetExecutionTimePerformanceCounter(context);
 
-			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.PathWithQueryString} Start");
-
-			// Flush in case of no error
-			if (e == null) {
+#if DebugWF4C
+            System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.PathWithQueryString} Start");
+#endif
+            // Flush in case of no error
+            if (e == null) {
                 // impersonate around PreSendHeaders / PreSendContent
                 using (new ClientImpersonationContext(context, false)) {
                     try {
@@ -1927,9 +1936,10 @@ namespace System.Web
             if (_requestQueue != null)
                 _requestQueue.ScheduleMoreWorkIfNeeded();
 
-			System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.PathWithQueryString} End");
-
-		}
+#if DebugWF4C
+            System.Diagnostics.Debug.WriteLine($"FinishRequest {context.Request.PathWithQueryString} End");
+#endif
+        }
 
 		//
 		// Make sure shutdown happens only once
@@ -2195,8 +2205,9 @@ namespace System.Web
 
             HttpContext context = (HttpContext)ar.AsyncState;
 
-			System.Diagnostics.Debug.WriteLine($"OnHandlerCompletion on {Thread.CurrentThread.Name} for {context.Request.PathWithQueryString}");
-
+#if DebugWF4C
+            System.Diagnostics.Debug.WriteLine($"OnHandlerCompletion on {Thread.CurrentThread.Name} for {context.Request.PathWithQueryString}");
+#endif
             try {
                 context.AsyncAppHandler.EndProcessRequest(ar);
 			}

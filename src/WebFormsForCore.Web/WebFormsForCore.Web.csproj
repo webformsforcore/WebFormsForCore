@@ -8,7 +8,7 @@
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
         <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_WEB;OBJECTSTATEFORMATTER;CONFIGPATHUTILITY_SYSTEMWEB;SAFESERIALIZATIONMANAGER;TRACE;RETAIL;WIN32</DefineConstants>
-        <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
+        <DefineConstants>$(DefineConstants);WebFormsForCore;DebugWF4C</DefineConstants>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Web</AssemblyName>

@@ -2575,6 +2575,13 @@ namespace System.Web
          */
 		internal Exception ExecuteStep(IExecutionStep step, ref bool completedSynchronously)
 		{
+#if DebugWF4C
+			System.Diagnostics.Debug.Write($"ExecuteStep: {step.GetType().Name}");
+			var handler = step.GetType().GetProperty("Handler");
+			if (handler != null) System.Diagnostics.Debug.WriteLine(handler.GetValue(step)?.ToString() ?? "");
+			else System.Diagnostics.Debug.WriteLine("");
+#endif
+
 			Exception error = null;
 
 			try
@@ -4680,6 +4687,9 @@ namespace System.Web
 						}
 						catch (ResponseEndException)
 						{
+#if DebugWF4C
+							System.Diagnostics.Debug.WriteLine("Catch ResponseEndExcepion");
+#endif
 							// don't rethrow ResponseEndException
 							// end request
 							context.Response.FilterOutput();

@@ -3143,7 +3143,9 @@ namespace System.Web {
         [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "Known issue, but required for proper operation of ASP.NET.")]
         [SecurityPermission(SecurityAction.Assert, ControlThread = true)]
         private void AbortCurrentThread() {
+#if DebugWF4C
             System.Diagnostics.Debug.WriteLine($"AbortCurrentThread on {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId})");
+#endif
 
 #if NETFRAMEWORK
             Thread.CurrentThread.Abort(new HttpApplication.CancelModuleException(false));

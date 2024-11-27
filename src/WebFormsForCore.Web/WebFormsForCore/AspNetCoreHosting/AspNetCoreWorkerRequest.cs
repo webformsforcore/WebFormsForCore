@@ -127,7 +127,9 @@ namespace System.Web.Hosting
 			Context.Response.CompleteAsync()
 				.ContinueWith(t =>
 				{
+#if DebugWF4C
 					Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
+#endif
 					if (t.Exception != null) Completed.SetException(t.Exception);
 					else Completed.SetResult(true);
 				});
@@ -341,19 +343,25 @@ namespace System.Web.Hosting
 				await Task.Factory.StartNew(() =>
 					{
 						Thread.CurrentThread.Name = $"ASP.NET WorkerThread {Context.Request.Path}";
+#if DebugWF4C
 						Debug.WriteLine($"Start ProcessRequest {Context.Request.Path}");
+#endif
 						HttpRuntime.ProcessRequest(this);
+#if DebugWF4C
 						Debug.WriteLine($"End ProcessRequest {Context.Request.Path}");
+#endif
 					},
 					TaskCreationOptions.LongRunning);
 
+#if DebugWF4C
 				Debug.WriteLine($"Waiting {Context.Request.Path} to finish");
-
+#endif
 				await Completed.Task;
-
+#if DebugWF4C
 				Debug.WriteLine($"Request {Context.Request.Path} finished");
+#endif
 			}
-		}
+			}
 
 		public override int ReadEntityBody(byte[] buffer, int size)
 		{
