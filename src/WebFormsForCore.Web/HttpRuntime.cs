@@ -695,7 +695,7 @@ namespace System.Web
                                 ProcessModelSection processModel = RuntimeConfig.GetMachineConfig().ProcessModel;
                             }
 						}
-						catch (ResponseEndException e)
+						catch (ThreadAbortException e)
 						{
 							throw;
 						}
@@ -706,7 +706,7 @@ namespace System.Web
                         }
                     }
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -1039,9 +1039,9 @@ namespace System.Web
 #else
             _codegenDir = codegenBase;
 #endif
-
-            // Create the codegen directory if needed
-            Directory.CreateDirectory(_codegenDir);
+			System.Diagnostics.Debugger.Launch();
+			// Create the codegen directory if needed
+			Directory.CreateDirectory(_codegenDir);
         }
 
         private void InitFusion(HostingEnvironmentSection hostingEnvironmentSection) {
@@ -1723,7 +1723,7 @@ namespace System.Web
                 try {
                     EnsureFirstRequestInit(context);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -1770,13 +1770,15 @@ namespace System.Web
                     FinishRequest(context.WorkerRequest, context, null);
                 }
 			}
-            catch (ResponseEndException e)
+            catch (ThreadAbortException e)
             {
 #if DebugWF4C
                 System.Diagnostics.Debug.WriteLine("Catch ResponseEndException");
 #endif
                 context.Response.InitResponseWriter();
                 FinishRequest(wr, context, null);
+
+                context.Response.ResetThreadAbort();
 				// don't rethrow RepsonseEndException here, as it just ends the request 
 			}
 			catch (Exception e) {
@@ -1839,9 +1841,9 @@ namespace System.Web
                         // this sends the actual content in most cases
                         response.FinalFlushAtTheEndOfRequestProcessing();
 					}
-					catch (ResponseEndException ex)
+					catch (ThreadAbortException ex)
 					{
-						throw;
+						//throw;
 					}
 					catch (Exception eFlush) {
                         e = eFlush;
@@ -1862,9 +1864,9 @@ namespace System.Web
                             ReportAppOfflineErrorMessage(response, _appOfflineMessage);
                             response.FinalFlushAtTheEndOfRequestProcessing();
 						}
-						catch (ResponseEndException ex)
+						catch (ThreadAbortException ex)
 						{
-							throw;
+							//throw;
 						}
 						catch
 						{
@@ -1879,7 +1881,7 @@ namespace System.Web
                                     // try to report error in a way that could possibly throw (a config exception)
                                     response.ReportRuntimeError(e, true /*canThrow*/, false);
 								}
-								catch (ResponseEndException ex)
+								catch (ThreadAbortException ex)
 								{
 									throw;
 								}
@@ -1890,9 +1892,9 @@ namespace System.Web
 
                                 response.FinalFlushAtTheEndOfRequestProcessing();
                             }
-							catch (ResponseEndException ex)
+							catch (ThreadAbortException ex)
 							{
-								throw;
+								//throw;
 							}
 							catch
 							{
@@ -1982,7 +1984,7 @@ namespace System.Web
             try {
                 Dispose();
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -2211,9 +2213,9 @@ namespace System.Web
             try {
                 context.AsyncAppHandler.EndProcessRequest(ar);
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
-				throw;
+				//throw;
 			}
 			catch (Exception e) {
                 context.AddError(e);

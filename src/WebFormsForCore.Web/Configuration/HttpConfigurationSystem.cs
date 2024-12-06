@@ -31,11 +31,15 @@ namespace System.Web.Configuration {
         private const string InternalConfigSettingsFactoryTypeString = "System.Configuration.Internal.InternalConfigSettingsFactory, " + AssemblyRef.SystemConfiguration;
         internal const string ConfigSystemTypeString = "System.Configuration.Internal.ConfigSystem, " + AssemblyRef.SystemConfiguration;
 
+#if !WebFormsForCore
 #if !PLATFORM_UNIX // File system paths must be lowercased in UNIX
         internal const string MachineConfigSubdirectory = "Config";
 #else // !PLATFORM_UNIX
         internal const string MachineConfigSubdirectory = "config";
 #endif // !PLATFORM_UNIX
+#else
+		internal const string MachineConfigSubdirectory = "App_Data";
+#endif
         internal const string MachineConfigFilename = "machine.config";
         internal const string RootWebConfigFilename         = "web.config";
         internal const string WebConfigFileName             = "web.config";

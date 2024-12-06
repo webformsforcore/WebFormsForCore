@@ -19,6 +19,7 @@ namespace System.Web.UI {
     using System.ComponentModel.Design;
     using System.Globalization;
     using System.IO;
+    using System.Threading;
     using System.Reflection;
     using System.Web.Compilation;
     using System.Web.UI.WebControls;
@@ -66,7 +67,7 @@ namespace System.Web.UI {
                         Util.InvokeMethod(methodInfo, control, parameters);
                     }
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -154,7 +155,7 @@ namespace System.Web.UI {
                         SetSimpleProperty(entry, control);
                     }
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}

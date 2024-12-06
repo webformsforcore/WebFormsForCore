@@ -843,7 +843,7 @@ namespace System.Web.UI.WebControls {
                         }
                     }
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}

@@ -692,7 +692,7 @@ namespace System.Web
 				{
 					handler(this, AppEvent);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -715,7 +715,7 @@ namespace System.Web
 				{
 					handler(this, AppEvent);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -735,7 +735,7 @@ namespace System.Web
 				{
 					handler(this, AppEvent);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -755,7 +755,7 @@ namespace System.Web
 				{
 					handler(this, AppEvent);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -1811,7 +1811,7 @@ namespace System.Web
 						SetAppLevelCulture();
 						InvokeMethodWithAssert(method, paramCount, eventSource, eventArgs);
 					}
-					catch (ResponseEndException e)
+					catch (ThreadAbortException e)
 					{
 						throw;
 					}
@@ -1965,7 +1965,7 @@ namespace System.Web
 						{
 							Init();
 						}
-						catch (ResponseEndException e)
+						catch (ThreadAbortException e)
 						{
 							throw;
 						}
@@ -2117,7 +2117,7 @@ namespace System.Web
 			{
 				Dispose();
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -2290,7 +2290,7 @@ namespace System.Web
 				{
 					addMethod.Invoke(target, new Object[1] { handlerDelegate });
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -2576,15 +2576,14 @@ namespace System.Web
 		internal Exception ExecuteStep(IExecutionStep step, ref bool completedSynchronously)
 		{
 #if DebugWF4C
-			System.Diagnostics.Debug.Write($"ExecuteStep: {step.GetType().Name} ");
 			var handler = step.GetType().GetField("_handler", BindingFlags.NonPublic | BindingFlags.Instance) ??
 				step.GetType().GetField("_beginHandler", BindingFlags.NonPublic | BindingFlags.Instance);
-			var eventHandler = handler?.GetValue(step) as EventHandler;
+			var eventHandler = handler?.GetValue(step) as Delegate;
 			var delegates = eventHandler?.GetInvocationList();
 			var methods = delegates?.Select(d => d.Method.Name).ToArray();
 			if (methods != null && methods.Length > 0) 
-				System.Diagnostics.Debug.WriteLine(string.Join('+', methods));
-			else System.Diagnostics.Debug.WriteLine("");
+				System.Diagnostics.Debug.WriteLine($"ExecuteStep: {step.GetType().Name} {string.Join('+', methods)}");
+			else System.Diagnostics.Debug.WriteLine($"ExecuteStep: {step.GetType().Name}");
 #endif
 
 			Exception error = null;
@@ -2618,10 +2617,8 @@ namespace System.Web
 						completedSynchronously = false;
 						return null;
 					}
-				}
-				catch (ResponseEndException e)
-				{
-					throw;
+
+					Context.Response.RethrowIfResponseEnd();
 				}
 				catch (Exception e)
 				{
@@ -2637,16 +2634,22 @@ namespace System.Web
 					// automatically, because we consumed an exception that was
 					// hiding ThreadAbortException behind it
 
-					if (e is ThreadAbortException &&
-						((Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0) ||
-						e is ResponseEndException)
+					if (e is ThreadAbortException)
 					{
-						// Response.End from a COM+ component that re-throws ThreadAbortException
-						// It is not a real ThreadAbort
-						// VSWhidbey 178556
-						error = null;
-						_stepManager.CompleteRequest();
-					}
+						if (!_context.Response.IsThreadAbort) 
+							// && (Thread.CurrentThread.ThreadState & ThreadState.AbortRequested) == 0)
+						{
+							// Response.End from a COM+ component that re-throws ThreadAbortException
+							// It is not a real ThreadAbort
+							// VSWhidbey 178556
+							error = null;
+							_stepManager.CompleteRequest();
+						} else
+						{
+							error = null;
+							throw;
+						}
+					} 
 				}
 #pragma warning disable 1058
 				catch
@@ -2662,13 +2665,14 @@ namespace System.Web
 				// ThreadAbortException can filter up here because it gets
 				// auto rethrown if no other exception is thrown on catch
 
-				if (e.ExceptionState != null && e.ExceptionState is CancelModuleException)
+				if (_context.Response.IsThreadAbort ||
+					e.ExceptionState != null && e.ExceptionState is CancelModuleException)
 				{
 					// one of ours (Response.End or timeout) -- cancel abort
 
 					CancelModuleException cancelException = (CancelModuleException)e.ExceptionState;
 
-					if (cancelException.Timeout)
+					if (cancelException?.Timeout == true)
 					{
 						// Timed out
 						error = new HttpException(SR.GetString(SR.Request_timed_out),
@@ -2684,14 +2688,10 @@ namespace System.Web
 
 #if NETFRAMEWORK
                     Thread.ResetAbort();
+#else
+					Context.Response.ResetThreadAbort();
 #endif
 				}
-			}
-			catch (ResponseEndException)
-			{
-				// Response.End
-				error = null;
-				_stepManager.CompleteRequest();
 			}
 
 			completedSynchronously = true;
@@ -3703,7 +3703,7 @@ namespace System.Web
 				{
 					InvokeEndHandler(ar);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -4065,7 +4065,7 @@ namespace System.Web
 					{
 						InvokeEndHandler(ar);
 					}
-					catch (ResponseEndException e)
+					catch (ThreadAbortException e)
 					{
 						throw;
 					}
@@ -4081,8 +4081,7 @@ namespace System.Web
 				}
 				catch (Exception e)
 				{
-					if (e is ThreadAbortException || e.InnerException != null && e.InnerException is ThreadAbortException ||
-						e is ResponseEndException || e.InnerException != null && e.InnerException is ResponseEndException)
+					if (e is ThreadAbortException || e.InnerException != null && e.InnerException is ThreadAbortException)
 					{
 						// Response.End happened during async operation
 						_application.CompleteRequest();
@@ -4596,7 +4595,7 @@ namespace System.Web
 						{
 							threadContext = app.OnThreadEnter();
 						}
-						catch (ResponseEndException e)
+						catch (ThreadAbortException e)
 						{
 							_requestCompleted = true;
 						}
@@ -4690,17 +4689,18 @@ namespace System.Web
 								}
 							}
 						}
-						catch (ResponseEndException)
+						catch (ThreadAbortException)
 						{
 #if DebugWF4C
 							System.Diagnostics.Debug.WriteLine("Catch ResponseEndExcepion");
 #endif
-							// don't rethrow ResponseEndException
+							// don't rethrow ThreadAbortException
 							// end request
 							context.Response.FilterOutput();
 							_currentStepIndex = _endRequestStepIndex;
 							_requestCompleted = true;
 							appCompleted = true;
+							context.Response.ResetThreadAbort();
 						}
 						catch (Exception)
 						{ // Protect against exception filters

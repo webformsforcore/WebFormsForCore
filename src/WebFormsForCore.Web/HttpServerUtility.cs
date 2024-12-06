@@ -572,7 +572,7 @@ namespace System.Web {
                                 try {
                                     asyncHandler.EndProcessRequest(ar);
 								}
-								catch (ResponseEndException e)
+								catch (ThreadAbortException e)
 								{
 									throw;
 								}
@@ -611,7 +611,7 @@ namespace System.Web {
                                         throw new InvalidOperationException(SR.GetString(SR.Server_execute_blocked_on_async_handler));
                                     }
 								}
-								catch (ResponseEndException e)
+								catch (ThreadAbortException e)
 								{
 									throw;
 								}
@@ -633,7 +633,7 @@ namespace System.Web {
                             try {
                                 handler.ProcessRequest(_context);
 							}
-							catch (ResponseEndException e)
+							catch (ThreadAbortException e)
 							{
 								throw;
 							}
@@ -643,7 +643,7 @@ namespace System.Web {
                         }
                     }
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}

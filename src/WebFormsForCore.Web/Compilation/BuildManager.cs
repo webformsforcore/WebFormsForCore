@@ -2315,6 +2315,7 @@ namespace System.Web.Compilation {
 
             Debug.Trace("BuildManager", "Didn't find '" + virtualPath + "' in memory cache before lock");
 
+            System.Diagnostics.Debugger.Launch();
             lock (this) {
                 // Try to get the BuildResult from the cheapest to most expensive cache
                 int i;

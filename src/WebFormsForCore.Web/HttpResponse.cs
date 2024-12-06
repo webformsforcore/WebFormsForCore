@@ -751,7 +751,7 @@ namespace System.Web {
             try {
                 Flush(false);
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -2509,7 +2509,7 @@ namespace System.Web {
                     Redirect(url, false /*endResponse*/);
                 }
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -3152,7 +3152,9 @@ namespace System.Web {
 #else
             try
             {
-                throw new ResponseEndException(new HttpApplication.CancelModuleException(false));
+                var tae = Activator.CreateInstance(typeof(ThreadAbortException), true) as ThreadAbortException;
+                throw tae;
+                //throw new ResponseEndException(new HttpApplication.CancelModuleException(false));
             } catch (Exception ex)
             {
                 _responseEndException = ExceptionDispatchInfo.Capture(ex);
@@ -3165,6 +3167,13 @@ namespace System.Web {
         {
             if (_responseEndException != null) _responseEndException.Throw();
 		}
+
+        internal void ResetThreadAbort()
+        {
+            _responseEndException = null;
+        }
+
+        internal bool IsThreadAbort => _responseEndException != null;
 
 		/*
          * ASP compatible caching properties

@@ -5145,7 +5145,7 @@ window.onload = WebForm_RestoreScrollPosition;
 			{
 				ProcessRequest(true /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/);
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -5192,15 +5192,6 @@ window.onload = WebForm_RestoreScrollPosition;
 					}
 				}
 				catch (ThreadAbortException)
-				{
-					try
-					{
-						if (needToCallEndTrace)
-							ProcessRequestEndTrace();
-					}
-					catch { }
-				}
-				catch (ResponseEndException)
 				{
 					try
 					{
@@ -5259,15 +5250,6 @@ window.onload = WebForm_RestoreScrollPosition;
 					}
 				}
 				catch (ThreadAbortException)
-				{
-					try
-					{
-						if (needToCallEndTrace)
-							ProcessRequestEndTrace();
-					}
-					catch { }
-				}
-				catch (ResponseEndException)
 				{
 					try
 					{
@@ -5334,12 +5316,6 @@ window.onload = WebForm_RestoreScrollPosition;
 				ValidateRawUrlIfRequired();
 			}
 			catch (ThreadAbortException)
-			{
-				// Don't go into HandleError logic for ThreadAbortException's, since they
-				// are expected (e.g. when Response.Redirect() is called).
-				throw;
-			}
-			catch (ResponseEndException)
 			{
 				// Don't go into HandleError logic for ThreadAbortException's, since they
 				// are expected (e.g. when Response.Redirect() is called).
@@ -5738,37 +5714,9 @@ window.onload = WebForm_RestoreScrollPosition;
 				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
 					_context.Handler == this &&                                         // not in server execute
 					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request
-					cancelException != null && !cancelException.Timeout)
-				{              // this is Response.End
-					_context.ApplicationInstance.CompleteRequest();
-					ThreadResetAbortWithAssert();
-				}
-				else
-				{
-					CheckRemainingAsyncTasks(true);
-					throw;
-				}
-			}
-			catch (ResponseEndException e)
-			{
-				// Don't go into HandleError logic for ThreadAbortExceptions, since they
-				// are expected (e.g. when Response.Redirect() is called).
-
-				// VSWhidbey 500309: perf improvement. We can safely cancel the thread abort here
-				// to avoid re-throwing the exception if this is a redirect and we're not being executed
-				// under the context of a Server.Execute call (i.e. _context.Handler == this).  Otherwise,
-				// re-throw so this can be handled lower in the stack (see HttpApplication.ExecuteStep).
-
-				// This perf optimization can only be applied if we are executing the entire page
-				// lifecycle within this method call (otherwise, in async pages) calling ResetAbort
-				// would only skip part of the lifecycle, not the entire page (as Response.End is supposed to)
-
-				HttpApplication.CancelModuleException cancelException = e.InnerException as HttpApplication.CancelModuleException;
-				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
-					_context.Handler == this &&                                         // not in server execute
-					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request
-					cancelException != null && !cancelException.Timeout)
-				{              // this is Response.End
+					(cancelException != null && !cancelException.Timeout ||
+					_context.Response.IsThreadAbort))
+				{ // this is Response.End
 					_context.ApplicationInstance.CompleteRequest();
 					ThreadResetAbortWithAssert();
 				}
@@ -6139,36 +6087,8 @@ window.onload = WebForm_RestoreScrollPosition;
 				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
 					_context.Handler == this &&                                         // not in server execute
 					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request
-					cancelException != null && !cancelException.Timeout)
-				{              // this is Response.End
-					_context.ApplicationInstance.CompleteRequest();
-					ThreadResetAbortWithAssert();
-				}
-				else
-				{
-					CheckRemainingAsyncTasks(true);
-					throw;
-				}
-			}
-			catch (ResponseEndException e)
-			{
-				// Don't go into HandleError logic for ThreadAbortExceptions, since they
-				// are expected (e.g. when Response.Redirect() is called).
-
-				// VSWhidbey 500309: perf improvement. We can safely cancel the thread abort here
-				// to avoid re-throwing the exception if this is a redirect and we're not being executed
-				// under the context of a Server.Execute call (i.e. _context.Handler == this).  Otherwise,
-				// re-throw so this can be handled lower in the stack (see HttpApplication.ExecuteStep).
-
-				// This perf optimization can only be applied if we are executing the entire page
-				// lifecycle within this method call (otherwise, in async pages) calling ResetAbort
-				// would only skip part of the lifecycle, not the entire page (as Response.End is supposed to)
-
-				HttpApplication.CancelModuleException cancelException = e.InnerException as HttpApplication.CancelModuleException;
-				if (includeStagesBeforeAsyncPoint && includeStagesAfterAsyncPoint &&    // executing entire page
-					_context.Handler == this &&                                         // not in server execute
-					_context.ApplicationInstance != null &&                             // application must be non-null so we can complete the request
-					cancelException != null && !cancelException.Timeout)
+					(cancelException != null && !cancelException.Timeout ||
+					_context.Response.IsThreadAbort))
 				{              // this is Response.End
 					_context.ApplicationInstance.CompleteRequest();
 					ThreadResetAbortWithAssert();
@@ -6304,7 +6224,7 @@ window.onload = WebForm_RestoreScrollPosition;
 					throw new InvalidOperationException(SR.GetString(SR.Page_CallBackTargetInvalid, callbackControlID));
 				}
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -6352,7 +6272,7 @@ window.onload = WebForm_RestoreScrollPosition;
 					throw new InvalidOperationException(SR.GetString(SR.Page_CallBackTargetInvalid, callbackControlID));
 				}
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -6430,7 +6350,7 @@ window.onload = WebForm_RestoreScrollPosition;
 					Response.Write("].xmlRequest.readyState=4;parent.WebForm_CallbackComplete();</script>");
 				}
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -6911,9 +6831,8 @@ window.onload = WebForm_RestoreScrollPosition;
 					_asyncResult.Complete(onPageThread, null /*result*/, _error);
 
 					if (!onPageThread &&
-						((e is ThreadAbortException &&
-						((ThreadAbortException)e).ExceptionState is HttpApplication.CancelModuleException) ||
-						e is ResponseEndException))
+						e is ThreadAbortException &&
+						_app.Response.IsThreadAbort)
 					{
 						// don't leave this threadpool thread with CancelModuleException
 						// as thread state - it might lead to AppDomainUnloadedException
@@ -6964,7 +6883,7 @@ window.onload = WebForm_RestoreScrollPosition;
 							// async completion
 							return;
 						}
-						catch (ResponseEndException e)
+						catch (ThreadAbortException e)
 						{
 							throw;
 						}
@@ -7026,7 +6945,7 @@ window.onload = WebForm_RestoreScrollPosition;
 					{
 						_page.Context.InvokeCancellableCallback(new WaitCallback(o => { _page.ProcessRequest(false /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/); }), null);
 					}
-					catch (ResponseEndException e)
+					catch (ThreadAbortException e)
 					{
 						throw;
 					}
@@ -7075,7 +6994,7 @@ window.onload = WebForm_RestoreScrollPosition;
 				{
 					((EndEventHandler)_endHandlers[_currentHandler])(ar);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -7181,7 +7100,7 @@ window.onload = WebForm_RestoreScrollPosition;
 						{
 							await _asyncTaskManager.ExecuteTasksAsync(this, EventArgs.Empty, cancellationToken, _context.SyncContext, _context.ApplicationInstance);
 						}
-						catch (ResponseEndException e)
+						catch (ThreadAbortException e)
 						{
 							throw;
 						}
@@ -7195,7 +7114,7 @@ window.onload = WebForm_RestoreScrollPosition;
 						}
 					}
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -7244,7 +7163,7 @@ window.onload = WebForm_RestoreScrollPosition;
 			{
 				_context.InvokeCancellableCallback(new WaitCallback(this.AsyncPageProcessRequestBeforeAsyncPointCancellableCallback), null);
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}

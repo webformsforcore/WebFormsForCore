@@ -754,8 +754,7 @@ namespace System.Web.Hosting {
                     || ex is AccessViolationException
                     || ex is StackOverflowException
                     || ex is OutOfMemoryException
-                    || ex is System.Threading.ThreadAbortException
-                    || ex is ResponseEndException;
+                    || ex is ThreadAbortException;
         }
 
     }

@@ -13,6 +13,7 @@ namespace System.Web.UI.WebControls {
     using System.Data;
     using System.Globalization;
     using System.Reflection;
+    using System.Threading;
     using System.Security;
     using System.Text;
     using System.Web.Compilation;
@@ -1668,7 +1669,7 @@ namespace System.Web.UI.WebControls {
             try {
                 returnValue = method.MethodInfo.Invoke(instance, parameterValues);
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}

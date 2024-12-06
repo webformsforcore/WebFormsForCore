@@ -34,11 +34,31 @@ namespace Microsoft.AspNetCore.Builder
 			{
 				if (host == null)
 				{
-					AppId = ApplicationManager.CreateApplicationId(VirtualPath, PhysicalPath);
-					host = ApplicationManager.CreateInstanceInNewWorkerLoadContext(typeof(AspNetCoreHost), AppId, System.Web.VirtualPath.Create(VirtualPath), PhysicalPath, UseSeparateAssemblyLoadContext) as AspNetCoreHost;
+					//AppId = ApplicationManager.CreateApplicationId(VirtualPath, PhysicalPath);
+					//host = ApplicationManager.CreateInstanceInNewWorkerLoadContext(typeof(AspNetCoreHost), AppId, System.Web.VirtualPath.Create(VirtualPath), PhysicalPath, UseSeparateAssemblyLoadContext) as AspNetCoreHost;
+					host = CreateWorkerLoadContextWithHost(VirtualPath, PhysicalPath, typeof(AspNetCoreHost)) as AspNetCoreHost;
 				}
 				return host;
 			}
+		}
+
+		private object CreateWorkerLoadContextWithHost(string virtualPath, string physicalPath, Type hostType)
+		{
+			// create BuildManagerHost in the worker app domain
+			//ApplicationManager appManager = ApplicationManager.GetApplicationManager();
+			Type buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
+			AppId = ApplicationManager.CreateApplicationId(VirtualPath, PhysicalPath);
+			var vpath = System.Web.VirtualPath.Create(virtualPath);
+			IRegisteredObject buildManagerHost = ApplicationManager.CreateInstanceInNewWorkerLoadContext(buildManagerHostType, AppId, vpath, physicalPath, false) as IRegisteredObject;
+
+			// call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
+			buildManagerHostType.InvokeMember("RegisterAssembly",
+											  BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
+											  null,
+											  buildManagerHost,
+											  new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
+			// create Host in the worker app domain
+			return ApplicationManager.CreateObject(AppId, hostType, virtualPath, physicalPath, false);
 		}
 
 		public void RestartApplication()
@@ -62,9 +82,9 @@ namespace Microsoft.AspNetCore.Builder
 			//PhysicalPath = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(Assembly.GetEntryAssembly().CodeBase).AbsolutePath));
 			VirtualPath = "/";
 
-			optionsBuilder?.Invoke(new WebFormsOptions(this));
-
 			Host.Configure(VirtualPath, PhysicalPath);
+
+			optionsBuilder?.Invoke(new WebFormsOptions(this));
 		}
 
 		public void AllowSynchronousIO(Core.HttpContext context)

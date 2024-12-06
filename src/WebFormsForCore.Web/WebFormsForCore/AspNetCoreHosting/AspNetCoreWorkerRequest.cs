@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Buffers;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -124,20 +125,61 @@ namespace System.Web.Hosting
 
 		public override void EndOfRequest()
 		{
-			Context.Response.CompleteAsync()
-				.ContinueWith(t =>
+#if DebugWF4C
+			var path = Context.Request.Path;
+			Debug.WriteLine($"EndOfRequestStart {path}");
+#endif
+			try
+			{
+				if (Context != null && Context.Response != null)
+				{
+					var task = Context.Response.CompleteAsync();
+					if (task != null)
+					{
+						task.ContinueWith(t =>
+							{
+#if DebugWF4C
+								Debug.WriteLine($"EndOfRequest {path}");
+#endif
+								if (t.Exception != null) Completed.SetException(t.Exception);
+								else Completed.SetResult(true);
+							},
+							CancellationToken.None,
+							TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+							TaskScheduler.Default);
+					}
+					else
+					{
+#if DebugWF4C
+						Debug.WriteLine($"EndOfRequest Fail three {path}");
+#endif
+						Completed.SetResult(true);
+					}
+				} else
 				{
 #if DebugWF4C
-					Debug.WriteLine($"EndOfRequest {Context.Request.Path}");
+					Debug.WriteLine($"EndOfRequest Fail {path}");
 #endif
-					if (t.Exception != null) Completed.SetException(t.Exception);
-					else Completed.SetResult(true);
-				});
+					Completed.SetResult(true);
+				}
+			}
+			catch (Exception ex)
+			{
+#if DebugWF4C
+				Debug.WriteLine($"EndOfRequest Fail two {path}");
+#endif
+				//Completed.SetException(ex);
+				Completed.SetResult(true);
+			}
 		}
 
 		public override void FlushResponse(bool finalFlush)
 		{
-		
+			using (var noSyncContext = new NoSynchronizationContextSection())
+			{
+				Context.Response.Body.Flush();
+				if (finalFlush) Context.Response.Body.Close();
+			}
 		}
 
 		public override string GetAppPath() => Host.VirtualPath;
@@ -361,16 +403,22 @@ namespace System.Web.Hosting
 				Debug.WriteLine($"Request {Context.Request.Path} finished");
 #endif
 			}
-			}
+		}
 
-		public override int ReadEntityBody(byte[] buffer, int size)
+
+		public override int ReadEntityBody(byte[] buffer, int size) => ReadEntityBody(buffer, 0, size);
+		public override int ReadEntityBody(byte[] buffer, int offset, int size)
 		{
+			if (offset < 0) throw new ArgumentOutOfRangeException("offset must be grater than zero.");
+
 			int bytesRead = 0;
 
-			var reader = Context.Request.Body;
+			using (var noSyncContext = new NoSynchronizationContextSection())
+			{
+				var reader = Context.Request.Body;
 
-			bytesRead = reader.Read(buffer, 0, size);
-
+				bytesRead = reader.Read(buffer, 0, size);
+			}
 			return bytesRead;
 		}
 
@@ -482,7 +530,10 @@ namespace System.Web.Hosting
 		{
 			if (length > 0)
 			{
-				Context.Response.Body.Write(data, 0, length);
+				using (var noSyncContext = new NoSynchronizationContextSection())
+				{
+					Context.Response.Body.Write(data, 0, length);
+				}
 			}
 		}
 
@@ -725,29 +776,49 @@ namespace System.Web.Hosting
 				f.Seek(offset, SeekOrigin.Begin);
 			}
 
-			if (length <= MaxChunkLength)
+			using (var noSyncContext = new NoSynchronizationContextSection())
 			{
-				var fileBytes = new byte[(int)length];
-				int bytesRead = f.Read(fileBytes, 0, (int)length);
-				SendResponseFromMemory(fileBytes, bytesRead);
-			}
-			else
-			{
-				var chunk = new byte[MaxChunkLength];
-				var bytesRemaining = (int)length;
-
-				while (bytesRemaining > 0)
+				if (length <= MaxChunkLength)
 				{
-					int bytesToRead = (bytesRemaining < MaxChunkLength) ? bytesRemaining : MaxChunkLength;
-					int bytesRead = f.Read(chunk, 0, bytesToRead);
-
-					SendResponseFromMemory(chunk, bytesRead);
-					bytesRemaining -= bytesRead;
-
-					// flush to release keep memory
-					if ((bytesRemaining > 0) && (bytesRead > 0))
+					var fileBytes = ArrayPool<byte>.Shared.Rent((int)length);
+					try
 					{
-						FlushResponse(false);
+						int bytesRead = f.Read(fileBytes, 0, (int)length);
+						//SendResponseFromMemory(fileBytes, bytesRead);
+						Context.Response.Body.Write(fileBytes, 0, bytesRead);
+					}
+					finally
+					{
+						ArrayPool<byte>.Shared.Return(fileBytes);
+					}
+				}
+				else
+				{
+					var chunk = ArrayPool<byte>.Shared.Rent(MaxChunkLength);
+					try
+					{
+						var bytesRemaining = (int)length;
+
+						while (bytesRemaining > 0)
+						{
+							int bytesToRead = (bytesRemaining < MaxChunkLength) ? bytesRemaining : MaxChunkLength;
+							int bytesRead = f.Read(chunk, 0, bytesToRead);
+
+							//SendResponseFromMemory(chunk, bytesRead);
+							Context.Response.Body.Write(chunk, 0, bytesRead);
+							bytesRemaining -= bytesRead;
+
+							// flush to release keep memory
+							if ((bytesRemaining > 0) && (bytesRead > 0))
+							{
+								//FlushResponse(false);
+								Context.Response.Body.Flush();
+							}
+						}
+					}
+					finally
+					{
+						ArrayPool<byte>.Shared.Return(chunk);
 					}
 				}
 			}

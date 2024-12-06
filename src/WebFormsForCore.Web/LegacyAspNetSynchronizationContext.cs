@@ -61,7 +61,7 @@ namespace System.Web {
                 try {
                     callback(state);
 				}
-				catch (ResponseEndException e)
+				catch (ThreadAbortException e)
 				{
 					throw;
 				}
@@ -69,7 +69,7 @@ namespace System.Web {
                     _error = ExceptionDispatchInfo.Capture(e);
                 }
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}

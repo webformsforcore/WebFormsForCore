@@ -621,7 +621,7 @@ namespace System.Web {
             try {
                 _requestCompletedQueue.FireAndComplete(action => action(this));
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -660,7 +660,7 @@ namespace System.Web {
             try {
                 _pipelineCompletedQueue.FireAndComplete(disposable => disposable.Dispose());
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -1877,29 +1877,16 @@ namespace System.Web {
                     e.ExceptionState is HttpApplication.CancelModuleException &&
                     ((HttpApplication.CancelModuleException)e.ExceptionState).Timeout)
                 {
-
+#if NETFRAMEWORK
                     Thread.ResetAbort();
+#else
+                    Response.ResetThreadAbort();
+#endif
                     PerfCounters.IncrementCounter(AppPerfCounter.REQUESTS_TIMED_OUT);
 
                     throw new HttpException(SR.GetString(SR.Request_timed_out),
                                         null, WebEventCodes.RuntimeErrorRequestAbort);
                 }
-            }
-            catch (ResponseEndException e)
-            {
-                if (e.InnerException != null &&
-                    e.InnerException is HttpApplication.CancelModuleException &&
-                    ((HttpApplication.CancelModuleException)e.InnerException).Timeout)
-                {
-
-                    //Thread.ResetAbort();
-                    PerfCounters.IncrementCounter(AppPerfCounter.REQUESTS_TIMED_OUT);
-
-                    throw new HttpException(SR.GetString(SR.Request_timed_out),
-                                        null, WebEventCodes.RuntimeErrorRequestAbort);
-                }
-
-                throw;
             }
         }
 

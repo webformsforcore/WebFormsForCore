@@ -1473,7 +1473,13 @@ setup,
             else {
                 env.Initialize(this, appHost, configMapPathFactory, hostingParameters, policyLevel, appDomainStartupConfigurationException);
             }
-            return env;
+
+            // Set AppDomainContext;
+			LockableAppDomainContext ac = GetLockableAppDomainContext(appId);
+            ac.HostEnv = env;
+            ac.LoadContext = appContext;
+
+			return env;
         }
 
         public void SetApplicationData(IDictionary bindings,

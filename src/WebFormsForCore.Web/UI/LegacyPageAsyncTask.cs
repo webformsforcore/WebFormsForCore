@@ -121,7 +121,7 @@ namespace System.Web.UI
 					_asyncResult = ar;
 				}
 			}
-			catch (ResponseEndException e)
+			catch (ThreadAbortException e)
 			{
 				throw;
 			}
@@ -242,7 +242,7 @@ namespace System.Web.UI
 				HttpApplication.CancelModuleException exceptionState = e.ExceptionState as HttpApplication.CancelModuleException;
 
 				// Is this from Response.End()
-				if (exceptionState != null && !exceptionState.Timeout)
+				if (app.Context.Response.IsThreadAbort || exceptionState != null && !exceptionState.Timeout)
 				{
 					// Mark the request as completed
 					using (app.Context.SyncContext.AcquireThreadLock())
@@ -260,32 +260,16 @@ namespace System.Web.UI
 				}
 
 				// ---- the exception. Async completion required (DDB 140655)
+#if NETFRAMEWORK
 				Thread.ResetAbort();
-			}
-			catch (ResponseEndException)
-			{
-				// From Response.End()
-				// Mark the request as completed
-				using (app.Context.SyncContext.AcquireThreadLock())
-				{
-					// Handle response end once. Skip if already initiated (previous AsyncTask)
-					if (!app.IsRequestCompleted)
-					{
-						responseEnded = true;
-						app.CompleteRequest();
-					}
-				}
-
-				// Clear the error for Response.End
-				_error = null;
-
-				// Don't retrow since the call to Thread.ResetAbort
+#else
+				app.Context.Response.ResetThreadAbort();
+#endif
 			}
 			catch (Exception e)
 			{
 				_error = e;
 			}
-
 
 			// Complete the current async task
 			_completed = true;

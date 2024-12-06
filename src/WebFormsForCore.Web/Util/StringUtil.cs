@@ -278,10 +278,12 @@ internal static class StringUtil {
     }
 
     internal static int GetNonRandomizedHashCode(string s, bool ignoreCase = false) {
-        // Preserve the default behavior when string hash randomization is off
+            // Preserve the default behavior when string hash randomization is off
+#if NETFRAMEWORK
         if (!AppSettings.UseRandomizedStringHashAlgorithm) {
             return ignoreCase ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(s) : s.GetHashCode();
         }
+#endif
 
         if (ignoreCase) {
             s = s.ToLower(CultureInfo.InvariantCulture);
@@ -297,6 +299,7 @@ internal static class StringUtil {
     // PERF isn't optimal, so apply consideration!
     [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands", Justification = "We carefully control the callers.")]
     internal static int GetNonRandomizedStringComparerHashCode(string s) {
+#if NETFRAMEWORK
         // Preserve the default behavior when string hash randomization is off
         if (!AppSettings.UseRandomizedStringHashAlgorithm) {
             return StringComparer.InvariantCultureIgnoreCase.GetHashCode(s);
@@ -312,7 +315,7 @@ internal static class StringUtil {
 
             return hashCode;
         }
-
+#endif
         // Fall back to non-compat result
         return GetStringHashCode(s.ToLower(CultureInfo.InvariantCulture));
     }
