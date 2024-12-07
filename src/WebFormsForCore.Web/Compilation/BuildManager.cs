@@ -651,7 +651,7 @@ namespace System.Web.Compilation {
             specialFilesHashCodeCombiner.AddObject(profileSection.RecompilationHash);
 
             // Add a dependency on file encoding (DevDiv 4560)
-            specialFilesHashCodeCombiner.AddObject(appConfig.Globalization.FileEncoding);
+            specialFilesHashCodeCombiner.AddObject(appConfig.Globalization.FileEncoding.EncodingName);
 
             // Also add a dependency on the <trust> config section
             TrustSection casConfig = appConfig.Trust;
@@ -2315,7 +2315,6 @@ namespace System.Web.Compilation {
 
             Debug.Trace("BuildManager", "Didn't find '" + virtualPath + "' in memory cache before lock");
 
-            System.Diagnostics.Debugger.Launch();
             lock (this) {
                 // Try to get the BuildResult from the cheapest to most expensive cache
                 int i;

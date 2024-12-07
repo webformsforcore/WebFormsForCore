@@ -1039,7 +1039,6 @@ namespace System.Web
 #else
             _codegenDir = codegenBase;
 #endif
-			System.Diagnostics.Debugger.Launch();
 			// Create the codegen directory if needed
 			Directory.CreateDirectory(_codegenDir);
         }
