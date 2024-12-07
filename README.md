@@ -1,22 +1,25 @@
 # WebFormsForCore 
-A library to run WebForms apps on ASP.NET Core. This library provides a port
+## WebForms for ASP.NET Core
+WebFormsForCore is a library to run WebForms apps on ASP.NET Core. This library provides a port
 of the System.Web libraries of .NET Framework to .NET 8. With this library,
-you can run WebForms websites directly in ASP.NET Core, also on Linux.
-    
-# Support
+you can run WebForms websites directly in ASP.NET Core, also on Linux. With this
+library it becomes easy to migrate your existing WebForms application to run
+on ASP.NET Core also.
+
+## Support
 If you need support porting your project to .NET Core & WebFormsForCore, we provide support for
 40$ per hour. Please contact us via the LiveChat button on this page or via [WhatsApp](https://wa.me/41775080285).
 There is also a tutorial on Youtube on [how to convert a sample WebForms application to WebFormsForCore](https://youtu.be/Zyb4WBlaUwA). 
 
-# Source Code
+## Source Code
 You can find the source code of [WebFormsForCore on GitHub](https://github.com/webformsforcore/WebFormsForCore). It is 
 licensed under a MIT license. We welcome contributions, please have a look into the issues if you want to contribute.
 
-# Donating
+## Donating
 If you like WebFormsForCore, and it helped you save a lot of work, please consider to
 [sponsor us on GitHub](https://github.com/sponsors/webformsforcore)  or [donate to us with PayPal](https://www.paypal.com/donate/?hosted_button_id=KQCGG3NDJRR2S).
 
-# Usage
+## Usage
 If you have a WebForms project you want to convert to NET Core, proceed as follows:
 
 First convert your Project to a SDK Project. Please keep a backup of the old non SDK style
@@ -103,10 +106,9 @@ public class Program
 #endif
 ```
 
-# Conflicts with Existing Packages
+## Conflicts with Existing Packages
 Currently there might be some conflicts with the packages System.Web.dll, System.Drawing.dll &
-System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent
-import of the old dll's include the following in your csproj:
+System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent the import of the old dll's include the following in your csproj:
 
 ```
 <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
