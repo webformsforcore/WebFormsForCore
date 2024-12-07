@@ -750,6 +750,8 @@ namespace System.Web {
             FlushAsyncResult ar = new FlushAsyncResult(callback, state);
             try {
                 Flush(false);
+
+                RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -2508,6 +2510,9 @@ namespace System.Web {
                     // redirect without response.end
                     Redirect(url, false /*endResponse*/);
                 }
+
+				// Throw after ResponseEnd
+				RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{

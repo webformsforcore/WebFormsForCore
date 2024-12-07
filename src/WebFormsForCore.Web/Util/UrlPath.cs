@@ -134,7 +134,7 @@ namespace System.Web.Util
 		internal static bool IsAbsolutePhysicalPathSmart(string path)
 		{
 			if (OSInfo.IsWindows) return IsAbsoluteWindowsPhysicalPath(path);
-			else return path.StartsWith("/") && Path.Exists(path);
+			else return path != "/" && path.StartsWith("/") && Path.Exists(path);
 		}
 		internal static bool IsVirtualPath(string path)
 		{

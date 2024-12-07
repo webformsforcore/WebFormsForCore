@@ -28,12 +28,24 @@ namespace System.Web.Hosting
 		}
 		
 		static readonly string exepath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+		static string[] extensions = new string[] { exepath };
+		static string tempPath = null;
+		public static string TempPath {
+			get => tempPath;
+			set
+			{
+				tempPath = value;
+				extensions = new string[] { exepath, tempPath };
+				paths = null;
+			}
+		}
+
 		static string[] paths = null;
 		static string[] Paths => paths != null ? paths : paths =
 			ProbingPaths
 				.Replace('\\', Path.DirectorySeparatorChar)
 				.Split(';')
-				.Concat(new string[] { exepath })
+				.Concat(extensions)
 				.ToArray();
 
 		public static Assembly Resolve(AssemblyLoadContext context, AssemblyName name)

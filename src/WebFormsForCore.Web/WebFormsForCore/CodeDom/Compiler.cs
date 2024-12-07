@@ -546,6 +546,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
 		{
 			string errorFile = null;
 			outputFile = options.TempFiles.AddExtension("out");
+			System.Diagnostics.Debug.WriteLine($"Compile {outputFile} ...");
 
 			bool profilingSettingIsUpdated = false;
 			string originalClrProfilingSetting = null;

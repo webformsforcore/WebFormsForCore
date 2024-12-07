@@ -691,6 +691,9 @@ namespace System.Web
 				try
 				{
 					handler(this, AppEvent);
+
+					// Throw after ResponseEnd
+					Context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -714,6 +717,9 @@ namespace System.Web
 				try
 				{
 					handler(this, AppEvent);
+
+					// Throw after ResponseEnd
+					Context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -734,6 +740,9 @@ namespace System.Web
 				try
 				{
 					handler(this, AppEvent);
+
+					// Throw after ResponseEnd
+					Context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -754,6 +763,9 @@ namespace System.Web
 				try
 				{
 					handler(this, AppEvent);
+
+					// Throw after ResponseEnd
+					Context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -1810,6 +1822,9 @@ namespace System.Web
 						// set culture on the current thread
 						SetAppLevelCulture();
 						InvokeMethodWithAssert(method, paramCount, eventSource, eventArgs);
+
+						// Throw after ResponseEnd
+						Context.Response.RethrowIfResponseEnd();
 					}
 					catch (ThreadAbortException e)
 					{
@@ -1964,6 +1979,9 @@ namespace System.Web
 						try
 						{
 							Init();
+
+							// Throw after ResponseEnd
+							Context.Response.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -2116,6 +2134,9 @@ namespace System.Web
 			try
 			{
 				Dispose();
+
+				// Throw after ResponseEnd
+				Context.Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -2289,6 +2310,9 @@ namespace System.Web
 				try
 				{
 					addMethod.Invoke(target, new Object[1] { handlerDelegate });
+
+					// Throw after ResponseEnd
+					Context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -2657,6 +2681,9 @@ namespace System.Web
 					// ignore non-Exception objects that could be thrown
 				}
 #pragma warning restore 1058
+
+				// Throw after ResponseEnd
+				Context.Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -3702,6 +3729,9 @@ namespace System.Web
 				try
 				{
 					InvokeEndHandler(ar);
+
+					// Throw after ResponseEnd
+					context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -4064,6 +4094,9 @@ namespace System.Web
 					try
 					{
 						InvokeEndHandler(ar);
+
+						// Throw after ResponseEnd
+						context.Response.RethrowIfResponseEnd();
 					}
 					catch (ThreadAbortException e)
 					{
@@ -4594,6 +4627,9 @@ namespace System.Web
 						try
 						{
 							threadContext = app.OnThreadEnter();
+
+							// Throw after ResponseEnd
+							context.Response.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -4667,6 +4703,9 @@ namespace System.Web
 										break;
 
 									_numSyncStepCalls++;      // count synchronous calls
+
+									// Throw on ThreadAbort
+									context.Response.RethrowIfResponseEnd();
 								}
 							}
 							finally

@@ -50,6 +50,7 @@ namespace System.Web
 	using System.Web.Util;
 	using System.Xml;
 	using Microsoft.Win32;
+	using Azure;
 
 	/// <devdoc>
 	///    <para>Provides a set of ASP.NET runtime services.</para>
@@ -694,6 +695,9 @@ namespace System.Web
                                 // Make sure that the <processModel> section has no errors
                                 ProcessModelSection processModel = RuntimeConfig.GetMachineConfig().ProcessModel;
                             }
+
+							// Throw after ResponseEnd
+							context.Response.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -1039,7 +1043,8 @@ namespace System.Web
 #else
             _codegenDir = codegenBase;
 #endif
-            System.Diagnostics.Debugger.Launch();
+            AssemblyLoaderNetCore.TempPath = _codegenDir;
+
 			// Create the codegen directory if needed
 			Directory.CreateDirectory(_codegenDir);
         }
@@ -1722,6 +1727,9 @@ namespace System.Web
                 // First request initialization
                 try {
                     EnsureFirstRequestInit(context);
+
+					// Throw after ResponseEnd
+					context.Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -1883,7 +1891,7 @@ namespace System.Web
 								}
 								catch (ThreadAbortException ex)
 								{
-									throw;
+									//throw;
 								}
 								catch (Exception eReport) {
                                     // report the config error in a way that would not throw

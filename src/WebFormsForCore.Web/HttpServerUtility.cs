@@ -20,7 +20,7 @@ using System.Runtime.CompilerServices;
 
 
 namespace System.Web {
-    using System.Collections;
+	using System.Collections;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.IO;
@@ -571,6 +571,9 @@ namespace System.Web {
 
                                 try {
                                     asyncHandler.EndProcessRequest(ar);
+
+									// Throw after ResponseEnd
+									_context.Response.RethrowIfResponseEnd();
 								}
 								catch (ThreadAbortException e)
 								{
@@ -610,6 +613,9 @@ namespace System.Web {
                                     if (blockedThread && !_context.SyncContext.AllowAsyncDuringSyncStages) {
                                         throw new InvalidOperationException(SR.GetString(SR.Server_execute_blocked_on_async_handler));
                                     }
+
+									// Throw after ResponseEnd
+									_context.Response.RethrowIfResponseEnd();
 								}
 								catch (ThreadAbortException e)
 								{
@@ -632,6 +638,9 @@ namespace System.Web {
                         using (new DisposableHttpContextWrapper(_context)) {
                             try {
                                 handler.ProcessRequest(_context);
+
+								// Throw after ResponseEnd
+								_context.Response.RethrowIfResponseEnd();
 							}
 							catch (ThreadAbortException e)
 							{

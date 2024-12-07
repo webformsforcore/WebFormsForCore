@@ -53,7 +53,7 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 Then, for `net8.0`, import the WebFormsForCore packages like so:
 ```
 <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.0.0" />
+    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.2.4" />
 </ItemGroup>
 ```
 Remove the old `Reference` references or put them in a condition only for `net48`.

@@ -620,6 +620,9 @@ namespace System.Web {
             // user code will no longer run), we'll just log the error.
             try {
                 _requestCompletedQueue.FireAndComplete(action => action(this));
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -659,6 +662,9 @@ namespace System.Web {
             // user code will no longer run), we'll just log the error.
             try {
                 _pipelineCompletedQueue.FireAndComplete(disposable => disposable.Dispose());
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -1870,8 +1876,8 @@ namespace System.Web {
                 }
 
                 WaitForExceptionIfCancelled();  // wait outside of finally
-            }
-            catch (ThreadAbortException e)
+			}
+			catch (ThreadAbortException e)
             {
                 if (e.ExceptionState != null &&
                     e.ExceptionState is HttpApplication.CancelModuleException &&

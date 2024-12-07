@@ -5144,6 +5144,9 @@ window.onload = WebForm_RestoreScrollPosition;
 			try
 			{
 				ProcessRequest(true /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/);
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -5190,6 +5193,9 @@ window.onload = WebForm_RestoreScrollPosition;
 						needToCallEndTrace = false;
 						ProcessRequestEndTrace();
 					}
+
+					// Throw after ResponseEnd
+					Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException)
 				{
@@ -5248,6 +5254,9 @@ window.onload = WebForm_RestoreScrollPosition;
 						needToCallEndTrace = false;
 						ProcessRequestEndTrace();
 					}
+
+					// Throw after ResponseEnd
+					Response.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException)
 				{
@@ -5314,6 +5323,9 @@ window.onload = WebForm_RestoreScrollPosition;
 
 				// Make sure Request.RawUrl gets validated.
 				ValidateRawUrlIfRequired();
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException)
 			{
@@ -5695,6 +5707,10 @@ window.onload = WebForm_RestoreScrollPosition;
 
 					CheckRemainingAsyncTasks(false);
 				}
+
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -6068,6 +6084,9 @@ window.onload = WebForm_RestoreScrollPosition;
 
 					CheckRemainingAsyncTasks(false);
 				}
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -6223,6 +6242,9 @@ window.onload = WebForm_RestoreScrollPosition;
 				{
 					throw new InvalidOperationException(SR.GetString(SR.Page_CallBackTargetInvalid, callbackControlID));
 				}
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -6271,6 +6293,9 @@ window.onload = WebForm_RestoreScrollPosition;
 				{
 					throw new InvalidOperationException(SR.GetString(SR.Page_CallBackTargetInvalid, callbackControlID));
 				}
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -6349,6 +6374,9 @@ window.onload = WebForm_RestoreScrollPosition;
 					Response.Write(index);
 					Response.Write("].xmlRequest.readyState=4;parent.WebForm_CallbackComplete();</script>");
 				}
+
+				// Throw after ResponseEnd
+				Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -6944,6 +6972,9 @@ window.onload = WebForm_RestoreScrollPosition;
 					try
 					{
 						_page.Context.InvokeCancellableCallback(new WaitCallback(o => { _page.ProcessRequest(false /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/); }), null);
+
+						// Throw after ResponseEnd
+						_page.Context.Response.RethrowIfResponseEnd();
 					}
 					catch (ThreadAbortException e)
 					{
@@ -7099,6 +7130,9 @@ window.onload = WebForm_RestoreScrollPosition;
 						try
 						{
 							await _asyncTaskManager.ExecuteTasksAsync(this, EventArgs.Empty, cancellationToken, _context.SyncContext, _context.ApplicationInstance);
+
+							// Throw after ResponseEnd
+							Response.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -7162,6 +7196,9 @@ window.onload = WebForm_RestoreScrollPosition;
 			try
 			{
 				_context.InvokeCancellableCallback(new WaitCallback(this.AsyncPageProcessRequestBeforeAsyncPointCancellableCallback), null);
+
+				// Throw after ResponseEnd
+				_context.Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{

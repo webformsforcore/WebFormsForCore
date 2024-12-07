@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace System.Web.Hosting
 {
-	internal readonly ref struct NoSynchronizationContextSection: IDisposable
+	internal readonly ref struct SafeAsync: IDisposable
 	{
 		private readonly SynchronizationContext oldSynchronizationContext;
 
-		public NoSynchronizationContextSection()
+		public SafeAsync()
 		{
 			oldSynchronizationContext = SynchronizationContext.Current;
-			SynchronizationContext.SetSynchronizationContext((SynchronizationContext)null);
+			SynchronizationContext.SetSynchronizationContext(null);
 		}
 
 		public void Dispose()

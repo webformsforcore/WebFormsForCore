@@ -175,7 +175,7 @@ namespace System.Web.Hosting
 
 		public override void FlushResponse(bool finalFlush)
 		{
-			using (var noSyncContext = new NoSynchronizationContextSection())
+			using (var noSyncContext = new SafeAsync())
 			{
 				Context.Response.Body.Flush();
 				if (finalFlush) Context.Response.Body.Close();
@@ -413,7 +413,7 @@ namespace System.Web.Hosting
 
 			int bytesRead = 0;
 
-			using (var noSyncContext = new NoSynchronizationContextSection())
+			using (var noSyncContext = new SafeAsync())
 			{
 				var reader = Context.Request.Body;
 
@@ -530,7 +530,7 @@ namespace System.Web.Hosting
 		{
 			if (length > 0)
 			{
-				using (var noSyncContext = new NoSynchronizationContextSection())
+				using (var noSyncContext = new SafeAsync())
 				{
 					Context.Response.Body.Write(data, 0, length);
 				}
@@ -776,7 +776,7 @@ namespace System.Web.Hosting
 				f.Seek(offset, SeekOrigin.Begin);
 			}
 
-			using (var noSyncContext = new NoSynchronizationContextSection())
+			using (var noSyncContext = new SafeAsync())
 			{
 				if (length <= MaxChunkLength)
 				{
