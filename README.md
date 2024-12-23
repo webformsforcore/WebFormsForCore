@@ -34,8 +34,6 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <!-- Set base intermediate output path, so NET Core build does not conflict with NetFX build. -->
-    <BaseIntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</BaseIntermediateOutputPath>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
@@ -48,6 +46,13 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
     <OutputType>Library</OutputType>
     <OutputPath>bin</OutputPath>
 </PropertyGroup>
+
+<ItemGroup>
+    <Content Remove="bin_dotnet\**\*.*" />
+    <Reference Remove="bin_dotnet\**\*.*" />
+    <None Remove="bin_dotnet\**\*.*" />
+    <Compile Remove="bin_dotnet\**\*.*" />
+</ItemGroup>
 ``` 
 
 Then, for `net8.0`, import the WebFormsForCore packages like so:

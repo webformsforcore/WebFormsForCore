@@ -2136,7 +2136,7 @@ namespace System.Web
 				Dispose();
 
 				// Throw after ResponseEnd
-				Context.Response.RethrowIfResponseEnd();
+				// Context?.Response?.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{

@@ -5146,7 +5146,8 @@ window.onload = WebForm_RestoreScrollPosition;
 				ProcessRequest(true /*includeStagesBeforeAsyncPoint*/, true /*includeStagesAfterAsyncPoint*/);
 
 				// Throw after ResponseEnd
-				Response.RethrowIfResponseEnd();
+				// Don't throw here, since Response is already released
+				// Response.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{

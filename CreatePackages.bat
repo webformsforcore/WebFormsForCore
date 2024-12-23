@@ -1,4 +1,4 @@
-SET PackageVersion=1.2.4
+SET PackageVersion=1.2.5
 SET Configuration=Debug
 
 REM msbuild /p:Configuration=%Configuration%
