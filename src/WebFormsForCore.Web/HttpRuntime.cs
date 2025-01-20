@@ -697,7 +697,7 @@ namespace System.Web
                             }
 
 							// Throw after ResponseEnd
-							context.Response.RethrowIfResponseEnd();
+							context?.Response?.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -1729,7 +1729,7 @@ namespace System.Web
                     EnsureFirstRequestInit(context);
 
 					// Throw after ResponseEnd
-					context.Response.RethrowIfResponseEnd();
+					context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
