@@ -693,7 +693,7 @@ namespace System.Web
 					handler(this, AppEvent);
 
 					// Throw after ResponseEnd
-					Context.Response.RethrowIfResponseEnd();
+					Context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -719,7 +719,7 @@ namespace System.Web
 					handler(this, AppEvent);
 
 					// Throw after ResponseEnd
-					Context.Response.RethrowIfResponseEnd();
+					Context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -742,7 +742,7 @@ namespace System.Web
 					handler(this, AppEvent);
 
 					// Throw after ResponseEnd
-					Context.Response.RethrowIfResponseEnd();
+					Context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -765,7 +765,7 @@ namespace System.Web
 					handler(this, AppEvent);
 
 					// Throw after ResponseEnd
-					Context.Response.RethrowIfResponseEnd();
+					Context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -1824,7 +1824,7 @@ namespace System.Web
 						InvokeMethodWithAssert(method, paramCount, eventSource, eventArgs);
 
 						// Throw after ResponseEnd
-						Context.Response.RethrowIfResponseEnd();
+						Context?.Response?.RethrowIfResponseEnd();
 					}
 					catch (ThreadAbortException e)
 					{
@@ -1981,7 +1981,7 @@ namespace System.Web
 							Init();
 
 							// Throw after ResponseEnd
-							Context.Response.RethrowIfResponseEnd();
+							Context?.Response?.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -2312,7 +2312,7 @@ namespace System.Web
 					addMethod.Invoke(target, new Object[1] { handlerDelegate });
 
 					// Throw after ResponseEnd
-					Context.Response.RethrowIfResponseEnd();
+					Context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -2642,7 +2642,7 @@ namespace System.Web
 						return null;
 					}
 
-					Context.Response.RethrowIfResponseEnd();
+					Context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (Exception e)
 				{
@@ -2683,7 +2683,7 @@ namespace System.Web
 #pragma warning restore 1058
 
 				// Throw after ResponseEnd
-				Context.Response.RethrowIfResponseEnd();
+				Context?.Response?.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -3731,7 +3731,7 @@ namespace System.Web
 					InvokeEndHandler(ar);
 
 					// Throw after ResponseEnd
-					context.Response.RethrowIfResponseEnd();
+					context?.Response?.RethrowIfResponseEnd();
 				}
 				catch (ThreadAbortException e)
 				{
@@ -4096,7 +4096,7 @@ namespace System.Web
 						InvokeEndHandler(ar);
 
 						// Throw after ResponseEnd
-						context.Response.RethrowIfResponseEnd();
+						context?.Response?.RethrowIfResponseEnd();
 					}
 					catch (ThreadAbortException e)
 					{
@@ -4629,7 +4629,7 @@ namespace System.Web
 							threadContext = app.OnThreadEnter();
 
 							// Throw after ResponseEnd
-							context.Response.RethrowIfResponseEnd();
+							context?.Response?.RethrowIfResponseEnd();
 						}
 						catch (ThreadAbortException e)
 						{
@@ -4705,7 +4705,7 @@ namespace System.Web
 									_numSyncStepCalls++;      // count synchronous calls
 
 									// Throw on ThreadAbort
-									context.Response.RethrowIfResponseEnd();
+									context?.Response?.RethrowIfResponseEnd();
 								}
 							}
 							finally
