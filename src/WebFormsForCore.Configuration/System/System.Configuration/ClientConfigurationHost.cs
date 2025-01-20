@@ -120,12 +120,15 @@ namespace System.Configuration {
                             }
                             else
                             {
-                                using (var file = new FileStream(s_machineConfigFilePath, FileMode.Create, FileAccess.Write))
-                                {
-                                    machineConfig.CopyTo(file);
-                                }
-                            }
-                        }
+								using (var reader = new StreamReader(machineConfig))
+								{
+									var txt = reader.ReadToEnd();
+									// Uncomment Mobile sections
+									txt = Regex.Replace(txt, @"<!--@!Mobile\s*(.*?)\s*-->", "$1", RegexOptions.Singleline);
+									File.WriteAllText(s_machineConfigFilePath, txt);
+								}
+							}
+						}
                     }
                 }
 			}
