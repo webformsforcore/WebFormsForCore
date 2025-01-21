@@ -14,9 +14,7 @@ using System.Web;
 [assembly: AssemblyTitle("System.Web.Optimization")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("System.Web.Optimization")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en-US")]
@@ -40,8 +38,6 @@ using System.Web;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
 [assembly: AssemblyMetadata("Serviceable", "True")]
 
 [assembly: PreApplicationStartMethod(typeof(System.Web.Optimization.PreApplicationStartCode), "Start")]

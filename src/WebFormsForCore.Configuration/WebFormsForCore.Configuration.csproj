@@ -164,8 +164,8 @@
 
     <Target Name="ReplaceBuildDate" BeforeTargets="CoreCompile" Inputs="$(MSBuildAllProjects);&#xD;&#xA;                @(Compile);&#xD;&#xA;                @(_CoreCompileResourceInputs);&#xD;&#xA;                $(ApplicationIcon);&#xD;&#xA;                $(KeyOriginatorFile);&#xD;&#xA;                @(ReferencePathWithRefAssemblies);&#xD;&#xA;                @(CompiledLicenseFile);&#xD;&#xA;                @(LinkResource);&#xD;&#xA;                @(EmbeddedDocumentation);&#xD;&#xA;                $(Win32Resource);&#xD;&#xA;                $(Win32Manifest);&#xD;&#xA;                @(CustomAdditionalCompileInputs);&#xD;&#xA;                $(ResolvedCodeAnalysisRuleSet);&#xD;&#xA;                @(AdditionalFiles);&#xD;&#xA;                @(EmbeddedFiles);&#xD;&#xA;                @(Analyzer);&#xD;&#xA;                @(EditorConfigFiles)" Outputs="@(DocFileItem);&#xD;&#xA;                @(IntermediateAssembly);&#xD;&#xA;                @(IntermediateRefAssembly);&#xD;&#xA;                @(_DebugSymbolsIntermediatePath);&#xD;&#xA;                $(NonExistentFile);&#xD;&#xA;                @(CustomAdditionalCompileOutputs)">
         <PropertyGroup>
-            <InputFile>AssemblyInfo.cs</InputFile>
-            <OutputFile>AssemblyInfo.cs</OutputFile>
+            <InputFile>Properties\AssemblyInfo.cs</InputFile>
+            <OutputFile>Properties\AssemblyInfo.cs</OutputFile>
         </PropertyGroup>
         <WriteLinesToFile File="$(OutputFile)" Overwrite="true" Lines="$([System.Text.RegularExpressions.Regex]::Replace($([System.IO.File]::ReadAllText('$(InputFile)')),'BuildDate\(&quot;[^&quot;]*&quot;\)', 'BuildDate(&quot;$([System.DateTime]::UtcNow.ToString(&quot;yyyyMMddHHmmss&quot;))&quot;)'))" Encoding="Unicode" />
     </Target>

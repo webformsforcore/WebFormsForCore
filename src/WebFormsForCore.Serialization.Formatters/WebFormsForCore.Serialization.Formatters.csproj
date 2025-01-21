@@ -69,6 +69,7 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
     </ItemGroup>
 
 </Project>

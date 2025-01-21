@@ -45,6 +45,7 @@
     <ItemGroup>
         <Compile Remove="System\Xml\**\*.cs" />
         <None Include="System\Xml\**\*.cs" />
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">

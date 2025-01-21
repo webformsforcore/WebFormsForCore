@@ -26,8 +26,6 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>8.0.1</AssemblyVersion>
-        <FileVersion>8.0.1</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IncludeSymbols>false</IncludeSymbols>
@@ -36,7 +34,7 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AssemblySearchPath_UseOutDir>false</AssemblySearchPath_UseOutDir>
         <AssemblySearchPath_UseCandidateAssemblyFiles>false</AssemblySearchPath_UseCandidateAssemblyFiles>
     </PropertyGroup>
@@ -57,6 +55,8 @@
 
     <ItemGroup>
         <Compile Remove="AssemblyPatcher.cs" />
+        <None Include="AssemblyPatcher.cs" />
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -70,10 +70,6 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Pack>False</Pack>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="AssemblyPatcher.cs" />
     </ItemGroup>
 
     <ItemGroup>

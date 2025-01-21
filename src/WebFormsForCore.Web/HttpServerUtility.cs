@@ -573,7 +573,7 @@ namespace System.Web {
                                     asyncHandler.EndProcessRequest(ar);
 
 									// Throw after ResponseEnd
-									_context?.Response?.RethrowIfResponseEnd();
+									HttpResponse.RethrowIfResponseEnd(() => _context?.Response);
 								}
 								catch (ThreadAbortException e)
 								{
@@ -615,7 +615,7 @@ namespace System.Web {
                                     }
 
 									// Throw after ResponseEnd
-									_context?.Response?.RethrowIfResponseEnd();
+									HttpResponse.RethrowIfResponseEnd(() => _context?.Response);
 								}
 								catch (ThreadAbortException e)
 								{
@@ -640,7 +640,7 @@ namespace System.Web {
                                 handler.ProcessRequest(_context);
 
 								// Throw after ResponseEnd
-								_context?.Response?.RethrowIfResponseEnd();
+								HttpResponse.RethrowIfResponseEnd(() => _context?.Response);
 							}
 							catch (ThreadAbortException e)
 							{

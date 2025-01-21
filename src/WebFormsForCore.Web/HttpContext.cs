@@ -622,7 +622,7 @@ namespace System.Web {
                 _requestCompletedQueue.FireAndComplete(action => action(this));
 
 				// Throw after ResponseEnd
-				Response?.RethrowIfResponseEnd();
+				HttpResponse.RethrowIfResponseEnd(() => _response);
 			}
 			catch (ThreadAbortException e)
 			{
@@ -664,7 +664,7 @@ namespace System.Web {
                 _pipelineCompletedQueue.FireAndComplete(disposable => disposable.Dispose());
 
 				// Throw after ResponseEnd
-				Response?.RethrowIfResponseEnd();
+				HttpResponse.RethrowIfResponseEnd(() => _response);
 			}
 			catch (ThreadAbortException e)
 			{
@@ -1872,10 +1872,10 @@ namespace System.Web {
                 {
                     EndCancellablePeriod();  // request can be cancelled until this point
 
-                    Response?.RethrowIfResponseEnd();
-                }
+					HttpResponse.RethrowIfResponseEnd(() => _response);
+				}
 
-                WaitForExceptionIfCancelled();  // wait outside of finally
+				WaitForExceptionIfCancelled();  // wait outside of finally
 			}
 			catch (ThreadAbortException e)
             {
@@ -2339,17 +2339,20 @@ namespace System.Web {
                 _wr.CloseConnection();
             }
         }
-    }
+#if NETCOREAPP
+		public Microsoft.AspNetCore.Http.HttpContext CoreContext => ((AspNetCoreWorkerRequest)_wr).Context;
+#endif
+	}
 
-    //
-    // Helper class to add/remove HttpContext to/from CallContext
-    //
-    // using (new DisposableHttpContextWrapper(context)) {
-    //     // this code will have HttpContext.Current working
-    // }
-    //
+	//
+	// Helper class to add/remove HttpContext to/from CallContext
+	//
+	// using (new DisposableHttpContextWrapper(context)) {
+	//     // this code will have HttpContext.Current working
+	// }
+	//
 
-    internal class DisposableHttpContextWrapper : IDisposable {
+	internal class DisposableHttpContextWrapper : IDisposable {
         private bool _needToUndo;
         private HttpContext _savedContext;
 

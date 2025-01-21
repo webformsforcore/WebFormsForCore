@@ -39,18 +39,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Microsoft.Web.Infrastructure.DynamicValidationHelper\LazyWebROCollection.cs" />
-      <Compile Remove="Microsoft.Web.Infrastructure.DynamicValidationHelper\ValidationUtility.cs" />
+        <Compile Remove="Microsoft.Web.Infrastructure.DynamicValidationHelper\LazyWebROCollection.cs" />
+        <Compile Remove="Microsoft.Web.Infrastructure.DynamicValidationHelper\ValidationUtility.cs" />
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
-      <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="Microsoft.Web.Infrastructure.DynamicValidationHelper\LazyWebROCollection.cs" />
-      <None Include="Microsoft.Web.Infrastructure.DynamicValidationHelper\ValidationUtility.cs" />
+        <None Include="Microsoft.Web.Infrastructure.DynamicValidationHelper\LazyWebROCollection.cs" />
+        <None Include="Microsoft.Web.Infrastructure.DynamicValidationHelper\ValidationUtility.cs" />
     </ItemGroup>
 
     <ItemGroup>

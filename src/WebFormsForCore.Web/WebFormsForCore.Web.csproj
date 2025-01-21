@@ -49,6 +49,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
         <EmbeddedResource Remove="*.resx" />
         <EmbeddedResource Include="*.js">
             <LogicalName>%(FileName)%(Extension)</LogicalName>

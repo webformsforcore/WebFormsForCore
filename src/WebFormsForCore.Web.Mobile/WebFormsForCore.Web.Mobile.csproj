@@ -54,6 +54,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
         <Compile Remove="UI\MobileControls\Design\Adapters\**\*.cs" />
         <Compile Remove="UI\MobileControls\Design\Util\**\*.cs" />
         <Compile Remove="UI\MobileControls\Design\*.cs" />
@@ -78,9 +79,6 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
     </ItemGroup>
 
     <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">

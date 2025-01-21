@@ -3173,6 +3173,17 @@ namespace System.Web {
             if (_responseEndException != null) _responseEndException.Throw();
 		}
 
+        internal static void RethrowIfResponseEnd(Func<HttpResponse> getResponse)
+        {
+            HttpResponse response = null;
+            try
+            {
+                response = getResponse();
+            }
+            catch { }
+            response?.RethrowIfResponseEnd();
+        }
+
         internal void ResetThreadAbort()
         {
             _responseEndException = null;
