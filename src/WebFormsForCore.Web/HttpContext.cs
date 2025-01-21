@@ -622,7 +622,7 @@ namespace System.Web {
                 _requestCompletedQueue.FireAndComplete(action => action(this));
 
 				// Throw after ResponseEnd
-				Response.RethrowIfResponseEnd();
+				Response?.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -664,7 +664,7 @@ namespace System.Web {
                 _pipelineCompletedQueue.FireAndComplete(disposable => disposable.Dispose());
 
 				// Throw after ResponseEnd
-				Response.RethrowIfResponseEnd();
+				Response?.RethrowIfResponseEnd();
 			}
 			catch (ThreadAbortException e)
 			{
@@ -1872,7 +1872,7 @@ namespace System.Web {
                 {
                     EndCancellablePeriod();  // request can be cancelled until this point
 
-                    Response.RethrowIfResponseEnd();
+                    Response?.RethrowIfResponseEnd();
                 }
 
                 WaitForExceptionIfCancelled();  // wait outside of finally
