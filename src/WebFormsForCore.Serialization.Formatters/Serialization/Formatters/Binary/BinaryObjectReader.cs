@@ -88,7 +88,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary
 
             _isSimpleAssembly = (_formatterEnums._assemblyFormat == FormatterAssemblyStyle.Simple);
 
-            using (IDisposable? token = (IDisposable?)startDeserialization.Invoke(null, null))
+            using (IDisposable? token = (IDisposable?)startDeserialization?.Invoke(null, null))
             {
                 if (_fullDeserialization)
                 {
