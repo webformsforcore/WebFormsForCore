@@ -207,7 +207,12 @@ namespace System.Web.Hosting
 			else return str;
 		}
 		public override byte[] GetQueryStringRawBytes() => Encoding.ASCII.GetBytes(GetQueryString());
-		public override string GetRawUrl() => path;
+		public override string GetRawUrl()
+		{
+			var query = GetQueryString();
+			if (string.IsNullOrEmpty(query)) return path;
+			return $"{path}?{query}";
+		}
 		public override string GetRemoteAddress() => Context.Connection.RemoteIpAddress.ToString();
 		public override int GetRemotePort() => Context.Connection.RemotePort;
 		public override string GetServerName()
@@ -873,7 +878,7 @@ namespace System.Web.Hosting
 			return true;
 		}
 
-		private static string UrlEncodeRedirect(string path)
+		/*private static string UrlEncodeRedirect(string path)
 		{
 			// this method mimics the logic in HttpResponse.Redirect (which relies on internal methods)
 
@@ -921,7 +926,7 @@ namespace System.Web.Hosting
 			}
 
 			return path;
-		}
+		}*/
 
 		#region Nested type: ByteParser
 
