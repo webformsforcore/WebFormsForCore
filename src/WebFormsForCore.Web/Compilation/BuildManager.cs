@@ -3308,8 +3308,10 @@ namespace System.Web.Compilation {
 			var ic = e.Name.IndexOf(',');
 			if (ic >= 0) name = e.Name.Substring(0, ic).Trim();
 			else name = e.Name.Trim();
-            if (!name.EndsWith(".resources") && name.StartsWith(AssemblyNamePrefix))
+            if (!name.EndsWith(".resources") && name.StartsWith(AssemblyNamePrefix) &&
+                e.RequestingAssembly != null)
             {
+                
                 var reqPath = Path.GetDirectoryName(e.RequestingAssembly.Location);
                 var assemblyFile = Path.Combine(reqPath, name + ".dll");
                 if (File.Exists(assemblyFile)) return Assembly.LoadFrom(assemblyFile);
