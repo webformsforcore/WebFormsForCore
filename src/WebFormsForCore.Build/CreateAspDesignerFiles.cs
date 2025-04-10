@@ -126,7 +126,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 
 		public void ParseMessage(string msg, out string file, out int line, out bool warning, out string message)
 		{
-			var m = Regex.Match(msg, @"(?<file>.*?)\s+\((?<line>[0-9]+)\):\s*(?<warning>Warning:\s*)?(?<msg>.*$)");
+			var m = Regex.Match(msg, @"(?<file>.*?)\s+\((?<line>[0-9]+)\):\s*(?<warning>[Ww]arning:\s*)?(?<msg>.*$)");
 			if (m.Success)
 			{
 				file = m.Groups["file"].Value;
