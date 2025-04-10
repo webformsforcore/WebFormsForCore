@@ -160,7 +160,17 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					string file, msg;
 					ParseMessage(args.Data, out file, out line, out warnign, out msg);
 					if (warnign) Log.LogWarning("", "", "", file, line, 0, line, 1, msg);
-					else Log.LogMessage("", "", "", file, line, 0, line, 1, MessageImportance.Normal, msg);
+					else
+					{
+						MessageImportance importance;
+						if (msg.Contains("Successfully created designer file for") || msg.Contains("Failed creating designer file for"))
+						{
+							importance = MessageImportance.High;
+						}
+						else importance = MessageImportance.Normal;
+
+						Log.LogMessage("", "", "", file, line, 0, line, 1, importance, msg);
+					}
 				}
 			};
 			bool hasErrors = false;
