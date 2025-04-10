@@ -23,8 +23,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>8.0.0.0</AssemblyVersion>
-        <FileVersion>8.0.0.0</FileVersion>
+        <AssemblyVersion>8.0.9.0</AssemblyVersion>
+        <FileVersion>8.0.9.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -51,7 +51,7 @@
 
     <ItemGroup Condition="$(TargetFramework) != 'net48'">
         <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
-        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="8.0.0.0" SpecificVersion="True" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="8.0.9.0" SpecificVersion="true" />
         <ProjectReference Include="..\WebFormsForCore.Web.Services\WebFormsForCore.Web.Services.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
         <PackageReference Include="CoreWCF.Http" Version="1.7.0" />

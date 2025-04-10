@@ -23,6 +23,7 @@
     </ItemGroup>
     
     <Target Name="CreateAspDesignerFiles" AfterTargets="Build">
+        <Message Text="Assembly: $(WebFormsForCoreTasksLib)" Importance="high" />    
         <CreateAspDesignerFiles Assembly="$(OutputPath)\$(AssemblyName).dll"
             Directory="$(MSBuildProjectDirectory)"
             TargetFramework="$(TargetFramework)"

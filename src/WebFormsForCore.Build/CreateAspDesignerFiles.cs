@@ -208,6 +208,8 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 			return true;
 		}
 
+		ResolveEventHandler ResolveAssembly = null;
+
 		public bool GenerateDesignerFiles(string dll, string WebRootPath, IEnumerable<string> aspFiles)
 		{
 			aspFiles = aspFiles
@@ -220,8 +222,22 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 #if NETSTANDARD
 			if (!SeparateProcess && (IsNetFX && IsTargetNetFX || IsCore && IsTargetNetCore))
 			{
-				Assembly buildAssembly;
 				var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				ResolveAssembly = (sender, args) =>
+				{
+					string assemblyFile;
+					if (IsCore) assemblyFile = Path.GetFullPath(Path.Combine(path, $"..\\net8.0\\{args.Name}.dll"));
+					else assemblyFile = Path.GetFullPath(Path.Combine(path, $"..\\net48\\{args.Name}.dll"));
+				
+					if (File.Exists(assemblyFile)) return System.Reflection.Assembly.LoadFrom(assemblyFile);
+					else
+					{
+						Log.LogError($"Assembly {args.Name} not found in {assemblyFile}");
+						return null;
+					}
+				};
+				AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+				Assembly buildAssembly;
 				if (IsCore) buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll")));
 				else buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net48\\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe")));
 
@@ -249,6 +265,11 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 		{
 			if (Files.Any()) GenerateDesignerFiles(Assembly.ItemSpec.Replace("\\\\", "\\"), Directory.ItemSpec, Files.Select(file => file.ItemSpec));
 			
+			if (ResolveAssembly != null)
+			{
+				AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssembly;
+				ResolveAssembly = null;
+			}
 			return true;
 		}
 	}

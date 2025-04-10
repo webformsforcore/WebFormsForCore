@@ -104,7 +104,7 @@ internal static class AssemblyRef
 #if NETFRAMEWORK
 	internal const string SystemWeb = "System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
-	internal const string SystemWeb = "System.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+	internal const string SystemWeb = "System.Web, Version=8.0.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #endif
 	internal const string SystemWebAbstractions = "System.Web.Abstractions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 
@@ -123,14 +123,14 @@ internal static class AssemblyRef
 #if NETFRAMEWORK
 	internal const string SystemWebRegularExpressions = "System.Web.RegularExpressions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
-	internal const string SystemWebRegularExpressions = "System.Web.RegularExpressions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+	internal const string SystemWebRegularExpressions = "System.Web.RegularExpressions, Version=8.0.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #endif
 	internal const string SystemWebRouting = "System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 
 #if NETFRAMEWORK
 	internal const string SystemWebServices = "System.Web.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
-	internal const string SystemWebServices = "System.Web.Services, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+	internal const string SystemWebServices = "System.Web.Services, Version=8.0.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #endif
 	internal const string WindowsBase = "WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 

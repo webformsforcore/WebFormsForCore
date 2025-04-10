@@ -1,9 +1,4 @@
-﻿#region Assembly System.CodeDom, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
-// C:\Users\simon\.nuget\packages\system.codedom\8.0.0\lib\net8.0\System.CodeDom.dll
-// Decompiled with ICSharpCode.Decompiler 8.1.1.7464
-#endregion
-
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
