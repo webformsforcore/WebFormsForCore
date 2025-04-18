@@ -83,8 +83,11 @@ System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, 
 missing.
 
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
-SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build`. If you import
-this package, outdated `*.designer.cs` files will be created after build. This only works for C#, not for
+SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build` like so:
+```
+<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.3.1" ExcludeAssets="runtime" />
+```
+If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#, not for
 VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't work.
 
 Finally configure ASP-NET Core to use WebForms in the initialization code Program.cs like so:
