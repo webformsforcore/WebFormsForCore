@@ -32,7 +32,11 @@ static class AssemblyRef
 	internal const string SharedLibPublicKeyToken = "31bf3856ad364e35";
 	internal const string SharedLibPublicKeyFull = "0024000004800000940000000602000000240000525341310004000001000100B5FC90E7027F67871E773A8FDE8938C81DD402BA65B9201D60593E96C492651E889CC13F1415EBB53FAC1131AE0BD333C5EE6021672D9718EA31A8AEBD0DA0072F25D87DBA6FC90FFD598ED4DA35E44C398C454307E8E33B8426143DAEC9F596836F97C8F74750E5975C64E2189F45DEF46B2A2B1247ADC3652BF5C308055DA9";
 	internal const string SystemComponentModelDataAnnotations = "System.ComponentModel.DataAnnotations, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+#if NETFRAMEWORK
 	internal const string SystemConfiguration = "System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#else
+	internal const string SystemConfiguration = "System.Configuration, Version=10.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#endif
 	internal const string SystemConfigurationInstall = "System.Configuration.Install, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 	internal const string SystemDeployment = "System.Deployment, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 	internal const string SystemDesign = "System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
@@ -53,18 +57,34 @@ static class AssemblyRef
 #if NETFRAMEWORK
 	internal const string SystemWeb = "System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
-	internal const string SystemWeb = "System.Web, Version=8.0.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+	internal const string SystemWeb = "System.Web, Version=8.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #endif
 	internal const string SystemWebAbstractions = "System.Web.Abstractions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 	internal const string SystemWebDynamicData = "System.Web.DynamicData, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 	internal const string SystemWebDynamicDataDesign = "System.Web.DynamicData.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 	internal const string SystemWebEntityDesign = "System.Web.Entity.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+#if NETFRAMEWORK
 	internal const string SystemWebExtensions = "System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+#else
+	internal const string SystemWebExtensions = "System.Web.Extensions, Version=8.0.11.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+#endif
 	internal const string SystemWebExtensionsDesign = "System.Web.Extensions.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+#if NETFRAMEWORK
 	internal const string SystemWebMobile = "System.Web.Mobile, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#else
+	internal const string SystemWebMobile = "System.Web.Mobile, Version=8.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#endif
+#if NETFRAMEWORK
 	internal const string SystemWebRegularExpressions = "System.Web.RegularExpressions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#else
+	internal const string SystemWebRegularExpressions = "System.Web.RegularExpressions, Version=8.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#endif
 	internal const string SystemWebRouting = "System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+#if NETFRAMEWORK
 	internal const string SystemWebServices = "System.Web.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#else
+	internal const string SystemWebServices = "System.Web.Services, Version=8.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#endif
 	internal const string WindowsBase = "WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
 	internal const string MicrosoftVisualStudio = "Microsoft.VisualStudio, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 	internal const string MicrosoftVisualStudioWindowsForms = "Microsoft.VisualStudio.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";

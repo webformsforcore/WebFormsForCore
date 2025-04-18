@@ -9,6 +9,7 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
         <CompilerToolsVersion>4.11.0</CompilerToolsVersion>
+        <UseCompilerTools>false</UseCompilerTools>
 
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Compilers</PackageId>
         <Title>WebFormsForCore.Compilers</Title>
@@ -22,8 +23,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>8.0.9.0</AssemblyVersion>
-        <FileVersion>8.0.9.0</FileVersion>
+        <AssemblyVersion>8.0.11.0</AssemblyVersion>
+        <FileVersion>8.0.11.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -33,11 +34,12 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(CompilerToolsVersion)" GeneratePathProperty="true" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0" />
+        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(CompilerToolsVersion)"
+            GeneratePathProperty="true" Condition="$(UseCompilerTools) == 'true'"/>
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.13.0" />
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="$(UseCompilerTools) == 'true'">
         <Content Include="$(NuGetPackageRoot)\microsoft.net.compilers.toolset\$(CompilerToolsVersion)\tasks\netcore\bincore\**\*.*">
             <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Pack>True</Pack>
@@ -74,7 +76,13 @@
             <PackagePath>lib\$(TargetFramework)</PackagePath>
         </Content>-->
     </ItemGroup>
-
+    <ItemGroup Condition="$(UseCompilerTools) == 'true'">
+        <Content Include="Roslyn\**\*.*">
+            <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+            <Pack>True</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </Content>
+    </ItemGroup>
     <ItemGroup>
         <None Include="..\..\README.md">
             <Pack>True</Pack>
@@ -84,13 +92,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
-      <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.11.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.13.0" />
     </ItemGroup>
 
-    <Target Name="CopyCompilers" BeforeTargets="ResolveReferences" Condition="$(TargetFramework) != 'net48'">
+    <ItemGroup>
+      <Folder Include="Roslyn\" />
+    </ItemGroup>
+
+    <Target Name="CopyCompilers" BeforeTargets="ResolveReferences"
+        Condition="$(TargetFramework) != 'net48' And $(UseCompilerTools) == 'true'">
         <ItemGroup>
             <CompilerItems Include="$(PkgMicrosoft_Net_Compilers_Toolset)\tasks\netcore\bincore\**\*.*" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(CompilerItems)" DestinationFiles="@(CompilerItems->'$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    </Target>
+
+    <Target Name="CopyCompilersNoTools" BeforeTargets="ResolveReferences"
+        Condition="$(TargetFramework) != 'net48' And $(UseCompilerTools) != 'true'">
+        <ItemGroup>
+            <CompilerItems Include="Roslyn\**\*.*" />
         </ItemGroup>
 
         <Copy SourceFiles="@(CompilerItems)" DestinationFiles="@(CompilerItems->'$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
