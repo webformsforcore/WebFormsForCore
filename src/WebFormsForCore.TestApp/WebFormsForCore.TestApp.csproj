@@ -72,7 +72,7 @@
 
     <ItemGroup>
         <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.7.1" />
-        <PackageReference Include="bootstrap" Version="5.3.3" />
+        <PackageReference Include="bootstrap" Version="5.3.5" />
         <PackageReference Include="jQuery" Version="3.7.1" />
         <PackageReference Include="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
         <PackageReference Include="Microsoft.AspNet.FriendlyUrls.Core" Version="1.0.2" />
