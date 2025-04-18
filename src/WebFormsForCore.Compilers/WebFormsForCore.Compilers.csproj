@@ -76,7 +76,7 @@
             <PackagePath>lib\$(TargetFramework)</PackagePath>
         </Content>-->
     </ItemGroup>
-    <ItemGroup Condition="$(UseCompilerTools) == 'true'">
+    <ItemGroup Condition="$(UseCompilerTools) != 'true'">
         <Content Include="Roslyn\**\*.*">
             <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
             <Pack>True</Pack>
