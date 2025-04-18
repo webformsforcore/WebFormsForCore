@@ -202,8 +202,12 @@ namespace System.Web.Configuration {
 
         private static readonly Lazy<ConcurrentDictionary<Assembly, string>> _assemblyNames =
             new Lazy<ConcurrentDictionary<Assembly, string>>();
-
-        static CompilationSection() {
+#if NETFRAMEWORK
+        private const bool IsCore = false;
+#else
+		private const bool IsCore = true;
+#endif
+		static CompilationSection() {
             // Property initialization
             _properties = new ConfigurationPropertyCollection();
             _properties.Add(_propTempDirectory);
@@ -888,7 +892,7 @@ namespace System.Web.Configuration {
 					}
 				}
 
-				if (BuildManager.IgnoreBadImageFormatException)
+				if (IsCore || BuildManager.IgnoreBadImageFormatException)
 				{
 					var badImageFormatException = e as BadImageFormatException;
 					if (badImageFormatException != null)

@@ -71,6 +71,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="App_Data\machine.config" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="App_Data\machine.config" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.7.1" />
         <PackageReference Include="bootstrap" Version="5.3.5" />
         <PackageReference Include="jQuery" Version="3.7.1" />
