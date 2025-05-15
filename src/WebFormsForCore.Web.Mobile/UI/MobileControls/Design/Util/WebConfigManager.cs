@@ -44,7 +44,21 @@ namespace System.Web.UI.Design.MobileControls.Util
                 IProjectItem dataFileProjectItem = webApplicationService.GetProjectItemFromUrl("~/web.config");
                 if (dataFileProjectItem != null) {
                     _path = dataFileProjectItem.PhysicalPath;
-                }
+                } else if (!OSInfo.IsWindows)
+                {
+					dataFileProjectItem = webApplicationService.GetProjectItemFromUrl("~/Web.config");
+					if (dataFileProjectItem != null)
+					{
+						_path = dataFileProjectItem.PhysicalPath;
+					} else
+                    {
+						dataFileProjectItem = webApplicationService.GetProjectItemFromUrl("~/Web.Config");
+						if (dataFileProjectItem != null)
+						{
+							_path = dataFileProjectItem.PhysicalPath;
+						}
+					}
+				}
             }
 
 /* VSWhidbey 271075, 257678

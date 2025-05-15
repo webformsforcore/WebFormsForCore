@@ -25,6 +25,7 @@ namespace System.Configuration {
     using System.Security.Permissions;
     using System.Text;
     using System.Globalization;
+    using System.Linq;
     using Microsoft.Win32;
     using Diagnostics.CodeAnalysis;
 
@@ -143,13 +144,25 @@ namespace System.Configuration {
                     if (File.Exists(appConfig)) _applicationConfigUri = appConfig;
                     else
                     {
-                        var webConfig = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(applicationUri)), "web.config");
+						var dir = Path.GetDirectoryName(Path.GetDirectoryName(applicationUri));
+						var webConfig = Path.Combine(dir, "web.config");
                         if (File.Exists(webConfig)) _applicationConfigUri = webConfig;
+                        else if (!OSInfo.IsWindows)
+                        {
+                            webConfig = Path.Combine(dir, "Web.config");
+                            if (File.Exists(webConfig)) _applicationConfigUri = webConfig;
+                            else
+                            {
+                                var files = Directory.GetFiles(dir);
+                                webConfig = files.FirstOrDefault(file => Path.GetFileName(file).Equals("web.config", StringComparison.OrdinalIgnoreCase));
+                                if (webConfig != null) _applicationConfigUri = webConfig;
+                            }
+                        }
                     }
                 }
 #endif
-            }
-            else {
+			}
+			else {
                 applicationUri = Path.GetFullPath(exePath);
                 if (!FileUtil.FileExists(applicationUri, false))
                     throw ExceptionUtil.ParameterInvalid("exePath");

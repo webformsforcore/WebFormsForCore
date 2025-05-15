@@ -8,6 +8,7 @@ namespace System.Web.Configuration {
     using System;
     using System.Configuration;
     using System.IO;
+    using System.Linq;
     using System.Web.Util;
     using System.Security.Permissions;
 	using System.Runtime.InteropServices;
@@ -37,7 +38,20 @@ namespace System.Web.Configuration {
             _isAppRoot = isAppRoot;
 
             PhysicalDirectory = physicalDirectory;
-            ConfigFileBaseName = configFileBaseName;
+            if (OperatingSystem.IsWindows()) ConfigFileBaseName = configFileBaseName;
+            else
+            {
+                var files = Directory.GetFiles(physicalDirectory);
+                var webConfig = files.FirstOrDefault(file => Path.GetFileName(file).Equals(configFileBaseName, StringComparison.OrdinalIgnoreCase));
+				if (webConfig != null)
+				{
+					ConfigFileBaseName = Path.GetFileName(webConfig);
+				}
+				else
+				{
+					ConfigFileBaseName = configFileBaseName;
+				}
+			}
         }
 
         internal VirtualDirectoryMapping Clone() {

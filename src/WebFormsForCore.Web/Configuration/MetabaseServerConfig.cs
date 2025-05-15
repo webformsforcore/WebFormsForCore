@@ -11,6 +11,7 @@ namespace System.Web.Configuration {
     using System.Globalization;
     using System.Text;
     using System.IO;
+    using System.Linq;
     using System.Web.Util;
     using System.Web.Hosting;
     using System.Web.Caching;
@@ -93,7 +94,13 @@ namespace System.Web.Configuration {
         private void GetPathConfigFilenameWorker(string siteID, VirtualPath path, out string directory, out string baseName) {
             directory = MapPathCaching(siteID, path);
             if (directory != null) {
-                baseName = HttpConfigurationSystem.WebConfigFileName;
+                if (!OperatingSystem.IsWindows())
+                {
+                    var files = Directory.GetFiles(directory);
+                    var config = files.FirstOrDefault(f => Path.GetFileName(f).Equals(HttpConfigurationSystem.WebConfigFileName, StringComparison.OrdinalIgnoreCase));
+                    if (config != null) baseName = config;
+					else baseName = HttpConfigurationSystem.WebConfigFileName;
+				} else baseName = HttpConfigurationSystem.WebConfigFileName;
             }
             else {
                 baseName = null;
