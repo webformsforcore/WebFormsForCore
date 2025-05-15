@@ -151,7 +151,7 @@ namespace System.Configuration {
                         {
                             webConfig = Path.Combine(dir, "Web.config");
                             if (File.Exists(webConfig)) _applicationConfigUri = webConfig;
-                            else
+                            else if (Directory.Exists(dir))
                             {
                                 var files = Directory.GetFiles(dir);
                                 webConfig = files.FirstOrDefault(file => Path.GetFileName(file).Equals("web.config", StringComparison.OrdinalIgnoreCase));

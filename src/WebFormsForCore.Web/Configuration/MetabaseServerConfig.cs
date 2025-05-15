@@ -94,7 +94,7 @@ namespace System.Web.Configuration {
         private void GetPathConfigFilenameWorker(string siteID, VirtualPath path, out string directory, out string baseName) {
             directory = MapPathCaching(siteID, path);
             if (directory != null) {
-                if (!OperatingSystem.IsWindows())
+                if (!OperatingSystem.IsWindows() && Directory.Exists(directory))
                 {
                     var files = Directory.GetFiles(directory);
                     var config = files.FirstOrDefault(f => Path.GetFileName(f).Equals(HttpConfigurationSystem.WebConfigFileName, StringComparison.OrdinalIgnoreCase));

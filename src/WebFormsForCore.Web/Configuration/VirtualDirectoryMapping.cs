@@ -39,7 +39,7 @@ namespace System.Web.Configuration {
 
             PhysicalDirectory = physicalDirectory;
             if (OperatingSystem.IsWindows()) ConfigFileBaseName = configFileBaseName;
-            else
+            else if (Directory.Exists(physicalDirectory))
             {
                 var files = Directory.GetFiles(physicalDirectory);
                 var webConfig = files.FirstOrDefault(file => Path.GetFileName(file).Equals(configFileBaseName, StringComparison.OrdinalIgnoreCase));
@@ -51,8 +51,8 @@ namespace System.Web.Configuration {
 				{
 					ConfigFileBaseName = configFileBaseName;
 				}
-			}
-        }
+			} else ConfigFileBaseName = configFileBaseName;
+		}
 
         internal VirtualDirectoryMapping Clone() {
             return new VirtualDirectoryMapping(_virtualDirectory, _physicalDirectory, _isAppRoot, _configFileBaseName);
