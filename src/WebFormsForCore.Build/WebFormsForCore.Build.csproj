@@ -96,7 +96,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.3.2" />
+        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.3.3" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
