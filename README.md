@@ -116,6 +116,7 @@ public class Program
 }
 #endif
 ```
+Usually this will cause WebFormsForCore to handle all WebForms requests, like aspx pages etc. Requests not specific to WebForms will be handled by ASP.NET Core. If you want all requests to be handled by WebForms, for example if your application uses routing and friendly urls, you might want to call ```app.UseWebForms(opt => opt.HandleAllRequestsWithWebForms())``` 
 
 ## Conflicts with Existing Packages
 Currently there might be some conflicts with the packages System.Web.dll, System.Drawing.dll &
