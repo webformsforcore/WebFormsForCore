@@ -384,6 +384,8 @@ namespace System.Web.Compilation {
             _theBuildManager._preAppStartHashCodeCombiner.AddObject(dependency);
         }
 
+        private string FirstCapitalLetter(string name) => name != null ?
+            (name.Length > 0 ? $"{char.ToUpper(name[0])}{name.Substring(1)}" : "") : null;
         /*
          * Perform initialization work that should only be done once (per app domain).
          */
@@ -396,6 +398,11 @@ namespace System.Web.Compilation {
 
             _globalAsaxVirtualPath = HttpRuntime.AppDomainAppVirtualPathObject.SimpleCombine(
                 HttpApplicationFactory.applicationFileName);
+            if (!OperatingSystem.IsWindows() && !_globalAsaxVirtualPath.FileExists())
+            {
+                _globalAsaxVirtualPath = HttpRuntime.AppDomainAppVirtualPathObject.SimpleCombine(
+                    FirstCapitalLetter(HttpApplicationFactory.applicationFileName));
+            }
 
             _webHashFilePath = Path.Combine(HttpRuntime.CodegenDirInternal, "hash\\hash.web");
 

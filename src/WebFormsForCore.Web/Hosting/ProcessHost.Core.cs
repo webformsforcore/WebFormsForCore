@@ -1216,14 +1216,19 @@ namespace System.Web.Hosting {
                 // modified during this process anyway.
 
                 string appRootPhysicalPath = helperFunctions.AppPhysicalPath;
-                string webConfigPhysicalPath = helperFunctions.MapPath("Web.config");
+                string webConfigPhysicalPath = helperFunctions.MapPath("web.config");
                 bool webConfigFileExists = File.Exists(webConfigPhysicalPath);
+                if (!webConfigFileExists && !OperatingSystem.IsWindows())
+                {
+					webConfigPhysicalPath = helperFunctions.MapPath("Web.config");
+					webConfigFileExists = File.Exists(webConfigPhysicalPath);
+				}
 
-                // The CustomLoaderHelper class is defined in System.Web.ApplicationServices.dll
-                // so that OOB frameworks don't need to take a hardcoded System.Web.dll dependency.
-                // There might be weird issues if we try to load a GACed System.Web.dll into the
-                // same AppDomain as a bin-deployed System.Web.dll.
-                supportFunctions = _functions;
+				// The CustomLoaderHelper class is defined in System.Web.ApplicationServices.dll
+				// so that OOB frameworks don't need to take a hardcoded System.Web.dll dependency.
+				// There might be weird issues if we try to load a GACed System.Web.dll into the
+				// same AppDomain as a bin-deployed System.Web.dll.
+				supportFunctions = _functions;
                 return CustomLoaderHelper.GetCustomLoader(
                     helperFunctions: helperFunctions,
                     appConfigMetabasePath: appConfigPath,

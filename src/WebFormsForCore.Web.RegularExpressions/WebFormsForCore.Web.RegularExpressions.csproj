@@ -9,6 +9,7 @@
 		<DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
 		<SignAssembly>True</SignAssembly>
         <AssemblyName>System.Web.RegularExpressions</AssemblyName>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
 
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.RegularExpressions</PackageId>
         <Title>WebFormsForCore.Web.RegularExpressions</Title>

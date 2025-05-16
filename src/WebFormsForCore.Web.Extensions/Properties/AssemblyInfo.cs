@@ -123,7 +123,6 @@ using WRA = System.Web.UI.WebResourceAttribute;
 [assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsForCore")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile(@"..\SigningKey\WebFormsForCore.snk")]
 #endif
 
 // Suppress Code Analysis violations for terms that appear frequently in resource strings

@@ -1216,7 +1216,7 @@ namespace System.Web.Hosting {
                 // modified during this process anyway.
 
                 string appRootPhysicalPath = helperFunctions.AppPhysicalPath;
-                string webConfigPhysicalPath = helperFunctions.MapPath("Web.config");
+                string webConfigPhysicalPath = helperFunctions.MapPath("web.config");
                 bool webConfigFileExists = File.Exists(webConfigPhysicalPath);
 
                 // The CustomLoaderHelper class is defined in System.Web.ApplicationServices.dll

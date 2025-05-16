@@ -39,7 +39,6 @@ using System.Web.Security;
 [assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsForCore")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile(@"..\SigningKey\WebFormsForCore.snk")]
 #endif
 
 [assembly:System.Runtime.InteropServices.TypeLibVersion(2, 4)]

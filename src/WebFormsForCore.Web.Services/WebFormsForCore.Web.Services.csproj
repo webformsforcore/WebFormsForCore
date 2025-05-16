@@ -11,6 +11,7 @@
 		<DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
 		<SignAssembly>True</SignAssembly>
         <AssemblyName>System.Web.Services</AssemblyName>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
 
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Services</PackageId>
         <Title>WebFormsForCore.Web.Services</Title>

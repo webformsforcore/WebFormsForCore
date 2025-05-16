@@ -33,25 +33,19 @@ namespace System.Web.Configuration {
             : this(null, physicalDirectory, isAppRoot, configFileBaseName) {
         }
 
-        private VirtualDirectoryMapping(VirtualPath virtualDirectory, string physicalDirectory, bool isAppRoot, string configFileBaseName) {
+		private string FirstCapitalLetter(string name) => name != null ?
+        	(name.Length > 0 ? $"{char.ToUpper(name[0])}{name.Substring(1)}" : "") : null;
+
+		private VirtualDirectoryMapping(VirtualPath virtualDirectory, string physicalDirectory, bool isAppRoot, string configFileBaseName) {
             _virtualDirectory = virtualDirectory;
             _isAppRoot = isAppRoot;
 
             PhysicalDirectory = physicalDirectory;
             if (OperatingSystem.IsWindows()) ConfigFileBaseName = configFileBaseName;
-            else if (Directory.Exists(physicalDirectory))
+            else if (!File.Exists(Path.Combine(physicalDirectory, configFileBaseName)))
             {
-                var files = Directory.GetFiles(physicalDirectory);
-                var webConfig = files.FirstOrDefault(file => Path.GetFileName(file).Equals(configFileBaseName, StringComparison.OrdinalIgnoreCase));
-				if (webConfig != null)
-				{
-					ConfigFileBaseName = Path.GetFileName(webConfig);
-				}
-				else
-				{
-					ConfigFileBaseName = configFileBaseName;
-				}
-			} else ConfigFileBaseName = configFileBaseName;
+                ConfigFileBaseName = FirstCapitalLetter(configFileBaseName);
+            } else ConfigFileBaseName = configFileBaseName;
 		}
 
         internal VirtualDirectoryMapping Clone() {

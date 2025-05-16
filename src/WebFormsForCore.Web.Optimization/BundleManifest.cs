@@ -15,9 +15,10 @@ namespace System.Web.Optimization {
     /// </summary>
     public sealed class BundleManifest {
         private const string XsdResourceName = "System.Web.Optimization.BundleManifestSchema.xsd";
-        private const string DefaultBundlePath = "~/bundle.config";
+		private const string DefaultBundlePath = "~/bundle.config";
+		private const string AlternateBundlePath = "~/Bundle.config";
 
-        private BundleManifest() {
+		private BundleManifest() {
         }
 
         /// <summary>
@@ -53,12 +54,14 @@ namespace System.Web.Optimization {
         /// Gets the path to the bundle manifest file.
         /// </summary>
         /// <returns>The path to the bundle manifest file.</returns>
+        private static string bundleManifestPath = null;
         public static string BundleManifestPath {
             get {
                 // TODO: support app settings in the future
-                return DefaultBundlePath;
+                return bundleManifestPath ??= DefaultBundlePath;
             }
-        }
+            set => bundleManifestPath = value;
+		}
 
         /// <summary>
         /// Creates a bundle manifest object from a bundle manifest.
@@ -75,8 +78,15 @@ namespace System.Web.Optimization {
             }
 
             if (!vpp.FileExists(BundleManifestPath)) {
-                // If the bundle path is not user-specified and no file exists at the root, don't attempt to set up bundles.
-                return null;
+                if (!OperatingSystem.IsWindows() && vpp.FileExists(AlternateBundlePath))
+				{
+					BundleManifestPath = AlternateBundlePath;
+				}
+				else
+				{
+					// If the bundle path is not user-specified and no file exists at the root, don't attempt to set up bundles.
+					return null;
+				}
             }
 
             VirtualFile file = vpp.GetFile(BundleManifestPath);

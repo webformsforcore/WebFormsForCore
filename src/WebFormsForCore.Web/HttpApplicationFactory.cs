@@ -184,10 +184,17 @@ namespace System.Web {
                 }
             }
         }
+		private static string FirstCapitalLetter(string name) => name != null ?
+        	(name.Length > 0 ? $"{char.ToUpper(name[0])}{name.Substring(1)}" : "") : null;
 
-        internal static String GetApplicationFile() {
-            return Path.Combine(HttpRuntime.AppDomainAppPathInternal, applicationFileName);
-        }
+		internal static String GetApplicationFile() {
+            var path = Path.Combine(HttpRuntime.AppDomainAppPathInternal, applicationFileName);
+            if (!OperatingSystem.IsWindows() && !File.Exists(path))
+			{
+				path = Path.Combine(HttpRuntime.AppDomainAppPathInternal, FirstCapitalLetter(applicationFileName));
+			}
+            return path;
+		}
 
         private void CompileApplication() {
             // Get the Application Type and AppState from the global file
@@ -222,7 +229,7 @@ namespace System.Web {
             ReflectOnApplicationType();
         }
 
-        private void GetAppStateByParsingGlobalAsax() {
+		private void GetAppStateByParsingGlobalAsax() {
             using (new ApplicationImpersonationContext()) {
                 // It may not exist if the app is precompiled
                 if (FileUtil.FileExists(_appFilename)) {
@@ -234,6 +241,11 @@ namespace System.Web {
                     referencedAssemblies.Add(typeof(string).Assembly);
                     VirtualPath virtualPath = HttpRuntime.AppDomainAppVirtualPathObject.SimpleCombine(
                         applicationFileName);
+                    if (!OperatingSystem.IsWindows() && !virtualPath.FileExists())
+                    {
+						virtualPath = HttpRuntime.AppDomainAppVirtualPathObject.SimpleCombine(
+						    FirstCapitalLetter(applicationFileName));
+					}
                     parser.Parse(referencedAssemblies, virtualPath);
 
                     // Create app state

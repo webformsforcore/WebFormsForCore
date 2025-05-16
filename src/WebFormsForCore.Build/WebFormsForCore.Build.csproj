@@ -37,6 +37,8 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AssemblySearchPath_UseOutDir>false</AssemblySearchPath_UseOutDir>
         <AssemblySearchPath_UseCandidateAssemblyFiles>false</AssemblySearchPath_UseCandidateAssemblyFiles>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework) == 'net48'">

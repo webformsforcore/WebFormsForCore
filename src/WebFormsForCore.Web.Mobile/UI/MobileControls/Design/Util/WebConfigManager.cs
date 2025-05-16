@@ -50,13 +50,6 @@ namespace System.Web.UI.Design.MobileControls.Util
 					if (dataFileProjectItem != null)
 					{
 						_path = dataFileProjectItem.PhysicalPath;
-					} else
-                    {
-						dataFileProjectItem = webApplicationService.GetProjectItemFromUrl("~/Web.Config");
-						if (dataFileProjectItem != null)
-						{
-							_path = dataFileProjectItem.PhysicalPath;
-						}
 					}
 				}
             }
