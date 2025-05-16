@@ -16,8 +16,6 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Test
 
 			var app = builder.Build();
 
-			Thread.Sleep(15000);
-
 			app.UseWebForms(options => options.HandleAllRequestsWithWebForms());
 			
 			app.Run();
