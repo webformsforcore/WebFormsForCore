@@ -7,7 +7,8 @@ library it becomes easy to migrate your existing WebForms application to run
 on ASP.NET Core also.
 
 We successfully ported the SolidCP Control Panel, a huge WebForms code base, to ASP.NET Core & Linux
-with the aid of this library. The goal of running SolidCP on Linux without porting everything to Blazor was also our motivation of creating WebFormsForCore. 
+with the aid of this library. The goal of running SolidCP on Linux without porting everything to Blazor was
+also our motivation of creating WebFormsForCore. 
 
 ## Support
 If you need support porting your project to .NET Core & WebFormsForCore, we provide support for
@@ -90,8 +91,9 @@ SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsF
 ```
 <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.3.3" ExcludeAssets="runtime" />
 ```
-If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#, not for
-VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't work.
+If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#,
+not for VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't
+work.
 
 Finally configure ASP.NET Core to use WebForms in the initialization code Program.cs like so:
 ```
