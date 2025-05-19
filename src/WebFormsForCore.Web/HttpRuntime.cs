@@ -58,7 +58,7 @@ namespace System.Web
 	public sealed class HttpRuntime
 	{
 
-		internal const string codegenDirName = "Temporary ASP.NET Files";
+		internal const string codegenDirName = "Temporary_ASP.NET_Files";
 		internal const string profileFileName = "profileoptimization.prof";
 
 		private static HttpRuntime _theRuntime;   // single instance of the class
@@ -1027,7 +1027,8 @@ namespace System.Web
 
                 tempDirectory = Path.GetTempPath();
                 Debug.Assert(System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory));
-                tempDirectory = Path.Combine(tempDirectory, codegenDirName);
+                if (OSInfo.IsWindows) tempDirectory = Path.Combine(tempDirectory, codegenDirName);
+                else tempDirectory = Path.Combine(tempDirectory, $"{codegenDirName}-{Environment.UserName}");
             }
   
             _tempDir = tempDirectory;
