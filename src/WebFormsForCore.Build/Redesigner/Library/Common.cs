@@ -182,6 +182,9 @@ namespace Redesigner.Library
 			string designer;
 			string designerFilename = filename + ".designer.cs";
 
+			if (File.Exists(designerFilename) &&
+				File.GetLastWriteTimeUtc(filename) < File.GetLastWriteTimeUtc(designerFilename)) return true;
+
 			// Load the markup from the .aspx, .ascx or .master file.
 			MarkupReader markup = new MarkupReader();
 			MarkupInfo markupInfo;
