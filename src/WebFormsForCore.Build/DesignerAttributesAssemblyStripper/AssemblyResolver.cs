@@ -47,7 +47,7 @@ public class AssemblyResolver: DefaultAssemblyResolver {
 
 	public void AddRuntimeConfig(params IEnumerable<string> filenames)
 	{
-		var dotnetInfo = Shell.Standard.Exec("dotnet --info").Output().Result;
+		var dotnetInfo = Shell.Standard.Exec("dotnet --list-runtimes").Output().Result;
 
 		var matches = Regex.Matches(dotnetInfo, @"\s+(?<name>[a-zA-Z0-9.]+)\s+(?<version>[0-9.]+)\s+\[(?<path>[^\]]+)\]");
 		var packs = matches
