@@ -135,7 +135,9 @@
                 Debugger.Break();
             }
             else {
+#if NETFRAMEWORK
                 NativeMethods.DebugBreak();
+#endif
             }
         }
 
@@ -772,11 +774,12 @@
             }
         }
 
+#if NETFRAMEWORK
         [SuppressUnmanagedCodeSecurityAttribute]
         private static class NativeMethods {
             [DllImport("kernel32.dll")]
             internal extern static void DebugBreak();
         }
-
+#endif
     }
 }

@@ -29,12 +29,14 @@ namespace System.Web.Util {
         internal const string   DATE_FORMAT = @"yyyy/MM/dd HH:mm:ss.ffff";
         internal const string   TIME_FORMAT = @"HH:mm:ss:ffff";
 
+#if NETFRAMEWORK
         // Some of these APIs must be always available, not #ifdefed away.
         [SuppressUnmanagedCodeSecurity]
         private static partial class NativeMethods {
             [DllImport("kernel32.dll")]
             internal extern static bool IsDebuggerPresent();
         }
+#endif
 
 #if DBG
         private static partial class NativeMethods {
@@ -842,13 +844,17 @@ A=Exit process R=Debug I=Continue";
         // We don't #ifdef this away since we might need to change behavior based
         // on whether one is attached.
         internal static bool IsDebuggerPresent() {
+#if NETFRAMEWORK
             return (NativeMethods.IsDebuggerPresent() || System.Diagnostics.Debugger.IsAttached);
-        }
+#else
+			return System.Diagnostics.Debugger.IsAttached;
+#endif
+		}
 
-        //
-        // Breaks into the debugger, or launches one if not yet attached.
-        //
-        [System.Diagnostics.Conditional("DBG")]
+		//
+		// Breaks into the debugger, or launches one if not yet attached.
+		//
+		[System.Diagnostics.Conditional("DBG")]
         [ResourceExposure(ResourceScope.None)]
         internal static void Break() {
 #if DBG
