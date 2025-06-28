@@ -136,9 +136,9 @@ public class AssemblyStripper
 		};
 		foreach (var dll in dlls)
 		{
+			AssemblyDefinition assembly = null;
 			try
 			{
-				AssemblyDefinition assembly = null;
 				try
 				{
 					assembly = AssemblyDefinition.ReadAssembly(dll, parameters);
@@ -151,6 +151,9 @@ public class AssemblyStripper
 			catch (Exception ex)
 			{
 				LogWarning($"Failed to process {dll}: {ex.Message}");
+			} finally
+			{
+				assembly?.Dispose();
 			}
 		}	
 	}
