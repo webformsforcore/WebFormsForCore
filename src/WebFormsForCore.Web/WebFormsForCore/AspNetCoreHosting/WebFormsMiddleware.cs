@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Builder;
 using Core = Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -22,6 +23,12 @@ namespace Microsoft.AspNetCore.Builder
 		public string VirtualPath { get; set; }
 		public string PhysicalPath { get; set; }
 		public string AppId { get; set; }
+		public bool HandleAllRequestsWithWebForms = false;
+		public IEnumerable<string> HandleExtensions = null;
+		public IEnumerable<string> AddHandleExtensions = Array.Empty<string>();
+		public IEnumerable<string> DefaultDocuments = null;
+		public IEnumerable<string> AddDefaultDocuments = Array.Empty<string>();
+
 
 		private readonly Core.RequestDelegate next;
 
@@ -37,6 +44,11 @@ namespace Microsoft.AspNetCore.Builder
 					//AppId = ApplicationManager.CreateApplicationId(VirtualPath, PhysicalPath);
 					//host = ApplicationManager.CreateInstanceInNewWorkerLoadContext(typeof(AspNetCoreHost), AppId, System.Web.VirtualPath.Create(VirtualPath), PhysicalPath, UseSeparateAssemblyLoadContext) as AspNetCoreHost;
 					host = CreateWorkerLoadContextWithHost(VirtualPath, PhysicalPath, typeof(AspNetCoreHost)) as AspNetCoreHost;
+					if (HandleExtensions != null) host.HandleExtensions = HandleExtensions.ToArray();
+					if (AddHandleExtensions.Any()) host.HandleExtensions = host.HandleExtensions.Concat(AddHandleExtensions).ToArray();
+					if (DefaultDocuments != null) host.DefaultDocuments = DefaultDocuments.ToArray();
+					if (AddDefaultDocuments.Any()) host.DefaultDocuments = host.DefaultDocuments.Concat(AddDefaultDocuments).ToArray();
+					host.HandleAllRequestsWithWebForms = HandleAllRequestsWithWebForms;
 				}
 				return host;
 			}
@@ -82,9 +94,9 @@ namespace Microsoft.AspNetCore.Builder
 			//PhysicalPath = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(Assembly.GetEntryAssembly().CodeBase).AbsolutePath));
 			VirtualPath = "/";
 
-			Host.Configure(VirtualPath, PhysicalPath);
-
 			optionsBuilder?.Invoke(new WebFormsOptions(this));
+
+			Host.Configure(VirtualPath, PhysicalPath);
 		}
 
 		public void AllowSynchronousIO(Core.HttpContext context)
@@ -116,13 +128,17 @@ namespace Microsoft.AspNetCore.Builder
 		WebFormsMiddleware Instance;
 
 		public WebFormsOptions(WebFormsMiddleware instance) { Instance = instance; }
-		public WebFormsOptions HandleExtensions(params string[] extensions) { Instance.Host.HandleExtensions = extensions; return this; }
-		public WebFormsOptions AddHandleExtensions(params string[] extensions) { Instance.Host.HandleExtensions = Instance.Host.HandleExtensions.Concat(extensions).ToArray(); return this; }
-		public WebFormsOptions DefaultDocuments(params string[] docs) { Instance.Host.DefaultDocuments = docs; return this; }
-		public WebFormsOptions AddDefaultDocuments(params string[] docs) { Instance.Host.DefaultDocuments = Instance.Host.DefaultDocuments.Concat(docs).ToArray(); return this; }
-		public WebFormsOptions VirtualPath(string path) { Instance.VirtualPath = path; return this; }
+		public WebFormsOptions HandleExtensions(params string[] extensions) { Instance.HandleExtensions = extensions; return this; }
+		public WebFormsOptions AddHandleExtensions(params string[] extensions) { Instance.AddHandleExtensions = Instance.AddHandleExtensions.Concat(extensions).ToArray(); return this; }
+		public WebFormsOptions DefaultDocuments(params string[] docs) { Instance.DefaultDocuments = docs; return this; }
+		public WebFormsOptions AddDefaultDocuments(params string[] docs) { Instance.AddDefaultDocuments = Instance.AddDefaultDocuments.Concat(docs).ToArray(); return this; }
+		public WebFormsOptions VirtualPath(string path) {
+			if (!path.StartsWith('/')) path = "/" + path;
+			Instance.VirtualPath = path;
+			return this;
+		}
 		public WebFormsOptions PhysicalPath(string path) { Instance.PhysicalPath = path; return this; }
-		public WebFormsOptions HandleAllRequestsWithWebForms() { Instance.Host.HandleAllRequestsWithWebForms = true; return this; }
+		public WebFormsOptions HandleAllRequestsWithWebForms() { Instance.HandleAllRequestsWithWebForms = true; return this; }
 	}
 
 	public static class WebFormsMiddlewareExtensions

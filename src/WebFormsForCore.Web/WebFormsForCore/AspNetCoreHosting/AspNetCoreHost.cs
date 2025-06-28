@@ -142,6 +142,7 @@ namespace System.Web.Hosting
                               bool requireAuthentication, bool disableDirectoryListing)
         {
             installPath = null;
+            if (!virtualPath.StartsWith('/')) virtualPath = "/" + virtualPath;
             this.virtualPath = virtualPath;
             this.requireAuthentication = requireAuthentication;
             this.disableDirectoryListing = disableDirectoryListing;
@@ -245,11 +246,13 @@ namespace System.Web.Hosting
             if (path == "") path = "/";
             if (path != "/") path = pathWithoutSlash;
 
+			var fullpath = $"{context.Request.PathBase.Value.TrimEnd('/')}/{path}";
+
 			if (HandleExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return true;
 
             if (ProhibitedExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return false;
 
-            var mappedPath = MapPath(path);
+            var mappedPath = MapPath(fullpath);
             if (Directory.Exists(mappedPath))
             {
 				var defaultDoc = DefaultDocuments

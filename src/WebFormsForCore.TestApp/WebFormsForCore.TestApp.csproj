@@ -43,18 +43,18 @@
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.RegularExpressions\WebFormsForCore.Web.RegularExpressions.csproj" />
         -->
-        <!--<ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Infrastructure\WebFormsForCore.Web.Infrastructure.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization.WebForms\WebFormsForCore.Web.Optimization.WebForms.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
-        <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />-->
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.3.7" />
+        <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
+        <!--<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.3.7" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Infrastructure" Version="1.3.7" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Extensions" Version="1.3.7" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Optimization" Version="1.3.7" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms" Version="1.3.7" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.WebGrease" Version="1.3.7" />
+        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.WebGrease" Version="1.3.7" />-->
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.3.7" ExcludeAssets="runtime" />
     </ItemGroup>
 
@@ -101,6 +101,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Update="Web.config">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Web.Debug.config">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Web.Release.config">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
       <Content Update="WebFormsForCore.TestApp.deps.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -123,4 +132,7 @@
         </ItemGroup>
     </Target>
 
+    <Target Name="CopyWebConfig" AfterTargets="Build">
+        <Copy SourceFiles="Core.Web.Config" DestinationFiles="bin_dotnet\Web.config" />
+    </Target>
 </Project>

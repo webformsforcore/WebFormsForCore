@@ -117,7 +117,12 @@ namespace System.Configuration
 
 		private static bool IsWebConfig(string appConfigFile)
 		{
+#if NETFRAMEWORK
 			return AppDomain.CurrentDomain.GetData(".appVPath") is string || appConfigFile != null && (appConfigFile.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || appConfigFile.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+#else
+			return appConfigFile != null && (appConfigFile.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || appConfigFile.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+#endif
+
 		}
 	}
 }
