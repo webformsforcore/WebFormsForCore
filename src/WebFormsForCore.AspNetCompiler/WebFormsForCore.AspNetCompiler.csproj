@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>aspnetcore_compiler</AssemblyName>
+        <StartupObject>System.Web.Compilation.Precompiler</StartupObject>
+        <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.3.9" />
+    </ItemGroup>
+
+</Project>

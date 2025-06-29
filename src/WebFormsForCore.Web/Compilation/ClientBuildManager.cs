@@ -67,6 +67,7 @@ public class ClientBuildManagerParameter {
     private string _strongNameKeyContainer;
     private PrecompilationFlags _precompilationFlags = PrecompilationFlags.Default;
     private List<string> _excludedVirtualPaths;
+    private string _binFolder;
 
     public List<string> ExcludedVirtualPaths {
         get {
@@ -91,6 +92,12 @@ public class ClientBuildManagerParameter {
     public string StrongNameKeyContainer {
         get { return _strongNameKeyContainer; }
         set { _strongNameKeyContainer = value; }
+    }
+
+    public string BinFolder
+    {
+        get => _binFolder;
+        set => _binFolder = value;
     }
 }
 
