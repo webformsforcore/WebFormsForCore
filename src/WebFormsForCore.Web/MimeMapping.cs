@@ -352,6 +352,7 @@ namespace System.Web {
                 AddMapping(".stl", "application/vnd.ms-pki.stl");
                 AddMapping(".sv4cpio", "application/x-sv4cpio");
                 AddMapping(".sv4crc", "application/x-sv4crc");
+                AddMapping(".svg", "image/svg+xml");
                 AddMapping(".swf", "application/x-shockwave-flash");
                 AddMapping(".t", "application/x-troff");
                 AddMapping(".tar", "application/x-tar");
@@ -390,6 +391,7 @@ namespace System.Web {
                 AddMapping(".wbmp", "image/vnd.wap.wbmp");
                 AddMapping(".wcm", "application/vnd.ms-works");
                 AddMapping(".wdb", "application/vnd.ms-works");
+                AddMapping(".webp", "image/webp");
                 AddMapping(".wks", "application/vnd.ms-works");
                 AddMapping(".wm", "video/x-ms-wm");
                 AddMapping(".wma", "audio/x-ms-wma");
