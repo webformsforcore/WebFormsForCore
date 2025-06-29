@@ -644,9 +644,9 @@ namespace System.Web.Hosting
 					headers.Add(name);
 					headers.Add(str);
 				}
-			}
-
-			// append AspFilterSessionId
+			} 
+            
+            // append AspFilterSessionId
             var path = Context.Request.Path.Value ?? string.Empty;
             // Optimize for the common case where there is no cookie
             if (path.IndexOf('(') != -1)
@@ -665,7 +665,6 @@ namespace System.Web.Hosting
             }
 
             // copy to array unknown headers
-
 			int n = headers.Count / 2;
 			unknownRequestHeaders = new string[n][];
 			int j = 0;
