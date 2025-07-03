@@ -240,16 +240,21 @@ namespace System.Web.Hosting
         public string MapPath(string path) => HostingEnvironment.MapPath(path);
         public bool IsLegacyRequest(Core.HttpContext context)
         {
+            if (HandleAllRequestsWithWebForms)
+                return true;
+
             var path = context.Request.Path.Value;
-            string pathWithoutSlash = path;
-            if (path.EndsWith("/")) pathWithoutSlash = path.Substring(0, path.Length - 1);
+            var pathWithoutSlash = path;
+            if (path.EndsWith('/')) pathWithoutSlash = path[..^1];
             if (path == "") path = "/";
             if (path != "/") path = pathWithoutSlash;
 
 			var fullpath = $"{context.Request.PathBase.Value.TrimEnd('/')}/{path}";
 
-			if (HandleExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return true;
-
+			if (HandleExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase) )) 
+                return true;
+            if (HandleExtensions.Any(ext => path.LastIndexOf('/') is var index and > 0 && path[..index].EndsWith(ext, StringComparison.OrdinalIgnoreCase))) 
+                return true;
             if (ProhibitedExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase))) return false;
 
             var mappedPath = MapPath(fullpath);
@@ -257,8 +262,7 @@ namespace System.Web.Hosting
             {
 				var defaultDoc = DefaultDocuments
                     .Select(doc => new { Mapped = Path.Combine(mappedPath, doc), Virtual = $"{pathWithoutSlash}/{doc}" })
-                    .Where(doc => File.Exists(doc.Mapped))
-                    .FirstOrDefault();
+                    .FirstOrDefault(doc => File.Exists(doc.Mapped));
                 if (defaultDoc != null)
                 {
                     context.Request.Path = defaultDoc.Virtual;
@@ -266,9 +270,8 @@ namespace System.Web.Hosting
                 }
             }
 
-			return HandleAllRequestsWithWebForms || 
-                File.Exists(mappedPath) &&
-                !(Path.GetDirectoryName(mappedPath) == AppDomain.CurrentDomain.BaseDirectory);
+			return File.Exists(mappedPath) &&
+                Path.GetDirectoryName(mappedPath) != AppDomain.CurrentDomain.BaseDirectory;
 		}
 
 		public bool IsVirtualPathInApp(String path)
