@@ -240,9 +240,6 @@ namespace System.Web.Hosting
         public string MapPath(string path) => HostingEnvironment.MapPath(path);
         public bool IsLegacyRequest(Core.HttpContext context)
         {
-            if (HandleAllRequestsWithWebForms)
-                return true;
-
             var path = context.Request.Path.Value;
             var pathWithoutSlash = path;
             if (path.EndsWith('/')) pathWithoutSlash = path[..^1];
@@ -270,8 +267,8 @@ namespace System.Web.Hosting
                 }
             }
 
-			return File.Exists(mappedPath) &&
-                Path.GetDirectoryName(mappedPath) != AppDomain.CurrentDomain.BaseDirectory;
+			return HandleAllRequestsWithWebForms || File.Exists(mappedPath) &&
+                Path.GetDirectoryName(mappedPath) != AppDomain.CurrentDomain.BaseDirectory; // Do not serve bin_dotnet directory
 		}
 
 		public bool IsVirtualPathInApp(String path)

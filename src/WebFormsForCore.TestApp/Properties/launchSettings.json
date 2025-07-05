@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "WebFormsForCore.TestApp": {
+    "Kestrel": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
