@@ -644,10 +644,27 @@ namespace System.Web.Hosting
 					headers.Add(name);
 					headers.Add(str);
 				}
-			}
+			} 
+            
+            // append AspFilterSessionId
+            var path = Context.Request.Path.Value ?? string.Empty;
+            // Optimize for the common case where there is no cookie
+            if (path.IndexOf('(') != -1)
+            {
+                int endPos = path.LastIndexOf(")/", StringComparison.Ordinal);
+                int startPos = (endPos > 2 ? path.LastIndexOf("/(", endPos - 1, endPos, StringComparison.Ordinal) : -1);
+                if (startPos < 0) // pattern not found: common case, exit immediately
+                    return;
 
-			// copy to array unknown headers
+                if (IsValidHeader(path, startPos + 2, endPos))
+                {
+                    var sessionHeader = path.Substring(startPos + 2, endPos - startPos - 2);
+                    headers.Add("AspFilterSessionId");
+                    headers.Add(sessionHeader);
+                }
+            }
 
+            // copy to array unknown headers
 			int n = headers.Count / 2;
 			unknownRequestHeaders = new string[n][];
 			int j = 0;
@@ -659,6 +676,45 @@ namespace System.Web.Hosting
 				unknownRequestHeaders[i][1] = headers[j++];
 			}
 		}
+
+        // Make sure sub-string if of the pattern: A(XXXX)N(XXXXX)P(XXXXX) and so on.
+        static private bool IsValidHeader(string path, int startPos, int endPos)
+        {
+            if (endPos - startPos < 3) // Minimum len is "X()"
+                return false;
+
+            while (startPos <= endPos - 3) { // Each iteration deals with one "A(XXXX)" pattern
+
+                if (path[startPos] < 'A' || path[startPos] > 'Z') // Make sure pattern starts with a capital letter
+                    return false;
+
+                if (path[startPos + 1] != '(') // Make sure next char is '('
+                    return false;
+
+                startPos += 2;
+                bool found = false;
+                for (; startPos < endPos; startPos++) { // Find the ending ')'
+
+                    if (path[startPos] == ')') { // found it!
+                        startPos++; // Set position for the next pattern
+                        found = true;
+                        break; // Break out of this for-loop.
+                    }
+
+                    if (path[startPos] == '/') { // Can't contain path separaters
+                        return false;
+                    }
+                }
+                if (!found)  {
+                    return false; // Ending ')' not found!
+                }
+            }
+
+            if (startPos < endPos) // All chars consumed?
+                return false;
+
+            return true;
+        }
 
 		private void ParsePostedContent()
 		{
