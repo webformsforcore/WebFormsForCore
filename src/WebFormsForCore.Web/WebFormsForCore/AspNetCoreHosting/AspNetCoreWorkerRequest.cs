@@ -766,7 +766,7 @@ namespace System.Web.Hosting
 
 				if (lastDot >= 0 && lastSlh >= 0 && lastDot < lastSlh)
 				{
-					int ipi = path.LastIndexOf('/', lastDot); 
+					int ipi = path.LastIndexOf('/', path.Length-1, path.Length - lastDot - 1); 
 					filePath = path[..ipi];
 					pathInfo = path[ipi..];
 				}
