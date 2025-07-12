@@ -1,10 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: System.Web.Compilation.CompilerResources
-// Assembly: aspnet_compiler, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
-// MVID: 706348EF-35A1-4428-B4AC-3BBDDF84899B
-// Assembly location: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\aspnet_compiler.exe
-
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;

@@ -439,12 +439,13 @@ namespace System.Web.Compilation {
             // Top level directories that have a special semantic
             _excludedTopLevelDirectories = new CaseInsensitiveStringSet();
             _excludedTopLevelDirectories.Add(HttpRuntime.BinDirectoryName);
+            _excludedTopLevelDirectories.Add(HttpRuntime.BinDotnetDirectoryName);
             _excludedTopLevelDirectories.Add(HttpRuntime.CodeDirectoryName);
             _excludedTopLevelDirectories.Add(HttpRuntime.ResourcesDirectoryName);
             _excludedTopLevelDirectories.Add(HttpRuntime.LocalResourcesDirectoryName);
             _excludedTopLevelDirectories.Add(HttpRuntime.WebRefDirectoryName);
             _excludedTopLevelDirectories.Add(HttpRuntime.ThemesDirectoryName);
-
+          
             // Top level directories that are not requestable
             // It's the same as _excludedTopLevelDirectories, except that we allow
             // the bin directory to avoid a v1 breaking change (VSWhidbey 465018)

@@ -69,6 +69,7 @@ namespace System.Web
 		//
 
 		internal const string BinDirectoryName = "bin";
+        internal static string BinDotnetDirectoryName => Path.GetFileName(AppDomain.CurrentDomain.BaseDirectory);
 		internal const string CodeDirectoryName = "App_Code";
 		internal const string WebRefDirectoryName = "App_WebReferences";
 		internal const string ResourcesDirectoryName = "App_GlobalResources";
