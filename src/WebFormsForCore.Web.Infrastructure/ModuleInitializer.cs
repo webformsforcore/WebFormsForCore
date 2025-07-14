@@ -1,6 +1,7 @@
 ﻿using System.Security;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Web.Infrastructure;
 
@@ -24,8 +25,11 @@ internal static class ModuleInitializer
 
 		private static void CheckKillBit()
 		{
-			using (KillBitHelper killBitHelper = new KillBitHelper())
-				killBitHelper.ThrowIfKillBitIsSet();
+			if (OSInfo.IsWindows)
+			{
+				using (KillBitHelper killBitHelper = new KillBitHelper())
+					killBitHelper.ThrowIfKillBitIsSet();
+			}
 		}
 	}
 }

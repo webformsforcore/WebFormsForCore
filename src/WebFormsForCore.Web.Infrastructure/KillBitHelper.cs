@@ -7,6 +7,8 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
+using System.Web;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Web.Infrastructure;
 
