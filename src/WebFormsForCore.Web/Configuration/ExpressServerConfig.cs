@@ -251,7 +251,9 @@ namespace System.Web.Configuration {
             directory = MapPathCaching(siteID, path);
             if (directory != null) {
                 baseName = HttpConfigurationSystem.WebConfigFileName;
-            }
+                var mpath = System.IO.Path.Combine(directory, baseName);
+                if (!System.IO.File.Exists(mpath)) baseName = HttpConfigurationSystem.WebConfigAltFileName;
+			}
             else {
                 baseName = null;
             }

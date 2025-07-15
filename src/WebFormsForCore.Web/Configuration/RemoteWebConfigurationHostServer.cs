@@ -196,8 +196,11 @@ namespace System.Web.Configuration {
                     string currentConfigPath = WebConfigurationHost.GetConfigPathFromSiteIDAndVPath(appSiteID, currentVirtualPath);
                     string currentFilePath = configMapPath.MapPath(appSiteID, currentVirtualPath.VirtualPathString);
                     currentFilePath = System.IO.Path.Combine(currentFilePath, HttpConfigurationSystem.WebConfigFileName);
-
-                    filePaths.Add(currentConfigPath);
+                    if (!File.Exists(currentFilePath))
+                    {
+						currentFilePath = System.IO.Path.Combine(currentFilePath, HttpConfigurationSystem.WebConfigAltFileName);
+					}
+					filePaths.Add(currentConfigPath);
                     filePaths.Add(currentFilePath);
                 }
             }
