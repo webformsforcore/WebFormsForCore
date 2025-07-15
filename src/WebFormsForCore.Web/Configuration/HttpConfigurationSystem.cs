@@ -41,8 +41,10 @@ namespace System.Web.Configuration {
 		internal const string MachineConfigSubdirectory = "App_Data";
 #endif
         internal const string MachineConfigFilename = "machine.config";
-        internal const string RootWebConfigFilename         = "web.config";
-        internal const string WebConfigFileName             = "web.config";
+		internal const string RootWebConfigFilename = "web.config";
+		internal const string RootWebConfigAltFilename = "Web.config";
+		internal const string WebConfigFileName             = "web.config";
+        internal const string WebConfigAltFileName          = "Web.config";
         internal const string InetsrvDirectoryName          = "inetsrv";
         internal const string ApplicationHostConfigFileName = "applicationHost.config";
 

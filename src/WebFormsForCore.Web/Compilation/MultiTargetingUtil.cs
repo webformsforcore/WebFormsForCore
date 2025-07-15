@@ -362,7 +362,12 @@ namespace System.Web.Compilation {
                 VirtualPath vpath = HttpRuntime.AppDomainAppVirtualPathObject;
                 if (vpath != null) {
                     string path = vpath.SimpleCombine(HttpConfigurationSystem.WebConfigFileName).MapPath();
-                    return System.IO.File.Exists(path);
+                    if (!System.IO.File.Exists(path))
+                    {
+						path = vpath.SimpleCombine(HttpConfigurationSystem.WebConfigAltFileName).MapPath();
+                        if (!System.IO.File.Exists(path)) return false;
+					}
+                    return true;
                 }
                 return false;
             }
