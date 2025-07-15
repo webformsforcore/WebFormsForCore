@@ -6,6 +6,7 @@
 
 namespace System.Web.Configuration {
 
+    using System;
     using System.Configuration;
     using System.Collections;
     using System.Globalization;
@@ -94,15 +95,14 @@ namespace System.Web.Configuration {
         private void GetPathConfigFilenameWorker(string siteID, VirtualPath path, out string directory, out string baseName) {
             directory = MapPathCaching(siteID, path);
             if (directory != null) {
-                if (!OperatingSystem.IsWindows() && Directory.Exists(directory))
-                {
-                    var files = Directory.GetFiles(directory);
-                    var config = files.FirstOrDefault(f => Path.GetFileName(f).Equals(HttpConfigurationSystem.WebConfigFileName, StringComparison.OrdinalIgnoreCase));
-                    if (config != null) baseName = config;
-					else baseName = HttpConfigurationSystem.WebConfigFileName;
-				} else baseName = HttpConfigurationSystem.WebConfigFileName;
-            }
-            else {
+				baseName = HttpConfigurationSystem.WebConfigFileName;
+				if (!OperatingSystem.IsWindows())
+				{
+					var mpath = System.IO.Path.Combine(directory, baseName);
+					if (!System.IO.File.Exists(mpath)) baseName = HttpConfigurationSystem.WebConfigAltFileName;
+				}
+			}
+			else {
                 baseName = null;
             }
         }

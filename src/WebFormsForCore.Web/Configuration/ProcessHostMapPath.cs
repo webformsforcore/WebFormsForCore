@@ -81,12 +81,17 @@ namespace System.Web.Configuration {
 
         private void GetPathConfigFilenameWorker(string siteID, VirtualPath path, out string directory, out string baseName) {
             directory = MapPathCaching(siteID, path);
-            if (directory != null) {
+            if (directory != null)
+            {
                 baseName = HttpConfigurationSystem.WebConfigFileName;
-				var mpath = System.IO.Path.Combine(directory, baseName);
-				if (!System.IO.File.Exists(mpath)) baseName = HttpConfigurationSystem.WebConfigAltFileName;
-			}
-			else {
+                if (!OSInfo.IsWindows)
+                {
+                    var mpath = System.IO.Path.Combine(directory, baseName);
+                    if (!System.IO.File.Exists(mpath)) baseName = HttpConfigurationSystem.WebConfigAltFileName;
+                }
+            }
+            else
+            {
                 baseName = null;
             }
 
