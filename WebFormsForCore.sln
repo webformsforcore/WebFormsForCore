@@ -114,6 +114,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AjaxControlToolkit.StaticRe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.AspNetCompiler", "src\WebFormsForCore.AspNetCompiler\WebFormsForCore.AspNetCompiler.csproj", "{0176294B-3A0B-4196-B5D7-A3728BB481B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.DynamicData", "src\WebFormsForCore.Web.DynamicData\WebFormsForCore.Web.DynamicData.csproj", "{C851B8AD-165A-6243-8E31-2E891B28DFFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFormsForCore.Web.Entity", "src\WebFormsForCore.Web.Entity\WebFormsForCore.Web.Entity.csproj", "{801337DB-EC51-4574-83F4-251C7CA9705F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -376,6 +380,30 @@ Global
 		{0176294B-3A0B-4196-B5D7-A3728BB481B0}.Release|x64.Build.0 = Release|Any CPU
 		{0176294B-3A0B-4196-B5D7-A3728BB481B0}.Release|x86.ActiveCfg = Release|Any CPU
 		{0176294B-3A0B-4196-B5D7-A3728BB481B0}.Release|x86.Build.0 = Release|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Debug|x64.Build.0 = Debug|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Debug|x86.Build.0 = Debug|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Release|x64.ActiveCfg = Release|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Release|x64.Build.0 = Release|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{C851B8AD-165A-6243-8E31-2E891B28DFFA}.Release|x86.Build.0 = Release|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Debug|x64.Build.0 = Debug|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Debug|x86.Build.0 = Debug|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Release|x64.ActiveCfg = Release|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Release|x64.Build.0 = Release|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Release|x86.ActiveCfg = Release|Any CPU
+		{801337DB-EC51-4574-83F4-251C7CA9705F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

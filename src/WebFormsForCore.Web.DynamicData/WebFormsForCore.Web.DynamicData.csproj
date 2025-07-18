@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>13</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_WEB;OBJECTSTATEFORMATTER;CONFIGPATHUTILITY_SYSTEMWEB;SAFESERIALIZATIONMANAGER;TRACE;RETAIL;WIN32</DefineConstants>
+        <DefineConstants>$(DefineConstants);WebFormsForCore;</DefineConstants>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
+        <AssemblyName>System.Web</AssemblyName>
+
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.DynamicData</PackageId>
+        <Title>WebFormsForCore.Web.DynamicData</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web.DynamicData</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.12.0</AssemblyVersion>
+        <FileVersion>8.0.12.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+        <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EntityFramework" Version="6.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
+      <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
+      <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+    </ItemGroup>
+
+    <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+        <ItemGroup>
+            <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8\.0\..\\'))" />
+            <!-- Do not import System.Web from dotnet -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+            <!-- Do not import System.Drawing from dotnet -->
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Drawing' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Drawing.Common'" />
+        </ItemGroup>
+    </Target>
+
+</Project>
