@@ -293,7 +293,7 @@ namespace System.Web
 		// IIS version and whether we're using the integrated pipeline
 		//
 		private static Version _iisVersion;
-		private static bool _useIntegratedPipeline;
+		private static bool _useIntegratedPipeline = true;
 
 		//
 		// Prefetch
@@ -1476,6 +1476,8 @@ namespace System.Web
                 return _useIntegratedPipeline;
             }
         }
+
+        internal static bool SetClassicPipeline() => _useIntegratedPipeline = false;
 
         internal static bool EnablePrefetchOptimization {
             get {

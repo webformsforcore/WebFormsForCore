@@ -24,6 +24,7 @@ namespace Microsoft.AspNetCore.Builder
 		public string PhysicalPath { get; set; }
 		public string AppId { get; set; }
 		public bool HandleAllRequestsWithWebForms = false;
+		public bool UseClassicMode = false;
 		public IEnumerable<string> HandleExtensions = null;
 		public IEnumerable<string> AddHandleExtensions = Array.Empty<string>();
 		public IEnumerable<string> DefaultDocuments = null;
@@ -49,6 +50,7 @@ namespace Microsoft.AspNetCore.Builder
 					if (DefaultDocuments != null) host.DefaultDocuments = DefaultDocuments.ToArray();
 					if (AddDefaultDocuments.Any()) host.DefaultDocuments = host.DefaultDocuments.Concat(AddDefaultDocuments).ToArray();
 					host.HandleAllRequestsWithWebForms = HandleAllRequestsWithWebForms;
+					host.UseClassicMode = UseClassicMode;
 				}
 				return host;
 			}
@@ -139,6 +141,8 @@ namespace Microsoft.AspNetCore.Builder
 		}
 		public WebFormsOptions PhysicalPath(string path) { Instance.PhysicalPath = path; return this; }
 		public WebFormsOptions HandleAllRequestsWithWebForms() { Instance.HandleAllRequestsWithWebForms = true; return this; }
+	
+		public WebFormsOptions UseClassicMode() { Instance.UseClassicMode = true; return this; }
 	}
 
 	public static class WebFormsMiddlewareExtensions
