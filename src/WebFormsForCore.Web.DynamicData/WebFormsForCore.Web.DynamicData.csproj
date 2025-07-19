@@ -11,7 +11,7 @@
         <DefineConstants>$(DefineConstants);WebFormsForCore;</DefineConstants>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
-        <AssemblyName>System.Web</AssemblyName>
+        <AssemblyName>System.Web.DynamicData</AssemblyName>
 
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.DynamicData</PackageId>
         <Title>WebFormsForCore.Web.DynamicData</Title>

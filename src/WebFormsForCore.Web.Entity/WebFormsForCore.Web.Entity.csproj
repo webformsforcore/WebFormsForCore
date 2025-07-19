@@ -1,19 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
+        <AssemblyName>System.Web.Entity</AssemblyName>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
-  </ItemGroup>
+        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Entity</PackageId>
+        <Title>WebFormsForCore.Web.Entity</Title>
+        <Authors>simonegli8</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Product>WebFormsForCore.Web.Entity</Product>
+        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <AssemblyVersion>8.0.12.0</AssemblyVersion>
+        <FileVersion>8.0.12.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebFormsForCore.Web.DynamicData\WebFormsForCore.Web.DynamicData.csproj" />
-    <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
-    <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WebFormsForCore.Web.DynamicData\WebFormsForCore.Web.DynamicData.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
+        <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+    </ItemGroup>
 
 </Project>
