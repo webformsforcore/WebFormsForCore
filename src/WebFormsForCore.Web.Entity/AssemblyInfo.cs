@@ -13,6 +13,3 @@
 // 
 // For details on this attribute, see http://msdn2.microsoft.com/en-us/library/bb397858.aspx
 [assembly: System.Security.SecurityTransparent]
-
-// Opts into loading designer-specific icons from the same assembly
-[assembly:System.Drawing.BitmapSuffixInSameAssembly]
