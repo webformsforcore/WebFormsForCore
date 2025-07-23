@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="ShowReportBodyDesc" xml:space="preserve"><value>Determines if the report content is rendered.</value></data>
+  <data name="ShowDocumentMapButtonDesc" xml:space="preserve"><value>Determines the visibility of the document map button on the tool bar.</value></data>
+  <data name="EnableHyperlinksDesc" xml:space="preserve"><value>Determines whether a report that contains hyperlink actions can be rendered.</value></data>
+  <data name="ServerReportPathDesc" xml:space="preserve"><value>The path to report on the Report Server.</value></data>
+  <data name="ZoomPercentDesc" xml:space="preserve"><value>Determines the percentage of zoom applied to the report when ZoomMode is set to Percent.</value></data>
+  <data name="AsyncProgressText" xml:space="preserve"><value>Loading...</value></data>
+  <data name="DisplayNameDesc" xml:space="preserve"><value>The user-visible name of the report.</value></data>
+  <data name="NotInDrillthrough" xml:space="preserve"><value>The operation can only be performed from a drillthrough report</value></data>
+  <data name="HyperlinkTargetDesc" xml:space="preserve"><value>The target window of the hyperlinks in the report.</value></data>
+  <data name="MissingReportSource" xml:space="preserve"><value>The source of the report definition has not been specified</value></data>
+  <data name="SortEventDesc" xml:space="preserve"><value>Occurs when the user performs a sort on the report.</value></data>
+  <data name="RenderCompleteEventDesc" xml:space="preserve"><value>Occurs when the rendering of the report in completed.</value></data>
+  <data name="ShowExportButtonDesc" xml:space="preserve"><value>Determines the visibility of the export button on the tool bar.</value></data>
+  <data name="SearchEventDesc" xml:space="preserve"><value>Occurs when the user searches for text in the report.</value></data>
+  <data name="ToolBarItemBorderColorDesc" xml:space="preserve"><value>The border color of icons on the tool bar.</value></data>
+  <data name="ErrorEventDesc" xml:space="preserve"><value>Occurs when errors are encountered while rendering a report.</value></data>
+  <data name="ServerReportDesc" xml:space="preserve"><value>Remote processing properties.</value></data>
+  <data name="SubreportProcessingEventDesc" xml:space="preserve"><value>Occurs when a subreport is being processed.</value></data>
+  <data name="EnableExternalImagesDesc" xml:space="preserve"><value>Determines whether a report that has external images can be rendered (for example, images referenced via a URL.)</value></data>
+  <data name="ZoomEventDesc" xml:space="preserve"><value>Occurs when the user changes the zoom setting for the report.</value></data>
+  <data name="ShowCredentialPromptsDesc" xml:space="preserve"><value>Determines whether credential prompts should be displayed during remote processing.</value></data>
+  <data name="ShowContextMenuDesc" xml:space="preserve"><value>Determines the visibility of the report context menu.</value></data>
+  <data name="NonClsCompliantException" xml:space="preserve"><value>Non-CLSCompliant exception.</value></data>
+  <data name="DocMapWidthDesc" xml:space="preserve"><value>Determines the width of the document map.</value></data>
+  <data name="Report" xml:space="preserve"><value>Report</value></data>
+  <data name="MissingDataSourceCredentials" xml:space="preserve"><value>One or more data sources is missing credentials</value></data>
+  <data name="WaitControlDisplayAfterDesc" xml:space="preserve"><value>The delay in milliseconds before the busy status indicator is displayed to the user.</value></data>
+  <data name="AsyncRenderingDesc" xml:space="preserve"><value>Determines if the report is rendered asynchronously from the rest of the web page.</value></data>
+  <data name="LocalProcessingErrors" xml:space="preserve"><value>An error occurred during local report processing.</value></data>
+  <data name="ParameterNotFound" xml:space="preserve"><value>Parameter '{0}' does not exist on this report</value></data>
+  <data name="LocalReportDesc" xml:space="preserve"><value>Local processing properties.</value></data>
+  <data name="HyperlinkSecurityError" xml:space="preserve"><value>Report '{0}' contains hyperlinks. The EnableHyperlinks property has not been set for this report</value></data>
+  <data name="ShowPromptAreaButtonDesc" xml:space="preserve"><value>Determines the visibility of the prompt area splitter button above the tool bar.</value></data>
+  <data name="PolicyFileLoadFailed" xml:space="preserve"><value>Failed to load policy file: {0}</value></data>
+  <data name="ParameterSpecifiedMultipleTimes" xml:space="preserve"><value>Parameter '{0}' was specified multiple times</value></data>
+  <data name="ShowFindButtonDesc" xml:space="preserve"><value>Determines the visibility of the find controls on the tool bar.</value></data>
+  <data name="ShowDetailedSubreportMessagesDesc" xml:space="preserve"><value>When true and an error occurs with a subreport, a detailed error message will be embedded into the report.</value></data>
+  <data name="PageSettingsChangedEventDesc" xml:space="preserve"><value>Occurs when user changes the margins or bounds in the page settings dialog.</value></data>
+  <data name="MapTileServerConfigurationTimeoutDesc" xml:space="preserve"><value>Specifies the timeout in seconds to wait for a response from Bing Maps Web Services.</value></data>
+  <data name="ShowBackButtonDesc" xml:space="preserve"><value>Determines the visibility of the back button on the tool bar.</value></data>
+  <data name="ShowParameterPromptsDesc" xml:space="preserve"><value>Determines whether parameter prompts should be displayed during remote processing.</value></data>
+  <data name="ToolBarItemBorderStyleDesc" xml:space="preserve"><value>The border style of icons on the tool bar.</value></data>
+  <data name="ShowPrintButtonDesc" xml:space="preserve"><value>Determines the visibility of the print, print layout, and page setup buttons on the tool bar.</value></data>
+  <data name="PrintingBegingEventDesc" xml:space="preserve"><value>Occurs after 'OK' is pressed in the print dialog.</value></data>
+  <data name="LocalModeMissingFullTrustErrors" xml:space="preserve"><value>Local report processing requires FullTrust Code Access Security permissions, which is unavailable to the calling code.  Grant the application FullTrust permissions or use ServerReport to execute the report remotely.</value></data>
+  <data name="LocalReportPathDesc" xml:space="preserve"><value>File system path to the report definition file.</value></data>
+  <data name="ToggleEventDesc" xml:space="preserve"><value>Occurs when the user toggles an item in the report.</value></data>
+  <data name="KeepSessionAliveDesc" xml:space="preserve"><value>When true, the report viewer will keep the report session alive as long as the report viewer is running.</value></data>
+  <data name="DocMapEventDesc" xml:space="preserve"><value>Occurs when the user navigates to a document map entry in the report.</value></data>
+  <data name="RenderBeginEventDesc" xml:space="preserve"><value>Occurs before rendering of the report is begins.</value></data>
+  <data name="InternalBorderColorDesc" xml:space="preserve"><value>The border color between major areas of the report viewer.</value></data>
+  <data name="RefreshEventDesc" xml:space="preserve"><value>Occurs when the user refreshes the report.</value></data>
+  <data name="ReportNotReadyException" xml:space="preserve"><value>Report is not ready to render: Unknown reason.</value></data>
+  <data name="UnsupportedReportServerError" xml:space="preserve"><value>Remote report processing requires Microsoft SQL Server 2008 Reporting Services or later.</value></data>
+  <data name="MapTileServerConfigurationAppIDDesc" xml:space="preserve"><value>Specifies the application identifier (AppID) to use for Bing Maps Web Services.</value></data>
+  <data name="ShowWaitControlCancelLinkDesc" xml:space="preserve"><value>Determines whether the cancel link is displayed on the busy status indicator.</value></data>
+  <data name="ShowToolBarDesc" xml:space="preserve"><value>Determines the visibility of the tool bar.</value></data>
+  <data name="ExportEventDesc" xml:space="preserve"><value>Occurs when the user exports the report.</value></data>
+  <data name="PageNavigationEventDesc" xml:space="preserve"><value>Occurs when the user changes the displayed page of the report.</value></data>
+  <data name="BackEventDesc" xml:space="preserve"><value>Occurs when the user navigates back to the parent report of a drillthrough report.</value></data>
+  <data name="DocMapCollapsedDesc" xml:space="preserve"><value>Determines whether the document map is visible or collapsed.</value></data>
+  <data name="ShowPageNavigationDesc" xml:space="preserve"><value>Determines the visibility of the page navigation controls on the tool bar.</value></data>
+  <data name="ToolBarItemHoverBackColorDesc" xml:space="preserve"><value>The background color of icons on the tool bar.</value></data>
+  <data name="ShowZoomButtonDesc" xml:space="preserve"><value>Determines the visibility of the zoom button on the tool bar.</value></data>
+  <data name="HyperlinkEventDesc" xml:space="preserve"><value>Occurs when the user clicks a hyperlink in the report.</value></data>
+  <data name="DocMapWidthFixedDesc" xml:space="preserve"><value>Determines if the document map width will grow proportionally with the size of the ReportViewer control.</value></data>
+  <data name="PromptAreaCollapsedDesc" xml:space="preserve"><value>Determines whether the prompt area is visible or collapsed.</value></data>
+  <data name="ToolBarItemBorderWidthDesc" xml:space="preserve"><value>The border width of icons on the tool bar.</value></data>
+  <data name="WaitMessageFontDesc" xml:space="preserve"><value>Determines the font of the wait message.</value></data>
+  <data name="ReportNotReady" xml:space="preserve"><value>Some parameters or credentials have not been specified</value></data>
+  <data name="ReportViewerDescription" xml:space="preserve"><value>Displays a report</value></data>
+  <data name="KeepSessionAliveException" xml:space="preserve"><value>KeepSessionAlive cannot be turned on because a report session already exists.</value></data>
+  <data name="DrillthroughEventDesc" xml:space="preserve"><value>Occurs when the user performs a drillthrough to a new report.</value></data>
+  <data name="MissingParameter" xml:space="preserve"><value>The '{0}' parameter is missing a value</value></data>
+  <data name="ShowProgressDesc" xml:space="preserve"><value>Determines whether a progress animation is visible while waiting for the report.</value></data>
+  <data name="InteractivityPostBackModeDesc" xml:space="preserve"><value>Determines whether synchronous or asynchronous postbacks are used for report interactivity.</value></data>
+  <data name="DeviceInfoInternal" xml:space="preserve"><value>DeviceInfo '{0}' is for internal use</value></data>
+  <data name="InternalBorderStyleDesc" xml:space="preserve"><value>The border style between major areas of the report viewer.</value></data>
+  <data name="BookmarkEventDesc" xml:space="preserve"><value>Occurs when the user navigates to a bookmark in the report.</value></data>
+  <data name="PrintEventDesc" xml:space="preserve"><value>Occurs when the user prints the report.</value></data>
+  <data name="SubmittingDataSourceCredentialsEventDesc" xml:space="preserve"><value>Occurs when the user submits data source credentials via the built-in prompt area.</value></data>
+  <data name="ShowStopButtonDesc" xml:space="preserve"><value>Determines the visibility of the stop button on the tool bar.</value></data>
+  <data name="ServerTimeoutDesc" xml:space="preserve"><value>The number of milliseconds to wait for a connection before terminating the attempt.  Specify -1 for no time out.</value></data>
+  <data name="ViewReportEventDesc" xml:space="preserve"><value>Occurs when the user clicks the view report button.</value></data>
+  <data name="ProcessingModeDesc" xml:space="preserve"><value>Determines whether report processing occurs locally or on a report server.</value></data>
+  <data name="EstimateTotalPages" xml:space="preserve"><value>{0} ?</value></data>
+  <data name="LinkActiveHoverColorDesc" xml:space="preserve"><value>The color of active links in the tool bar and prompt areas while the mouse is hovering over the text.</value></data>
+  <data name="LinkDisabledColorDesc" xml:space="preserve"><value>The color of disabled links in the tool bar and prompt areas.</value></data>
+  <data name="LinkActiveColorDesc" xml:space="preserve"><value>The color of active links in the tool bar and prompt areas.</value></data>
+  <data name="InternalBorderWidthDesc" xml:space="preserve"><value>The border width between major areas of the report viewer.</value></data>
+  <data name="CancelLinkText" xml:space="preserve"><value>Cancel</value></data>
+  <data name="StateChangedEventDesc" xml:space="preserve"><value>Occurs when the display state of the report viewer changes.</value></data>
+  <data name="ExternalImagesError" xml:space="preserve"><value>Report '{0}' contains external images. The EnableExternalImages property has not been set for this report.</value></data>
+  <data name="MissingDataSource" xml:space="preserve"><value>A data source instance has not been supplied for the data source '{0}'.</value></data>
+  <data name="ShowRefreshButtonDesc" xml:space="preserve"><value>Determines the visibility of the refresh button on the tool bar.</value></data>
+  <data name="MapTileServerConfigurationMaxConnectionsDesc" xml:space="preserve"><value>Specifies the maximum number of connections to Bing Maps Web Services.</value></data>
+  <data name="MapTileServerConfigurationDesc" xml:space="preserve"><value>Defines configuration settings for Microsoft Bing Maps Web Services that provides a tile background for map report items.</value></data>
+  <data name="SubmittingParameterValuesEventDesc" xml:space="preserve"><value>Occurs when the user submits parameter values from the built-in prompt area.</value></data>
+  <data name="ZoomModeDesc" xml:space="preserve"><value>Determines the type of zoom applied to the report.</value></data>
+  <data name="ReportServerUrlDesc" xml:space="preserve"><value>The URL of the report server. </value></data>
+  <data name="ReportEmbeddedResourceDesc" xml:space="preserve"><value>Name of embedded resource containing the report definition. If ReportPath is set this property is ignored.</value></data>
+  <data name="ReportDataSourcesDesc" xml:space="preserve"><value>Data source instance associated with each report data source.</value></data>
+  <data name="HistoryIdDesc" xml:space="preserve"><value>The unique identifier of a report history snapshot for the specified report.</value></data>
+  <data name="SizeToContentDesc" xml:space="preserve"><value>Determines if the report area has a fixed size or is the size of the report content.</value></data>
+  <data name="ContentDispositionDesc" xml:space="preserve"><value>Determines which mime types are exported as attachments.</value></data>
+  <data name="ClientRenderingErrors" xml:space="preserve"><value>An error occurred during client rendering.</value></data>
+  <data name="ToolBarCategoryDesc" xml:space="preserve"><value>Tool Bar</value></data>
+  <data name="PageCountModeDesc" xml:space="preserve"><value>Determines whether the actual number of pages are calculated when rendering the report.</value></data>
+  </root>
