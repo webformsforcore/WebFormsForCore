@@ -2503,9 +2503,11 @@ namespace System.Web
             if (wr == null)
                 throw new ArgumentNullException("wr");
 
+#if NETFRAMEWORK
             if (HttpRuntime.UseIntegratedPipeline) {
                 throw new PlatformNotSupportedException(SR.GetString(SR.Method_Not_Supported_By_Iis_Integrated_Mode, "HttpRuntime.ProcessRequest"));
             }
+#endif
 
             ProcessRequestNoDemand(wr);
         }
