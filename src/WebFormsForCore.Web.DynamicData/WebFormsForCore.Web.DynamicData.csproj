@@ -53,7 +53,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
     </ItemGroup>
 
     <ItemGroup>

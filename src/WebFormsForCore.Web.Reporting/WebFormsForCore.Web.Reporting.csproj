@@ -53,7 +53,7 @@
     <ItemGroup>
         <ProjectReference Include="..\WebFormsForCore.Web.Extensions\WebFormsForCore.Web.Extensions.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
-        <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.23" />
+        <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.26" />
     </ItemGroup>
 
     <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\FakeStrongName.targets" />

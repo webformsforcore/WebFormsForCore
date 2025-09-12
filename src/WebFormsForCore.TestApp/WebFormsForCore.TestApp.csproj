@@ -97,7 +97,7 @@
         <!--<PackageReference Include="AjaxControlToolkit" Version="20.1.0" />-->
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.7.1" />
-        <PackageReference Include="bootstrap" Version="5.3.5" />
+        <PackageReference Include="bootstrap" Version="5.3.8" />
         <PackageReference Include="jQuery" Version="3.7.1" GeneratePathProperty="true" />
         <PackageReference Include="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
         <PackageReference Include="Microsoft.AspNet.FriendlyUrls.Core" Version="1.0.2" />
