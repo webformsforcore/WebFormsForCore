@@ -62,7 +62,7 @@ Change the OutputPath for `net10.0` to `bin_dotnet`:
 Then, for `net10.0`, import the WebFormsForCore packages like so:
 ```
 <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.1" />
+    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.2" />
 </ItemGroup>
 ```
 Remove the old `Reference` references or put them in a condition only for `net48`.
@@ -89,7 +89,7 @@ missing.
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
 SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build` like so:
 ```
-<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.4.1" ExcludeAssets="runtime" />
+<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.4.2" ExcludeAssets="runtime" />
 ```
 If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#,
 not for VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't
