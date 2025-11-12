@@ -25,8 +25,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.13.0</AssemblyVersion>
-        <FileVersion>10.0.13.0</FileVersion>
+        <AssemblyVersion>10.0.14.0</AssemblyVersion>
+        <FileVersion>10.0.14.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -77,7 +77,7 @@
 
 
     <ItemGroup>
-	  <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="10.0.13.0" SpecificVersion="True" />
+	  <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" Version="10.0.14.0" SpecificVersion="True" />
 	</ItemGroup>
 
     <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\FakeStrongName.targets" />
