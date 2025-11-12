@@ -20,6 +20,8 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 		public static bool IsCore => !(IsNetFX || IsNetNative);
 		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
+		public static bool IsNet10 => Environment.Version.Major >= 10;
+
 		public ITaskItem[]? Assemblies { get; set; }
 		public ITaskItem? Source { get; set; }
 		public ITaskItem? Key { get; set; }
@@ -118,10 +120,11 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					}
 					var assemblies = string.Join(";", a);
 
-					var dll = Assembly.GetExecutingAssembly().Location;
-					dll = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(dll)!, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
+                    var dll = Assembly.GetExecutingAssembly().Location;
+                    var net = IsNet10 ? "net10.0" : "net8.0";
+                    dll = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(dll)!)!, net, "EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll");
 
-					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
+                    var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
 						$"\"{Source?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;

@@ -32,11 +32,12 @@ namespace System.Web.Util {
 		public static readonly Version Net7 = new Version(7, 0);
 		public static readonly Version Net8 = new Version(8, 0);
 		public static readonly Version Net9 = new Version(9, 0);
+        public static readonly Version Net10 = new Version(10, 0);
 
-		// Convenience accessor for the "default" framework version; various configuration
-		// switches can use this as a default value. This value must only be bumped during
-		// SxS releases of the .NET Framework.
-		public static readonly Version FrameworkDefault = Framework40;
+        // Convenience accessor for the "default" framework version; various configuration
+        // switches can use this as a default value. This value must only be bumped during
+        // SxS releases of the .NET Framework.
+        public static readonly Version FrameworkDefault = Framework40;
         public const string FrameworkDefaultString = "4.0";
 
     }

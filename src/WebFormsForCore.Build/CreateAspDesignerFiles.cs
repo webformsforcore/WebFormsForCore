@@ -32,12 +32,15 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 		public bool SeparateProcess { get; set; } = true;
 
 		public bool IsTargetNetFX => TargetFramework.CompareTo("net4999") < 0;
-		public bool IsTargetNetCore => TargetFramework.CompareTo("net5") >= 0;
+		public bool IsTargetNetCore => TargetFramework.CompareTo("net5") >= 0 || TargetFramework.StartsWith("net1");
 		public bool IsTargetNetStandard => TargetFramework.StartsWith("netstandard");
+        public bool IsTargetNet8Or9 => TargetFramework == "net8.0" || TargetFramework == "net9.0";
+        public bool IsTargetNet10 => TargetFramework == "net10.0";
+
 
 
 #if !NETSTANDARD
-		public class MSBuildCompileContext: ICompileContext
+        public class MSBuildCompileContext: ICompileContext
 		{
 			private string filename;
 			public Task Task { get; set; }
@@ -201,7 +204,10 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				var files = string.Join(";", aspFiles);
 
 				var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-				var assembly = Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
+				string assembly;
+				if (IsTargetNet8Or9) assembly = Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
+				else if (IsTargetNet10) assembly = Path.GetFullPath(Path.Combine(path, "..\\net10.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
+				else throw new NotSupportedException($"Unsupported TargetFramework {TargetFramework}");
 
 				return RunCommand("dotnet.exe", $"\"{assembly}\" createdesignerfiles \"{dll}\" \"{WebRootPath}\" \"{files}\"");
 
@@ -236,7 +242,11 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				ResolveAssembly = (sender, args) =>
 				{
 					string assemblyFile;
-					if (IsCore) assemblyFile = Path.GetFullPath(Path.Combine(path, $"..\\net8.0\\{args.Name}.dll"));
+					if (IsCore) {
+						if (IsTargetNet8Or9) assemblyFile = Path.GetFullPath(Path.Combine(path, $"..\\net8.0\\{args.Name}.dll"));
+						else if (IsTargetNet10) assemblyFile = Path.GetFullPath(Path.Combine(path, $"..\\net10.0\\{args.Name}.dll"));
+						else throw new NotSupportedException($"Unsupported TargetFramework: {TargetFramework}");
+                    }
 					else assemblyFile = Path.GetFullPath(Path.Combine(path, $"..\\net48\\{args.Name}.dll"));
 				
 					if (File.Exists(assemblyFile)) return System.Reflection.Assembly.LoadFrom(assemblyFile);
@@ -248,8 +258,13 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 				};
 				AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 				Assembly buildAssembly;
-				if (IsCore) buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll")));
-				else buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net48\\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe")));
+				if (IsCore)
+				{
+                    if (IsTargetNet8Or9) buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net8.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll")));
+                    if (IsTargetNet10) buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net10.0\\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll")));
+                    else throw new NotSupportedException($"Unsupported TargetFramework: {TargetFramework}");
+                }
+                else buildAssembly = System.Reflection.Assembly.LoadFrom(Path.GetFullPath(Path.Combine(path, "..\\net48\\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe")));
 
 				var contextType = buildAssembly.GetType("EstrellasDeEsperanza.WebFormsForCore.Build.CreateAspDesignerFiles+MSBuildCompileContext");
 				var context = Activator.CreateInstance(contextType, (Task)this);

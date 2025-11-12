@@ -1,7 +1,7 @@
 # WebFormsForCore 
 ## WebForms for ASP.NET Core
 WebFormsForCore is an OpenSource library to run WebForms apps on ASP.NET Core. This library provides a port
-of the System.Web libraries of .NET Framework to .NET 8. With this library,
+of the System.Web libraries of .NET Framework to .NET 10. With this library,
 you can run WebForms websites directly in ASP.NET Core, also on Linux. With this
 library it becomes easy to migrate your existing WebForms application to run
 on ASP.NET Core also.
@@ -31,9 +31,9 @@ project. Conversion can be done easiest by using a converter like the migrate-20
 tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory
 of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. If
 the converter complains about an unsupported project type, remove the `<ProjectTypeGuid>` property from
-the project first. After conversion change the target framework of your project to `net8.0`. You
+the project first. After conversion change the target framework of your project to `net10.0`. You
 might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
-Change the OutputPath for `net8.0` to `bin_dotnet`:
+Change the OutputPath for `net10.0` to `bin_dotnet`:
 ```
 <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -59,10 +59,10 @@ Change the OutputPath for `net8.0` to `bin_dotnet`:
 </ItemGroup>
 ``` 
 
-Then, for `net8.0`, import the WebFormsForCore packages like so:
+Then, for `net10.0`, import the WebFormsForCore packages like so:
 ```
-<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.0" />
+<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.1" />
 </ItemGroup>
 ```
 Remove the old `Reference` references or put them in a condition only for `net48`.
@@ -89,7 +89,7 @@ missing.
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
 SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build` like so:
 ```
-<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.4.0" ExcludeAssets="runtime" />
+<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.4.1" ExcludeAssets="runtime" />
 ```
 If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#,
 not for VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't
@@ -132,7 +132,7 @@ System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces th
 ```
 <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
-        <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
+        <!-- Do not import System.Configuration.ConfigurationManage -->
         <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'(?i)system\.configuration\.configurationmanager\\[.0-9]+\\'))" />
         <!-- Do not import System.Web -->
         <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />

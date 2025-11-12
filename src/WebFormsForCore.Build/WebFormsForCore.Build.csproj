@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net48;net8.0;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net48;net8.0;net10.0;netstandard2.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <LangVersion>13</LangVersion>
@@ -104,7 +104,7 @@
         <Reference Include="System.Web" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+    <ItemGroup Condition="$(TargetFramework) == 'net8.0' OR $(TargetFramework) == 'net10.0'">
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.0" />
     </ItemGroup>
 
@@ -116,28 +116,23 @@
         <None Include="..\..\README.md" PackagePath="\" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\net8.0" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\net8.0" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\net10.0" Pack="True" />
+        <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\net10.0" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\net48" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\net48" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.props" PackagePath="build\netstandard2.0" Pack="True" />
         <None Include="build\EstrellasDeEsperanza.WebFormsForCore.Build.targets" PackagePath="build\netstandard2.0" Pack="True" />
         <None Include="lib\net8.0\_._" PackagePath="lib\net8.0" Pack="True" />
+        <None Include="lib\net10.0\_._" PackagePath="lib\net10.0" Pack="True" />
         <None Include="lib\net48\_._" PackagePath="lib\net48" Pack="True" />
         <None Include="lib\netstandard2.0\_._" PackagePath="lib\netstandard2.0" Pack="True" />
     </ItemGroup>
     <ItemGroup Condition="$(Packaging) == 'True'">
         <None Include="..\..\lib\WebFormsForCore.Build\net8.0\**\*.*" PackagePath="build\net8.0\%(RecursiveDir)" Pack="True" Link="lib\net8.0\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net10.0\**\*.*" PackagePath="build\net10.0\%(RecursiveDir)" Pack="True" Link="lib\net10.0\%(RecursiveDir)\%(Filename).%(Extension)" />
         <None Include="..\..\lib\WebFormsForCore.Build\net48\**\*.*" PackagePath="build\net48\%(RecursiveDir)" Pack="True" Link="lib\net48\%(RecursiveDir)\%(Filename).%(Extension)" />
         <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\**\*.*" PackagePath="build\netstandard2.0\%(RecursiveDir)" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />
         <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\*.*" PackagePath="build\netstandard2.0\%(RecursiveDir)" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />
-        <!--<None Include="..\..\lib\WebFormsForCore.Build\net8.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.deps.json" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.deps.json" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.pdb" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.pdb" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.exe" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.exe" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.runtimeconfig.json" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.runtimeconfig.json" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net48\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net48\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.pdb" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.pdb" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net48\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe.config" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\EstrellasDeEsperanza.WebFormsForCore.Build.NetFX.exe.config" />
-        -->
     </ItemGroup>
 
 </Project>
