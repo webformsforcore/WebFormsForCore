@@ -90,7 +90,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
-        <PackageReference Include="System.Data.OleDb" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -104,6 +103,7 @@
         <PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.1" />
         <PackageReference Include="System.Drawing.Common" Version="8.0.20" Aliases="Common" />
+        <PackageReference Include="System.Data.OleDb" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -117,6 +117,7 @@
         <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.0" />
         <PackageReference Include="System.Drawing.Common" Version="10.0.0" Aliases="Common" />
+        <PackageReference Include="System.Data.OleDb" Version="10.0.0" />
     </ItemGroup>
         
     <ItemGroup>

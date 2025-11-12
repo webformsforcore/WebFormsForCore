@@ -44,7 +44,7 @@
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1">
             <Aliases>NET</Aliases>
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="9.0.0" />
+        <PackageReference Include="System.Composition" Version="9.0.11" />
     </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
