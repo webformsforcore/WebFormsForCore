@@ -71,5 +71,5 @@ internal static class AssemblyRef
 	internal const string MicrosoftVSDesignerMobile = "Microsoft.VSDesigner.Mobile, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 	internal const string MicrosoftJScript = "Microsoft.JScript, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 	//internal const string WebFormsForCoreWeb = "EstrellasDeEsperanza.WebFormsForCore.Web";
-	internal const string WebFormsForCoreWeb = "System.Web, Version=8.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+	internal const string WebFormsForCoreWeb = "System.Web, Version=10.0.13.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 }

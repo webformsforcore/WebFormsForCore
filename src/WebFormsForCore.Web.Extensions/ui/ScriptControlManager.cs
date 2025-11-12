@@ -17,9 +17,9 @@ namespace System.Web.UI {
     using Debug = System.Diagnostics.Debug;
 
     internal class ScriptControlManager {
-        private OrderedDictionary<IExtenderControl, List<Control>> _extenderControls;
+        private Web.Util.OrderedDictionary<IExtenderControl, List<Control>> _extenderControls;
         private bool _pagePreRenderRaised;
-        private OrderedDictionary<IScriptControl, int> _scriptControls;
+        private Web.Util.OrderedDictionary<IScriptControl, int> _scriptControls;
         private ScriptManager _scriptManager;
         private bool _scriptReferencesRegistered;
 
@@ -27,19 +27,19 @@ namespace System.Web.UI {
             _scriptManager = scriptManager;
         }
 
-        private OrderedDictionary<IExtenderControl, List<Control>> ExtenderControls {
+        private Web.Util.OrderedDictionary<IExtenderControl, List<Control>> ExtenderControls {
             get {
                 if (_extenderControls == null) {
-                    _extenderControls = new OrderedDictionary<IExtenderControl, List<Control>>();
+                    _extenderControls = new Web.Util.OrderedDictionary<IExtenderControl, List<Control>>();
                 }
                 return _extenderControls;
             }
         }
 
-        private OrderedDictionary<IScriptControl, int> ScriptControls {
+        private Web.Util.OrderedDictionary<IScriptControl, int> ScriptControls {
             get {
                 if (_scriptControls == null) {
-                    _scriptControls = new OrderedDictionary<IScriptControl, int>();
+                    _scriptControls = new Web.Util.OrderedDictionary<IScriptControl, int>();
                 }
                 return _scriptControls;
             }

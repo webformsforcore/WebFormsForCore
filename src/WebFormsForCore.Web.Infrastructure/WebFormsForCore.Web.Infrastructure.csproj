@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <LangVersion>13</LangVersion>
@@ -22,8 +22,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>8.0.12.0</AssemblyVersion>
-        <FileVersion>8.0.12.0</FileVersion>
+        <AssemblyVersion>10.0.13.0</AssemblyVersion>
+        <FileVersion>10.0.13.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -49,6 +49,14 @@
     <ItemGroup>
         <ProjectReference Include="..\WebFormsForCore.Configuration\WebFormsForCore.Configuration.csproj" />
         <ProjectReference Include="..\WebFormsForCore.Web\WebFormsForCore.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" Aliases="NET" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" Aliases="NET" />
     </ItemGroup>
 
     <ItemGroup>

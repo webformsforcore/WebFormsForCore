@@ -629,7 +629,7 @@ namespace System.Web.Hosting
 						str = strValues[0];
 						break;
 					default:
-						str = string.Join(';', strValues);
+						str = string.Join(';', (IEnumerable<string?>)strValues);
 						break;
 				}
 

@@ -51,6 +51,11 @@
         <OutputPath>..\..\lib\WebFormsForCore.Build\net8.0</OutputPath>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$(TargetFramework) == 'net10.0'">
+        <AssemblyName>$(AssemblyName).NetCore</AssemblyName>
+        <OutputPath>..\..\lib\WebFormsForCore.Build\net10.0</OutputPath>
+    </PropertyGroup>
+
     <PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
         <OutputPath>..\..\lib\WebFormsForCore.Build\netstandard2.0</OutputPath>
     </PropertyGroup>
@@ -79,7 +84,7 @@
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Mono.Cecil" Version="0.11.6" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="System.Private.Uri" Version="4.3.2" />
     </ItemGroup>
     
