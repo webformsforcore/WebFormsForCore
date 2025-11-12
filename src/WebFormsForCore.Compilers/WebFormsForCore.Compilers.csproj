@@ -8,10 +8,8 @@
         <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Compilers</AssemblyName>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-        <CompilerToolsVersion>4.14.0</CompilerToolsVersion>
+        <CompilerToolsVersion>10.0.100.0</CompilerToolsVersion>
         
-        <UseCompilerTools>false</UseCompilerTools>
-
         <PackageId>EstrellasDeEsperanza.WebFormsForCore.Compilers</PackageId>
         <Title>WebFormsForCore.Compilers</Title>
         <Authors>simonegli8</Authors>
@@ -35,54 +33,28 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(CompilerToolsVersion)"
-            GeneratePathProperty="true" Condition="$(UseCompilerTools) == 'true'"/>
+    <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.13.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.13.0" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
         <PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.14.0" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(UseCompilerTools) == 'true'">
-        <Content Include="$(NuGetPackageRoot)\microsoft.net.compilers.toolset\$(CompilerToolsVersion)\tasks\netcore\bincore\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <!--<Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.common\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.csharp\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.visualbasic\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.workspaces.common\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.csharp.workspaces\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <Content Include="$(NuGetPackageRoot)\microsoft.codeanalysis.visualbasic.workspaces\$(CompilerToolsVersion)\lib\net8.0\**\*.*">
-            <Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>-->
-    </ItemGroup>
-    <ItemGroup Condition="$(UseCompilerTools) != 'true'">
-        <Content Include="Roslyn\**\*.*">
+    <ItemGroup>
+        <Content Include="Roslyn.net8.0\**\*.*">
             <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
             <Pack>True</Pack>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
+            <PackagePath>lib\net8.0</PackagePath>
+        </Content>
+        <Content Include="Roslyn.net10.0\**\*.*">
+            <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+            <Pack>True</Pack>
+            <PackagePath>lib\net10.0</PackagePath>
         </Content>
     </ItemGroup>
     <ItemGroup>
@@ -94,29 +66,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.14.0" />
+      <Folder Include="Roslyn.net10.0\" />
+      <Folder Include="Roslyn.net8.0\" />    
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Roslyn\" />
-    </ItemGroup>
-
-    <Target Name="CopyCompilers" BeforeTargets="ResolveReferences"
-        Condition="$(TargetFramework) != 'net48' And $(UseCompilerTools) == 'true'">
+    
+    <Target Name="CopyCompilersNoTools" BeforeTargets="ResolveReferences" Condition="$(TargetFramework) != 'net48'">
         <ItemGroup>
-            <CompilerItems Include="$(PkgMicrosoft_Net_Compilers_Toolset)\tasks\netcore\bincore\**\*.*" />
+            <CompilerItems Include="Roslyn.$(TargetFramework)\**\*.*" />
         </ItemGroup>
 
-        <Copy SourceFiles="@(CompilerItems)" DestinationFiles="@(CompilerItems->'$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
-    </Target>
-
-    <Target Name="CopyCompilersNoTools" BeforeTargets="ResolveReferences"
-        Condition="$(TargetFramework) != 'net48' And $(UseCompilerTools) != 'true'">
-        <ItemGroup>
-            <CompilerItems Include="Roslyn\**\*.*" />
-        </ItemGroup>
-
+        <Message Text="Roslyn.$(TargetFramework)" Importance="high" />
         <Copy SourceFiles="@(CompilerItems)" DestinationFiles="@(CompilerItems->'$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
     </Target>
 

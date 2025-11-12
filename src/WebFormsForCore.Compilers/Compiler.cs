@@ -40,8 +40,12 @@ namespace WebFormsForCore.Compilers
 				//var buildServerConnectionType = assembly.GetType("Microsoft.CodeAnalysis.CommandLine.BuildServerConnection");
 				var tempPath = Path.GetTempPath(); //buildServerConnectionType.GetMethod("GetTempPath", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { workingDirectory }) as string;
 
+#if NET8_0
 				var loader = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.DefaultAnalyzerAssemblyLoader, Microsoft.CodeAnalysis"), true);
-				var buildPaths = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.BuildPaths, Microsoft.CodeAnalysis"),
+#else
+				var loader = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.AnalyzerAssemblyLoader, Microsoft.CodeAnalysis"), true);
+#endif
+                var buildPaths = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.BuildPaths, Microsoft.CodeAnalysis"),
 						BindingFlags.NonPublic | BindingFlags.Instance,
 						null,
 						new object[] { clientPath, workingDirectory, sdkPath, tempPath },
