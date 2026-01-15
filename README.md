@@ -38,6 +38,7 @@ Change the OutputPath for `net10.0` to `bin_dotnet`:
 <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
