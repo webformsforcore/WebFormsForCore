@@ -6,8 +6,8 @@ you can run WebForms websites directly in ASP.NET Core, also on Linux. With this
 library it becomes easy to migrate your existing WebForms application to run
 on ASP.NET Core also.
 
-We successfully ported the SolidCP Control Panel, a huge WebForms code base, to ASP.NET Core & Linux
-with the aid of this library. The goal of running SolidCP on Linux without porting everything to Blazor was
+We successfully ported the FuseCP Control Panel, a huge WebForms code base, to ASP.NET Core & Linux
+with the aid of this library. The goal of running FuseCP on Linux without porting everything to Blazor was
 also our motivation of creating WebFormsForCore. 
 
 ## Support
@@ -38,6 +38,7 @@ Change the OutputPath for `net10.0` to `bin_dotnet`:
 <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
 </PropertyGroup>
 
 <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
