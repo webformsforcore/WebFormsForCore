@@ -18,13 +18,13 @@
     <File Path="src/VersionInfo.cs" />
     <File Path="www/index.html" />
   </Folder>
-  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/AjaxControlToolkit.HtmlEditor.Sanitizer.csproj">
+  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/AjaxControlToolkit.HtmlEditor.Sanitizer.csproj" Id="4f19469b-3352-4d93-89e2-4b79fd7086a6">
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
   </Project>
-  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.StaticResources/AjaxControlToolkit.StaticResources.csproj">
+  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.StaticResources/AjaxControlToolkit.StaticResources.csproj" Id="820694df-c225-46b6-ba38-c5fefbd79aeb">
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
   </Project>
-  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit/AjaxControlToolkit.csproj">
+  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit/AjaxControlToolkit.csproj" Id="676b3449-93f7-4102-8df0-fb51911675d6">
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
   </Project>
   <Project Path="src/WebFormsForCore.AspNetCompiler/WebFormsForCore.AspNetCompiler.csproj" />
