@@ -1,0 +1,84 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Signing Key/">
+    <File Path="src/SigningKey/WebFormsForCore.PublicKey" />
+    <File Path="src/SigningKey/WebFormsForCore.PublicKey.txt" />
+    <File Path="src/SigningKey/WebFormsForCore.snk" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="CreatePackages.bat" />
+    <File Path="NugetApiKey.txt" />
+    <File Path="PushToNuget.bat" />
+    <File Path="README.md" />
+    <File Path="src/VersionInfo.cs" />
+    <File Path="www/index.html" />
+  </Folder>
+  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/AjaxControlToolkit.HtmlEditor.Sanitizer.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.StaticResources/AjaxControlToolkit.StaticResources.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit/AjaxControlToolkit.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.AspNetCompiler/WebFormsForCore.AspNetCompiler.csproj" />
+  <Project Path="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  <Project Path="src/WebFormsForCore.Compilers/WebFormsForCore.Compilers.csproj" />
+  <Project Path="src/WebFormsForCore.Configuration/WebFormsForCore.Configuration.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Drawing/WebFormsForCore.Drawing.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Serialization.Formatters/WebFormsForCore.Serialization.Formatters.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.TestApp/WebFormsForCore.TestApp.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.ApplicationServices/WebFormsForCore.Web.ApplicationServices.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.DynamicData/WebFormsForCore.Web.DynamicData.csproj">
+    <Build Project="false" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Entity/WebFormsForCore.Web.Entity.csproj">
+    <Build Project="false" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Extensions/WebFormsForCore.Web.Extensions.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Infrastructure/WebFormsForCore.Web.Infrastructure.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Mobile/WebFormsForCore.Web.Mobile.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Optimization.WebForms/WebFormsForCore.Web.Optimization.WebForms.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Optimization/WebFormsForCore.Web.Optimization.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.RegularExpressions/WebFormsForCore.Web.RegularExpressions.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Reporting/WebFormsForCore.Web.Reporting.csproj">
+    <Build Project="false" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web.Services/WebFormsForCore.Web.Services.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.Web/WebFormsForCore.Web.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+  <Project Path="src/WebFormsForCore.WebGrease/WebFormsForCore.WebGrease.csproj">
+    <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  </Project>
+</Solution>

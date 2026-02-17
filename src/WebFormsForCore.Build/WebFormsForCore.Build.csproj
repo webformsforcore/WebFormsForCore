@@ -80,13 +80,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Build" Version="15.9.20" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
+        <PackageReference Include="Microsoft.Build" Version="15.9.30" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Mono.Cecil" Version="0.11.6" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
-    </ItemGroup>
+		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
+		<PackageReference Include="System.Linq" Version="4.3.0" />
+	</ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework) == 'net48'">
         <!--<Reference Include="System.Web" Version="4.0.0.0" />-->
