@@ -67,9 +67,16 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Remove="EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.runtimeconfig.json" />
         <None Remove="FakeStrongName.targets" />
         <None Remove="netstandard.dll" />
         <None Remove="System.Runtime.dll" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+      <Content Include="EstrellasDeEsperanza.WebFormsForCore.Build.runtimeconfig.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -86,9 +93,19 @@
         <PackageReference Include="Mono.Cecil" Version="0.11.6" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
-		<PackageReference Include="System.Linq" Version="4.3.0" />
+		<PackageReference Include="System.Linq" Version="4.3.0" GeneratePathProperty="true" />
 	</ItemGroup>
-    
+	
+	<Target Name="CopyPackageAssembly" AfterTargets="Build" Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<ItemGroup>
+			<PkgAssembly Include="$(PkgSystem_Linq)\lib\netstandard1.6\System.Linq.dll" />
+		</ItemGroup>
+
+		<Copy
+		  SourceFiles="@(PkgAssembly)"
+		  DestinationFolder="$(OutputPath)" />
+	</Target>
+	
     <ItemGroup Condition="$(TargetFramework) == 'net48'">
         <!--<Reference Include="System.Web" Version="4.0.0.0" />-->
         <Reference Include="System" Version="4.0.0.0" />
