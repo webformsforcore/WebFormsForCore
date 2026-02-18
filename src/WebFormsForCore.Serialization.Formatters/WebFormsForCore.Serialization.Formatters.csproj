@@ -73,4 +73,12 @@
         <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
     </ItemGroup>
 
+	<ItemGroup>
+	    <EmbeddedResource Remove="Resources\**\*.resx" />
+		<EmbeddedResource Include="Resources\Strings.resx">
+			<LogicalName>FxResources.System.Runtime.Serialization.Formatters.SR.resources</LogicalName>
+		</EmbeddedResource>
+
+	</ItemGroup>
+
 </Project>
