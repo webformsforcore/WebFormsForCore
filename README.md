@@ -60,6 +60,8 @@ Change the OutputPath for `net10.0` to `bin_dotnet`:
 </ItemGroup>
 ``` 
 
+We change the output path to `bin_dotnet` and set `AppendTargetFrameworkToOutputPath` and `AppendRuntimeIdentifierToOutputPath` to `false`, since WebFormsForCore can only work, if the OutputPath is a direct subfolder of the project, as in classic ASP.NET.
+
 Then, for `net10.0`, import the WebFormsForCore packages like so:
 ```
 <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
