@@ -35,6 +35,11 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <FuseCPSkipBrokenWebFormsReporting Condition="'$(FuseCPSkipBrokenWebFormsReporting)' == ''">true</FuseCPSkipBrokenWebFormsReporting>
+        <EnableDefaultCompileItems Condition="'$(FuseCPSkipBrokenWebFormsReporting)' == 'true'">false</EnableDefaultCompileItems>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType>
     </PropertyGroup>
@@ -48,6 +53,10 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(FuseCPSkipBrokenWebFormsReporting)' == 'true'">
+        <Compile Include="Placeholder.cs" />
     </ItemGroup>
 
     <ItemGroup>
