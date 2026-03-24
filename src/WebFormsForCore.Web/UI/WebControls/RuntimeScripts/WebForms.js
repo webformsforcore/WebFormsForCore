@@ -273,7 +273,7 @@ function WebForm_CallbackComplete() {
 //    document.body.appendChild(document.createTextNode("Callback change\r\n"));
     // Look through the list of pending callbacks for the ones that are ready.
     for (var i = 0; i < __pendingCallbacks.length; i++) {
-        callbackObject = __pendingCallbacks[i];
+        var callbackObject = __pendingCallbacks[i];
         if (callbackObject && callbackObject.xmlRequest && (callbackObject.xmlRequest.readyState == 4)) {
 //            document.body.appendChild(document.createTextNode("Callback " + i + "|" + callbackObject.xmlRequest.responseText + "\r\n"));
             if (!__pendingCallbacks[i].async) {

@@ -104,7 +104,7 @@ function WebPart_UpdatePosition() {
 function Zone(zoneElement, zoneIndex, uniqueID, isVertical, allowLayoutChange, highlightColor) {
     var webPartTable = null;
     if (zoneElement.rows.length == 1) {
-        webPartTableContainer = zoneElement.rows[0].cells[0];
+        var webPartTableContainer = zoneElement.rows[0].cells[0];
     }
     else {
         webPartTableContainer = zoneElement.rows[1].cells[0];

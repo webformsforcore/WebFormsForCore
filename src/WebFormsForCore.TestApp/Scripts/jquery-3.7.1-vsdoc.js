@@ -1,4 +1,4 @@
-﻿/*
+/*
 * This file has been generated to support Visual Studio IntelliSense.
 * You should not use this file at runtime inside the browser--it is only
 * intended to be used only for design-time IntelliSense.  Please use the
@@ -2674,7 +2674,7 @@
             i = 0;
 
         // Unless we *know* we can detect duplicates, assume their presence
-        hasDuplicate = !support.detectDuplicates;
+        var hasDuplicate = !support.detectDuplicates;
         sortInput = !support.sortStable && results.slice(0);
         results.sort(sortOrder);
 

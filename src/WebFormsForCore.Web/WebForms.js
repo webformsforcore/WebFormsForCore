@@ -189,7 +189,7 @@ function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, 
 }
 function WebForm_CallbackComplete() {
     for (var i = 0; i < __pendingCallbacks.length; i++) {
-        callbackObject = __pendingCallbacks[i];
+        var callbackObject = __pendingCallbacks[i];
         if (callbackObject && callbackObject.xmlRequest && (callbackObject.xmlRequest.readyState == 4)) {
             if (!__pendingCallbacks[i].async) {
                 __synchronousCallBackIndex = -1;
