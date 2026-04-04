@@ -10,9 +10,9 @@
 
 [assembly: System.Reflection.AssemblyCompany("Estrellas de Esperanza")]
 [assembly: System.Reflection.AssemblyCopyright("Copyright © 2026 Estrellas de Esperanza.")]
-[assembly: System.Reflection.AssemblyFileVersion("10.0.15")]
-[assembly: System.Reflection.AssemblyVersion("10.0.15")]
-[assembly: System.Reflection.AssemblyInformationalVersion("10.0.15")]
-[assembly: System.Resources.SatelliteContractVersion("10.0.15")]
+[assembly: System.Reflection.AssemblyFileVersion("10.0.18")]
+[assembly: System.Reflection.AssemblyVersion("10.0.18")]
+[assembly: System.Reflection.AssemblyInformationalVersion("10.0.18")]
+[assembly: System.Resources.SatelliteContractVersion("10.0.18")]
 
 
