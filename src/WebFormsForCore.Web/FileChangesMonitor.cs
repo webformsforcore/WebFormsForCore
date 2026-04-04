@@ -415,12 +415,216 @@ namespace System.Web {
         int                 _disposed;                      // set to 1 when we call DirMonClose
         object              _ndirMonCompletionHandleLock;
 
+#if !NETFRAMEWORK
+        FileSystemWatcher   _managedWatcher;
+        int                 _internalBufferSize;
+        NotifyFilters       _managedNotifyFilters;
+        bool                _managedWatchSubtree;
+#endif
+
         internal static int ActiveDirMonCompletions { get { return _activeDirMonCompletions; } }
+
+#if !NETFRAMEWORK
+        static NotifyFilters MapRdcwFilterToNotifyFilters(uint notifyFilter) {
+            if (notifyFilter == 0) {
+                notifyFilter = UnsafeNativeMethods.RDCW_FILTER_FILE_CHANGES;
+            }
+
+            NotifyFilters nf = 0;
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_FILE_NAME) != 0) {
+                nf |= NotifyFilters.FileName;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_DIR_NAME) != 0) {
+                nf |= NotifyFilters.DirectoryName;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_ATTRIBUTES) != 0) {
+                nf |= NotifyFilters.Attributes;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_SIZE) != 0) {
+                nf |= NotifyFilters.Size;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_LAST_WRITE) != 0) {
+                nf |= NotifyFilters.LastWrite;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_LAST_ACCESS) != 0) {
+                nf |= NotifyFilters.LastAccess;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_CREATION) != 0) {
+                nf |= NotifyFilters.CreationTime;
+            }
+
+            if ((notifyFilter & UnsafeNativeMethods.FILE_NOTIFY_CHANGE_SECURITY) != 0) {
+                nf |= NotifyFilters.Security;
+            }
+
+            if (nf == 0) {
+                nf = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size;
+            }
+
+            return nf;
+        }
+
+        void AttachManagedWatcherHandlers() {
+            _managedWatcher.Created += OnManagedFileSystemCreated;
+            _managedWatcher.Deleted += OnManagedFileSystemDeleted;
+            _managedWatcher.Changed += OnManagedFileSystemChanged;
+            _managedWatcher.Renamed += OnManagedFileSystemRenamed;
+            _managedWatcher.Error += OnManagedFileSystemError;
+        }
+
+        void DetachManagedWatcherHandlers() {
+            if (_managedWatcher == null) {
+                return;
+            }
+
+            _managedWatcher.Created -= OnManagedFileSystemCreated;
+            _managedWatcher.Deleted -= OnManagedFileSystemDeleted;
+            _managedWatcher.Changed -= OnManagedFileSystemChanged;
+            _managedWatcher.Renamed -= OnManagedFileSystemRenamed;
+            _managedWatcher.Error -= OnManagedFileSystemError;
+        }
+
+        void StartManagedDirectoryWatch(string dir, bool watchSubtree, uint notifyFilter) {
+            _managedNotifyFilters = MapRdcwFilterToNotifyFilters(notifyFilter);
+            _managedWatchSubtree = watchSubtree;
+            _internalBufferSize = 8192;
+            _managedWatcher = new FileSystemWatcher(dir) {
+                IncludeSubdirectories = watchSubtree,
+                NotifyFilter = _managedNotifyFilters,
+                InternalBufferSize = _internalBufferSize,
+            };
+            AttachManagedWatcherHandlers();
+            _managedWatcher.EnableRaisingEvents = true;
+        }
+
+        void StopManagedDirectoryWatch() {
+            if (_managedWatcher == null) {
+                return;
+            }
+
+            _managedWatcher.EnableRaisingEvents = false;
+            DetachManagedWatcherHandlers();
+            _managedWatcher.Dispose();
+            _managedWatcher = null;
+        }
+
+        void ForwardManagedNotification(FileAction action, string relativePath) {
+            long ticks = DateTime.UtcNow.ToFileTimeUtc();
+            OnFileChange(action, relativePath, ticks);
+        }
+
+        void OnManagedFileSystemCreated(object sender, FileSystemEventArgs e) {
+            lock (_ndirMonCompletionHandleLock) {
+                if (_disposed != 0 || _managedWatcher == null) {
+                    return;
+                }
+            }
+
+            if (!String.IsNullOrEmpty(e.Name)) {
+                ForwardManagedNotification(FileAction.Added, e.Name);
+            }
+        }
+
+        void OnManagedFileSystemDeleted(object sender, FileSystemEventArgs e) {
+            lock (_ndirMonCompletionHandleLock) {
+                if (_disposed != 0 || _managedWatcher == null) {
+                    return;
+                }
+            }
+
+            if (!String.IsNullOrEmpty(e.Name)) {
+                ForwardManagedNotification(FileAction.Removed, e.Name);
+            }
+        }
+
+        void OnManagedFileSystemChanged(object sender, FileSystemEventArgs e) {
+            lock (_ndirMonCompletionHandleLock) {
+                if (_disposed != 0 || _managedWatcher == null) {
+                    return;
+                }
+            }
+
+            if (!String.IsNullOrEmpty(e.Name)) {
+                ForwardManagedNotification(FileAction.Modified, e.Name);
+            }
+        }
+
+        void OnManagedFileSystemRenamed(object sender, RenamedEventArgs e) {
+            lock (_ndirMonCompletionHandleLock) {
+                if (_disposed != 0 || _managedWatcher == null) {
+                    return;
+                }
+            }
+
+            long ticks = DateTime.UtcNow.ToFileTimeUtc();
+            if (!String.IsNullOrEmpty(e.OldName)) {
+                OnFileChange(FileAction.RenamedOldName, e.OldName, ticks);
+            }
+
+            if (!String.IsNullOrEmpty(e.Name)) {
+                OnFileChange(FileAction.RenamedNewName, e.Name, ticks);
+            }
+        }
+
+        void OnManagedFileSystemError(object sender, ErrorEventArgs e) {
+            lock (_ndirMonCompletionHandleLock) {
+                if (_disposed != 0 || _managedWatcher == null) {
+                    return;
+                }
+            }
+
+            Exception ex = e.GetException();
+            FileAction action = FileAction.Error;
+            if (ex is InternalBufferOverflowException) {
+                action = FileAction.Overwhelming;
+            }
+
+            long ticks = DateTime.UtcNow.ToFileTimeUtc();
+            OnFileChange(action, null, ticks);
+        }
+
+        internal void TryGrowManagedNotificationBuffer() {
+            lock (_ndirMonCompletionHandleLock) {
+                if (_disposed != 0 || _managedWatcher == null) {
+                    return;
+                }
+
+                int newSize = Math.Min(Math.Max(_internalBufferSize * 2, 16384), 65536);
+                if (newSize <= _internalBufferSize) {
+                    return;
+                }
+
+                _internalBufferSize = newSize;
+                string dir = _dirMon.Directory;
+                DetachManagedWatcherHandlers();
+                _managedWatcher.Dispose();
+                _managedWatcher = new FileSystemWatcher(dir) {
+                    IncludeSubdirectories = _managedWatchSubtree,
+                    NotifyFilter = _managedNotifyFilters,
+                    InternalBufferSize = _internalBufferSize,
+                };
+                AttachManagedWatcherHandlers();
+                _managedWatcher.EnableRaisingEvents = true;
+            }
+        }
+
+        void CompleteManagedDisposeCallback() {
+            OnFileChange(FileAction.Dispose, null, 0);
+        }
+#endif
 
         internal DirMonCompletion(DirectoryMonitor dirMon, string dir, bool watchSubtree, uint notifyFilter) {
             Debug.Trace("FileChangesMonitor", "DirMonCompletion::ctor " + dir + " " + watchSubtree.ToString() + " " + notifyFilter.ToString(NumberFormatInfo.InvariantInfo));
 
+#if NETFRAMEWORK
             int                             hr;
+#endif
             NativeFileChangeNotification    myCallback;
 
             _dirMon = dirMon;
@@ -448,6 +652,14 @@ namespace System.Web {
                     if (hr != HResults.S_OK) {
                         _rootCallback.Free();
                         throw FileChangesMonitor.CreateFileMonitoringException(hr, dir);
+                    }
+#else
+                    try {
+                        StartManagedDirectoryWatch(dir, watchSubtree, notifyFilter);
+                    }
+                    catch (Exception) {
+                        _rootCallback.Free();
+                        throw FileChangesMonitor.CreateFileMonitoringException(HResults.E_FAIL, dir);
                     }
 #endif
                     
@@ -485,16 +697,35 @@ namespace System.Web {
                     // the native DirMonCompletion won't be able to call back into the appdomain.
                     // But it does not need to because _rootCallback is already reclaimed as part of AD unload
                     bool fNeedToSendFileActionDispose = !AppDomain.CurrentDomain.IsFinalizingForUnload();
+#if !NETFRAMEWORK
+                    StopManagedDirectoryWatch();
+#endif
                     HandleRef ndirMonCompletionHandle = _ndirMonCompletionHandle;
                     if (ndirMonCompletionHandle.Handle != IntPtr.Zero) {
                         _ndirMonCompletionHandle = new HandleRef(this, IntPtr.Zero);
                         UnsafeNativeMethods.DirMonClose(ndirMonCompletionHandle, fNeedToSendFileActionDispose);
                     }
+#if !NETFRAMEWORK
+                    else if (fNeedToSendFileActionDispose) {
+                        CompleteManagedDisposeCallback();
+                    }
+                    else {
+                        if (_rootCallback.IsAllocated) {
+                            _rootCallback.Free();
+                        }
+
+                        Interlocked.Decrement(ref _activeDirMonCompletions);
+                    }
+#endif
                 }
             }
         }
 
         void OnFileChange(FileAction action, string fileName, long ticks) {
+            if (action != FileAction.Dispose && Volatile.Read(ref _disposed) != 0) {
+                return;
+            }
+
             DateTime utcCompletion;
             if (ticks == 0) {
                 utcCompletion = DateTime.MinValue;
@@ -1013,7 +1244,11 @@ namespace System.Web {
                             if (action == FileAction.Overwhelming) {
                                 //increase file notification buffer size, but only once per app instance
                                 if (Interlocked.Increment(ref s_notificationBufferSizeIncreased) == 1) {
+#if NETFRAMEWORK
                                     UnsafeNativeMethods.GrowFileNotificationBuffer( HttpRuntime.AppDomainAppId, _watchSubtree );
+#else
+                                    _dirMonCompletion?.TryGrowManagedNotificationBuffer();
+#endif
                                 }
                             }
 
@@ -1541,6 +1776,13 @@ namespace System.Web {
                     break;
             }
 
+#if NET8_0 || NET9_0
+            // .NET 8/9's FileSystemWatcher on Linux and macOS is heavy on non-Windows runtimes; avoid starting watchers.
+            if (!OSInfo.IsWindows) {
+                _FCNMode = 1;
+            }
+#endif
+
             if (IsFCNDisabled) {
                 return;
             }
@@ -1675,7 +1917,9 @@ namespace System.Web {
         //
         internal DateTime StartMonitoringFile(string alias, FileChangeEventHandler callback) {
 
+#if !WebFormsForCore
             if (!OSInfo.IsWindows) return DateTime.MinValue;
+#endif
 
             Debug.Trace("FileChangesMonitor", "StartMonitoringFile\n" + "\tArgs: File=" + alias + "; Callback=" + callback.Target + "(HC=" + callback.Target.GetHashCode().ToString("x", NumberFormatInfo.InvariantInfo) + ")");
 
@@ -1771,11 +2015,13 @@ namespace System.Web {
         //
         internal DateTime StartMonitoringPath(string alias, FileChangeEventHandler callback, out FileAttributesData fad) {
 
+#if !WebFormsForCore
             if (!OSInfo.IsWindows)
             {
                 fad = null;
                 return DateTime.MinValue;
             }
+#endif
 
             Debug.Trace("FileChangesMonitor", "StartMonitoringPath\n" + "\tArgs: File=" + alias + "; Callback=" + callback.Target + "(HC=" + callback.Target.GetHashCode().ToString("x", NumberFormatInfo.InvariantInfo) + ")");
 
@@ -2103,7 +2349,9 @@ namespace System.Web {
         //
         internal void StopMonitoringFile(string alias, object target) {
 
+#if !WebFormsForCore
             if (!OSInfo.IsWindows) return;
+#endif
 
             Debug.Trace("FileChangesMonitor", "StopMonitoringFile\n" + "File=" + alias + "; Callback=" + target);
 
@@ -2164,7 +2412,9 @@ namespace System.Web {
         // 
         internal void StopMonitoringPath(String alias, object target) {
 
+#if !WebFormsForCore
             if (!OSInfo.IsWindows) return;
+#endif
 
             Debug.Trace("FileChangesMonitor", "StopMonitoringFile\n" + "File=" + alias + "; Callback=" + target);
 
@@ -2294,7 +2544,9 @@ namespace System.Web {
         //
         internal void Stop() {
 
+#if !WebFormsForCore
             if (!OSInfo.IsWindows) return;
+#endif
 
             Debug.Trace("FileChangesMonitor", "Stop!");
 
