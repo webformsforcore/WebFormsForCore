@@ -2126,7 +2126,7 @@ namespace System.Web.UI
 					else
 					{
 						RegisterClientScriptBlockInternal(script.ContainingControl, typeof(ScriptManager), scriptInfo.LoadSuccessExpression,
-							String.Format(CultureInfo.InvariantCulture, "({0})||document.write('<script type=\"text/javascript\" src=\"{1}\"><\\/script>');", scriptInfo.LoadSuccessExpression, fallbackPath),
+							String.Format(CultureInfo.InvariantCulture, "({0})||document.write('<script type=\"text/javascript\" src=\"{1}\"></script>');", scriptInfo.LoadSuccessExpression, fallbackPath),
 							addScriptTags: true);
 					}
 				}

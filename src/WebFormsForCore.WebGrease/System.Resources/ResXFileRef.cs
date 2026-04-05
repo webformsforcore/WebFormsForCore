@@ -70,7 +70,7 @@ namespace System.Resources {
 
 				string filename = parts [0];
 				if (Path.DirectorySeparatorChar == '/')
-					filename = filename.Replace ("\\", "/");
+					filename = filename.Replace ('\\', '/');
 
 				Type type = Type.GetType (parts [1]);
 				if (type == typeof(string)) {

@@ -930,7 +930,7 @@ namespace System.Web.Compilation
 
 			RemoveCodegenResourceDir();
 
-			string codegen = _cacheDir + "\\";
+			string codegen = _cacheDir + Path.DirectorySeparatorChar;
 
 			// Go through all the files in the codegen dir
 			foreach (FileData fileData in FileEnumerator.Create(codegen))

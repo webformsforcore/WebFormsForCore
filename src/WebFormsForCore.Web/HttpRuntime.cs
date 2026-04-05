@@ -43,14 +43,12 @@ namespace System.Web
 	using System.Web.Caching;
 	using System.Web.Compilation;
 	using System.Web.Configuration;
-	using System.Web.Hosting;
 	using System.Web.Management;
 	using System.Web.Security;
 	using System.Web.UI;
 	using System.Web.Util;
 	using System.Xml;
 	using Microsoft.Win32;
-	using Azure;
 
 	/// <devdoc>
 	///    <para>Provides a set of ASP.NET runtime services.</para>

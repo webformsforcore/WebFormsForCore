@@ -557,7 +557,7 @@ namespace System.Web.Security
                                 appPath = appPath.Replace('\\', '/');
                                 _ConnectionString = _ConnectionString.Replace("~", appPath);
                             }
-                            string fileName = _ConnectionString.Substring("msxml://".Length).Replace('/', '\\');
+                            string fileName = _ConnectionString.Substring("msxml://".Length).Replace('/', Path.DirectorySeparatorChar);
 
                             if( HostingEnvironment.IsHosted )
                             {

@@ -34,11 +34,12 @@ namespace System.Web.Configuration {
     using System.Diagnostics.CodeAnalysis;
 #if WebFormsForCore
     using EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+    using System.Runtime.InteropServices;
 #else
     using Microsoft.CSharp;
 #endif
 
-	[PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
+    [PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
     [PermissionSet(SecurityAction.InheritanceDemand, Unrestricted = true)]
     public class BrowserCapabilitiesCodeGenerator {
         private static readonly string _browsersDirectory;
@@ -82,14 +83,14 @@ namespace System.Web.Configuration {
         private CaseInsensitiveStringSet _headers;
 
         static BrowserCapabilitiesCodeGenerator() {
-#if !PLATFORM_UNIX // File system paths must account for UNIX
-            _browsersDirectory = HttpRuntime.ClrInstallDirectoryInternal + "\\config\\browsers";
-            _publicKeyTokenFile = _browsersDirectory + "\\" + _publicKeyTokenFileName;
-#else // !PLATFORM_UNIX 
-            _browsersDirectory = HttpRuntime.ClrInstallDirectoryInternal + "/config/browsers";
-            _publicKeyTokenFile = _browsersDirectory + "/" + _publicKeyTokenFileName;
-
-#endif // !PLATFORM_UNIX 
+            // TODO create valid browser directory for .NET Core
+            if (OSInfo.IsWindows) {
+                _browsersDirectory = HttpRuntime.ClrInstallDirectoryInternal + "\\config\\browsers";
+                _publicKeyTokenFile = _browsersDirectory + "\\" + _publicKeyTokenFileName;
+            } else {
+                _browsersDirectory = HttpRuntime.ClrInstallDirectoryInternal + "/config/browsers";
+                _publicKeyTokenFile = _browsersDirectory + "/" + _publicKeyTokenFileName;
+            }
         }
 
         public BrowserCapabilitiesCodeGenerator() {
@@ -276,7 +277,7 @@ namespace System.Web.Configuration {
         }
 
         private string NoPathFileName(string fullPath) {
-            int lastSlash = fullPath.LastIndexOf("\\", StringComparison.Ordinal);
+            int lastSlash = fullPath.LastIndexOf(Path.DirectorySeparatorChar);
             if(lastSlash > -1) {
                 return fullPath.Substring(lastSlash + 1);
             }
@@ -789,7 +790,7 @@ namespace System.Web.Configuration {
             GenerateOverrideBrowserElements(factoryType);
 
             //TODO: don't actually generate the code, just compile it in memory
-            TextWriter twriter = new StreamWriter(new FileStream(_browsersDirectory + "\\BrowserCapsFactory.cs", FileMode.Create));
+            TextWriter twriter = new StreamWriter(new FileStream(_browsersDirectory + Path.DirectorySeparatorChar + "BrowserCapsFactory.cs", FileMode.Create));
             try {
                 cscp.GenerateCodeFromCompileUnit(ccu, twriter, null);
             }
@@ -802,11 +803,7 @@ namespace System.Web.Configuration {
 
             bool debug = compConfig.Debug;
 
-#if !PLATFORM_UNIX // File system paths must account for UNIX
-            string strongNameFile = _browsersDirectory + "\\" + _strongNameKeyFileName;
-#else // !PLATFORM_UNIX
-            string strongNameFile = _browsersDirectory + "/" + _strongNameKeyFileName;
-#endif // !PLATFORM_UNIX
+            string strongNameFile = _browsersDirectory + Path.DirectorySeparatorChar + _strongNameKeyFileName;
 
             // Generate strong name file
             StrongNameUtility.GenerateStrongNameFile(strongNameFile);
@@ -815,11 +812,11 @@ namespace System.Web.Configuration {
             string[] referencedAssemblies = new string[2] { "System.dll", "System.Web.dll" };
             CompilerParameters compilerParameters = new CompilerParameters(referencedAssemblies, "ASP.BrowserCapsFactory", debug /* includeDebugInformation */ );
             compilerParameters.GenerateInMemory = false;
-            compilerParameters.OutputAssembly = _browsersDirectory + "\\ASP.BrowserCapsFactory.dll";
+            compilerParameters.OutputAssembly = _browsersDirectory + Path.DirectorySeparatorChar + "ASP.BrowserCapsFactory.dll";
             CompilerResults results = null;
 
             try {
-                results = cscp.CompileAssemblyFromFile(compilerParameters, _browsersDirectory + "\\BrowserCapsFactory.cs");
+                results = cscp.CompileAssemblyFromFile(compilerParameters, _browsersDirectory + Path.DirectorySeparatorChar + "BrowserCapsFactory.cs");
             }
             finally {
                 if (File.Exists(strongNameFile)) {

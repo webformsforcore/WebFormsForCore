@@ -267,7 +267,7 @@ namespace WebGrease.ImageAssemble
             // If Optimizer tool command is provided then execute the tool
             if (!string.IsNullOrEmpty(this.OptimizerToolCommand))
             {
-                this.OptimizerToolCommand = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + this.OptimizerToolCommand;
+                this.OptimizerToolCommand = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), this.OptimizerToolCommand);
 
                 // Execute PNG Optimization tool
                 // Find EXE Path and then pass it to ProcessStartInfo

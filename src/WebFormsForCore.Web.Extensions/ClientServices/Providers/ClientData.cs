@@ -210,7 +210,7 @@ namespace System.Web.ClientServices.Providers
             ClientData cd = null;
             string fileName = null;
             if (useIsolatedStorage) {
-                fileName = _IsolatedDir + "\\" + SqlHelper.GetPartialDBFileName(username, ".clientdata");
+                fileName = _IsolatedDir + Path.DirectorySeparatorChar + SqlHelper.GetPartialDBFileName(username, ".clientdata");
                 try {
                     using(IsolatedStorageFile f = IsolatedStorageFile.GetUserStoreForAssembly()) {
                         using(IsolatedStorageFileStream fs = new IsolatedStorageFileStream(fileName, FileMode.Open, f)) {

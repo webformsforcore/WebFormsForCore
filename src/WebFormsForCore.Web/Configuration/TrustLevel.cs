@@ -84,7 +84,7 @@ namespace System.Web.Configuration {
                 if (_PolicyFileExpanded == null) {
                     // 
                     string filename = ElementInformation.Properties["policyFile"].Source;
-                    String strDir = filename.Substring(0, filename.LastIndexOf('\\') + 1);
+                    String strDir = filename.Substring(0, filename.LastIndexOf(Path.DirectorySeparatorChar) + 1);
                     bool fAppend = true; // Append filename to directory else return just filename
                     if (PolicyFile.Length > 1) {
                         char c1 = PolicyFile[1];
@@ -114,7 +114,7 @@ namespace System.Web.Configuration {
                 if (_LegacyPolicyFileExpanded == null) {
                     // 
                     string filename = ElementInformation.Properties["policyFile"].Source;
-                    String strDir = filename.Substring(0, filename.LastIndexOf('\\') + 1);
+                    String strDir = filename.Substring(0, filename.LastIndexOf(Path.DirectorySeparatorChar) + 1);
                     bool fAppend = true; // Append filename to directory else return just filename
                     if (PolicyFile.Length > 1) {
                         char c1 = PolicyFile[1];

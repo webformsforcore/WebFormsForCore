@@ -158,7 +158,7 @@ namespace System.Web.Hosting
             ApplicationManager.SetLoadContextData(".appPath", physicalPath, assembly);
 			ApplicationManager.SetLoadContextData(".appVPath", virtualPath, assembly);
 
-			physicalClientScriptPath = HttpRuntime.AspClientScriptPhysicalPath + "\\";
+			physicalClientScriptPath = HttpRuntime.AspClientScriptPhysicalPath + Path.DirectorySeparatorChar;
             lowerCasedClientScriptPathWithTrailingSlash =
                 CultureInfo.InvariantCulture.TextInfo.ToLower(HttpRuntime.AspClientScriptVirtualPath + "/");
 

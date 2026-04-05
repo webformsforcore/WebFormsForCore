@@ -15,7 +15,7 @@ namespace System.Resources
     private AssemblyName[] names;
     private Hashtable cachedAssemblies;
     private Hashtable cachedTypes;
-    private static string NetFrameworkPath = Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), "Microsoft.Net\\Framework");
+    private static string NetFrameworkPath = Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), "Microsoft.Net", "Framework");
 
     internal AssemblyNamesTypeResolutionService(AssemblyName[] names) => this.names = names;
 

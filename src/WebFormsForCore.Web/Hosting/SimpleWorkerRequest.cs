@@ -159,7 +159,7 @@ namespace System.Web.Hosting {
         ///    <para>[To be supplied.]</para>
         /// </devdoc>
         public override String GetFilePathTranslated() {
-            String path =  _appPhysPath + _page.Replace('/', '\\');
+            String path =  _appPhysPath + _page.Replace('/', Path.DirectorySeparatorChar);
             InternalSecurityPermissions.PathDiscovery(path).Demand();
             return path;
         }
@@ -212,7 +212,7 @@ namespace System.Web.Hosting {
                 mappedPath = appPath;
             }
             if (StringUtil.StringStartsWith(path, _appVirtPath)) {
-                mappedPath = appPath + path.Substring(_appVirtPath.Length).Replace('/', '\\');
+                mappedPath = appPath + path.Substring(_appVirtPath.Length).Replace('/', Path.DirectorySeparatorChar);
             }
 
             InternalSecurityPermissions.PathDiscovery(mappedPath).Demand();
@@ -421,8 +421,8 @@ namespace System.Web.Hosting {
 
             ExtractPagePathInfo();
 
-            if (!StringUtil.StringEndsWith(_appPhysPath, '\\'))
-                _appPhysPath += "\\";
+            if (!StringUtil.StringEndsWith(_appPhysPath, Path.DirectorySeparatorChar))
+                _appPhysPath += Path.DirectorySeparatorChar;
                 
             _hasRuntimeInfo = false;
         }

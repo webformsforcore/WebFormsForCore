@@ -162,7 +162,7 @@ namespace System.Web.Services.Configuration
             }
             if ((this.actualPath != null) && (!this.actualPath.EndsWith(@"\", StringComparison.Ordinal)))
             {
-                this.actualPath += "\\";
+                this.actualPath += Path.DirectorySeparatorChar;
             }
             this.Href = "DefaultWsdlHelpGenerator.aspx";
             CheckIOReadPermission(this.actualPath, this.Href);

@@ -374,7 +374,7 @@ namespace System.Web.Configuration {
             string physicalPath = _nativeConfig.MapPathDirect(((IServerConfig)this).GetSiteNameFromSiteID(siteID), path);
 
             if (physicalPath != null && physicalPath.Length == 2 && physicalPath[1] == ':')
-                physicalPath += "\\";
+                physicalPath += IO.Path.DirectorySeparatorChar;
 
             // Throw if the resulting physical path is not canonical, to prevent potential
             // security issues (VSWhidbey 418125)

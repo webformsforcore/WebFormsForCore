@@ -116,7 +116,7 @@ namespace System.Web.Services.Discovery {
                         throw new ArgumentException(Res.GetString(Res.WebVirtualDisoRoot, dir, rootPathAsdi), "dir");
                     }
                     string physicalDir = dir.Substring(rootPathAsdi.Length);
-                    physicalDir = physicalDir.Replace('/', '\\'); //it always begins with '/' or is empty
+                    physicalDir = physicalDir.Replace('/', Path.DirectorySeparatorChar); //it always begins with '/' or is empty
                     directory = new DirectoryInfo(startDir + physicalDir);
 
                 }

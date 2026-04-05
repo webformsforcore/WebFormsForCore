@@ -149,7 +149,7 @@ namespace System.Web.Util {
                                 s = String.Empty;
 
                             // strip path
-                            int i = s.LastIndexOf('\\');
+                            int i = Math.Max(s.LastIndexOf('\\'), s.LastIndexOf('/'));
                             if (i >= 0)
                                 s = s.Substring(i+1);
 

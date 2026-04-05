@@ -239,8 +239,8 @@ namespace System.Resources
       string basePath = this.BasePath;
       if (!string.IsNullOrEmpty(basePath))
       {
-        if (!basePath.EndsWith("\\"))
-          basePath += "\\";
+        if (!basePath.EndsWith(Path.DirectorySeparatorChar))
+          basePath += Path.DirectorySeparatorChar;
         fileRef?.MakeFilePathRelative(basePath);
       }
       DataNodeInfo dataNodeInfo = resXdataNode.GetDataNodeInfo();

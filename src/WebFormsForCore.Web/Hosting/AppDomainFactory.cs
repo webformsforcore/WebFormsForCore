@@ -158,8 +158,8 @@ namespace System.Web.Hosting {
                     appPath = file.FullName;
                 }
 
-                if (!StringUtil.StringEndsWith(appPath, '\\')) {
-                    appPath = appPath + "\\";
+                if (!StringUtil.StringEndsWith(appPath, IO.Path.DirectorySeparatorChar)) {
+                    appPath = appPath + IO.Path.DirectorySeparatorChar;
                 }
 
                 // Create new app domain via App Manager

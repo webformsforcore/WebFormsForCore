@@ -295,7 +295,7 @@ namespace System.Web.Compilation
 
 			// Compute the full path to the directory we'll use to generate all
 			// the code files
-			generatedFilesDir = HttpRuntime.CodegenDirInternal + "\\" +
+			generatedFilesDir = HttpRuntime.CodegenDirInternal + Path.DirectorySeparatorChar +
 				sourcesDirectoryPrefix + virtualDir.FileName;
 
 			bool supportLocalization = IsResourceCodeDirectoryType(dirType);

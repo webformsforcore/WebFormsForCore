@@ -2309,11 +2309,11 @@ namespace System.Web {
             string dirRootSubDir;
             DirectoryMonitor dirMonSubDir;
 
-            if (StringUtil.StringEndsWith(dirRoot, '\\')) {
+            if (StringUtil.StringEndsWith(dirRoot, Path.DirectorySeparatorChar)) {
                 dirRootSubDir = dirRoot + dirToListenTo;
             }
             else {
-                dirRootSubDir = dirRoot + "\\" + dirToListenTo;
+                dirRootSubDir = dirRoot + Path.DirectorySeparatorChar + dirToListenTo;
             }
 
             if (IsBeneathAppPathInternal(dirRootSubDir)) {

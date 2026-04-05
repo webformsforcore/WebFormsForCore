@@ -156,7 +156,7 @@ namespace System.Web.DataAccess {
                     // Extract the filenames
                     int startPos = strUpper.IndexOf(s_strUpperDataDirWithToken, StringComparison.Ordinal) + s_strUpperDataDirWithToken.Length;
                     partialFileName = strUpper.Substring(startPos).Trim();
-                    while (partialFileName.StartsWith("\\", StringComparison.Ordinal))
+                    while (partialFileName.StartsWith(Path.DirectorySeparatorChar))
                         partialFileName = partialFileName.Substring(1);
                     if (partialFileName.Contains("..")) // don't allow it to traverse-up
                         partialFileName = null;

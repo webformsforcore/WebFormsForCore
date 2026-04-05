@@ -199,13 +199,13 @@ namespace System.Web.Configuration {
                 return result;
             }
 
-            result = result.Replace('/', '\\');
+            result = result.Replace('/', Path.DirectorySeparatorChar);
 
             // ensure extra '\\' in the physical path if the virtual path had extra '/'
             // and the other way -- no extra '\\' in physical if virtual didn't have it.
             if (path.HasTrailingSlash) {
                 if (!UrlPath.PathEndsWithExtraSlash(result) && !UrlPath.PathIsDriveRoot(result)) {
-                    result = result + "\\";
+                    result = result + Path.DirectorySeparatorChar;
                 }
             }
             else {
