@@ -15,6 +15,7 @@ namespace System.Web {
     using System.Security;
     using System.Security.Permissions;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Web.Configuration;
     using System.Web.Hosting;
@@ -153,7 +154,7 @@ namespace System.Web {
                          Justification="Microsoft: Call to GetLastWin32Error() does follow P/Invoke call that is outside the if/else block.")]
         static internal byte[] GetDacl(string filename) {
             // DevDiv #322858 - allow skipping DACL step for perf gain
-            if (HostingEnvironment.FcnSkipReadAndCacheDacls) {
+            if (!OSInfo.IsWindows || HostingEnvironment.FcnSkipReadAndCacheDacls) {
                 return s_nullDacl;
             }
 
@@ -1663,6 +1664,22 @@ namespace System.Web {
         internal static bool    s_enableRemoveTargetAssert;
 #endif
 
+        static bool IsWSL
+        {
+            get
+            {
+                if (!OSInfo.IsLinux) return false;
+                
+                var proc = File.ReadAllText("/proc/version");
+                return proc.Contains("Microsoft", StringComparison.OrdinalIgnoreCase) ||
+                    proc.Contains("WSL");
+            }
+        }
+        internal static bool IsWSLWindowsPath(string path)
+        {
+            return IsWSL && Regex.IsMatch(path, @"^/mnt/[a-zA-Z]/");
+        }
+
         // Dev10 927283: We were appending to HttpRuntime._shutdownMessage in DirectoryMonitor.OnFileChange when
         // we received overwhelming changes and errors, but not all overwhelming file change notifications result
         // in a shutdown.  The fix is to only append to _shutdownMessage when the domain is being shutdown.
@@ -1942,6 +1959,22 @@ namespace System.Web {
                 else {
                     return DateTime.MinValue;
                 }
+            } else
+            {
+                fullPathName = GetFullPath(alias);
+                if (IsWSLWindowsPath(fullPathName))
+                {
+                    FindFileData ffd = null;
+                    int hr = FindFileData.FindFile(fullPathName, out ffd);
+                    if (hr == HResults.S_OK)
+                    {
+                        return ffd.FileAttributesData.UtcLastWriteTime;
+                    }
+                    else
+                    {
+                        return DateTime.MinValue;
+                    }
+                }
             }
 
             using (new ApplicationImpersonationContext()) {
@@ -2046,6 +2079,23 @@ namespace System.Web {
                 }
                 else {
                     return DateTime.MinValue;
+                }
+            } else
+            {
+                fullPathName = GetFullPath(alias);
+                if (IsWSLWindowsPath(fullPathName))
+                {
+                    FindFileData ffd = null;
+                    int hr = FindFileData.FindFile(fullPathName, out ffd);
+                    if (hr == HResults.S_OK)
+                    {
+                        fad = ffd.FileAttributesData;
+                        return ffd.FileAttributesData.UtcLastWriteTime;
+                    }
+                    else
+                    {
+                        return DateTime.MinValue;
+                    }
                 }
             }
 
@@ -2162,7 +2212,7 @@ namespace System.Web {
                 throw new HttpException(SR.GetString(SR.Invalid_file_name_for_monitoring, String.Empty));
             }
 
-            if (IsFCNDisabled) {
+            if (IsFCNDisabled || IsWSLWindowsPath(dir)) {
                 return;
             }
 
@@ -2213,6 +2263,11 @@ namespace System.Web {
 
             if (IsFCNDisabled) {
                 return;
+            }
+            if (OSInfo.IsLinux)
+            {
+                string dir = virtualDir.MapPath();
+                if (IsWSLWindowsPath(dir)) return;
             }
 
             // In some situation (not well understood yet), we get here with either
@@ -2355,13 +2410,20 @@ namespace System.Web {
 
             Debug.Trace("FileChangesMonitor", "StopMonitoringFile\n" + "File=" + alias + "; Callback=" + target);
 
+            FileMonitor fileMon;
+            DirectoryMonitor dirMon = null;
+            string fullPathName, file = null, dir;
+
             if (IsFCNDisabled) {
                 return;
+            } else
+            {
+                fullPathName = GetFullPath(alias);
+                if (IsWSLWindowsPath(fullPathName))
+                {
+                    return;
+                }
             }
-
-            FileMonitor         fileMon;
-            DirectoryMonitor    dirMon = null;
-            string              fullPathName, file = null, dir;
 
             if (alias == null) {
                 throw new HttpException(SR.GetString(SR.Invalid_file_name_for_monitoring, String.Empty));
@@ -2418,13 +2480,21 @@ namespace System.Web {
 
             Debug.Trace("FileChangesMonitor", "StopMonitoringFile\n" + "File=" + alias + "; Callback=" + target);
 
+            FileMonitor fileMon;
+            DirectoryMonitor dirMon = null;
+            string fullPathName, file = null, dir;
+
             if (IsFCNDisabled) {
                 return;
+            } else
+            {
+                fullPathName = GetFullPath(alias);
+                if (IsWSLWindowsPath(fullPathName))
+                {
+                    return;
+                }
             }
 
-            FileMonitor         fileMon;
-            DirectoryMonitor    dirMon = null;
-            string              fullPathName, file = null, dir;
 
             if (alias == null) {
                 throw new HttpException(SR.GetString(SR.Invalid_file_name_for_monitoring, String.Empty));
@@ -2499,9 +2569,25 @@ namespace System.Web {
                  else {
                      return null;
                  }   
-             }
+             } else
+             {
+                fullPathName = GetFullPath(alias);
+                if (IsWSLWindowsPath(fullPathName))
+                {
+                    FindFileData ffd = null;
+                    int hr = FindFileData.FindFile(fullPathName, out ffd);
+                    if (hr == HResults.S_OK)
+                    {
+                        return ffd.FileAttributesData;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
 
-             using (new ApplicationImpersonationContext()) {
+            using (new ApplicationImpersonationContext()) {
                  _lockDispose.AcquireReaderLock();
                 try {
                     if (!_disposed) {

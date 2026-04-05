@@ -739,7 +739,7 @@ namespace System.Web.Util
 			{
 				try
 				{
-					var info = new FileInfo(path);
+					FileSystemInfo info = Directory.Exists(path) ? new DirectoryInfo(path) : new FileInfo(path);
 					fad = new FileAttributesData(info);
 					return HResults.S_OK;
 				}
@@ -766,7 +766,16 @@ namespace System.Web.Util
 			UtcLastAccessTime = info.LastAccessTimeUtc;
 			UtcLastWriteTime = info.LastWriteTimeUtc;
 		}
-		FileAttributesData(ref UnsafeNativeMethods.WIN32_FILE_ATTRIBUTE_DATA data)
+        public FileAttributesData(FileSystemInfo info)
+        {
+            FileAttributes = info.Attributes;
+            if (info is FileInfo) FileSize = ((FileInfo)info).Length;
+            UtcCreationTime = info.CreationTimeUtc;
+            UtcLastAccessTime = info.LastAccessTimeUtc;
+            UtcLastWriteTime = info.LastWriteTimeUtc;
+        }
+
+        FileAttributesData(ref UnsafeNativeMethods.WIN32_FILE_ATTRIBUTE_DATA data)
 		{
 			FileAttributes = (FileAttributes)data.fileAttributes;
 			UtcCreationTime = DateTimeUtil.FromFileTimeToUtc(((long)data.ftCreationTimeHigh) << 32 | (long)data.ftCreationTimeLow);
