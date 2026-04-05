@@ -574,7 +574,7 @@ namespace System.Web.Util
 					data = new FindFileData()
 					{
 						FileNameLong = path,
-						FileNameShort = path,
+						FileNameShort = null,
 						FileAttributesData = new FileAttributesData(new FileInfo(path))
 					};
 					return HResults.S_OK;

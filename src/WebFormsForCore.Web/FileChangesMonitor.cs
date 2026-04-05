@@ -515,9 +515,9 @@ namespace System.Web {
             _managedWatcher = null;
         }
 
-        void ForwardManagedNotification(FileAction action, string relativePath) {
+        void ForwardManagedNotification(FileAction action, string fileName) {
             long ticks = DateTime.UtcNow.ToFileTimeUtc();
-            OnFileChange(action, relativePath, ticks);
+            OnFileChange(action, fileName, ticks);
         }
 
         void OnManagedFileSystemCreated(object sender, FileSystemEventArgs e) {
@@ -527,8 +527,8 @@ namespace System.Web {
                 }
             }
 
-            if (!String.IsNullOrEmpty(e.Name)) {
-                ForwardManagedNotification(FileAction.Added, e.Name);
+            if (!String.IsNullOrEmpty(e.FullPath)) {
+                ForwardManagedNotification(FileAction.Added, e.FullPath);
             }
         }
 
@@ -539,8 +539,8 @@ namespace System.Web {
                 }
             }
 
-            if (!String.IsNullOrEmpty(e.Name)) {
-                ForwardManagedNotification(FileAction.Removed, e.Name);
+            if (!String.IsNullOrEmpty(e.FullPath)) {
+                ForwardManagedNotification(FileAction.Removed, e.FullPath);
             }
         }
 
@@ -551,8 +551,8 @@ namespace System.Web {
                 }
             }
 
-            if (!String.IsNullOrEmpty(e.Name)) {
-                ForwardManagedNotification(FileAction.Modified, e.Name);
+            if (!String.IsNullOrEmpty(e.FullPath)) {
+                ForwardManagedNotification(FileAction.Modified, e.FullPath);
             }
         }
 
@@ -568,8 +568,8 @@ namespace System.Web {
                 OnFileChange(FileAction.RenamedOldName, e.OldName, ticks);
             }
 
-            if (!String.IsNullOrEmpty(e.Name)) {
-                OnFileChange(FileAction.RenamedNewName, e.Name, ticks);
+            if (!String.IsNullOrEmpty(e.FullPath)) {
+                OnFileChange(FileAction.RenamedNewName, e.FullPath, ticks);
             }
         }
 
