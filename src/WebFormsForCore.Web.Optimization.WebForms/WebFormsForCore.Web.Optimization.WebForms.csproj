@@ -18,8 +18,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.19.0</AssemblyVersion>
-        <FileVersion>10.0.19.0</FileVersion>
+        <AssemblyVersion>10.0.20.0</AssemblyVersion>
+        <FileVersion>10.0.20.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

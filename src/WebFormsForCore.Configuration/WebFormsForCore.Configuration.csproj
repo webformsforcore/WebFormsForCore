@@ -24,8 +24,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>12.5.0.0</AssemblyVersion>
-        <FileVersion>12.5.0.0</FileVersion>
+        <AssemblyVersion>13.5.0.0</AssemblyVersion>
+        <FileVersion>13.5.0.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -102,7 +102,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
-      <!--<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Drawing" Version="1.5.0" />-->
+      <!--<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Drawing" Version="1.5.1" />-->
     </ItemGroup>
 
     <ItemGroup>
