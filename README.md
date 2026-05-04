@@ -1,3 +1,7 @@
+# New Repository Location
+This project has moved to [https://github.com/webformsforcore/WebFormsForCore](https://github.com/webformsforcore/WebFormsForCore).
+The old repository here has been archived.
+
 # WebFormsForCore 
 ## WebForms for ASP.NET Core
 WebFormsForCore is an OpenSource library to run WebForms apps on ASP.NET Core. This library provides a port
