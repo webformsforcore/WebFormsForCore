@@ -1,4 +1,4 @@
-<%@ Page Title="Test Page" Language="C#"  AutoEventWireup="true" CodeBehind="Test.aspx.cs" Inherits="EstrellasDeEsperanza.WebFormsForCore.TestApp.Test" %>
+<%@ Page Title="Test Page" Language="C#"  AutoEventWireup="true" CodeBehind="Test.aspx.cs" Inherits="WebFormsForCore.TestApp.Test" %>
 
 <html id="html" runat="server">
 <head>

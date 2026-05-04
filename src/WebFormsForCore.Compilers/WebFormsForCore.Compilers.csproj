@@ -5,12 +5,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <DebugType>portable</DebugType>
-        <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Compilers</AssemblyName>
+        <AssemblyName>WebFormsForCore.Compilers</AssemblyName>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
         <CompilerToolsVersion>10.0.100.0</CompilerToolsVersion>
         
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Compilers</PackageId>
+        <PackageId>WebFormsForCore.Compilers</PackageId>
         <Title>WebFormsForCore.Compilers</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -22,8 +22,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.21.0</AssemblyVersion>
-        <FileVersion>10.0.21.0</FileVersion>
+        <AssemblyVersion>10.0.22.0</AssemblyVersion>
+        <FileVersion>10.0.22.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

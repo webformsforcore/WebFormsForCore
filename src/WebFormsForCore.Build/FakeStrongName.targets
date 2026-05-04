@@ -4,9 +4,9 @@
     <PropertyGroup>
         <WebFormsForCoreTasksPath Condition="'$(WebFormsForCoreTasksPath)' == '' and '$(MSBuildThisFile)' == 'WebFormsForCore.Build.targets'">$(MSBuildThisFileDirectory)</WebFormsForCoreTasksPath>
         <!--<WebFormsForCoreTasksPath Condition="'$(WebFormsForCoreTasksPath)' == '' and '$(MSBuildThisFile)' == 'MSBuildTasks.targets'">$(MSBuildThisFileDirectory)..\tools</WebFormsForCoreTasksPath>-->
-        <WebFormsForCoreTasksLib Condition="'$(OS)' == 'Windows_NT'">$([MSBUILD]::Unescape($(WebFormsForCoreTasksPath)\EstrellasDeEsperanza.WebFormsForCore.Build.dll))</WebFormsForCoreTasksLib>
-        <WebFormsForCoreTasksLib Condition="'$(OS)' != 'Windows_NT'">$(WebFormsForCoreTasksPath)\EstrellasDeEsperanza.WebFormsForCore.Build.dll</WebFormsForCoreTasksLib>
-        <WebFormsForCoreTasksLib Condition="!Exists('$(WebFormsForCoreTasksLib)')">EstrellasDeEsperanza.WebFormsForCore.Build.dll</WebFormsForCoreTasksLib>
+        <WebFormsForCoreTasksLib Condition="'$(OS)' == 'Windows_NT'">$([MSBUILD]::Unescape($(WebFormsForCoreTasksPath)\WebFormsForCore.Build.dll))</WebFormsForCoreTasksLib>
+        <WebFormsForCoreTasksLib Condition="'$(OS)' != 'Windows_NT'">$(WebFormsForCoreTasksPath)\WebFormsForCore.Build.dll</WebFormsForCoreTasksLib>
+        <WebFormsForCoreTasksLib Condition="!Exists('$(WebFormsForCoreTasksLib)')">WebFormsForCore.Build.dll</WebFormsForCoreTasksLib>
         <NetFXDir>$(windir)\Microsoft.NET\Framework64\v4.0.30319\</NetFXDir>
         <TargetsTriggeredByCompilation>
             $(TargetsTriggeredByCompilation);
@@ -20,7 +20,7 @@
         AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
         <ParameterGroup />
         <Task Evaluate="true">
-            <Using Namespace="EstrellasDeEsperanza.WebFormsForCore.Build" />
+            <Using Namespace="WebFormsForCore.Build" />
             <Reference Include="$(MSBuildThisFileDirectory)Mono.Cecil.dll" />
             <Reference Include="$(MSBuildThisFileDirectory)Mono.Cecil.Pdb.dll" />
             <Reference Include="$(MSBuildThisFileDirectory)Microsoft.Build.dll" />
@@ -45,7 +45,7 @@ using System.Runtime.InteropServices;
 
 #nullable enable
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build
+namespace WebFormsForCore.Build
 {
 	public class FakeStrongName : Task
 	{
@@ -150,7 +150,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 					}
 					var assemblies = string.Join(";", a);
 
-					var dll = Path.GetFullPath(Path.Combine(AssemblyPath, $"..", "net10.0", "EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll"));
+					var dll = Path.GetFullPath(Path.Combine(AssemblyPath, $"..", "net10.0", "WebFormsForCore.Build.NetCore.dll"));
 
 					var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +

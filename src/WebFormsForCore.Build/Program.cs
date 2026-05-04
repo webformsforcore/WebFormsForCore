@@ -6,7 +6,7 @@ using System.Diagnostics;
 using Microsoft.Build.Utilities;
 using Microsoft.Build;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build
+namespace WebFormsForCore.Build
 {
 	public class Program
 	{

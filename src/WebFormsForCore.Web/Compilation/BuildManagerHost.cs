@@ -30,7 +30,7 @@ namespace System.Web.Compilation
 	using System.Web.Util;
 #if NETCOREAPP
 	using System.Runtime.Loader;
-	using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+	using W = WebFormsForCore.CodeDom.Compiler;
 #else
 	using W = System.CodeDom.Compiler;
 #endif

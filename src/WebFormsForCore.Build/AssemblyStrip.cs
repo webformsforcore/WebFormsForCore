@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build;
+namespace WebFormsForCore.Build;
 
 public class AssemblyStrip: Task
 {

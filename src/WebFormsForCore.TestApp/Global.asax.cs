@@ -7,7 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.TestApp
+namespace WebFormsForCore.TestApp
 {
 	public class Global : HttpApplication
 	{

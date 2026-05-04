@@ -28,7 +28,7 @@ using System.Security;
 [assembly: AssemblyTitle("System.Web.Mobile.dll")]
 [assembly: AssemblyDescription("System.Web.Mobile.dll")]
 [assembly: AssemblyDefaultAlias("System.Web.Mobile.dll")]
-[assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsForCore")]
+[assembly: AssemblyProduct("WebFormsForCore")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyDelaySign(false)]
 #endif

@@ -6,12 +6,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 #if NETCOREAPP
-using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+using W = WebFormsForCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+namespace WebFormsForCore.CodeDom.Compiler;
 
 //
 // Summary:

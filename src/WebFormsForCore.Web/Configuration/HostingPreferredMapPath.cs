@@ -14,6 +14,7 @@ namespace System.Web.Configuration {
     using System.Web.UI;
     using System.IO;
     using System.Web.Hosting;
+    using System.Runtime.InteropServices;
 
     //
     // IConfigMapPath that uses the HostingEnvironment's IConfigMapPath for
@@ -27,15 +28,25 @@ namespace System.Web.Configuration {
         IConfigMapPath  _iisConfigMapPath;
         IConfigMapPath  _hostingConfigMapPath;
 
-        internal static IConfigMapPath GetInstance() {
-            IConfigMapPath iisConfigMapPath = IISMapPath.GetInstance();
-            IConfigMapPath hostingConfigMapPath = HostingEnvironment.ConfigMapPath;
+        internal static IConfigMapPath GetInstance()
+        {
+            if (OSInfo.IsWindows)
+            {
+                IConfigMapPath iisConfigMapPath;
+                try {
+                    iisConfigMapPath = IISMapPath.GetInstance();
+                } catch
+                {
+                    return HostingEnvironment.ConfigMapPath;
+                }
+                IConfigMapPath hostingConfigMapPath = HostingEnvironment.ConfigMapPath;
 
-            // Only delegate if the types implementing IConfigMapPath are different.
-            if (hostingConfigMapPath == null || iisConfigMapPath.GetType() == hostingConfigMapPath.GetType())
-                return iisConfigMapPath;
+                // Only delegate if the types implementing IConfigMapPath are different.
+                if (hostingConfigMapPath == null || iisConfigMapPath.GetType() == hostingConfigMapPath.GetType())
+                    return iisConfigMapPath;
 
-            return new HostingPreferredMapPath(iisConfigMapPath, hostingConfigMapPath);
+                return new HostingPreferredMapPath(iisConfigMapPath, hostingConfigMapPath);
+            } else return HostingEnvironment.ConfigMapPath;
         }
 
         HostingPreferredMapPath(IConfigMapPath iisConfigMapPath, IConfigMapPath hostingConfigMapPath) {

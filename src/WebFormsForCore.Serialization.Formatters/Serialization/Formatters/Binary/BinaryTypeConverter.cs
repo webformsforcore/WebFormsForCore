@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary
+namespace WebFormsForCore.Serialization.Formatters.Binary
 {
     // Routines to convert between the runtime type and the type as it appears on the wire
     internal static class BinaryTypeConverter

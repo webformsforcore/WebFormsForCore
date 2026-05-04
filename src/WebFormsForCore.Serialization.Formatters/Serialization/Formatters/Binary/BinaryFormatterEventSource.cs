@@ -6,7 +6,7 @@ using System.Diagnostics.Tracing;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary
+namespace WebFormsForCore.Serialization.Formatters.Binary
 {
     [EventSource(
         Name = "System.Runtime.Serialization.Formatters.Binary.BinaryFormatterEventSource")]

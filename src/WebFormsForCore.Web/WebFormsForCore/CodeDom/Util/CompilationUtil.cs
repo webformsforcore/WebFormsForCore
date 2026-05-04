@@ -10,12 +10,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 #if NETCOREAPP
-using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+using W = WebFormsForCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
+namespace WebFormsForCore.CodeDom.Compiler {
     internal static class CompilationUtil {
         private const int DefaultCompilerServerTTL = 10; // 10 seconds
         private const int DefaultCompilerServerTTLInDevEnvironment = 60 * 15; // 15 minutes

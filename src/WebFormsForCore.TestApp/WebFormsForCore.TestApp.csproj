@@ -29,7 +29,7 @@
     <PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
         <OutputType>Exe</OutputType>
         <OutputPath>bin_dotnet</OutputPath>
-        <StartupObject>EstrellasDeEsperanza.WebFormsForCore.Test.Program</StartupObject>
+        <StartupObject>WebFormsForCore.Test.Program</StartupObject>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
@@ -52,16 +52,16 @@
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
         <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
         <ProjectReference Include="..\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj" />-->
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Compilers" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Services" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Infrastructure" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Extensions" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Optimization" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.WebGrease" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit" Version="1.5.2" />
-        <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.5.2" ExcludeAssets="runtime" />
+        <PackageReference Include="WebFormsForCore.Web" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Compilers" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Web.Services" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.WebGrease" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.5.3" />
+        <PackageReference Include="WebFormsForCore.Build" Version="1.5.3" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">

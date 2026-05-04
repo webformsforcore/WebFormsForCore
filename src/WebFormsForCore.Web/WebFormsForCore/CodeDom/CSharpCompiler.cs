@@ -9,12 +9,12 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 #if NETCOREAPP
-using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+using W = WebFormsForCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+namespace WebFormsForCore.CodeDom.Compiler;
 
 internal class CSharpCompiler : Compiler
 {

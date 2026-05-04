@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Mono.Cecil;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build;
+namespace WebFormsForCore.Build;
 
 public class AssemblyStripper
 {

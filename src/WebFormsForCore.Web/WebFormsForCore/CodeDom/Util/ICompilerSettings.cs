@@ -3,7 +3,7 @@
 
 using System;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
+namespace WebFormsForCore.CodeDom.Compiler {
 
 	/// <summary>
 	/// Provides settings for the C# and VB CodeProviders

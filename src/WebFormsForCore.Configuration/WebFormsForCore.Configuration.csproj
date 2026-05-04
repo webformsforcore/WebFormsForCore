@@ -12,7 +12,7 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Configuration.ConfigurationManager</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Configuration</PackageId>
+        <PackageId>WebFormsForCore.Configuration</PackageId>
         <Title>WebFormsForCore.Configuration</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -102,7 +102,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
-      <!--<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Drawing" Version="1.5.2" />-->
+      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.5.3" />-->
     </ItemGroup>
 
     <ItemGroup>

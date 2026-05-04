@@ -25,7 +25,7 @@ namespace System.Web.Compilation
 	using System.Web.Util;
 	using Util = System.Web.UI.Util;
 #if NETCOREAPP
-	using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+	using W = WebFormsForCore.CodeDom.Compiler;
 #else
 	using W = System.CodeDom.Compiler;
 #endif

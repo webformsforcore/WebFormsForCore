@@ -11,9 +11,9 @@
         <NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0050;SYSLIB0051</NoWarn>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
-        <AssemblyName>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</AssemblyName>
+        <AssemblyName>WebFormsForCore.Serialization.Formatters</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters</PackageId>
+        <PackageId>WebFormsForCore.Serialization.Formatters</PackageId>
         <Title>WebFormsForCore.Serialization.Formatters</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -25,8 +25,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.21.0</AssemblyVersion>
-        <FileVersion>10.0.21.0</FileVersion>
+        <AssemblyVersion>10.0.22.0</AssemblyVersion>
+        <FileVersion>10.0.22.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

@@ -120,7 +120,7 @@ using WRA = System.Web.UI.WebResourceAttribute;
 [assembly: AssemblyTitle("System.Web.Extensions.dll")]
 [assembly: AssemblyDescription("System.Web.Extensions.dll")]
 [assembly: AssemblyDefaultAlias("System.Web.Extensions.dll")]
-[assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsForCore")]
+[assembly: AssemblyProduct("WebFormsForCore")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyDelaySign(false)]
 #endif

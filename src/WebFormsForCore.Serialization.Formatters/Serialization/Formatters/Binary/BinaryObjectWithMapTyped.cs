@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary
+namespace WebFormsForCore.Serialization.Formatters.Binary
 {
     internal sealed class BinaryObjectWithMapTyped : IStreamable
     {

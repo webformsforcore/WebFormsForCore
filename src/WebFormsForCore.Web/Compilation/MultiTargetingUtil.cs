@@ -16,7 +16,7 @@ using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 using System.Diagnostics;
 #if WebFormsForCore
-using EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+using WebFormsForCore.CodeDom.Compiler;
 #else
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;

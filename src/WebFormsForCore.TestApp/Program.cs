@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using System.Web;
 using System.Threading;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Test
+namespace WebFormsForCore.Test
 {
 	public class Program
 	{

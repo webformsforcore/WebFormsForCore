@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 #nullable enable
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build
+namespace WebFormsForCore.Build
 {
 	public class FakeStrongNameTask : Task
 	{
@@ -122,7 +122,7 @@ namespace EstrellasDeEsperanza.WebFormsForCore.Build
 
                     var dll = Assembly.GetExecutingAssembly().Location;
                     var net = IsNet10 ? "net10.0" : "net8.0";
-                    dll = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(dll)!)!, net, "EstrellasDeEsperanza.WebFormsForCore.Build.NetCore.dll");
+                    dll = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(dll)!)!, net, "WebFormsForCore.Build.NetCore.dll");
 
                     var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +

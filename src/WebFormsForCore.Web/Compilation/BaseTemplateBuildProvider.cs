@@ -18,7 +18,7 @@ using System.CodeDom.Compiler;
 using System.Web.Util;
 using System.Web.UI;
 #if NETCOREAPP
-	using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+	using W = WebFormsForCore.CodeDom.Compiler;
 #else
 	using W = System.CodeDom.Compiler;
 #endif

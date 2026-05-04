@@ -11,7 +11,7 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Drawing</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Drawing</PackageId>
+        <PackageId>WebFormsForCore.Drawing</PackageId>
         <Title>WebFormsForCore.Drawing</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>

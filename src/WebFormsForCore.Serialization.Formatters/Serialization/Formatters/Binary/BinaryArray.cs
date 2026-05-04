@@ -3,7 +3,7 @@
 
 using System.Diagnostics;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary
+namespace WebFormsForCore.Serialization.Formatters.Binary
 {
     internal sealed class BinaryArray : IStreamable
     {

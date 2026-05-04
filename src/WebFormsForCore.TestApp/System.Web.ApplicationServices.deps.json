@@ -9,7 +9,7 @@
       "System.Web.ApplicationServices/1.0.0": {
         "dependencies": {
           "System.Configuration.ConfigurationManager": "1.0.0",
-          "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Reference": "8.0.0.0",
+          "WebFormsForCore.Serialization.Formatters.Reference": "8.0.0.0",
           "System.Configuration.ConfigurationManager.Reference": "8.5.0.0"
         },
         "runtime": {
@@ -284,14 +284,14 @@
           }
         }
       },
-      "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters/1.0.0": {
+      "WebFormsForCore.Serialization.Formatters/1.0.0": {
         "runtime": {
-          "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.dll": {}
+          "WebFormsForCore.Serialization.Formatters.dll": {}
         }
       },
       "System.Configuration.ConfigurationManager/1.0.0": {
         "dependencies": {
-          "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters": "1.0.0",
+          "WebFormsForCore.Serialization.Formatters": "1.0.0",
           "System.CodeDom": "8.0.0",
           "System.IO.FileSystem.AccessControl": "5.0.0",
           "System.Security.Cryptography.Algorithms": "4.3.1",
@@ -301,9 +301,9 @@
           "System.Configuration.ConfigurationManager.dll": {}
         }
       },
-      "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Reference/8.0.0.0": {
+      "WebFormsForCore.Serialization.Formatters.Reference/8.0.0.0": {
         "runtime": {
-          "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.dll": {
+          "WebFormsForCore.Serialization.Formatters.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.0.0"
           }
@@ -619,7 +619,7 @@
       "path": "system.windows.extensions/8.0.0",
       "hashPath": "system.windows.extensions.8.0.0.nupkg.sha512"
     },
-    "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters/1.0.0": {
+    "WebFormsForCore.Serialization.Formatters/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -629,7 +629,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Reference/8.0.0.0": {
+    "WebFormsForCore.Serialization.Formatters.Reference/8.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

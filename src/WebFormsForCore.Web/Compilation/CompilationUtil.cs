@@ -30,7 +30,7 @@ namespace System.Web.Compilation {
     using System.Threading;
     using System.Threading.Tasks;
 #if NETCOREAPP
-	using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+	using W = WebFormsForCore.CodeDom.Compiler;
 #else
 	using W = System.CodeDom.Compiler;
 #endif
@@ -57,7 +57,7 @@ namespace System.Web.Compilation {
         }
         
         internal static CompilerType GetCodeDefaultLanguageCompilerInfo() {
-            return new CompilerType(typeof(EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler.VBCodeProvider), null);
+            return new CompilerType(typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider), null);
         }
 
         internal static CompilerType GetDefaultLanguageCompilerInfo(CompilationSection compConfig, VirtualPath configPath) {
@@ -121,7 +121,7 @@ namespace System.Web.Compilation {
             }
 
             if (compConfig.DefaultLanguage == null)
-                return new CompilerType(typeof(EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider), null);
+                return new CompilerType(typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider), null);
 
             return compConfig.GetCompilerInfoFromLanguage("c#");
         }

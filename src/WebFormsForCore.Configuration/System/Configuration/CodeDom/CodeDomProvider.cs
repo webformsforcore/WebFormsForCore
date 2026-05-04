@@ -6,7 +6,7 @@
 // </copyright>                                                                
 //------------------------------------------------------------------------------
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler
+namespace WebFormsForCore.CodeDom.Compiler
 {
 	using System;
 	using System.CodeDom;

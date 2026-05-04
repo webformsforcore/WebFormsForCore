@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build;
+namespace WebFormsForCore.Build;
 
 
 public class AssemblyResolver: DefaultAssemblyResolver {

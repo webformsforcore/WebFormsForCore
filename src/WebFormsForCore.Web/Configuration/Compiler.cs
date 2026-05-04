@@ -22,7 +22,7 @@ namespace System.Web.Configuration {
     using System.ComponentModel;
     using System.Security.Permissions;
 #if NETCOREAPP
-    using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+    using W = WebFormsForCore.CodeDom.Compiler;
 #else
 	using W = System.CodeDom.Compiler;
 #endif

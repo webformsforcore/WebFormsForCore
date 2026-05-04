@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <AssemblyName>Microsoft.AspNet.Web.Optimization.WebForms</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms</PackageId>
+        <PackageId>WebFormsForCore.Web.Optimization.WebForms</PackageId>
         <Title>WebFormsForCore.Web.Optimization.WebForms</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -18,8 +18,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.21.0</AssemblyVersion>
-        <FileVersion>10.0.21.0</FileVersion>
+        <AssemblyVersion>10.0.22.0</AssemblyVersion>
+        <FileVersion>10.0.22.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

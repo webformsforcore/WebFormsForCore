@@ -19,8 +19,8 @@ namespace System.Web.UI {
 #if NETFRAMEWORK
     using System.Runtime.Serialization.Formatters.Binary;
 #else
-    using IFormatter = EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.IFormatter; 
-    using EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary;
+    using IFormatter = WebFormsForCore.Serialization.Formatters.IFormatter; 
+    using WebFormsForCore.Serialization.Formatters.Binary;
 #endif
 	using System.Security;
     using System.Security.Permissions;

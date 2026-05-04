@@ -3,7 +3,7 @@
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary
+namespace WebFormsForCore.Serialization.Formatters.Binary
 {
     // BinaryHeaderEnum is the first byte on binary records (except for primitive types which do not have a header)
     internal enum BinaryHeaderEnum
