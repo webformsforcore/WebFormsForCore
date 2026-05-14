@@ -12,7 +12,7 @@ namespace System.Configuration {
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 #if NETCOREAPP
-    using EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary;
+    using WebFormsForCore.Serialization.Formatters.Binary;
 #else
     using System.Runtime.Serialization.Formatters.Binary;
 #endif

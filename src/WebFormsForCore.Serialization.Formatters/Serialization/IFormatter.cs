@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters
+namespace WebFormsForCore.Serialization.Formatters
 {
     public interface IFormatter
     {

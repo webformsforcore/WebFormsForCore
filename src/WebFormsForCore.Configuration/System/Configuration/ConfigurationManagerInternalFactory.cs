@@ -8,7 +8,7 @@ namespace System.Configuration
 #if NETFRAMEWORK
         private const string ConfigurationManagerInternalTypeString = "System.Configuration.Internal.ConfigurationManagerInternal, System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
-		private const string ConfigurationManagerInternalTypeString = "System.Configuration.Internal.ConfigurationManagerInternal, EstrellasDeEsperanza.WebFormsForCore.Configuration";
+		private const string ConfigurationManagerInternalTypeString = "System.Configuration.Internal.ConfigurationManagerInternal, WebFormsForCore.Configuration";
 #endif
 		private static volatile IConfigurationManagerInternal s_instance;
 
@@ -20,7 +20,7 @@ namespace System.Configuration
 #if NETFRAMEWORK
 					ConfigurationManagerInternalFactory.s_instance = (IConfigurationManagerInternal)TypeUtil.CreateInstanceWithReflectionPermission("System.Configuration.Internal.ConfigurationManagerInternal, System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
 #else
-					ConfigurationManagerInternalFactory.s_instance = (IConfigurationManagerInternal)TypeUtil.CreateInstanceWithReflectionPermission("System.Configuration.Internal.ConfigurationManagerInternal, EstrellasDeEsperanza.WebFormsForCore.Configuration");
+					ConfigurationManagerInternalFactory.s_instance = (IConfigurationManagerInternal)TypeUtil.CreateInstanceWithReflectionPermission("System.Configuration.Internal.ConfigurationManagerInternal, WebFormsForCore.Configuration");
 #endif
 				return ConfigurationManagerInternalFactory.s_instance;
 			}

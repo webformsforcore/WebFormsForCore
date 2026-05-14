@@ -36,7 +36,7 @@ using System.Web.Security;
 [assembly: AssemblyTitle("System.Web.dll")]
 [assembly: AssemblyDescription("System.Web.dll")]
 [assembly: AssemblyDefaultAlias("System.Web.dll")]
-[assembly: AssemblyProduct("EstrellasDeEsperanza.WebFormsForCore")]
+[assembly: AssemblyProduct("WebFormsForCore")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyDelaySign(false)]
 #endif

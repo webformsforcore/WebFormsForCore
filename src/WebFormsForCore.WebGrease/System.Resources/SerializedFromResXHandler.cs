@@ -34,7 +34,7 @@ using System.Runtime.Serialization;
 #if NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
-using EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary;
+using WebFormsForCore.Serialization.Formatters.Binary;
 #endif
 using System.IO;
 using System.Text;

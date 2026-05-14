@@ -8,7 +8,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AssemblyName>WebGrease</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.WebGrease</PackageId>
+        <PackageId>WebFormsForCore.WebGrease</PackageId>
         <Title>WebFormsForCore.WebGrease</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -20,8 +20,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.14.0</AssemblyVersion>
-        <FileVersion>10.0.14.0</FileVersion>
+        <AssemblyVersion>10.0.23.0</AssemblyVersion>
+        <FileVersion>10.0.23.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -44,7 +44,7 @@
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1">
             <Aliases>NET</Aliases>
         </PackageReference>
-        <PackageReference Include="System.Composition" Version="9.0.11" />
+        <PackageReference Include="System.Composition" Version="8.0.0" />
     </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework) == 'net10.0'">

@@ -710,8 +710,8 @@ namespace System.Web.Hosting {
                     appPath = file.FullName;
                 }
 
-                if (!StringUtil.StringEndsWith(appPath, '\\')) {
-                    appPath = appPath + "\\";
+                if (!StringUtil.StringEndsWith(appPath, Path.DirectorySeparatorChar)) {
+                    appPath = appPath + Path.DirectorySeparatorChar;
                 }
 
                 // Create new app host of a consistent type
@@ -930,8 +930,8 @@ namespace System.Web.Hosting {
                 //
                 // make sure physical app path ends with '\\' and virtual does not
                 //
-                if (!StringUtil.StringEndsWith(physicalPath, '\\')) {
-                    physicalPath = physicalPath + "\\";
+                if (!StringUtil.StringEndsWith(physicalPath, Path.DirectorySeparatorChar)) {
+                    physicalPath = physicalPath + Path.DirectorySeparatorChar;
                 }
 
                 Debug.Assert( !String.IsNullOrEmpty(physicalPath), "!String.IsNullOrEmpty(physicalPath)");

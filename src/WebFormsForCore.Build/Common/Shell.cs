@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.Build;
+namespace WebFormsForCore.Build;
 
 
 public abstract class Shell : INotifyCompletion

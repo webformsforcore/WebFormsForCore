@@ -11,7 +11,7 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>System.Drawing</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Drawing</PackageId>
+        <PackageId>WebFormsForCore.Drawing</PackageId>
         <Title>WebFormsForCore.Drawing</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -42,7 +42,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
-      <PackageReference Include="System.Drawing.Common" Version="8.0.20" />
+      <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
       <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     </ItemGroup>
 

@@ -136,7 +136,7 @@ namespace System.Web.Configuration {
                     childPart = path.Substring(l);
                 }
 
-                if (OSInfo.IsWindows) childPart = childPart.Replace('/', '\\');
+                if (OSInfo.IsWindows) childPart = childPart.Replace('/', Path.DirectorySeparatorChar);
                 physicalPath = Path.Combine(mapping.PhysicalDirectory, childPart);
             }
 

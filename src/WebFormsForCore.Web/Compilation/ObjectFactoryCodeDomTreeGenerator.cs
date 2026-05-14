@@ -57,12 +57,9 @@ internal class ObjectFactoryCodeDomTreeGenerator {
         // code.  We need to use this hack because CodeDOM doesn't allow simply generating
         // a '#line hidden'. (VSWhidbey 199384)
         CodeSnippetTypeMember dummySnippet = new CodeSnippetTypeMember(String.Empty);
-#if !PLATFORM_UNIX /// Unix file system
         // CORIOLISTODO: Unix file system
-        dummySnippet.LinePragma = new CodeLinePragma(@"c:\\dummy.txt", 1);
-#else // !PLATFORM_UNIX
-        dummySnippet.LinePragma = new CodeLinePragma(@"/dummy.txt", 1);
-#endif // !PLATFORM_UNIX
+        if (IO.Path.DirectorySeparatorChar == '\\') dummySnippet.LinePragma = new CodeLinePragma(@"c:\\dummy.txt", 1);
+        else dummySnippet.LinePragma = new CodeLinePragma(@"/dummy.txt", 1);
         _factoryClass.Members.Add(dummySnippet);
 
         // Add a private default ctor to make the class non-instantiatable (VSWhidbey 340829)

@@ -6,7 +6,7 @@ using System.Reflection;
 #if NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
-using EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary;
+using WebFormsForCore.Serialization.Formatters.Binary;
 #endif
 using System.Security.Permissions;
 using System.Xml.Serialization;
@@ -157,7 +157,7 @@ namespace System.Configuration
 #if NETFRAMEWORK
                             Type.GetType("System.Web.Management.WebBaseEvent, System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", true).InvokeMember("RaisePropertyDeserializationWebErrorEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod, (Binder) null, (object) null, args, CultureInfo.InvariantCulture);
 #else
-							Type.GetType("System.Web.Management.WebBaseEvent, EstrellasDeEsperanza.WebFormsForCore.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", true).InvokeMember("RaisePropertyDeserializationWebErrorEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod, (Binder)null, (object)null, args, CultureInfo.InvariantCulture);
+							Type.GetType("System.Web.Management.WebBaseEvent, WebFormsForCore.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", true).InvokeMember("RaisePropertyDeserializationWebErrorEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod, (Binder)null, (object)null, args, CultureInfo.InvariantCulture);
 #endif
 						}
 					}

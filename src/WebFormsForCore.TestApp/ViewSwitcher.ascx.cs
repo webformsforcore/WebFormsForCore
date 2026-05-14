@@ -7,7 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 //using Microsoft.AspNet.FriendlyUrls.Resolvers;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.TestApp
+namespace WebFormsForCore.TestApp
 {
     public partial class ViewSwitcher : System.Web.UI.UserControl
     {

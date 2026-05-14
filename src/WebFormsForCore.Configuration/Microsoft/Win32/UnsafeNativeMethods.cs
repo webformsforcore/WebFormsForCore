@@ -61,6 +61,6 @@ namespace Microsoft.Win32 {
         internal const int MOVEFILE_REPLACE_EXISTING = 0x00000001;
 
         [DllImport(ExternDll.Kernel32, CharSet=CharSet.Auto, BestFitMapping=false)]
-        internal static extern bool   MoveFileEx(string lpExistingFileName, string lpNewFileName, int dwFlags);
+        internal static extern bool MoveFileEx(string lpExistingFileName, string lpNewFileName, int dwFlags);
     }
 }

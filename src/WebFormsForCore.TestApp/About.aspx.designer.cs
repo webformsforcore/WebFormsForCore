@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EstrellasDeEsperanza.WebFormsForCore.TestApp {
+namespace WebFormsForCore.TestApp {
     
     
     public partial class About {

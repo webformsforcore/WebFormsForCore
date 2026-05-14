@@ -12,12 +12,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 #if NETCOREAPP
-using W = EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler;
+using W = WebFormsForCore.CodeDom.Compiler;
 #else
 using W = System.CodeDom.Compiler;
 #endif
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
+namespace WebFormsForCore.CodeDom.Compiler {
     internal class VBCompiler : Compiler {
         // Command line string for My.* support
         internal static string MySupport = @"/define:_MYTYPE=\""Empty\""";

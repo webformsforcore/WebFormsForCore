@@ -11,7 +11,7 @@
         <AssemblyName>System.Web.RegularExpressions</AssemblyName>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.RegularExpressions</PackageId>
+        <PackageId>WebFormsForCore.Web.RegularExpressions</PackageId>
         <Title>WebFormsForCore.Web.RegularExpressions</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
@@ -23,8 +23,8 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
-        <AssemblyVersion>10.0.14.0</AssemblyVersion>
-        <FileVersion>10.0.14.0</FileVersion>
+        <AssemblyVersion>10.0.23.0</AssemblyVersion>
+        <FileVersion>10.0.23.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

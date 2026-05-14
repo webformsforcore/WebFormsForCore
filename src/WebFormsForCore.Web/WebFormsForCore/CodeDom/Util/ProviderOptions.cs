@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
+namespace WebFormsForCore.CodeDom.Compiler {
 
     /// <summary>
     /// A set of options for the C# and VB CodeProviders.

@@ -2449,7 +2449,7 @@ public abstract class TemplateParser : BaseParser, IAssemblyDependencyParser {
                     // Treat it as relative to the physical path of the current page
                     string currentPhysicalDir = Path.GetDirectoryName(
                         CurrentVirtualPath.MapPath());
-                    newPhysicalPath = Path.GetFullPath(Path.Combine(currentPhysicalDir, filename.Replace('/', '\\')));
+                    newPhysicalPath = Path.GetFullPath(Path.Combine(currentPhysicalDir, filename.Replace('/', Path.DirectorySeparatorChar)));
                 }
             }
         }

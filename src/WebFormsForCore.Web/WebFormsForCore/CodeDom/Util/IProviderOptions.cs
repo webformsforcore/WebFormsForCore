@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.CodeDom.Compiler {
+namespace WebFormsForCore.CodeDom.Compiler {
 
 #pragma warning disable CS0618
 

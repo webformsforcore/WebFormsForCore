@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace EstrellasDeEsperanza.WebFormsForCore.TestApp
+namespace WebFormsForCore.TestApp
 {
 	public partial class AjaxTest : Page
 	{

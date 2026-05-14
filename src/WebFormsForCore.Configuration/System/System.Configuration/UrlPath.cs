@@ -47,12 +47,12 @@ namespace System.Configuration {
             // Compare up to but not including trailing backslash
             //
             int lDir = dir.Length;
-            if (dir[lDir - 1] == '\\') {
+            if (dir[lDir - 1] == Path.DirectorySeparatorChar) {
                 lDir -= 1;
             }
 
             int lSubdir = subdir.Length;
-            if (subdir[lSubdir - 1] == '\\') {
+            if (subdir[lSubdir - 1] == Path.DirectorySeparatorChar) {
                 lSubdir -= 1;
             }
 
@@ -63,7 +63,7 @@ namespace System.Configuration {
                 return false;
 
             // Check subdir that character following length of dir is a backslash
-            if (lSubdir > lDir && subdir[lDir] != '\\')
+            if (lSubdir > lDir && subdir[lDir] != Path.DirectorySeparatorChar)
                 return false;
 
             return true;

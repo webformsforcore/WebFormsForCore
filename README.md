@@ -60,43 +60,45 @@ Change the OutputPath for `net10.0` to `bin_dotnet`:
 </ItemGroup>
 ``` 
 
+We change the output path to `bin_dotnet` and set `AppendTargetFrameworkToOutputPath` and `AppendRuntimeIdentifierToOutputPath` to `false`, since WebFormsForCore can only work, if the OutputPath is a direct subfolder of the project, as in classic ASP.NET.
+
 Then, for `net10.0`, import the WebFormsForCore packages like so:
 ```
 <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.6" />
+    <PackageReference Include="WebFormsForCore.Web" Version="1.5.4" />
 </ItemGroup>
 ```
 Remove the old `Reference` references or put them in a condition only for `net48`.
 
 If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the
-corresponding packages also, like `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions` or 
-`EstrellasDeEsperanza.WebFormsForCore.Web.Optimization` etc. The following packages are available:
-- `System.Configuration`: `EstrellasDeEsperanza.WebFormsForCore.Configuration`
-- `System.Web`: `EstrellasDeEsperanza.WebFormsForCore.Web`
-- `System.Web.Services`: `EstrellasDeEsperanza.WebFormsForCore.Web.Services`
-- `System.Web.Extensions`: `EstrellasDeEsperanza.WebFormsForCore.Web.Extensions`
-- `System.Web.Optimization`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization`
-- `System.Web.Mobile`: `EstrellasDeEsperanza.Web.Mobile`
-- `Microsoft.AspNet.Web.Optimization.WebForms`: `EstrellasDeEsperanza.WebFormsForCore.Web.Optimization.WebForms`
-- `WebGrease`: `EstrellasDeEsperanza.WebFormsForCore.WebGrease`
-- `System.Drawing`: `EstrellasDeEsperanza.WebFormsForCore.Drawing`
-- `AjaxControlToolkit`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit`
-- `AjaxControlToolkit.HtmlEditor.Sanitizer`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit.HtmlEditor.Sanitizer`
-- `AjaxControlToolkit.StaticResources`: `EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit.StaticResources`
+corresponding packages also, like `WebFormsForCore.Web.Extensions` or 
+`WebFormsForCore.Web.Optimization` etc. The following packages are available:
+- `System.Configuration`: `WebFormsForCore.Configuration`
+- `System.Web`: `WebFormsForCore.Web`
+- `System.Web.Services`: `WebFormsForCore.Web.Services`
+- `System.Web.Extensions`: `WebFormsForCore.Web.Extensions`
+- `System.Web.Optimization`: `WebFormsForCore.Web.Optimization`
+- `System.Web.Mobile`: `Web.Mobile`
+- `Microsoft.AspNet.Web.Optimization.WebForms`: `WebFormsForCore.Web.Optimization.WebForms`
+- `WebGrease`: `WebFormsForCore.WebGrease`
+- `System.Drawing`: `WebFormsForCore.Drawing`
+- `AjaxControlToolkit`: `WebFormsForCore.AjaxControlToolkit`
+- `AjaxControlToolkit.HtmlEditor.Sanitizer`: `WebFormsForCore.AjaxControlToolkit.HtmlEditor.Sanitizer`
+- `AjaxControlToolkit.StaticResources`: `WebFormsForCore.AjaxControlToolkit.StaticResources`
 
 System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is 
 missing.
 
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
-SDK project, you also need to import the package `EstrellasDeEsperanza.WebFormsForCore.Build` like so:
+SDK project, you also need to import the package `WebFormsForCore.Build` like so:
 ```
-<PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Build" Version="1.4.6" ExcludeAssets="runtime" />
+<PackageReference Include="WebFormsForCore.Build" Version="1.5.4" ExcludeAssets="runtime" />
 ```
 If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#,
 not for VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't
 work.
 
-Also, the Build package will strip incompatible designer attributes from classes in legacy .NET Framework assemblies after build, that would otherwise cause the types load to fail.
+Also, the Build package will strip incompatible designer attributes from classes in legacy .NET Framework assemblies after build, that would otherwise cause the types load to fail. This way, when you reference the Build packages you can use third party libraries that reference System.Web. You might still encounter issues, since the third party libraries will be compiled against .NET Framework and not .NET Core.
 
 Finally configure ASP.NET Core to use WebForms in the initialization code Program.cs like so:
 ```

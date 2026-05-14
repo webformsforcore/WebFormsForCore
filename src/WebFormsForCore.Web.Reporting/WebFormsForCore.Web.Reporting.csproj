@@ -13,7 +13,7 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AssemblyName>Microsoft.ReportViewer.WebForms</AssemblyName>
 
-        <PackageId>EstrellasDeEsperanza.WebFormsForCore.Web.Reporting</PackageId>
+        <PackageId>WebFormsForCore.Web.Reporting</PackageId>
         <Title>WebFormsForCore.Web.Reporting</Title>
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>

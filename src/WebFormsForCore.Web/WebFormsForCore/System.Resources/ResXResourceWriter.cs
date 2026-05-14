@@ -5,8 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
-using IFormatter = EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.IFormatter;
-using EstrellasDeEsperanza.WebFormsForCore.Serialization.Formatters.Binary;
+using IFormatter = WebFormsForCore.Serialization.Formatters.IFormatter;
+using WebFormsForCore.Serialization.Formatters.Binary;
 using System.Security.Permissions;
 using System.Text;
 using System.Xml;
@@ -239,8 +239,8 @@ namespace System.Resources
       string basePath = this.BasePath;
       if (!string.IsNullOrEmpty(basePath))
       {
-        if (!basePath.EndsWith("\\"))
-          basePath += "\\";
+        if (!basePath.EndsWith(Path.DirectorySeparatorChar))
+          basePath += Path.DirectorySeparatorChar;
         fileRef?.MakeFilePathRelative(basePath);
       }
       DataNodeInfo dataNodeInfo = resXdataNode.GetDataNodeInfo();

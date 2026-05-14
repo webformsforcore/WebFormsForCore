@@ -43,14 +43,12 @@ namespace System.Web
 	using System.Web.Caching;
 	using System.Web.Compilation;
 	using System.Web.Configuration;
-	using System.Web.Hosting;
 	using System.Web.Management;
 	using System.Web.Security;
 	using System.Web.UI;
 	using System.Web.Util;
 	using System.Xml;
 	using Microsoft.Win32;
-	using Azure;
 
 	/// <devdoc>
 	///    <para>Provides a set of ASP.NET runtime services.</para>
@@ -908,6 +906,10 @@ namespace System.Web
             }
         }
 
+        [DllImport("libc")]
+        static extern uint geteuid();
+        public static string UserId => OSInfo.IsWindows ? Environment.UserName : geteuid().ToString();
+
         // Set up the codegen directory for the app
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands", Justification = "This call site is trusted.")]
         private void SetUpCodegenDirectory(CompilationSection compilationSection) {
@@ -1029,7 +1031,7 @@ namespace System.Web
                 tempDirectory = Path.GetTempPath();
                 Debug.Assert(System.Web.UI.Util.HasWriteAccessToDirectory(tempDirectory));
                 if (OSInfo.IsWindows) tempDirectory = Path.Combine(tempDirectory, codegenDirName);
-                else tempDirectory = Path.Combine(tempDirectory, $"{codegenDirName}-{Environment.UserName}");
+                else tempDirectory = Path.Combine(tempDirectory, $"{codegenDirName}-{UserId}");
             }
   
             _tempDir = tempDirectory;
