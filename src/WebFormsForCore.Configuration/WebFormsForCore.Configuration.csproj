@@ -102,7 +102,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
-      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.5.3" />-->
+      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.5.4" />-->
     </ItemGroup>
 
     <ItemGroup>
