@@ -571,6 +571,7 @@ namespace System.Web.Configuration {
                 }
 
                 // check succeeded
+                if (version >= VersionUtil.Net5) return new FrameworkName(".NETCoreApp", version);
                 return new FrameworkName(".NETFramework", version);
             }
         }

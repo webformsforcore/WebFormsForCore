@@ -36,16 +36,18 @@ namespace System.Web.Compilation {
 		static internal readonly FrameworkName FrameworkNameV48 = CreateFrameworkName(".NETFramework,Version=v4.8");
 		static internal readonly FrameworkName FrameworkNameV80 = CreateFrameworkName(".NETCoreApp,Version=v8.0");
 		static internal readonly FrameworkName FrameworkNameV90 = CreateFrameworkName(".NETCoreApp,Version=v9.0");
-		static internal readonly FrameworkName FrameworkNameV100 = CreateFrameworkName(".NETCoreApp,Version=v10.0");
+        static internal readonly FrameworkName FrameworkNameV100 = CreateFrameworkName(".NETCoreApp,Version=v10.0");
+        static internal readonly FrameworkName FrameworkNameV110 = CreateFrameworkName(".NETCoreApp,Version=v11.0");
 
-		internal static Version Version35 = new Version(3, 5);
+        internal static Version Version35 = new Version(3, 5);
 		internal static Version Version40 = new Version(4, 0);
         internal static Version Version45 = new Version(4, 5);
 		internal static Version Version60 = new Version(6, 0);
 		internal static Version Version80 = new Version(8, 0);
 		internal static Version Version90 = new Version(9, 0);
-		internal static Version Version100 = new Version(10, 0);
-		private static FrameworkName s_targetFrameworkName = null;
+        internal static Version Version100 = new Version(10, 0);
+        internal static Version Version110 = new Version(11, 0);
+        private static FrameworkName s_targetFrameworkName = null;
         private static string s_configTargetFrameworkMoniker = null;
         private static object s_configTargetFrameworkMonikerLock = new object();
         private static bool s_initializedConfigTargetFrameworkMoniker = false;
