@@ -51,10 +51,14 @@ namespace System.Web.Util {
 			TargetsAtLeastNet5 = (version >= VersionUtil.Net5);
 			TargetsAtLeastNet6 = (version >= VersionUtil.Net6);
 			TargetsAtLeastNet7 = (version >= VersionUtil.Net7);
-			TargetsAtLeastNet8 = (version >= VersionUtil.Net8);
-		}
+            TargetsAtLeastNet8 = (version >= VersionUtil.Net8);
+            TargetsAtLeastNet9 = (version >= VersionUtil.Net9);
+            TargetsAtLeastNet10 = (version >= VersionUtil.Net10);
+            TargetsAtLeastNet11 = (version >= VersionUtil.Net11);
 
-		public bool TargetsAtLeastFramework45 { get; private set; }
+        }
+
+        public bool TargetsAtLeastFramework45 { get; private set; }
         public bool TargetsAtLeastFramework451 { get; private set; }
         public bool TargetsAtLeastFramework452 { get; private set; }
         public bool TargetsAtLeastFramework46 { get; private set; }
@@ -65,9 +69,12 @@ namespace System.Web.Util {
 		public bool TargetsAtLeastNet5 { get; private set; }
 		public bool TargetsAtLeastNet6 { get; private set; }
 		public bool TargetsAtLeastNet7 { get; private set; }
-		public bool TargetsAtLeastNet8 { get; private set; }
+        public bool TargetsAtLeastNet8 { get; private set; }
+        public bool TargetsAtLeastNet9 { get; private set; }
+        public bool TargetsAtLeastNet10 { get; private set; }
+        public bool TargetsAtLeastNet11 { get; private set; }
 
-		public Version TargetFramework { get; private set; }
+        public Version TargetFramework { get; private set; }
 
     }
 }
