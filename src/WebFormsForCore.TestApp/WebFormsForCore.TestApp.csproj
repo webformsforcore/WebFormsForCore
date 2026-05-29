@@ -61,6 +61,7 @@
         <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.5.5" />
         <PackageReference Include="WebFormsForCore.WebGrease" Version="1.5.5" />
         <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.5.5" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.5.5" />
         <PackageReference Include="WebFormsForCore.Build" Version="1.5.5" ExcludeAssets="runtime" />
     </ItemGroup>
 
