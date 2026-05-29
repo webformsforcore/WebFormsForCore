@@ -55,7 +55,6 @@ namespace System.Web.Util {
             TargetsAtLeastNet9 = (version >= VersionUtil.Net9);
             TargetsAtLeastNet10 = (version >= VersionUtil.Net10);
             TargetsAtLeastNet11 = (version >= VersionUtil.Net11);
-
         }
 
         public bool TargetsAtLeastFramework45 { get; private set; }
