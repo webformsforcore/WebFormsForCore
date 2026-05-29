@@ -1129,6 +1129,14 @@ namespace System.Web.Hosting {
 #endif
                         }
 
+                        // Set application data again to include TargetFrameworkKey, see WebFormsForCore issue #34
+                        appDomain = AppDomain.CurrentDomain;
+#if NETCOREAPP
+                        if (newLoadContext) appContext = new AssemblyLoadContext(domainId, true);
+                        else appContext = AssemblyLoadContext.Default;
+#endif
+                        SetApplicationData(bindings, appDomainAdditionalData, appContext, appDomain);
+
                         // DevDiv #286354 - Having a Task-friendly SynchronizationContext requires overriding the AppDomain's HostExecutionContextManager.
                         // DevDiv #403846 - If we can't parse the <appSettings> switch, use the <httpRuntime/targetFramework> setting to determine the default.
                         AppSettingsSection appSettingsSection = appConfig.AppSettings;
