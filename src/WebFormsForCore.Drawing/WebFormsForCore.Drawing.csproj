@@ -4,7 +4,7 @@
         <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <LangVersion>11</LangVersion>
+        <LangVersion>14</LangVersion>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
         <SignAssembly>True</SignAssembly>
@@ -16,13 +16,13 @@
         <Authors>simonegli8</Authors>
         <Company>Estrellas de Esperanza</Company>
         <Product>WebFormsForCore.Drawing</Product>
-        <Description>A port of ASP.NET WebForms to .NET 8</Description>
+        <Description>A port of ASP.NET WebForms to .NET 10</Description>
         <Copyright>Estrellas de Esperanza</Copyright>
         <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>WebForms;porting WebForms;NET Core;NET 8</PackageTags>
+        <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
         <AssemblyVersion>4.0.0.0</AssemblyVersion>
         <FileVersion>4.0.0.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -52,10 +52,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
+        <None Include="..\..\README.md" Pack=" True" PackagePath ="\" />
     </ItemGroup>
 
     <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\FakeStrongName.targets" />
