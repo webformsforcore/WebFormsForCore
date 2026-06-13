@@ -45,7 +45,9 @@
   <Project Path="src/WebFormsForCore.Web.ApplicationServices/WebFormsForCore.Web.ApplicationServices.csproj">
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
   </Project>
-  <Project Path="src/WebFormsForCore.Web.DataVisualization/WebFormsForCore.Web.DataVisualization.csproj" Id="2402ef45-9934-4979-a792-75642d95f657" />
+  <Project Path="src/WebFormsForCore.Web.DataVisualization/WebFormsForCore.Web.DataVisualization.csproj" Id="2402ef45-9934-4979-a792-75642d95f657">
+    <Build Solution="Debug|Any CPU" Project="false" />
+  </Project>
   <Project Path="src/WebFormsForCore.Web.DynamicData/WebFormsForCore.Web.DynamicData.csproj">
     <Build Project="false" />
   </Project>
