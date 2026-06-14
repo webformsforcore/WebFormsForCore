@@ -86,30 +86,44 @@ internal class CompilerResources
 		}
 	}
 
-	internal static string d_help
-	{
-		get
-		{
-			return CompilerResources.ResourceManager.GetString(nameof(d_help), CompilerResources.resourceCulture);
-		}
-	}
-	internal static string b_help
+    internal static string d_help
+    {
+        get
+        {
+            return CompilerResources.ResourceManager.GetString(nameof(d_help), CompilerResources.resourceCulture);
+        }
+    }
+    internal static string b_help
 	{
 		get
 		{
 			return CompilerResources.ResourceManager.GetString(nameof(b_help), CompilerResources.resourceCulture);
 		}
 	}
+    internal static string t_help
+    {
+        get
+        {
+            return CompilerResources.ResourceManager.GetString(nameof(t_help), CompilerResources.resourceCulture);
+        }
+    }
 
-	internal static string delaysign_help
+    internal static string delaysign_help
 	{
 		get
 		{
 			return CompilerResources.ResourceManager.GetString(nameof(delaysign_help), CompilerResources.resourceCulture);
 		}
 	}
-
-	internal static string dir_not_exist
+    internal static string unequalBinAndFramework
+    {
+        get
+        {
+            return CompilerResources.ResourceManager.GetString(nameof(unequalBinAndFramework), CompilerResources.resourceCulture);
+        }
+    }
+    
+    internal static string dir_not_exist
 	{
 		get
 		{

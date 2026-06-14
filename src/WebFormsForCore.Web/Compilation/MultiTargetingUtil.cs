@@ -60,7 +60,8 @@ namespace System.Web.Compilation {
         private static FrameworkName s_latestFrameworkName = null;
 
         private static List<FrameworkName> s_knownFrameworkNames = null;
-        
+
+        public static string ClientBuildManagerTargetFramework = null;
         /// <summary>
         /// Returns the target framework moniker, eg ".NETFramework,Version=3.5"
         /// </summary>
@@ -205,7 +206,7 @@ namespace System.Web.Compilation {
         /// Checks what is the target framework version and initializes the targetFrameworkName
         /// </summary>
         private static void InitializeTargetFrameworkName() {
-            string targetFrameworkMoniker = ConfigTargetFrameworkMoniker;
+            string targetFrameworkMoniker = ClientBuildManagerTargetFramework ?? ConfigTargetFrameworkMoniker;
 
             // Check if web.config exists, and if not, assume 4.0
             if (!WebConfigExists) {
@@ -229,6 +230,9 @@ namespace System.Web.Compilation {
                 // The targetFrameworkMonike is specified, so we need to validate it.
                 InitializeTargetFrameworkNameFor40AndAbove(targetFrameworkMoniker);
             }
+
+            ClientConfigurationHost.UseNetFXMachineConfig = s_targetFrameworkName.Version < new Version(5, 0, 0, 0) &&
+                !string.IsNullOrEmpty(ClientBuildManagerTargetFramework);
         }
 
         /// <summary>
@@ -243,17 +247,26 @@ namespace System.Web.Compilation {
                 // Try treating it as a version, eg "4.0" first.
                 Version v = GetVersion(targetFrameworkMoniker);
                 if (v != null) {
-					// If it is of the form "4.0", construct the full moniker string,
-					// eg ".NETFramework,Version=v4.0"
-#if !NETFRAMEWORK
-					if (v.Major < 8) moniker = ".NETCoreApp,Version=v8.0";
+                    // If it is of the form "4.0", construct the full moniker string,
+                    // eg ".NETFramework,Version=v4.0"
+#if NET10_0_OR_GREATER
+					if (v.Major < 10 && string.IsNullOrEmpty(ClientBuildManagerTargetFramework))
+                    {
+                        moniker = ".NETCoreApp,Version=v10.0";
+                    }
+                    else
+#elif NET8_0_OR_GREATER
+                    if (v.Major < 8 && string.IsNullOrEmpty(ClientBuildManagerTargetFramework))
+                    {
+                        moniker = ".NETCoreApp,Version=v8.0";
+                    }
                     else
 #endif
-                    if (v.Major > 4)
-                    {
-                        moniker = ".NETCoreApp,Version=v" + moniker;
-                    }
-                    else moniker = ".NETFramework,Version=v" + moniker;
+                        if (v.Major > 4)
+                        {
+                            moniker = ".NETCoreApp,Version=v" + moniker;
+                        }
+                        else moniker = ".NETFramework,Version=v" + moniker;
                 }
                 s_targetFrameworkName = CreateFrameworkName(moniker);
             }

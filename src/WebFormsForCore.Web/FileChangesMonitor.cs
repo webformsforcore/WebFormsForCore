@@ -21,6 +21,7 @@ namespace System.Web {
     using System.Web.Hosting;
     using System.Web.Util;
     using Microsoft.Win32;
+    using System.Linq;
 
 
     // Type of the callback to the subscriber of a file change event in FileChangesMonitor.StartMonitoringFile
@@ -1636,11 +1637,14 @@ namespace System.Web {
 #if !FEATURE_PAL // FEATURE_PAL does not enable file change notification
         internal static string[] s_dirsToMonitor = new string[] {
             HttpRuntime.BinDirectoryName,
+            HttpRuntime.BinDotnetDirectoryName,
             HttpRuntime.ResourcesDirectoryName,
             HttpRuntime.CodeDirectoryName,
             HttpRuntime.WebRefDirectoryName,
             HttpRuntime.BrowsersDirectoryName
-        };
+        }
+        .Distinct()
+        .ToArray();
 
         internal const int MAX_PATH = 260;
 

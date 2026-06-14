@@ -36,6 +36,7 @@ namespace System.Configuration {
 
         private const string ConfigExtension = ".config";
         public const string MachineConfigFilename = "machine.config";
+        public const string MachineConfigNetFXFilename = "machine.netfx.config";
         private const string MachineConfigSubdirectory = "Config";
 		public const string MachineConfigSubdirectoryWebFormsForCore = "App_Data";
 
@@ -44,7 +45,8 @@ namespace System.Configuration {
         private static object                   s_version = new object();
         private static volatile string          s_machineConfigFilePath;
 
-        private string                          _exePath;       // the physical path to the exe being configured
+        private string _exePath;       // the physical path to the exe being configured
+        private static string _staticExePath = null;       // the physical path to the exe being configured
         private ClientConfigPaths               _configPaths;   // physical paths to client config files
         private ExeConfigurationFileMap         _fileMap;       // optional file map
         private bool                            _initComplete;
@@ -71,6 +73,7 @@ namespace System.Configuration {
             }
         }
 
+        public static bool UseNetFXMachineConfig = false;
 		public static string MachineConfigFilePath {
             [FileIOPermissionAttribute(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
             [SuppressMessage("Microsoft.Security", "CA2106:SecureAsserts", Justification = "The callers do not expose this information without performing the appropriate demands themselves.")]
@@ -80,9 +83,17 @@ namespace System.Configuration {
                     string directory = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 					s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectory), MachineConfigFilename);
 #else
-					string directory = AppDomain.CurrentDomain.BaseDirectory;
-					s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectoryWebFormsForCore), MachineConfigFilename);
-#endif
+                    if (UseNetFXMachineConfig)
+                    {
+                        string directory = Path.GetDirectoryName(_staticExePath ?? AppDomain.CurrentDomain.BaseDirectory);
+                        s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectoryWebFormsForCore), MachineConfigNetFXFilename);
+                    }
+                    else
+                    {
+                        string directory = Path.GetDirectoryName(_staticExePath ?? AppDomain.CurrentDomain.BaseDirectory);
+                        s_machineConfigFilePath = Path.Combine(Path.Combine(directory, MachineConfigSubdirectoryWebFormsForCore), MachineConfigFilename);
+                    } 
+                    #endif
 				}
 
 				return s_machineConfigFilePath;
@@ -98,12 +109,14 @@ namespace System.Configuration {
                     var assembly = Assembly.GetExecutingAssembly();
                     var linkerTimeStamp = assembly.GetCustomAttribute<BuildDateAttribute>()?.DateTime ?? DateTime.MinValue;
 
+
                     if (!File.Exists(s_machineConfigFilePath) ||
                         File.GetLastWriteTimeUtc(s_machineConfigFilePath) < linkerTimeStamp)
                     {
+                         var configName = UseNetFXMachineConfig ? MachineConfigNetFXFilename : MachineConfigFilename;
                         using (var machineConfig = assembly
                             .GetManifestResourceNames()
-                            .Where(name => name == MachineConfigFilename || name.EndsWith($".{MachineConfigFilename}"))
+                            .Where(name => name == configName || name.EndsWith($".{configName}"))
                             .Select(name => assembly.GetManifestResourceStream(name))
                             .FirstOrDefault())
                         {
@@ -120,15 +133,15 @@ namespace System.Configuration {
                             }
                             else
                             {
-								using (var reader = new StreamReader(machineConfig))
-								{
-									var txt = reader.ReadToEnd();
-									// Uncomment Mobile sections
-									txt = Regex.Replace(txt, @"<!--@!Mobile\s*(.*?)\s*-->", "$1", RegexOptions.Singleline);
-									File.WriteAllText(s_machineConfigFilePath, txt);
-								}
-							}
-						}
+                                using (var reader = new StreamReader(machineConfig))
+                                {
+                                    var txt = reader.ReadToEnd();
+                                    // Uncomment Mobile sections
+                                    txt = Regex.Replace(txt, @"<!--@!Mobile\s*(.*?)\s*-->", "$1", RegexOptions.Singleline);
+                                    File.WriteAllText(s_machineConfigFilePath, txt);
+                                }
+                            }
+                        }
                     }
                 }
 			}
@@ -200,8 +213,8 @@ namespace System.Configuration {
         public override void Init(IInternalConfigRoot configRoot, params object[] hostInitParams) {
             try {
                 ConfigurationFileMap fileMap = (ConfigurationFileMap)   hostInitParams[0];
-                _exePath = (string)                                     hostInitParams[1];
-
+                _staticExePath = _exePath = (string)                                     hostInitParams[1];
+                
                 Host.Init(configRoot, hostInitParams);
 
                 // Do not complete initialization in runtime config, to avoid expense of 

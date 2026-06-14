@@ -36,7 +36,6 @@ namespace System.Web.Hosting {
     using System.Web.Util;
     using System.Runtime.Loader;
 
-
     public enum HostSecurityPolicyResults {
         DefaultPolicy = 0,
         FullTrust = 1,
@@ -921,7 +920,7 @@ namespace System.Web.Hosting {
 								String appId,
 								VirtualPath virtualPath,
 								String physicalPath,
-                                bool newLoadContext = true)
+                                bool newLoadContext = false)
 		{
 
 			Debug.Trace("AppManager", "CreateObjectInNewWorkerAppDomain, type=" + type.FullName);
@@ -971,7 +970,7 @@ namespace System.Web.Hosting {
                                         String appId,
                                         IApplicationHost appHost,
                                         HostingEnvironmentParameters hostingParameters,
-                                        bool newLoadContext = true) {
+                                        bool newLoadContext = false) {
             try {
                 return CreateAssemblyLoadContextWithHostingEnvironment(appId, appHost, hostingParameters, newLoadContext);
             }
@@ -987,14 +986,18 @@ namespace System.Web.Hosting {
                                                 String appId,
                                                 IApplicationHost appHost,
                                                 HostingEnvironmentParameters hostingParameters,
-                                                bool newLoadContext = true) {
+                                                bool newLoadContext = false) {
 
             String physicalPath = appHost.GetPhysicalPath();
             if (!StringUtil.StringEndsWith(physicalPath, Path.DirectorySeparatorChar))
                 physicalPath = physicalPath + Path.DirectorySeparatorChar;
 
 #if NETCOREAPP
-            ClientConfigurationHost.MachineConfigFilePath = Path.Combine(physicalPath, ClientConfigurationHost.MachineConfigSubdirectoryWebFormsForCore, ClientConfigurationHost.MachineConfigFilename);
+            var appData = Path.Combine(physicalPath, ClientConfigurationHost.MachineConfigSubdirectoryWebFormsForCore);
+            ClientConfigurationHost.MachineConfigFilePath =
+                ClientConfigurationHost.UseNetFXMachineConfig ?
+                    Path.Combine(appData, ClientConfigurationHost.MachineConfigFilename) :
+                    Path.Combine(appData, ClientConfigurationHost.MachineConfigNetFXFilename);
 #endif
             String domainId = ConstructAppDomainId(appId);
             String appName = (StringUtil.GetStringHashCode(String.Concat(appId.ToLower(CultureInfo.InvariantCulture),
@@ -1132,7 +1135,11 @@ namespace System.Web.Hosting {
                         // Set application data again to include TargetFrameworkKey, see WebFormsForCore issue #34
                         appDomain = AppDomain.CurrentDomain;
 #if NETCOREAPP
-                        if (newLoadContext) appContext = new AssemblyLoadContext(domainId, true);
+                        if (newLoadContext)
+                        {
+                            appContext = new AssemblyLoadContext(domainId, true);
+                            System.Diagnostics.Debug.WriteLine($"Created AssemblyLoadContext {domainId}");
+                        }
                         else appContext = AssemblyLoadContext.Default;
 #endif
                         SetApplicationData(bindings, appDomainAdditionalData, appContext, appDomain);
@@ -1490,7 +1497,7 @@ setup,
 			return env;
         }
 
-        public void SetApplicationData(IDictionary bindings,
+        public static void SetApplicationData(IDictionary bindings,
             Dictionary<string, object> appDomainAdditionalData, AssemblyLoadContext appContext,
             AppDomain appDomain)
         {
@@ -1894,7 +1901,7 @@ setup,
         private static int s_domainCount = 0;
         private static Object s_domainCountLock = new Object();
 
-        private static String ConstructAppDomainId(String id) {
+       internal static String ConstructAppDomainId(String id) {
             int domainCount = 0;
             lock (s_domainCountLock) {
                 domainCount = ++s_domainCount;

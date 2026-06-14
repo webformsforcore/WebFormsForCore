@@ -52,17 +52,17 @@
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
         <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
         <ProjectReference Include="..\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj" />-->
-        <PackageReference Include="WebFormsForCore.Web" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Compilers" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Web.Services" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Web.Optimization" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.WebGrease" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.5.5" />
-        <PackageReference Include="WebFormsForCore.Build" Version="1.5.5" ExcludeAssets="runtime" />
+        <PackageReference Include="WebFormsForCore.Web" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Compilers" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Web.Services" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.WebGrease" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.6.0" />
+        <PackageReference Include="WebFormsForCore.Build" Version="1.6.0" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">

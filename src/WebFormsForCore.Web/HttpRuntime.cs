@@ -67,7 +67,8 @@ namespace System.Web
 		//
 
 		internal const string BinDirectoryName = "bin";
-        internal static string BinDotnetDirectoryName => Path.GetFileName(AppDomain.CurrentDomain.BaseDirectory);
+        internal static string BinDotnetDirectoryName => CustomBinDirectory ?? Path.GetFileName(AppDomain.CurrentDomain.BaseDirectory);
+        public static string CustomBinDirectory { get; set; } = null;
 		internal const string CodeDirectoryName = "App_Code";
 		internal const string WebRefDirectoryName = "App_WebReferences";
 		internal const string ResourcesDirectoryName = "App_GlobalResources";
@@ -2280,6 +2281,10 @@ namespace System.Web
             else if (StringUtil.EqualsIgnoreCase(directoryName, BinDirectoryName)) {
                 reason = ApplicationShutdownReason.BinDirChangeOrDirectoryRename;
             }
+            else if (StringUtil.EqualsIgnoreCase(directoryName, BinDotnetDirectoryName))
+            {
+                reason = ApplicationShutdownReason.BinDirChangeOrDirectoryRename;
+            }
 
             if (e.Action == FileAction.Added) {
                 // Make sure HttpRuntime does not ignore the appdomain shutdown if a file is added (VSWhidbey 363481)
@@ -3174,9 +3179,11 @@ namespace System.Web
 #if NETFRAMEWORK
                 return Path.Combine(_theRuntime._appDomainAppPath, BinDirectoryName) + Path.DirectorySeparatorChar;
 #else
-				var path = AppDomain.CurrentDomain.BaseDirectory;
+                return Path.Combine(_theRuntime._appDomainAppPath, BinDotnetDirectoryName) + Path.DirectorySeparatorChar;
+
+                /*var path = AppDomain.CurrentDomain.BaseDirectory;
 				if (path.EndsWith(Path.DirectorySeparatorChar.ToString())) path = path.Substring(0, path.Length - 1);
-                return path + Path.DirectorySeparatorChar;
+                return path + Path.DirectorySeparatorChar;*/
 #endif
 			}
 

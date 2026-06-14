@@ -517,7 +517,7 @@ namespace System.Web.Compilation {
 
             // Create a special disk cache in the target's bin directory.  Use a slightly different
             // implementation for the updatable case.
-            string targetBinDir = Path.Combine(_precompTargetPhysicalDir, HttpRuntime.BinDirectoryName);
+            string targetBinDir = Path.Combine(_precompTargetPhysicalDir, HttpRuntime.BinDotnetDirectoryName);
             BuildResultCache preCompilationCache;
             if (PrecompilingForUpdatableDeployment) {
                 preCompilationCache = new UpdatablePrecompilerDiskBuildResultCache(targetBinDir);
@@ -2611,7 +2611,7 @@ namespace System.Web.Compilation {
 
             // Copy all the DLL's we compiled into the destination's bin directory (if any)
             if (_precompTargetPhysicalDir != null) {
-                string targetBinDir = Path.Combine(_precompTargetPhysicalDir, HttpRuntime.BinDirectoryName);
+                string targetBinDir = Path.Combine(_precompTargetPhysicalDir, HttpRuntime.BinDotnetDirectoryName);
                 CopyCompiledAssembliesToDestinationBin(HttpRuntime.CodegenDirInternal, targetBinDir);
             }
 

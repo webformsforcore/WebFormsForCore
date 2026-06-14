@@ -24,6 +24,7 @@
         <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
+        <Version>1.6.0</Version>
         <AssemblyVersion>13.5.0.0</AssemblyVersion>
         <FileVersion>13.5.0.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -73,6 +74,7 @@
     <ItemGroup>
         <EmbeddedResource Remove="System\Configuration.resx" />
         <None Remove="machine.config" />
+        <EmbeddedResource Include="Config\machine.netfx.config" />
         <EmbeddedResource Include="Config\machine.config" />
         <EmbeddedResource Include="System\Configuration.resx">
             <LogicalName>System.Configuration.resources</LogicalName>
@@ -103,7 +105,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
-      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.5.5" />-->
+      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.6.0" />-->
     </ItemGroup>
 
     <ItemGroup>

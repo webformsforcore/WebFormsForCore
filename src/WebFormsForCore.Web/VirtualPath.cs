@@ -59,7 +59,7 @@ namespace System.Web {
 
         // This is called to set the appropriate virtual path field when we already know
         // that the path is generally well formed.
-        private VirtualPath(string virtualPath) {
+        internal VirtualPath(string virtualPath) {
             if (UrlPath.IsAppRelativePath(virtualPath)) {
                 _appRelativeVirtualPath = virtualPath;
             }

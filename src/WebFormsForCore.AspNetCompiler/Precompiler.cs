@@ -1,14 +1,31 @@
-﻿using System.CodeDom.Compiler;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
+using System.Web.Hosting;
 
 #nullable disable
 namespace System.Web.Compilation;
 
+internal class Start
+{
+	public static int Main(string[] args)
+	{
+		//AssemblyLoaderNetCore.Init();
+		return RunMain(args);
+	}
+
+	static int RunMain(string[] args) {
+		return Precompiler.Main(args);
+	}
+}
 internal class Precompiler
 {
 	private static ClientBuildManager _client;
@@ -22,6 +39,7 @@ internal class Precompiler
 	private static PrecompilationFlags _precompilationFlags;
 	private static bool _showErrorStack;
 	private static List<string> _excludedVirtualPaths;
+	private static string _targetFramework;
 	private static int maxLineLength = 80 /*0x50*/;
 	private const int leftMargin = 14;
 	private static readonly char[] invalidVirtualPathChars = new char[2] { '*', '?' };
@@ -48,7 +66,7 @@ internal class Precompiler
 		{
 			Console.WriteLine(string.Format((IFormatProvider)CultureInfo.CurrentCulture, CompilerResources.brand_text, new object[1]
 			{
-		(object) "8.0.8"
+		(object) "10.0.8"
 			}));
 			Console.WriteLine(CompilerResources.header_text);
 			Console.WriteLine(CompilerResources.copyright);
@@ -63,6 +81,7 @@ internal class Precompiler
 			return 1;
 		try
 		{
+			
 			if (Precompiler._sourceVirtualDir == null)
 				Precompiler._sourceVirtualDir = Precompiler._metabasePath;
 			ClientBuildManagerParameter parameter = new ClientBuildManagerParameter();
@@ -70,9 +89,37 @@ internal class Precompiler
 			parameter.StrongNameKeyFile = Precompiler._keyFile;
 			parameter.StrongNameKeyContainer = Precompiler._keyContainer;
 			parameter.BinFolder = Precompiler._binFolder;
+			parameter.TargetFramework = Precompiler._targetFramework;
 			parameter.ExcludedVirtualPaths.AddRange((IEnumerable<string>)Precompiler._excludedVirtualPaths);
-			Precompiler._client = new ClientBuildManager(Precompiler._sourceVirtualDir, Precompiler._sourcePhysicalDir, Precompiler._targetPhysicalDir, parameter);
-			Precompiler._client.PrecompileApplication((ClientBuildManagerCallback)new Precompiler.CBMCallback());
+
+			var binFolders = parameter.BinFolder?.Split(new char[] { ',', ';' }, StringSplitOptions.TrimEntries) ?? new string[] { null };
+			var targetFrameworks = parameter.TargetFramework?.Split(new char[] { ',', ';' }, StringSplitOptions.TrimEntries) ?? new string[] { null };
+
+			if (binFolders.Length != targetFrameworks.Length) {
+				Console.WriteLine(CompilerResources.unequalBinAndFramework);
+				return -401;
+			}
+
+			int i;
+			for (i = 0; i < binFolders.Length; i++)
+			{
+				var targetDir = Precompiler._targetPhysicalDir;
+				var tempTargetDir = targetDir;
+				if (i >= 1) tempTargetDir = Path.Combine(targetDir, binFolders[i], "_AspNetCompiler");
+				Directory.CreateDirectory(tempTargetDir);
+
+                Precompile(Precompiler._sourceVirtualDir, Precompiler._sourcePhysicalDir, tempTargetDir,
+					binFolders[i], targetFrameworks[i], parameter);
+
+				if (i >= 1)
+				{
+					var targetBin = Path.Combine(targetDir, binFolders[i]);
+					if (Directory.Exists(targetBin)) Directory.Delete(targetBin, true);
+					CopyDirectory(Path.Combine(tempTargetDir, binFolders[i]), targetBin, true);
+					Directory.Delete(tempTargetDir, true);
+				}
+			}
+
 			return 0;
 		}
 		catch (FileLoadException ex)
@@ -93,8 +140,42 @@ internal class Precompiler
 		}
 		return 1;
 	}
+    public static void CopyDirectory(string sourceDir, string destinationDir, bool overwrite = true)
+    {
+        var dir = new DirectoryInfo(sourceDir);
 
-	private static void SetThreadUICulture()
+        if (!dir.Exists)
+            throw new DirectoryNotFoundException($"Source directory not found: {sourceDir}");
+
+        DirectoryInfo[] dirs = dir.GetDirectories();
+
+        // Create destination if it doesn't exist
+        Directory.CreateDirectory(destinationDir);
+
+        // Copy files
+        foreach (FileInfo file in dir.GetFiles())
+        {
+            string targetFilePath = Path.Combine(destinationDir, file.Name);
+            file.CopyTo(targetFilePath, overwrite);
+        }
+
+        // Copy subdirectories recursively
+        foreach (DirectoryInfo subDir in dirs)
+        {
+            string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+            CopyDirectory(subDir.FullName, newDestinationDir, overwrite);
+        }
+    }
+
+    public static void Precompile(string sourceVirtualDir, string sourcePhysicalDir, string targetDir, string binFolder, string targetFramework, ClientBuildManagerParameter parameter)
+	{
+		parameter.BinFolder = string.IsNullOrEmpty(binFolder) ? null : binFolder;
+		parameter.TargetFramework = string.IsNullOrEmpty(targetFramework) ? null : targetFramework;
+        Precompiler._client = new ClientBuildManager(sourceVirtualDir, sourcePhysicalDir, targetDir, parameter);
+        Precompiler._client.PrecompileApplication((ClientBuildManagerCallback)new Precompiler.CBMCallback());
+    }
+
+    private static void SetThreadUICulture()
 	{
 		Thread.CurrentThread.CurrentUICulture = CultureInfo.CurrentUICulture.GetConsoleFallbackUICulture();
 		if (Console.OutputEncoding.CodePage == 65001 || Console.OutputEncoding.CodePage == Thread.CurrentThread.CurrentUICulture.TextInfo.OEMCodePage || Console.OutputEncoding.CodePage == Thread.CurrentThread.CurrentUICulture.TextInfo.ANSICodePage)
@@ -119,8 +200,9 @@ internal class Precompiler
 		Precompiler.DisplaySwitchWithHelp("-p", CompilerResources.p_help);
 		Precompiler.DisplaySwitchWithHelp("-u", CompilerResources.u_help);
 		Precompiler.DisplaySwitchWithHelp("-f", CompilerResources.f_help);
-		Precompiler.DisplaySwitchWithHelp("-d", CompilerResources.d_help);
-		Precompiler.DisplaySwitchWithHelp("targetDir", CompilerResources.targetDir_help);
+        Precompiler.DisplaySwitchWithHelp("-d", CompilerResources.d_help);
+        Precompiler.DisplaySwitchWithHelp("-t", CompilerResources.t_help);
+        Precompiler.DisplaySwitchWithHelp("targetDir", CompilerResources.targetDir_help);
 		Precompiler.DisplaySwitchWithHelp("-c", CompilerResources.c_help);
 		Precompiler.DisplaySwitchWithHelp("-x", CompilerResources.x_help);
 		Precompiler.DisplaySwitchWithHelp("-b", CompilerResources.b_help);
@@ -322,7 +404,13 @@ internal class Precompiler
 							return false;
 						Precompiler._excludedVirtualPaths.Add(nextArgument);
 						continue;
-					default:
+					case "t":
+                        string nextArg = Precompiler.GetNextArgument(args, ref index);
+                        if (nextArg == null)
+                            return false;
+						Precompiler._targetFramework = nextArg;
+                        continue;
+                    default:
 						Precompiler.DumpError("1004", string.Format((IFormatProvider)CultureInfo.CurrentCulture, CompilerResources.unknown_switch, new object[1]
 						{
 			  (object) str

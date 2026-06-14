@@ -28,7 +28,9 @@
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
   </Project>
   <Project Path="src/WebFormsForCore.AspNetCompiler/WebFormsForCore.AspNetCompiler.csproj" />
-  <Project Path="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
+  <Project Path="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj">
+    <Build Solution="Debug|Any CPU" Project="false" />
+  </Project>
   <Project Path="src/WebFormsForCore.Compilers/WebFormsForCore.Compilers.csproj" />
   <Project Path="src/WebFormsForCore.Configuration/WebFormsForCore.Configuration.csproj">
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />

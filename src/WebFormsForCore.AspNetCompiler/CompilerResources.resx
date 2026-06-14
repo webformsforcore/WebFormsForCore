@@ -241,6 +241,12 @@
     <value>The virtual path of the application to be compiled (e.g. "/MyApp"). If -p is specified, the physical path is used to locate the application. Otherwise, the IIS metabase is used, and the application is assumed to be in the default site (under "/LM/W3SVC/1/Root"). This switch cannot be combined with the -m switch.</value>
   </data>
   <data name="b_help" xml:space="preserve">
-    <value>If specified, designates the binary folder of the project.</value>
+    <value>If specified, designates the binary folder of the project. This can also be a comma separated list of bin folders. If you specify a list, you must also specify the target frameworks of those folders using the -t parameter with the list of target frameworks.</value>
+  </data>
+  <data name="t_help" xml:space="preserve">
+    <value>If specified, designates the target framework for the compilation. If not specified the target framework is determined from the web.config. This can also be a comma separated list of target frameworks. If you specify a list, you must also specify the bin folders of those TFM's using the -b parameter with the list of bin folders.</value>
+  </data>
+  <data name="unequalBinAndFramework" xml:space="preserve">
+    <value>The number of bin folders must be identical to the number of target frameworks</value>
   </data>
 </root>

@@ -15,10 +15,14 @@ namespace System.Web.Hosting
 	public class AssemblyLoaderNetCore
 	{
 		static int Initialized = 0;
-		public static void Init()
+		public static void Init(string binpath = null)
 		{
 			var initialized = Interlocked.Exchange(ref Initialized, 1);
-			if (initialized == 0) AssemblyLoadContext.Default.Resolving += Resolve;
+			if (initialized == 0)
+			{
+				exepath = binpath ?? exepath;
+				AssemblyLoadContext.Default.Resolving += Resolve;
+			}
 		}
 
 		static string probingPaths = "";
@@ -27,7 +31,7 @@ namespace System.Web.Hosting
 			set { probingPaths = value; paths = null; }
 		}
 		
-		static readonly string exepath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+		static string exepath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 		static string[] extensions = new string[] { exepath };
 		static string tempPath = null;
 		public static string TempPath {
@@ -50,7 +54,9 @@ namespace System.Web.Hosting
 
 		public static Assembly Resolve(AssemblyLoadContext context, AssemblyName name)
 		{
-			return Paths
+			//Debugger.Break();
+			Debug.WriteLine($"Resolving {name.Name}");
+			var assembly = Paths
 				.Select(p =>
 				{
 					var relativename = Path.Combine(p, $"{name.Name}.dll");
@@ -65,6 +71,9 @@ namespace System.Web.Hosting
 				.Where(assembly => assembly != null &&
 					(name.Version == null || assembly.GetName().Version >= name.Version))
 				.FirstOrDefault();
+			if (assembly != null) Debug.WriteLine($"Loaded assembly {name.Name}");
+			else Debug.WriteLine($"Failed to resolve assembly {name.Name}");
+			return assembly;
 		}
 	}
 }
