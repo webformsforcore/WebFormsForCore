@@ -1,14 +1,17 @@
 ﻿#if !NETFRAMEWORK
+using Microsoft.AspNetCore.Routing.Constraints;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Loader;
 using System.Diagnostics;
-using System.Reflection;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.Loader;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 
 namespace System.Web.Hosting
 {
@@ -51,18 +54,38 @@ namespace System.Web.Hosting
 				.Split(';')
 				.Concat(extensions)
 				.ToArray();
+		public static bool UseNetFXGAC = false;
 
 		public static Assembly Resolve(AssemblyLoadContext context, AssemblyName name)
 		{
 			//Debugger.Break();
 			Debug.WriteLine($"Resolving {name.Name}");
-			var assembly = Paths
+			var paths = Paths;
+			if (UseNetFXGAC)
+			{
+				var winAssemblyDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+					"Microsoft.NET", "assembly");
+                byte[] tokenBytes = name.GetPublicKeyToken();
+                string token = BitConverter
+                    .ToString(tokenBytes)
+                    .Replace("-", "")
+                    .ToLowerInvariant();
+
+				var subdir = Path.Combine(name.Name, $"v4.0_{name.Version}__{token}");
+				var gacNative = OSInfo.Is64 ? "GAC_64" : "GAC_32";
+				paths = paths
+					.Concat(new[] { Path.Combine(winAssemblyDir, "GAC_MSIL", subdir),
+						Path.Combine(winAssemblyDir, gacNative, subdir) })
+					.ToArray();
+			}
+			var assembly = paths
 				.Select(p =>
 				{
 					var relativename = Path.Combine(p, $"{name.Name}.dll");
 					return new
 					{
-						FullName = new DirectoryInfo(Path.Combine(exepath, relativename)).FullName,
+						FullName = Path.IsPathRooted(relativename) ? relativename :
+							new DirectoryInfo(Path.Combine(exepath, relativename)).FullName,
 						Name = relativename
 					};
 				})

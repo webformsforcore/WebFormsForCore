@@ -16,6 +16,7 @@ namespace System.Web.Compilation
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Configuration;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -246,7 +247,7 @@ namespace System.Web.Compilation
             // Initialize HttpRuntime.CustomBinFolder after SetApplicationData, since the static constructor of HttpRuntime
             // will read the ApplicationData
             SetBinFolder(parameter.BinFolder);
-            MultiTargetingUtil.ClientBuildManagerTargetFramework = parameter.TargetFramework switch
+            var versionText = MultiTargetingUtil.ClientBuildManagerTargetFramework = parameter.TargetFramework switch
             {
                 "net20" => "2.0",
                 "net30" => "3.0",
@@ -273,6 +274,11 @@ namespace System.Web.Compilation
                 "net12.0" => "12.0",
                 _ => parameter.TargetFramework
             };
+            if (Version.TryParse(versionText, out var version) && version < new Version(5,0,0,0))
+            {
+                ClientConfigurationHost.UseNetFXMachineConfig = true;
+                AssemblyLoaderNetCore.UseNetFXGAC = true;
+            }
 
             InitializeCBMTDPBridge(typeDescriptionProvider);
 
@@ -667,6 +673,7 @@ namespace System.Web.Compilation
         public void PrecompileApplication(ClientBuildManagerCallback callback)
         {
             PrecompileApplication(callback, false);
+            
         }
 
         public void PrecompileApplication(ClientBuildManagerCallback callback, bool forceCleanBuild)
@@ -815,6 +822,7 @@ namespace System.Web.Compilation
                 // host appdomain cannot be unloaded during creation.
                 host.AddPendingCall();
 
+                HostingEnvironment.HostingParameters.ClientBuildManagerParameter = _hostingParameters.ClientBuildManagerParameter;
                 host.Configure(this);
 
                 _host = host;

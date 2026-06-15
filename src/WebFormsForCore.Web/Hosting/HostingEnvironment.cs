@@ -637,6 +637,8 @@ namespace System.Web.Hosting {
                 HttpRuntime.CoalesceNotifications();
             }
 
+            _wellKnownObjects.Clear();
+
             RemoveThisAppDomainFromAppManagerTableOnce();
 
             // stop all registered objects without blocking

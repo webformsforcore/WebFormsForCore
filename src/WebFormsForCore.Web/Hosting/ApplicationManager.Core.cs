@@ -820,7 +820,7 @@ namespace System.Web.Hosting {
 
                         ac.HostEnv = null;
                         Interlocked.Decrement(ref _accessibleHostingEnvCount);
-
+                        
                         // Autorestart the application right away
                         if (ac.PreloadContext != null && !ac.RetryingPreload) {
                             ProcessHost.PreloadApplicationIfNotShuttingdown(appId, ac);
@@ -996,8 +996,8 @@ namespace System.Web.Hosting {
             var appData = Path.Combine(physicalPath, ClientConfigurationHost.MachineConfigSubdirectoryWebFormsForCore);
             ClientConfigurationHost.MachineConfigFilePath =
                 ClientConfigurationHost.UseNetFXMachineConfig ?
-                    Path.Combine(appData, ClientConfigurationHost.MachineConfigFilename) :
-                    Path.Combine(appData, ClientConfigurationHost.MachineConfigNetFXFilename);
+                    Path.Combine(appData, ClientConfigurationHost.MachineConfigNetFXFilename) :
+                    Path.Combine(appData, ClientConfigurationHost.MachineConfigFilename);
 #endif
             String domainId = ConstructAppDomainId(appId);
             String appName = (StringUtil.GetStringHashCode(String.Concat(appId.ToLower(CultureInfo.InvariantCulture),

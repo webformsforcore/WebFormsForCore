@@ -793,8 +793,10 @@ public class AssemblyBuilder {
     internal static void FixUpCompilerParameters(CompilationSection compilationSection, Type codeDomProviderType, CompilerParameters compilParams) {
         // The mscorlib reference is special cased, and needs to be passed via the CoreAssemblyFileName property.
         if (BuildManagerHost.InClientBuildManager && !MultiTargetingUtil.IsTargetFramework20 && !MultiTargetingUtil.IsTargetFramework35) {
-            string coreAssemblyFile;
-		    AssemblyResolver.GetPathToReferenceAssembly(typeof(string).Assembly, out coreAssemblyFile);
+                string coreAssemblyFile = compilParams.ReferencedAssemblies
+                    .OfType<string>()
+                    .FirstOrDefault(name => name.EndsWith("mscorlib.dll") || name.EndsWith("System.Private.CoreLib.dll"));
+		    //AssemblyResolver.GetPathToReferenceAssembly(typeof(string).Assembly, out coreAssemblyFile);
             compilParams.CoreAssemblyFileName = coreAssemblyFile;
         }
 

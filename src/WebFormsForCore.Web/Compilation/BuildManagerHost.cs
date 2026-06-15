@@ -679,6 +679,9 @@ namespace System.Web.Compilation
 #endif
 				_buildManager = BuildManager.TheBuildManager;
 
+				_buildManager.SetPrecompilationInfo(HostingEnvironment.HostingParameters, false);
+				_buildManager.PrecompilationModeInitialize();
+
 				// Listen to appdomain shutdown.
 				HttpRuntime.AppDomainShutdown += new BuildManagerHostUnloadEventHandler(this.OnAppDomainShutdown);
 			}

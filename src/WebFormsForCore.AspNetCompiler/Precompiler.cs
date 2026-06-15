@@ -109,7 +109,7 @@ internal class Precompiler
 				Directory.CreateDirectory(tempTargetDir);
 
                 Precompile(Precompiler._sourceVirtualDir, Precompiler._sourcePhysicalDir, tempTargetDir,
-					binFolders[i], targetFrameworks[i], parameter);
+					binFolders[i], targetFrameworks[i], parameter, i >= 1);
 
 				if (i >= 1)
 				{
@@ -167,12 +167,65 @@ internal class Precompiler
         }
     }
 
-    public static void Precompile(string sourceVirtualDir, string sourcePhysicalDir, string targetDir, string binFolder, string targetFramework, ClientBuildManagerParameter parameter)
-	{
-		parameter.BinFolder = string.IsNullOrEmpty(binFolder) ? null : binFolder;
-		parameter.TargetFramework = string.IsNullOrEmpty(targetFramework) ? null : targetFramework;
-        Precompiler._client = new ClientBuildManager(sourceVirtualDir, sourcePhysicalDir, targetDir, parameter);
-        Precompiler._client.PrecompileApplication((ClientBuildManagerCallback)new Precompiler.CBMCallback());
+    public static int Precompile(string sourceVirtualDir, string sourcePhysicalDir, string targetDir, string binFolder, string targetFramework, ClientBuildManagerParameter parameter, bool forceCleanBuild = false)
+	{ 
+        var binFolders = parameter.BinFolder?.Split(new char[] { ',', ';' }, StringSplitOptions.TrimEntries) ?? new string[] { null };
+        var targetFrameworks = parameter.TargetFramework?.Split(new char[] { ',', ';' }, StringSplitOptions.TrimEntries) ?? new string[] { null };
+		if (binFolders.Length <= 1 && targetFrameworks.Length <= 1)
+		{
+            var par = new ClientBuildManagerParameter()
+            {
+                PrecompilationFlags = parameter.PrecompilationFlags,
+                StrongNameKeyContainer = parameter.StrongNameKeyContainer,
+                StrongNameKeyFile = parameter.StrongNameKeyFile,
+                TargetFramework = string.IsNullOrEmpty(targetFramework) ? null : targetFramework,
+                BinFolder = string.IsNullOrEmpty(binFolder) ? null : binFolder
+            };
+			par.ExcludedVirtualPaths.AddRange(parameter.ExcludedVirtualPaths);
+
+			using (Precompiler._client = new ClientBuildManager(sourceVirtualDir, sourcePhysicalDir, targetDir, par))
+			{
+				Precompiler._client.PrecompileApplication((ClientBuildManagerCallback)new Precompiler.CBMCallback(), forceCleanBuild);
+			}
+		}
+		else
+		{
+			if (binFolders.Length != targetFrameworks.Length)
+			{
+				Console.WriteLine(CompilerResources.unequalBinAndFramework);
+				return -401;
+			}
+
+			int i;
+			for (i = 0; i < binFolders.Length; i++)
+			{
+				var par = new ClientBuildManagerParameter()
+				{
+					PrecompilationFlags = parameter.PrecompilationFlags,
+					StrongNameKeyContainer = parameter.StrongNameKeyContainer,
+					StrongNameKeyFile = parameter.StrongNameKeyFile,
+					TargetFramework = targetFrameworks[i],
+					BinFolder = binFolders[i]
+				};
+                par.ExcludedVirtualPaths.AddRange(parameter.ExcludedVirtualPaths);
+
+                var tempTargetDir = targetDir;
+				if (i >= 1) tempTargetDir = Path.Combine(targetDir, binFolders[i], "_AspNetCompiler");
+				Directory.CreateDirectory(tempTargetDir);
+
+				Precompile(Precompiler._sourceVirtualDir, Precompiler._sourcePhysicalDir, tempTargetDir,
+					binFolders[i], targetFrameworks[i], par, i >= 1);
+
+				if (i >= 1)
+				{
+					var targetBin = Path.Combine(targetDir, binFolders[i]);
+					if (Directory.Exists(targetBin)) Directory.Delete(targetBin, true);
+					CopyDirectory(Path.Combine(tempTargetDir, binFolders[i]), targetBin, true);
+					Directory.Delete(tempTargetDir, true);
+				}
+			}
+		}
+		return 0;
     }
 
     private static void SetThreadUICulture()
@@ -193,6 +246,7 @@ internal class Precompiler
 		Console.WriteLine("                [[-keyfile file | -keycontainer container]");
 		Console.WriteLine("                     [-aptca] [-delaySign]]");
 		Console.WriteLine("                [-errorstack]");
+		Console.WriteLine("                [[-t] targetFramework]");
 		Console.WriteLine();
 		Precompiler.DisplaySwitchWithHelp("-?", CompilerResources.questionmark_help);
 		Precompiler.DisplaySwitchWithHelp("-m", CompilerResources.m_help);

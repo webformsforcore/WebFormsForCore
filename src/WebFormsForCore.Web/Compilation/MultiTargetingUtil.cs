@@ -231,8 +231,10 @@ namespace System.Web.Compilation {
                 InitializeTargetFrameworkNameFor40AndAbove(targetFrameworkMoniker);
             }
 
-            ClientConfigurationHost.UseNetFXMachineConfig = s_targetFrameworkName.Version < new Version(5, 0, 0, 0) &&
+            var useFX = s_targetFrameworkName.Version < new Version(5, 0, 0, 0) &&
                 !string.IsNullOrEmpty(ClientBuildManagerTargetFramework);
+            ClientConfigurationHost.UseNetFXMachineConfig = useFX;
+            AssemblyLoaderNetCore.UseNetFXGAC = useFX;
         }
 
         /// <summary>
