@@ -7,9 +7,12 @@
 namespace System.Web.Hosting {
     
     using System;
+    using System.Configuration;
+    using System.Reflection;
+    using System.Runtime.Loader;
+    using System.Linq;
     using System.Web;
     using System.Web.Util;
-    using System.Configuration;
 
     internal sealed class PreloadHost : MarshalByRefObject, IRegisteredObject {
 
@@ -23,7 +26,12 @@ namespace System.Web.Hosting {
                 // Check the type
                 Type preloadObjType = null;
                 try {
-                    preloadObjType = Type.GetType(preloadObjTypeName, true);
+                    //preloadObjType = Type.GetType(preloadObjTypeName, true);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    preloadObjType = Type.GetType(preloadObjTypeName,
+                        assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                        (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                        true);
                 }
                 catch (Exception e) {
                     throw new InvalidOperationException (

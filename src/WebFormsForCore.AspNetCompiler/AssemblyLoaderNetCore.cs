@@ -1,39 +1,35 @@
 ﻿#if !NETFRAMEWORK
-using Microsoft.AspNetCore.Routing.Constraints;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Configuration;
 
-namespace System.Web.Hosting
+namespace System.Web.Compilation
 {
 	public class AssemblyLoaderNetCore
 	{
 		static int Initialized = 0;
+		static AssemblyLoadContext Context = null;
 		public static void Init(string binpath = null, AssemblyLoadContext context = null)
 		{
 			var initialized = Interlocked.Exchange(ref Initialized, 1);
 			if (initialized == 0)
 			{
 				exepath = binpath ?? exepath;
-                var alc = context ?? AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
-                alc.Resolving += Resolve;
+                Context = context ?? AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                Context.Resolving += Resolve;
             }
         }
 
 		public static void Dispose()
 		{
-            var assembly = Assembly.GetExecutingAssembly();
-            var alc = AssemblyLoadContext.GetLoadContext(assembly);
-            alc.Resolving -= Resolve;
+            Context?.Resolving -= Resolve;
         }
 
         static string probingPaths = "";
@@ -82,7 +78,7 @@ namespace System.Web.Hosting
                     .ToLowerInvariant();
 
 				var subdir = Path.Combine(name.Name, $"v4.0_{name.Version}__{token}");
-				var gacNative = OSInfo.Is64 ? "GAC_64" : "GAC_32";
+				var gacNative = Environment.Is64BitOperatingSystem ? "GAC_64" : "GAC_32";
 				paths = paths
 					.Concat(new[] { Path.Combine(winAssemblyDir, "GAC_MSIL", subdir),
 						Path.Combine(winAssemblyDir, gacNative, subdir) })

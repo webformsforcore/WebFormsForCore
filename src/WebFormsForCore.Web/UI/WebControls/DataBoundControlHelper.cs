@@ -11,6 +11,7 @@ namespace System.Web.UI.WebControls {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Reflection;
+    using System.Runtime.Loader;
     using System.Web.Compilation;
     using System.Web.Util;
 
@@ -127,7 +128,9 @@ namespace System.Web.UI.WebControls {
             }
 
             if (s_enableDynamicDataMethod == null) {
-                Type dataControlExtensionsType = Assembly.Load(AssemblyRef.SystemWebDynamicData).GetType("System.Web.UI.DataControlExtensions");
+                //Type dataControlExtensionsType = Assembly.Load(AssemblyRef.SystemWebDynamicData).GetType("System.Web.UI.DataControlExtensions");
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                 Type dataControlExtensionsType = alc.LoadFromAssemblyName(new AssemblyName(AssemblyRef.SystemWebDynamicData)).GetType("System.Web.UI.DataControlExtensions");
                 s_enableDynamicDataMethod = dataControlExtensionsType.GetMethod("EnableDynamicData",
                                                                               BindingFlags.Public | BindingFlags.Static,
                                                                               binder: null,

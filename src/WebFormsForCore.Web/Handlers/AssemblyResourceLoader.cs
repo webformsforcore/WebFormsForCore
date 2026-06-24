@@ -10,6 +10,7 @@ namespace System.Web.Handlers {
     using System.Globalization;
     using System.IO;
     using System.Reflection;
+    using System.Runtime.Loader;
     using System.Security.Permissions;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -571,15 +572,20 @@ namespace System.Web.Handlers {
                     }
                     realName.SetPublicKeyToken(tokenBytes);
 
-                    assembly = Assembly.Load(realName);
+                    // assembly = Assembly.Load(realName);
+                    var alc = System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    assembly = alc.LoadFromAssemblyName(realName);
                 }
                 // System.Web special case
                 else if (nameType == 's') {
                     assembly = typeof(AssemblyResourceLoader).Assembly;
                 }
                 // If was a partial name, just try to load it
-                else if (nameType == 'p') {
-                    assembly = Assembly.Load(assemblyName);
+                else if (nameType == 'p')
+                {
+                    // assembly = Assembly.Load(assemblyName);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                     assembly = alc.LoadFromAssemblyName(new AssemblyName(assemblyName));
                 }
                 else {
                     throw new HttpException(404, SR.GetString(SR.AssemblyResourceLoader_InvalidRequest));

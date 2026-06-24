@@ -9,14 +9,16 @@
  * with deferred creation
  */
 namespace System.Web {
-    using System.Runtime.InteropServices;
-
     using System.Collections;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Runtime.Loader;
+    using System.Reflection;
+    using System.Security.Permissions;
     using System.Web;
     using System.Web.Util;
-    using System.Security.Permissions;
 
     //
     // Static objects collection class
@@ -216,7 +218,11 @@ namespace System.Web {
                 else {
                     typename = reader.ReadString();
                     bool lateBound = reader.ReadBoolean();
-                    entry = new HttpStaticObjectsEntry(name, Type.GetType(typename), lateBound);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    entry = new HttpStaticObjectsEntry(name, Type.GetType(typename,
+                        assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                        (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase)
+                        ), lateBound);
                 }
 
                 col._objects.Add(name, entry);

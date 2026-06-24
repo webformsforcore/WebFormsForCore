@@ -17,8 +17,10 @@ namespace WebFormsForCore.CodeDom.Compiler
 	using System.Diagnostics;
 	using System.Linq;
 	using System.Web;
+    using System.Runtime.Loader;
+    using System.IO;
 
-	[PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust")]
+    [PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust")]
 	public sealed class CompilerInfo
 	{
 		internal String _codeDomProviderTypeName; // This can never by null
@@ -54,7 +56,21 @@ namespace WebFormsForCore.CodeDom.Compiler
 					{
 						if (type == null)
 						{
-							type = Type.GetType(_codeDomProviderTypeName);
+                            //type = Type.GetType(_codeDomProviderTypeName);
+                            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+							type = Type.GetType(_codeDomProviderTypeName,
+								assemblyName => {
+									try
+									{
+										return alc.LoadFromAssemblyName(assemblyName);
+									}
+									catch (FileNotFoundException)
+									{
+										return null;
+									}
+								},
+                                (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase),
+								false);
 							if (type == null)
 							{
 								if (configFileName == null)
@@ -80,7 +96,20 @@ namespace WebFormsForCore.CodeDom.Compiler
 		{
 			get
 			{
-				Type type = Type.GetType(_codeDomProviderTypeName);
+                //Type type = Type.GetType(_codeDomProviderTypeName);
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                type = Type.GetType(_codeDomProviderTypeName,
+                    assemblyName => {
+						try
+						{
+							return alc.LoadFromAssemblyName(assemblyName);
+						} catch (FileNotFoundException)
+						{
+							return null;
+						}
+					},
+                    (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase),
+                    false);
 				return (type != null);
 			}
 		}

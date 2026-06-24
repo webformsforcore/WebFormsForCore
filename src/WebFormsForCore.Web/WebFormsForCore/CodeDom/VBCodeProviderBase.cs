@@ -4,7 +4,10 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
+
 #if NETCOREAPP
 using W = WebFormsForCore.CodeDom.Compiler;
 #else
@@ -23,12 +26,44 @@ public class VBCodeProviderBase : W.CodeDomProvider
 #else
 	const string CodeDomAssembly  = "System"; 
 #endif
+
+#if NETCOREAPP
+	private Type Type {
+		get
+		{
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            return Type.GetType($"Microsoft.VisualBasic.VBCodeGenerator, {CodeDomAssembly}",
+                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
+        }
+    } 
+	private Type typeAttributeConverterType
+	{
+		get
+		{
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            return Type.GetType($"Microsoft.VisualBasic.VBTypeAttributeConverter, {CodeDomAssembly}",
+                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
+        }
+    }
+	private Type memberAttributeConverterType
+	{
+		get
+		{
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            return Type.GetType($"Microsoft.VisualBasic.VBMemberAttributeConverter, {CodeDomAssembly}",
+                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
+        }
+    }
+#else
 	private Type Type => Type.GetType($"Microsoft.VisualBasic.VBCodeGenerator, {CodeDomAssembly}");
 	private Type typeAttributeConverterType => Type.GetType($"Microsoft.VisualBasic.VBTypeAttributeConverter, {CodeDomAssembly}");
 	private Type memberAttributeConverterType => Type.GetType($"Microsoft.VisualBasic.VBMemberAttributeConverter, {CodeDomAssembly}");
+#endif
 
-
-	private readonly ICodeGenerator _generator;
+    private readonly ICodeGenerator _generator;
 
 	//
 	// Summary:

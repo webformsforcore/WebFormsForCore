@@ -16,6 +16,7 @@ namespace System.Web.UI {
     using System.Globalization;
     using System.Reflection;
 	using System.Runtime.Serialization;
+    using System.Linq;
 #if NETFRAMEWORK
     using System.Runtime.Serialization.Formatters.Binary;
 #else
@@ -31,6 +32,7 @@ namespace System.Web.UI {
     using System.Web.Management;
     using System.Web.UI.WebControls;
     using System.Web.Security.Cryptography;
+    using System.Runtime.Loader;
 
     // 
 
@@ -473,7 +475,12 @@ namespace System.Web.UI {
                         resolvedType = HttpContext.SystemWebAssembly.GetType(typeName, true);
                     }
                     else {
-                        resolvedType = Type.GetType(typeName, true);
+                        //resolvedType = Type.GetType(typeName, true);
+                        var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                        resolvedType = Type.GetType(typeName,
+                            assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                            true);
                     }
                 }
                 catch (Exception exception) {

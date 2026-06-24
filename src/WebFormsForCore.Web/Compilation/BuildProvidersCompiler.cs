@@ -6,7 +6,8 @@
 
 
 
-namespace System.Web.Compilation {
+namespace System.Web.Compilation;
+
 
 using System;
 using System.IO;
@@ -26,8 +27,10 @@ using System.Web.Util;
 using System.Web.Caching;
 using System.Web.UI;
 using System.Web.Configuration;
+using System.Runtime.Loader;
 
-internal class BuildProvidersCompiler {
+internal class BuildProvidersCompiler
+{
     private ICollection _buildProviders;
     private VirtualPath _configPath;
     private bool _supportLocalization;
@@ -46,10 +49,10 @@ internal class BuildProvidersCompiler {
     // This is used to implement ClientBuildManager.GetCodeDirectoryInformation
     private string _generatedFilesDir;
 
-    internal BuildProvidersCompiler(VirtualPath configPath, string outputAssemblyName) : 
+    internal BuildProvidersCompiler(VirtualPath configPath, string outputAssemblyName) :
         this(configPath, false, outputAssemblyName) { }
 
-    internal BuildProvidersCompiler(VirtualPath configPath, bool supportLocalization, 
+    internal BuildProvidersCompiler(VirtualPath configPath, bool supportLocalization,
         string outputAssemblyName) {
         _configPath = configPath;
         _supportLocalization = supportLocalization;
@@ -59,7 +62,8 @@ internal class BuildProvidersCompiler {
     }
 
     internal BuildProvidersCompiler(VirtualPath configPath, bool supportLocalization,
-        string generatedFilesDir, int index) {
+        string generatedFilesDir, int index)
+    {
         _configPath = configPath;
         _supportLocalization = supportLocalization;
         _compConfig = MTConfigUtil.GetCompilationConfig(_configPath);
@@ -72,26 +76,31 @@ internal class BuildProvidersCompiler {
     internal CompilationSection CompConfig { get { return _compConfig; } }
 
     private string _outputAssemblyName;
-    internal string OutputAssemblyName {
+    internal string OutputAssemblyName
+    {
         get { return _outputAssemblyName; }
     }
 
-    private bool CbmGenerateOnlyMode {
+    private bool CbmGenerateOnlyMode
+    {
         get { return _generatedFilesDir != null; }
     }
 
-    internal void SetBuildProviders(ICollection buildProviders) {
+    internal void SetBuildProviders(ICollection buildProviders)
+    {
         _buildProviders = buildProviders;
     }
 
-    private void ProcessBuildProviders() {
+    private void ProcessBuildProviders()
+    {
 
         CompilerType compilerType = null;
         BuildProvider firstLanguageBuildProvider = null;
 
         // First, delete all the existing satellite assemblies of the assembly
         // we're about to build (VSWhidbey 87022) (only if it has a fixed name)
-        if (OutputAssemblyName != null) {
+        if (OutputAssemblyName != null)
+        {
             Debug.Assert(!CbmGenerateOnlyMode);
             StandardDiskBuildResultCache.RemoveSatelliteAssemblies(OutputAssemblyName);
         }
@@ -99,15 +108,18 @@ internal class BuildProvidersCompiler {
         // List of BuildProvider's that don't ask for a specific language
         ArrayList languageFreeBuildProviders = null;
 
-        foreach (BuildProvider buildProvider in _buildProviders) {
+        foreach (BuildProvider buildProvider in _buildProviders)
+        {
 
             // If it's an InternalBuildProvider, give it the assembly references early on
             buildProvider.SetReferencedAssemblies(_referencedAssemblies);
 
             // Instruct the internal build providers to continue processing for more parse errors.
-            if (!BuildManager.ThrowOnFirstParseError) {
+            if (!BuildManager.ThrowOnFirstParseError)
+            {
                 InternalBuildProvider provider = buildProvider as InternalBuildProvider;
-                if (provider != null) {
+                if (provider != null)
+                {
                     provider.ThrowOnFirstParseError = false;
                 }
             }
@@ -121,24 +133,29 @@ internal class BuildProvidersCompiler {
                 cultureName = buildProvider.GetCultureName();
 
             // Is it asking for a specific language?
-            if (ctwp != null) {
+            if (ctwp != null)
+            {
 
                 // If it specifies a language, it can't also have a culture
-                if (cultureName != null) {
+                if (cultureName != null)
+                {
                     throw new HttpException(SR.GetString(SR.Both_culture_and_language, BuildProvider.GetDisplayName(buildProvider)));
                 }
 
                 // Do we already know the language we'll be using
-                if (compilerType != null) {
+                if (compilerType != null)
+                {
 
                     // If it's different from the current one, fail
-                    if (!ctwp.Equals(compilerType)) {
+                    if (!ctwp.Equals(compilerType))
+                    {
                         throw new HttpException(SR.GetString(SR.Inconsistent_language,
                             BuildProvider.GetDisplayName(buildProvider),
                             BuildProvider.GetDisplayName(firstLanguageBuildProvider)));
                     }
                 }
-                else {
+                else
+                {
                     // Keep track of the build provider of error handling purpose
                     firstLanguageBuildProvider = buildProvider;
 
@@ -148,23 +165,27 @@ internal class BuildProvidersCompiler {
                         CompConfig, _referencedAssemblies, _generatedFilesDir, OutputAssemblyName);
                 }
             }
-            else {
-                if (cultureName != null) {
+            else
+            {
+                if (cultureName != null)
+                {
                     // Ignore the culture files in generate-only mode
                     if (CbmGenerateOnlyMode)
                         continue;
 
-                    if (_satelliteAssemblyBuilders == null) {
+                    if (_satelliteAssemblyBuilders == null)
+                    {
                         _satelliteAssemblyBuilders = new Hashtable(
                             StringComparer.OrdinalIgnoreCase);
                     }
 
                     // Check if we already have an assembly builder for this culture
                     AssemblyBuilder satelliteAssemblyBuilder =
-                        (AssemblyBuilder) _satelliteAssemblyBuilders[cultureName];
+                        (AssemblyBuilder)_satelliteAssemblyBuilders[cultureName];
 
                     // If not, create one and store it in the hashtable
-                    if (satelliteAssemblyBuilder == null) {
+                    if (satelliteAssemblyBuilder == null)
+                    {
                         satelliteAssemblyBuilder = CompilerType.GetDefaultAssemblyBuilder(
                             CompConfig, _referencedAssemblies, _configPath, OutputAssemblyName);
                         satelliteAssemblyBuilder.CultureName = cultureName;
@@ -175,7 +196,8 @@ internal class BuildProvidersCompiler {
                     continue;
                 }
 
-                if (_assemblyBuilder == null) {
+                if (_assemblyBuilder == null)
+                {
                     // If this provider doesn't need a specific language, and we don't know
                     // the language yet, just keep track of it
                     if (languageFreeBuildProviders == null)
@@ -189,28 +211,34 @@ internal class BuildProvidersCompiler {
         }
 
         // If we didn't get an AssemblyBuilder, use a default
-        if (_assemblyBuilder == null && languageFreeBuildProviders != null) {
+        if (_assemblyBuilder == null && languageFreeBuildProviders != null)
+        {
             _assemblyBuilder = CompilerType.GetDefaultAssemblyBuilder(
                 CompConfig, _referencedAssemblies, _configPath,
                 _generatedFilesDir, OutputAssemblyName);
         }
 
         // Add all the language free providers (if any) to the AssemblyBuilder
-        if (_assemblyBuilder != null && languageFreeBuildProviders != null) {
-            foreach (BuildProvider languageFreeBuildProvider in languageFreeBuildProviders) {
+        if (_assemblyBuilder != null && languageFreeBuildProviders != null)
+        {
+            foreach (BuildProvider languageFreeBuildProvider in languageFreeBuildProviders)
+            {
                 _assemblyBuilder.AddBuildProvider(languageFreeBuildProvider);
             }
         }
     }
 
-    internal CompilerResults PerformBuild() {
+    internal CompilerResults PerformBuild()
+    {
 
         ProcessBuildProviders();
-                
+
         // Build all the satellite assemblies
-        if (_satelliteAssemblyBuilders != null) {
+        if (_satelliteAssemblyBuilders != null)
+        {
             int maxConcurrent = Math.Min(_satelliteAssemblyBuilders.Count, CompilationUtil.MaxConcurrentCompilations);
-            try {
+            try
+            {
                 Parallel.ForEach(_satelliteAssemblyBuilders.Values.Cast<AssemblyBuilder>(),
                     new ParallelOptions { MaxDegreeOfParallelism = maxConcurrent },
                     assemblyBuilder =>
@@ -218,28 +246,32 @@ internal class BuildProvidersCompiler {
                         assemblyBuilder.Compile();
                     });
             }
-            catch (AggregateException ae) {
+            catch (AggregateException ae)
+            {
                 ExceptionDispatchInfo.Capture(ae.GetBaseException()).Throw();
             }
         }
 
         // Build the main assembly
         if (_assemblyBuilder != null)
+        {
             return _assemblyBuilder.Compile();
-
+        }
         return null;
     }
 
     internal void GenerateSources(out Type codeDomProviderType,
-        out CompilerParameters compilerParameters) {
+        out CompilerParameters compilerParameters)
+    {
 
         ProcessBuildProviders();
 
         // If we didn't get an AssemblyBuilder (happens when there was nothing to build),
         // get a default one.
-        if (_assemblyBuilder == null) {
+        if (_assemblyBuilder == null)
+        {
             _assemblyBuilder = CompilerType.GetDefaultAssemblyBuilder(
-                CompConfig, _referencedAssemblies, _configPath, 
+                CompConfig, _referencedAssemblies, _configPath,
                 _generatedFilesDir, null /*outputAssemblyName*/);
         }
 
@@ -255,7 +287,8 @@ internal class BuildProvidersCompiler {
  * differences.  All the BuildProvider's are expected to share the same
  * configuration (i.e. they live in the same directory).
  */
-internal class WebDirectoryBatchCompiler {
+internal class WebDirectoryBatchCompiler
+{
 
     private DateTime _utcStart;
 
@@ -280,7 +313,8 @@ internal class WebDirectoryBatchCompiler {
     // The first parse exceptions thrown during parsing.
     private HttpParseException _firstException;
 
-    internal WebDirectoryBatchCompiler(VirtualDirectory vdir) {
+    internal WebDirectoryBatchCompiler(VirtualDirectory vdir)
+    {
         _vdir = vdir;
 
         _utcStart = DateTime.UtcNow;
@@ -290,11 +324,13 @@ internal class WebDirectoryBatchCompiler {
         _referencedAssemblies = BuildManager.GetReferencedAssemblies(_compConfig);
     }
 
-    internal void SetIgnoreErrors() {
+    internal void SetIgnoreErrors()
+    {
         _ignoreProvidersWithErrors = true;
     }
 
-    internal void Process() {
+    internal void Process()
+    {
 
         AddBuildProviders(true /*retryIfDeletionHappens*/);
 
@@ -307,23 +343,26 @@ internal class WebDirectoryBatchCompiler {
         GetBuildResultDependencies();
         ProcessDependencies();
 
-        foreach (ICollection buildProviders in _nonDependentBuckets) {
+        foreach (ICollection buildProviders in _nonDependentBuckets)
+        {
             if (!CompileNonDependentBuildProviders(buildProviders))
                 break;
         }
 
         // Report all parse exceptions
-        if (_parserErrors != null && _parserErrors.Count > 0) {
+        if (_parserErrors != null && _parserErrors.Count > 0)
+        {
             Debug.Assert(!_ignoreProvidersWithErrors);
 
             // Throw the first exception as inner exception along with the parse errors.
-            HttpParseException newException = 
+            HttpParseException newException =
                 new HttpParseException(_firstException.Message, _firstException, _firstException.VirtualPath,
                     _firstException.Source, _firstException.Line);
 
             // Add the rest of the parser errors to the exception.
             // The first one is already added.
-            for (int i = 1; i < _parserErrors.Count; i++) {
+            for (int i = 1; i < _parserErrors.Count; i++)
+            {
                 newException.ParserErrors.Add(_parserErrors[i]);
             }
 
@@ -332,23 +371,28 @@ internal class WebDirectoryBatchCompiler {
         }
     }
 
-    private void AddBuildProviders(bool retryIfDeletionHappens) {
+    private void AddBuildProviders(bool retryIfDeletionHappens)
+    {
 
         DiskBuildResultCache.ResetAssemblyDeleted();
 
-        foreach (VirtualFile vfile in _vdir.Files) {
+        foreach (VirtualFile vfile in _vdir.Files)
+        {
 
             // If it's already built and up to date, skip it
             BuildResult result = null;
-            try {
+            try
+            {
                 result = BuildManager.GetVPathBuildResultFromCache(vfile.VirtualPathObject);
             }
-            catch {
+            catch
+            {
                 // Ignore the cached error in batch compilation mode, since we want to compile
                 // as many files as possible.
                 // But don't ignore it in CBM or precompile cases, since we always want to try
                 // to compile everything that had failed before.
-                if (!BuildManager.PerformingPrecompilation) {
+                if (!BuildManager.PerformingPrecompilation)
+                {
                     // Skip it if an exception occurs (e.g. if a compile error was cached for it)
                     continue;
                 }
@@ -356,7 +400,7 @@ internal class WebDirectoryBatchCompiler {
 
             if (result != null)
                 continue;
-            
+
             BuildProvider buildProvider = BuildManager.CreateBuildProvider(vfile.VirtualPathObject,
                 _compConfig, _referencedAssemblies, false /*failIfUnknown*/);
 
@@ -374,13 +418,15 @@ internal class WebDirectoryBatchCompiler {
         // me way need to run the AddBuildProviders logic again.  The reason is that as a result of
         // deleting the assembly, we may have invalidated other BuildResult that we had earlier found
         // to be up to date (VSWhidbey 269297)
-        if (DiskBuildResultCache.InUseAssemblyWasDeleted) {
+        if (DiskBuildResultCache.InUseAssemblyWasDeleted)
+        {
             Debug.Assert(retryIfDeletionHappens);
 
             // Only retry if we're doing precompilation.  For standard batching, we can live
             // with the fact that not everything will be built after we're done (and we want to
             // be done as quickly as possible since the user is waiting).
-            if (retryIfDeletionHappens && BuildManager.PerformingPrecompilation) {
+            if (retryIfDeletionHappens && BuildManager.PerformingPrecompilation)
+            {
                 Debug.Trace("WebDirectoryBatchCompiler", "Rerunning AddBuildProviders for '" +
                     _vdir.VirtualPath + "' because an assembly was out of date.");
 
@@ -391,9 +437,11 @@ internal class WebDirectoryBatchCompiler {
         }
     }
 
-    private void CacheAssemblyResults(AssemblyBuilder assemblyBuilder, CompilerResults results) {
+    private void CacheAssemblyResults(AssemblyBuilder assemblyBuilder, CompilerResults results)
+    {
 
-        foreach (BuildProvider buildProvider in assemblyBuilder.BuildProviders) {
+        foreach (BuildProvider buildProvider in assemblyBuilder.BuildProviders)
+        {
 
             BuildResult result = buildProvider.GetBuildResult(results);
 
@@ -407,27 +455,29 @@ internal class WebDirectoryBatchCompiler {
                 break;
 
 #if DBG
-            if (results != null) {
-                if (DelayLoadType.Enabled) {
-                    Debug.Trace("BuildManager", buildProvider.VirtualPath + " Delay Load Assembly");
-                } else {
-                    Debug.Trace("BuildManager", buildProvider.VirtualPath + results.CompiledAssembly.EscapedCodeBase);
-                }
+        if (results != null) {
+            if (DelayLoadType.Enabled) {
+                Debug.Trace("BuildManager", buildProvider.VirtualPath + " Delay Load Assembly");
+            } else {
+                Debug.Trace("BuildManager", buildProvider.VirtualPath + results.CompiledAssembly.EscapedCodeBase);
             }
-            else {
-                Debug.Trace("BuildManager", buildProvider.VirtualPath + ": no assembly");
-            }
+        }
+        else {
+            Debug.Trace("BuildManager", buildProvider.VirtualPath + ": no assembly");
+        }
 #endif
         }
     }
 
     // Cache the various compile errors found during batching
-    private void CacheCompileErrors(AssemblyBuilder assemblyBuilder, CompilerResults results) {
+    private void CacheCompileErrors(AssemblyBuilder assemblyBuilder, CompilerResults results)
+    {
 
         BuildProvider previous = null;
 
         // Go through all the compile errors
-        foreach (CompilerError error in results.Errors) {
+        foreach (CompilerError error in results.Errors)
+        {
 
             // Skip warnings
             if (error.IsWarning)
@@ -479,14 +529,17 @@ internal class WebDirectoryBatchCompiler {
 
     }
 
-    private void GetBuildResultDependencies() {
-        foreach (BuildProvider buildProvider in _buildProviders.Values) {
+    private void GetBuildResultDependencies()
+    {
+        foreach (BuildProvider buildProvider in _buildProviders.Values)
+        {
             ICollection virtualPathDependencies = buildProvider.GetBuildResultVirtualPathDependencies();
             if (virtualPathDependencies == null)
                 continue;
 
-            foreach (string virtualPathDependency in virtualPathDependencies) {
-                BuildProvider dependentBuildProvider = (BuildProvider) _buildProviders[virtualPathDependency];
+            foreach (string virtualPathDependency in virtualPathDependencies)
+            {
+                BuildProvider dependentBuildProvider = (BuildProvider)_buildProviders[virtualPathDependency];
 
                 if (dependentBuildProvider != null)
                     buildProvider.AddBuildProviderDependency(dependentBuildProvider);
@@ -495,7 +548,8 @@ internal class WebDirectoryBatchCompiler {
     }
 
     // Split the providers into non dependent buckets
-    private void ProcessDependencies() {
+    private void ProcessDependencies()
+    {
         // First phase: compute levels in the dependency tree
 
         int totaldepth = 0;
@@ -503,25 +557,31 @@ internal class WebDirectoryBatchCompiler {
         Stack stack = new Stack();
 
         // compute depths
-        foreach (BuildProvider buildProvider in _buildProviders.Values) {
+        foreach (BuildProvider buildProvider in _buildProviders.Values)
+        {
             stack.Push(buildProvider);
 
-            while (stack.Count > 0) {
+            while (stack.Count > 0)
+            {
                 BuildProvider curnode = (BuildProvider)stack.Peek();
 
                 bool recurse = false;
                 int maxdepth = 0;
 
-                if (curnode.BuildProviderDependencies != null) {
-                    foreach (BuildProvider child in curnode.BuildProviderDependencies) {
+                if (curnode.BuildProviderDependencies != null)
+                {
+                    foreach (BuildProvider child in curnode.BuildProviderDependencies)
+                    {
 
-                        if (depth.ContainsKey(child)) {
+                        if (depth.ContainsKey(child))
+                        {
                             if (maxdepth <= (int)depth[child])
                                 maxdepth = (int)depth[child] + 1;
                             else if ((int)depth[child] == -1)
                                 throw new HttpException(SR.GetString(SR.File_Circular_Reference, child.VirtualPath));
                         }
-                        else {
+                        else
+                        {
                             recurse = true;
                             stack.Push(child);
                         }
@@ -530,7 +590,8 @@ internal class WebDirectoryBatchCompiler {
 
                 if (recurse)
                     depth[curnode] = -1; // being computed;
-                else {
+                else
+                {
                     stack.Pop();
                     depth[curnode] = maxdepth;
                     if (totaldepth <= maxdepth)
@@ -542,7 +603,8 @@ internal class WebDirectoryBatchCompiler {
         // drop into buckets by depth
         _nonDependentBuckets = new ArrayList[totaldepth];
 
-        for (IDictionaryEnumerator en = (IDictionaryEnumerator)depth.GetEnumerator(); en.MoveNext();) {
+        for (IDictionaryEnumerator en = (IDictionaryEnumerator)depth.GetEnumerator(); en.MoveNext();)
+        {
             int level = (int)en.Value;
 
             if (_nonDependentBuckets[level] == null)
@@ -552,20 +614,21 @@ internal class WebDirectoryBatchCompiler {
         }
 
 #if DBG
-        int i = 0;
-        foreach (ICollection buildProviders in _nonDependentBuckets) {
-            Debug.Trace("BuildManager", String.Empty);
-            Debug.Trace("BuildManager", "Bucket " + i + " contains " + buildProviders.Count + " files");
+    int i = 0;
+    foreach (ICollection buildProviders in _nonDependentBuckets) {
+        Debug.Trace("BuildManager", String.Empty);
+        Debug.Trace("BuildManager", "Bucket " + i + " contains " + buildProviders.Count + " files");
 
-            foreach (BuildProvider buildProvider in buildProviders)
-                Debug.Trace("BuildManager", buildProvider.VirtualPath);
-            i++;
-        }
+        foreach (BuildProvider buildProvider in buildProviders)
+            Debug.Trace("BuildManager", buildProvider.VirtualPath);
+        i++;
+    }
 #endif
 
     }
 
-    private bool IsBuildProviderSkipable(BuildProvider buildProvider) {
+    private bool IsBuildProviderSkipable(BuildProvider buildProvider)
+    {
 
         // If another build provider depends on it, we should not skip it
         if (buildProvider.IsDependedOn) return false;
@@ -585,7 +648,8 @@ internal class WebDirectoryBatchCompiler {
         return false;
     }
 
-    private bool CompileNonDependentBuildProviders(ICollection buildProviders) {
+    private bool CompileNonDependentBuildProviders(ICollection buildProviders)
+    {
 
         // Key: CompilerType, Value: AssemblyBuilder
         IDictionary assemblyBuilders = new Hashtable();
@@ -598,15 +662,18 @@ internal class WebDirectoryBatchCompiler {
 
         bool hasParserErrors = false;
 
-        foreach (BuildProvider buildProvider in buildProviders) {
+        foreach (BuildProvider buildProvider in buildProviders)
+        {
 
             if (IsBuildProviderSkipable(buildProvider))
                 continue;
 
             // Instruct the internal build providers to continue processing for more parse errors.
-            if (!BuildManager.ThrowOnFirstParseError) {
+            if (!BuildManager.ThrowOnFirstParseError)
+            {
                 InternalBuildProvider provider = buildProvider as InternalBuildProvider;
-                if (provider != null) {
+                if (provider != null)
+                {
                     provider.ThrowOnFirstParseError = false;
                 }
             }
@@ -614,24 +681,29 @@ internal class WebDirectoryBatchCompiler {
             CompilerType compilerType = null;
 
             // Get the language
-            try {
+            try
+            {
                 compilerType = BuildProvider.GetCompilerTypeFromBuildProvider(
                     buildProvider);
             }
-            catch (HttpParseException ex) {
+            catch (HttpParseException ex)
+            {
                 // Ignore the error if we are in that mode.
-                if (_ignoreProvidersWithErrors) {
+                if (_ignoreProvidersWithErrors)
+                {
                     continue;
                 }
 
                 hasParserErrors = true;
 
                 // Remember the first parse exception
-                if (_firstException == null) {
+                if (_firstException == null)
+                {
                     _firstException = ex;
                 }
 
-                if (_parserErrors == null) {
+                if (_parserErrors == null)
+                {
                     _parserErrors = new ParserErrorCollection();
                 }
 
@@ -639,9 +711,11 @@ internal class WebDirectoryBatchCompiler {
 
                 continue;
             }
-            catch {
+            catch
+            {
                 // Ignore the error if we are in that mode.
-                if (_ignoreProvidersWithErrors) {
+                if (_ignoreProvidersWithErrors)
+                {
                     continue;
                 }
 
@@ -652,12 +726,15 @@ internal class WebDirectoryBatchCompiler {
             ICollection typeNames = buildProvider.GetGeneratedTypeNames();
 
             // Is it asking for a specific language?
-            if (compilerType == null) {
+            if (compilerType == null)
+            {
                 // If this provider doesn't need a specific language, and we haven't yet created
                 // a default builder that is capable of building this, just keep track of it                
                 if (defaultAssemblyBuilder == null || defaultAssemblyBuilder.IsBatchFull ||
-                    defaultAssemblyBuilder.ContainsTypeNames(typeNames)) {
-                    if (languageFreeBuildProviders == null) {
+                    defaultAssemblyBuilder.ContainsTypeNames(typeNames))
+                {
+                    if (languageFreeBuildProviders == null)
+                    {
                         languageFreeBuildProviders = new ArrayList();
                     }
 
@@ -665,7 +742,8 @@ internal class WebDirectoryBatchCompiler {
                     continue;
                 }
             }
-            else {
+            else
+            {
                 // Check if we already have an assembly builder of the right type
                 assemblyBuilder = (AssemblyBuilder)assemblyBuilders[compilerType];
             }
@@ -673,10 +751,12 @@ internal class WebDirectoryBatchCompiler {
             // Starts a new assemblyBuilder if the old one already contains another buildprovider 
             // that uses the same type name
             if (assemblyBuilder == null || assemblyBuilder.IsBatchFull ||
-                assemblyBuilder.ContainsTypeNames(typeNames)) {
+                assemblyBuilder.ContainsTypeNames(typeNames))
+            {
 
                 // If the assemblyBuilder is full, compile it.
-                if (assemblyBuilder != null) {
+                if (assemblyBuilder != null)
+                {
                     CompileAssemblyBuilder(assemblyBuilder);
                 }
 
@@ -688,7 +768,8 @@ internal class WebDirectoryBatchCompiler {
                 // Remember it as the default if we don't already have one,
                 // or if the default is already full, switch the default to the new one.
                 if (defaultAssemblyBuilder == null ||
-                    defaultAssemblyBuilder == assemblyBuilder) {
+                    defaultAssemblyBuilder == assemblyBuilder)
+                {
 
                     defaultAssemblyBuilder = newBuilder;
                 }
@@ -702,18 +783,21 @@ internal class WebDirectoryBatchCompiler {
 
         // Don't try to compile providers, otherwise compile exceptions will be bubbled up,
         // and we lose the parse errors.
-        if (hasParserErrors) {
+        if (hasParserErrors)
+        {
             return false;
         }
 
         // Handle all the left over language free providers
-        if (languageFreeBuildProviders != null) {
+        if (languageFreeBuildProviders != null)
+        {
 
             // Indicates whether the default assembly builder is not a language specific builder.
             bool newDefaultAssemblyBuilder = (defaultAssemblyBuilder == null);
 
             // Add language independent providers to the default assembly builder.
-            foreach (BuildProvider languageFreeBuildProvider in languageFreeBuildProviders) {
+            foreach (BuildProvider languageFreeBuildProvider in languageFreeBuildProviders)
+            {
 
                 ICollection typeNames = languageFreeBuildProvider.GetGeneratedTypeNames();
 
@@ -721,15 +805,17 @@ internal class WebDirectoryBatchCompiler {
                 // starts a new assemblyBuilder if the old one already contains another buildprovider 
                 // that uses the same type name
                 if (defaultAssemblyBuilder == null || defaultAssemblyBuilder.IsBatchFull ||
-                    defaultAssemblyBuilder.ContainsTypeNames(typeNames)) {
+                    defaultAssemblyBuilder.ContainsTypeNames(typeNames))
+                {
 
                     // If the default assemblyBuilder is full, compile it.
-                    if (defaultAssemblyBuilder != null) {
+                    if (defaultAssemblyBuilder != null)
+                    {
                         CompileAssemblyBuilder(defaultAssemblyBuilder);
                     }
 
                     defaultAssemblyBuilder = CompilerType.GetDefaultAssemblyBuilder(
-                        _compConfig, _referencedAssemblies, _vdir.VirtualPathObject /*configPath*/, 
+                        _compConfig, _referencedAssemblies, _vdir.VirtualPathObject /*configPath*/,
                         null /*outputAssemblyName*/);
 
                     // the default assembly builder needs to be compiled separately.
@@ -742,82 +828,95 @@ internal class WebDirectoryBatchCompiler {
 
             // Only compile the default assembly builder if it's not part of language specific
             // assembly builder (which will be compiled separately)
-            if (newDefaultAssemblyBuilder) {
+            if (newDefaultAssemblyBuilder)
+            {
                 // Compile the default assembly builder.
                 CompileAssemblyBuilder(defaultAssemblyBuilder);
             }
         }
 
         CompileAssemblyBuilderParallel(assemblyBuilders.Values);
-        
+
         return true;
     }
 
-    private void CompileAssemblyBuilderParallel(ICollection assemblyBuilders) {
+    private void CompileAssemblyBuilderParallel(ICollection assemblyBuilders)
+    {
 
         int maxConcurrent = Math.Min(assemblyBuilders.Count, CompilationUtil.MaxConcurrentCompilations);
 
-        if (maxConcurrent < 2) {
+        if (maxConcurrent < 2)
+        {
             // Not using Parallel.ForEach to avoid performance penalty
-            foreach (AssemblyBuilder assemblyBuilder in assemblyBuilders) {
+            foreach (AssemblyBuilder assemblyBuilder in assemblyBuilders)
+            {
                 CompileAssemblyBuilder(assemblyBuilder);
             }
         }
 
-        else {
+        else
+        {
             // devdiv bug 666936: ASP.NET compilation related deadlock in Antares scenario. 
             // The main (current) thread holds a global compilation lock. CacheAssemblyResults and CacheCompileErrors may 
             // also require the global compilation lock in case of removing old data and thus may lead to deadlock.
             // Fix: using dictionaries to collect the build results from parallel threads and do caching in the main thread.
             ConcurrentDictionary<AssemblyBuilder, CompilerResults> buildResults = new ConcurrentDictionary<AssemblyBuilder, CompilerResults>();
             ConcurrentDictionary<AssemblyBuilder, CompilerResults> buildErrors = new ConcurrentDictionary<AssemblyBuilder, CompilerResults>();
-            
-            try {
+
+            try
+            {
                 Parallel.ForEach(assemblyBuilders.Cast<AssemblyBuilder>(),
                     new ParallelOptions { MaxDegreeOfParallelism = maxConcurrent },
                     builder =>
                     {
                         CompilerResults results;
-                        try {
+                        try
+                        {
                             results = builder.Compile();
                         }
-                        catch (HttpCompileException e) { 
-                            buildErrors[builder] = e.Results;                            
+                        catch (HttpCompileException e)
+                        {
+                            buildErrors[builder] = e.Results;
                             throw;
-                        }                        
-                        buildResults[builder] = results;                        
+                        }
+                        buildResults[builder] = results;
                     });
             }
-            catch (AggregateException e) {
+            catch (AggregateException e)
+            {
                 ExceptionDispatchInfo.Capture(e.GetBaseException()).Throw();
             }
-            finally {
+            finally
+            {
                 // Before throwing the aggregated compilation exception, cache the build results first
                 // This follows the execution order for the single thread case
-                foreach (var pair in buildErrors) {
+                foreach (var pair in buildErrors)
+                {
                     CacheCompileErrors(pair.Key, pair.Value);
                 }
-                foreach (var pair in buildResults) {
+                foreach (var pair in buildResults)
+                {
                     CacheAssemblyResults(pair.Key, pair.Value);
-                }                
+                }
             }
         }
     }
 
-    private void CompileAssemblyBuilder(AssemblyBuilder builder) {
+    private void CompileAssemblyBuilder(AssemblyBuilder builder)
+    {
 
         CompilerResults results;
 
-        try {
+        try
+        {
             results = builder.Compile();
         }
-        catch (HttpCompileException e) {
+        catch (HttpCompileException e)
+        {
             CacheCompileErrors(builder, e.Results);
             throw;
         }
 
         CacheAssemblyResults(builder, results);
     }
-}
-
 }

@@ -22,6 +22,9 @@ namespace System.Web.Security {
     using System.Web.Management;
     using System.Web.Hosting;
     using System.Collections.Generic;
+    using System.Runtime.Loader;
+    using System.Reflection;
+    using System.Linq;
 
 
 
@@ -76,12 +79,26 @@ namespace System.Web.Security {
                 throw new ArgumentException(SR.GetString(SR.Virtual_path_outside_application_not_supported), "virtualPath");
 
             if (!s_EnabledDetermined) {
-                if( !HttpRuntime.UseIntegratedPipeline) {
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                if ( !HttpRuntime.UseIntegratedPipeline) {
                     HttpModulesSection modulesSection = RuntimeConfig.GetConfig().HttpModules;
                     int len = modulesSection.Modules.Count;
                     for (int iter = 0; iter < len; iter++) {
                         HttpModuleAction module = modulesSection.Modules[iter];
-                        if (Type.GetType(module.Type, false) == typeof(UrlAuthorizationModule)) {
+                        //if (Type.GetType(module.Type, false) == typeof(UrlAuthorizationModule))
+                        if (Type.GetType(module.Type,
+                            assemblyName => {
+                                try
+                                {
+                                    return alc.LoadFromAssemblyName(assemblyName);
+                                }
+                                catch (FileNotFoundException)
+                                {
+                                    return null;
+                                }
+                            },
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                            false) == typeof(UrlAuthorizationModule)) {
                             s_Enabled = true;
                             break;
                         }
@@ -90,7 +107,20 @@ namespace System.Web.Security {
                 else {
                     List<ModuleConfigurationInfo> modules = HttpApplication.IntegratedModuleList;
                     foreach (ModuleConfigurationInfo mod in modules) {
-                        if (Type.GetType(mod.Type, false) == typeof(UrlAuthorizationModule)) {
+                       // if (Type.GetType(mod.Type, false) == typeof(UrlAuthorizationModule))
+                       if (Type.GetType(mod.Type,
+                            assemblyName => {
+                                try
+                                {
+                                    return alc.LoadFromAssemblyName(assemblyName);
+                                }
+                                catch (FileNotFoundException)
+                                {
+                                    return null;
+                                }
+                            },
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                           false) == typeof(UrlAuthorizationModule)) {
                             s_Enabled = true;
                             break;
                         }

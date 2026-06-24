@@ -22,6 +22,9 @@ namespace System.Web.Security {
     using  System.Web.Util;
     using  System.Collections.Specialized;
     using System.Web.Compilation;
+    using System.Runtime.Loader;
+    using System.Reflection;
+    using System.Linq;
 
 
     /// <devdoc>
@@ -461,8 +464,12 @@ namespace System.Web.Security {
             if (HostingEnvironment.IsHosted) {
                 ProvidersHelper.InstantiateProviders(settings.Providers, s_Providers, typeof(MembershipProvider));
             } else {
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
                 foreach (ProviderSettings ps in settings.Providers) {
-                    Type t = Type.GetType(ps.Type, true, true);
+                    Type t = Type.GetType(ps.Type,
+                        assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                        (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                        true, true);
                     if (!typeof(MembershipProvider).IsAssignableFrom(t))
                         throw new ArgumentException(SR.GetString(SR.Provider_must_implement_type, typeof(MembershipProvider).ToString()));
                     MembershipProvider provider = (MembershipProvider)Activator.CreateInstance(t);

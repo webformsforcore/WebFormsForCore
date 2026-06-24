@@ -79,6 +79,7 @@ corresponding packages also, like `WebFormsForCore.Web.Extensions` or
 - `System.Web.Extensions`: `WebFormsForCore.Web.Extensions`
 - `System.Web.Optimization`: `WebFormsForCore.Web.Optimization`
 - `System.Web.Mobile`: `WebFormsForCore.Web.Mobile`
+- `Microsft.AspNet.Web.Optimization`: `WebFormsForCore.Web.Optimization`
 - `Microsoft.AspNet.Web.Optimization.WebForms`: `WebFormsForCore.Web.Optimization.WebForms`
 - `WebGrease`: `WebFormsForCore.WebGrease`
 - `System.Drawing`: `WebFormsForCore.Drawing`

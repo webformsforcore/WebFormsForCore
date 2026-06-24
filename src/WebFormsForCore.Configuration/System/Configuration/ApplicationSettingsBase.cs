@@ -2,7 +2,9 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Configuration.Provider;
+using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Security.Permissions;
 
 #nullable disable
@@ -353,7 +355,20 @@ namespace System.Configuration
 							continue;
 						case SettingsProviderAttribute _:
 							string providerTypeName = ((SettingsProviderAttribute)attribute).ProviderTypeName;
-							Type type = Type.GetType(providerTypeName);
+                            //Type type = Type.GetType(providerTypeName);
+                            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                            Type type = Type.GetType(providerTypeName,
+                                assemblyName => {
+                                    try
+                                    {
+                                        return alc.LoadFromAssemblyName(assemblyName);
+                                    }
+                                    catch (FileNotFoundException)
+                                    {
+                                        return null;
+                                    }
+                                },
+                                (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase), false);
 							if (type != (Type)null)
 							{
 								if (SecurityUtils.SecureCreateInstance(type) is SettingsProvider settingsProvider)
@@ -442,8 +457,21 @@ namespace System.Configuration
 										continue;
 									case SettingsProviderAttribute _:
 										string providerTypeName = ((SettingsProviderAttribute)classAttribute).ProviderTypeName;
-										Type type = Type.GetType(providerTypeName);
-										if (type != (Type)null)
+                                        //Type type = Type.GetType(providerTypeName);
+                                        var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                                        Type type = Type.GetType(providerTypeName,
+											assemblyName => {
+												try
+												{
+													return alc.LoadFromAssemblyName(assemblyName);
+												}
+												catch (FileNotFoundException)
+												{
+													return null;
+												}
+											},
+                                            (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase), false);
+                                        if (type != (Type)null)
 										{
 											settingsProvider = SecurityUtils.SecureCreateInstance(type) is SettingsProvider instance ? instance : throw new ConfigurationErrorsException(SR.GetString("ProviderInstantiationFailed", (object)providerTypeName));
 											continue;

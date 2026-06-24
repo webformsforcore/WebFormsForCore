@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Linq;
 #if !WebFormsForCore || NETFRAMEWORK
 using System.Runtime.Serialization.Formatters.Binary;
 #else
@@ -19,6 +20,7 @@ using System.Runtime.Serialization.Formatters.Soap;
 using System.Security.Permissions;
 using System.Text;
 using System.Xml;
+using System.Runtime.Loader;
 
 #nullable disable
 namespace System.Resources
@@ -585,8 +587,23 @@ namespace System.Resources
 					}
 				}
 			}
-			if (type == (System.Type)null)
-				type = System.Type.GetType(typeName, false);
+			if (type == (System.Type)null) {
+                //type = System.Type.GetType(typeName, false);
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+				type = System.Type.GetType(typeName,
+                    assemblyName => {
+                        try
+                        {
+                            return alc.LoadFromAssemblyName(assemblyName);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            return null;
+                        }
+                    },
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+					false);
+			}
 			return type;
 		}
 

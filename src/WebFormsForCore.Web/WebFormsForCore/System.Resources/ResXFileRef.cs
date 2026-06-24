@@ -11,6 +11,8 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Runtime.Loader;
+using System.Linq;
 
 #nullable disable
 namespace System.Resources
@@ -240,7 +242,12 @@ namespace System.Resources
 				{
 					string[] resxFileRefString = ResXFileRef.Converter.ParseResxFileRefString(stringValue);
 					string path = resxFileRefString[0];
-					Type type = Type.GetType(resxFileRefString[1], true);
+                    //Type type = Type.GetType(resxFileRefString[1], true);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+					Type type = Type.GetType(resxFileRefString[1],
+		                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                        (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+						true);
 					if (type.Equals(typeof(string)))
 					{
 						Encoding encoding = Encoding.Default;

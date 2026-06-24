@@ -49,11 +49,12 @@ namespace System.Web
 	using System.Web.Util;
 	using System.Xml;
 	using Microsoft.Win32;
+    using System.Text.Json.Serialization;
 
-	/// <devdoc>
-	///    <para>Provides a set of ASP.NET runtime services.</para>
-	/// </devdoc>
-	public sealed class HttpRuntime
+    /// <devdoc>
+    ///    <para>Provides a set of ASP.NET runtime services.</para>
+    /// </devdoc>
+    public sealed class HttpRuntime
 	{
 
 		internal const string codegenDirName = "Temporary_ASP.NET_Files";
@@ -67,7 +68,7 @@ namespace System.Web
 		//
 
 		internal const string BinDirectoryName = "bin";
-        internal static string BinDotnetDirectoryName => CustomBinDirectory ?? Path.GetFileName(AppDomain.CurrentDomain.BaseDirectory);
+        internal static string BinDotnetDirectoryName => CustomBinDirectory ?? Path.GetFileName(AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
         public static string CustomBinDirectory { get; set; } = null;
 		internal const string CodeDirectoryName = "App_Code";
 		internal const string WebRefDirectoryName = "App_WebReferences";
@@ -1037,8 +1038,13 @@ namespace System.Web
   
             _tempDir = tempDirectory;
 
-            codegenBase = Path.Combine(tempDirectory, simpleAppName, GetDeterministicHashCode(_appDomainAppPath).ToString("x"));
-
+            if (HttpRuntime.BinDotnetDirectoryName != "bin")
+            {
+                codegenBase = Path.Combine(tempDirectory, simpleAppName, GetDeterministicHashCode(_appDomainAppPath + HttpRuntime.BinDotnetDirectoryName).ToString("x"));
+            } else
+            {
+                codegenBase = Path.Combine(tempDirectory, simpleAppName, GetDeterministicHashCode(_appDomainAppPath).ToString("x"));
+            }
 #if NETFRAMEWORK
 #pragma warning disable 0618    // To avoid deprecation warning
             appDomain.SetDynamicBase(codegenBase);
@@ -1226,7 +1232,10 @@ namespace System.Web
 
             // Pre-load all the assemblies, ignoring all exceptions
             foreach (FileInfo fi in binDlls) {
-                try { Assembly.Load(System.Web.UI.Util.GetAssemblyNameFromFileName(fi.Name)); }
+                try {
+                    //Assembly.Load(System.Web.UI.Util.GetAssemblyNameFromFileName(fi.Name));
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    alc.LoadFromAssemblyName(new AssemblyName(System.Web.UI.Util.GetAssemblyNameFromFileName(fi.Name))); }
                 catch (FileNotFoundException) {
                     // If Load failed, try LoadFrom (VSWhidbey 493725)
                     try { Assembly.LoadFrom(fi.FullName); }

@@ -11,23 +11,25 @@
 /////////////////////////////////////////////////////////////////////////////
 namespace System.Web.Compilation {
     using System;
-    using System.IO;
-    using System.Collections;
-    using System.Collections.Specialized;
-    using System.Reflection;
-    using System.Text;
-    using System.Globalization;
-    using System.Resources;
     using System.CodeDom;
     using System.CodeDom.Compiler;
-    using System.Web.Configuration;
-    using System.Web.Util;
-    using System.Web.Caching;
-    using System.Web.UI;
-    using System.Web.Security;
-    using System.Web.Profile;
+    using System.Collections;
+    using System.Collections.Specialized;
     using System.Configuration;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Resources;
+    using System.Runtime.Loader;
+    using System.Text;
+    using System.Web.Caching;
+    using System.Web.Configuration;
     using System.Web.Hosting;
+    using System.Web.Profile;
+    using System.Web.Security;
+    using System.Web.UI;
+    using System.Web.Util;
 
     internal class ProfileBuildProvider: BuildProvider {
 
@@ -86,10 +88,24 @@ namespace System.Web.Compilation {
         // BuildProvider implementation
 
         public override void GenerateCode(AssemblyBuilder assemblyBuilder) {
-            Hashtable           properties   = ProfileBase.GetPropertiesForCompilation();
-            CodeCompileUnit     compileUnit  = new CodeCompileUnit();
-            Hashtable           groups       = new Hashtable();
-            Type                baseType     = Type.GetType(ProfileBase.InheritsFromTypeString, false);
+            Hashtable properties = ProfileBase.GetPropertiesForCompilation();
+            CodeCompileUnit compileUnit = new CodeCompileUnit();
+            Hashtable groups = new Hashtable();
+            //Type baseType = Type.GetType(ProfileBase.InheritsFromTypeString, false);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Type baseType = Type.GetType(ProfileBase.InheritsFromTypeString,
+                assemblyName => {
+                    try
+                    {
+                        return alc.LoadFromAssemblyName(assemblyName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        return null;
+                    }
+                },
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                false);
 
             // namespace ASP {
             //

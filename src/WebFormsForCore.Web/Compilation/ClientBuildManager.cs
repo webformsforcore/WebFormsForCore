@@ -17,6 +17,7 @@ namespace System.Web.Compilation
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Configuration;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -27,6 +28,7 @@ namespace System.Web.Compilation
     using System.Threading;
     using System.Web;
     using System.Web.Hosting;
+    using System.Web.UI;
     using System.Web.Util;
     using Debug = System.Web.Util.Debug;
 
@@ -76,7 +78,7 @@ namespace System.Web.Compilation
         private List<string> _excludedVirtualPaths;
         private string _binFolder;
        
-        public string TargetFramework;
+        public string TargetFramework { get; set; }
 
         public List<string> ExcludedVirtualPaths
         {
@@ -135,6 +137,7 @@ namespace System.Web.Compilation
         private string _appId;
         private IApplicationHost _appHost;
         private string _codeGenDir;
+        static internal AssemblyLoadContext CompilationContext;
 
         private HostingEnvironmentParameters _hostingParameters;
         private ClientBuildManagerTypeDescriptionProviderBridge _cbmTdpBridge;
@@ -226,6 +229,7 @@ namespace System.Web.Compilation
         {
             var binpath = Path.Combine(appPhysicalSourceDir, parameter.BinFolder ?? "bin");
             AssemblyLoaderNetCore.Init(binpath);
+            //BuildManager.ResetBuildManager();
 
             if (parameter == null)
             {
@@ -242,12 +246,14 @@ namespace System.Web.Compilation
             AppDomainSetup setup = AppDomain.CurrentDomain.SetupInformation; // new AppDomainSetup();
             ApplicationManager.PopulateDomainBindings(domainId, AppId, appName, appPhysicalSourceDir, VirtualPath.Create(appVirtualDir), setup, bindings);
             Dictionary<string, object> appDomainAdditionalData = new Dictionary<string, object>();
-            ApplicationManager.SetApplicationData(bindings, appDomainAdditionalData, AssemblyLoadContext.Default, AppDomain.CurrentDomain);
+            var assembly = Assembly.GetExecutingAssembly();
+            var alc = AssemblyLoadContext.GetLoadContext(assembly);
+            ApplicationManager.SetApplicationData(bindings, appDomainAdditionalData, alc, AppDomain.CurrentDomain);
 
             // Initialize HttpRuntime.CustomBinFolder after SetApplicationData, since the static constructor of HttpRuntime
             // will read the ApplicationData
             SetBinFolder(parameter.BinFolder);
-            var versionText = MultiTargetingUtil.ClientBuildManagerTargetFramework = parameter.TargetFramework switch
+           var versionText = MultiTargetingUtil.ClientBuildManagerTargetFramework = parameter.TargetFramework switch
             {
                 "net20" => "2.0",
                 "net30" => "3.0",
@@ -280,6 +286,12 @@ namespace System.Web.Compilation
                 AssemblyLoaderNetCore.UseNetFXGAC = true;
             }
 
+            MultiTargetingUtil.ClientBuildManagerTargetFramework = versionText;
+
+            MultiTargetingUtil.ResetTargetFrameworkName();
+
+            //BuildManager.ResetBuildManager();
+
             InitializeCBMTDPBridge(typeDescriptionProvider);
 
             // Always build clean in precompilation for deployment mode, 
@@ -291,7 +303,7 @@ namespace System.Web.Compilation
 
             _hostingParameters = new HostingEnvironmentParameters();
             _hostingParameters.HostingFlags = HostingEnvironmentFlags.DontCallAppInitialize |
-                                              HostingEnvironmentFlags.ClientBuildManager;
+                HostingEnvironmentFlags.ClientBuildManager;
             _hostingParameters.ClientBuildManagerParameter = parameter;
             _hostingParameters.PrecompilationTargetPhysicalDirectory = appPhysicalTargetDir;
             if (typeDescriptionProvider != null)
@@ -321,6 +333,7 @@ namespace System.Web.Compilation
             var appdir = HttpRuntime.AppDomainAppPath;
 
             Initialize(VirtualPath.CreateNonRelative(appVirtualDir), appPhysicalSourceDir);
+
         }
 
         /*
@@ -584,7 +597,9 @@ namespace System.Web.Compilation
             if (typeAndAsemblyName == null)
                 return null;
 
-            Assembly a = Assembly.LoadFrom(typeAndAsemblyName[1]);
+            //Assembly a = Assembly.LoadFrom(typeAndAsemblyName[1]);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Assembly a = alc.LoadFromAssemblyPath(typeAndAsemblyName[1]);
             Type t = a.GetType(typeAndAsemblyName[0]);
             return t;
         }
@@ -649,6 +664,8 @@ namespace System.Web.Compilation
         {
             Debug.Trace("CBM", "Unload");
 
+            AssemblyLoaderNetCore.Dispose();
+
             BuildManagerHost host = _host;
             if (host != null)
             {
@@ -704,6 +721,9 @@ namespace System.Web.Compilation
             try
             {
                 EnsureHostCreated();
+
+                //BuildManager.InitializeBuildManager();
+
                 _host.PrecompileApp(callback, _hostingParameters.ClientBuildManagerParameter.ExcludedVirtualPaths);
             }
             finally
@@ -798,6 +818,7 @@ namespace System.Web.Compilation
         private void CreateHost()
         {
             Debug.Trace("CBM", "CreateHost");
+            System.Diagnostics.Debug.WriteLine("CreateHost");
             Debug.Assert(_host == null);
 
             Debug.Assert(!_hostCreationPending, "CreateHost: creation already pending");
@@ -823,6 +844,12 @@ namespace System.Web.Compilation
                 host.AddPendingCall();
 
                 HostingEnvironment.HostingParameters.ClientBuildManagerParameter = _hostingParameters.ClientBuildManagerParameter;
+                HostingEnvironment.HostingParameters.PrecompilationTargetPhysicalDirectory = _hostingParameters.PrecompilationTargetPhysicalDirectory;
+                HostingEnvironment.HostingParameters.HostingFlags = _hostingParameters.HostingFlags;
+                HostingEnvironment.HostingParameters.ClrQuirksSwitches = _hostingParameters.ClrQuirksSwitches;
+                HostingEnvironment.HostingParameters.FcnMode = _hostingParameters.FcnMode;
+                HostingEnvironment.HostingParameters.FcnSkipReadAndCacheDacls = _hostingParameters.FcnSkipReadAndCacheDacls;
+                HostingEnvironment.HostingParameters.IISExpressVersion = _hostingParameters.IISExpressVersion;
                 host.Configure(this);
 
                 _host = host;

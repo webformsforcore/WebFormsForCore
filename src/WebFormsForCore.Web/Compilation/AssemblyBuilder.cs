@@ -6,43 +6,44 @@
 
 
 
-namespace System.Web.Compilation {
+namespace System.Web.Compilation;
 
-    using System;
-    using System.CodeDom;
-    using System.CodeDom.Compiler;
+
+using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 #if NETCOREAPP
-    using W = WebFormsForCore.CodeDom.Compiler;
+using W = WebFormsForCore.CodeDom.Compiler;
 #else
-    using W = System.CodeDom.Compiler;
+using W = System.CodeDom.Compiler;
 #endif
-	using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Reflection.Emit;
-    using System.Security;
-    using System.Security.Cryptography;
-    using System.Security.Permissions;
-    using System.Text;
-    using System.Web.Configuration;
-    using System.Web.Hosting;
-    using System.Web.Management;
-    using System.Web.Security.Cryptography;
-    using System.Web.UI;
-    using System.Web.Util;
-    using System.Xml;
-    using System.Xml.Schema;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security;
+using System.Security.Cryptography;
+using System.Security.Permissions;
+using System.Text;
+using System.Web.Configuration;
+using System.Web.Hosting;
+using System.Web.Management;
+using System.Web.UI;
+using System.Web.Util;
+using System.Xml;
+using System.Xml.Schema;
+using System.Runtime.Loader;
 
 /*
  * This class is used to handle a single compilation using a CodeDom compiler.
  * It is instantiated via CompilerType.CreateAssemblyBuilder.
  */
-public class AssemblyBuilder {
+public class AssemblyBuilder
+{
 
     private CompilationSection _compConfig;
 
@@ -56,8 +57,9 @@ public class AssemblyBuilder {
     // it doesn't give us a virtual path.
     // The value is the BuildProvider.
     private Hashtable _buildProviders = new Hashtable(StringComparer.OrdinalIgnoreCase);
-        
-    internal ICollection BuildProviders {
+
+    internal ICollection BuildProviders
+    {
         get { return _buildProviders.Values; }
     }
 
@@ -86,7 +88,8 @@ public class AssemblyBuilder {
     // The type of CodeDom compiler (i.e. language, flags)
     private CompilerType _compilerType;
 
-    internal Type CodeDomProviderType {
+    internal Type CodeDomProviderType
+    {
         get { return _compilerType.CodeDomProviderType; }
     }
 
@@ -94,8 +97,10 @@ public class AssemblyBuilder {
     private ObjectFactoryCodeDomTreeGenerator _objectFactoryGenerator;
 
     private StringResourceBuilder _stringResourceBuilder;
-    internal StringResourceBuilder StringResourceBuilder {
-        get {
+    internal StringResourceBuilder StringResourceBuilder
+    {
+        get
+        {
             if (_stringResourceBuilder == null)
                 _stringResourceBuilder = new StringResourceBuilder();
 
@@ -108,15 +113,19 @@ public class AssemblyBuilder {
     private int _fileCount;
 
     private string _cultureName;
-    internal string CultureName {
+    internal string CultureName
+    {
         get { return _cultureName; }
         set { _cultureName = value; }
     }
 
     private string _outputAssemblyName;
-    private string OutputAssemblyName {
-        get {
-            if (_outputAssemblyName == null) {
+    private string OutputAssemblyName
+    {
+        get
+        {
+            if (_outputAssemblyName == null)
+            {
                 // If we don't have the assembly name, we should never have a culture
                 Debug.Assert(CultureName == null);
 
@@ -127,7 +136,7 @@ public class AssemblyBuilder {
                 _outputAssemblyName = BuildManager.WebAssemblyNamePrefix + baseFileName;
             }
 
-            return _outputAssemblyName; 
+            return _outputAssemblyName;
         }
     }
 
@@ -136,10 +145,14 @@ public class AssemblyBuilder {
     private long _totalFileLength;
 
     private CaseInsensitiveStringSet _registeredTypeNames;
-    internal bool ContainsTypeNames(ICollection typeNames) {
-        if (_registeredTypeNames != null && typeNames != null) {
-            foreach (String typeName in typeNames) {
-                if (_registeredTypeNames.Contains(typeName)) {
+    internal bool ContainsTypeNames(ICollection typeNames)
+    {
+        if (_registeredTypeNames != null && typeNames != null)
+        {
+            foreach (String typeName in typeNames)
+            {
+                if (_registeredTypeNames.Contains(typeName))
+                {
                     return true;
                 }
             }
@@ -148,12 +161,15 @@ public class AssemblyBuilder {
         return false;
     }
 
-    internal void AddTypeNames(ICollection typeNames) {
-        if (typeNames == null) {
+    internal void AddTypeNames(ICollection typeNames)
+    {
+        if (typeNames == null)
+        {
             return;
         }
 
-        if (_registeredTypeNames == null) {
+        if (_registeredTypeNames == null)
+        {
             _registeredTypeNames = new CaseInsensitiveStringSet();
         }
 
@@ -161,7 +177,8 @@ public class AssemblyBuilder {
     }
 
     internal AssemblyBuilder(CompilationSection compConfig,
-        ICollection referencedAssemblies, CompilerType compilerType, string outputAssemblyName) {
+        ICollection referencedAssemblies, CompilerType compilerType, string outputAssemblyName)
+    {
 
         _compConfig = compConfig;
 
@@ -173,19 +190,23 @@ public class AssemblyBuilder {
         // We need to clone it to avoid modifying the original (VSWhidbey 338935)
         _compilerType = compilerType.Clone();
 
-        if (BuildManager.PrecompilingWithDebugInfo) {
+        if (BuildManager.PrecompilingWithDebugInfo)
+        {
             // If the precompile flag indicates force debug, always compile as debug
             _compilerType.CompilerParameters.IncludeDebugInformation = true;
         }
-        else if (BuildManager.PrecompilingForDeployment) {
+        else if (BuildManager.PrecompilingForDeployment)
+        {
             // If we're precompiling the app, never compile in debug mode (VSWhidbey 178377)
             _compilerType.CompilerParameters.IncludeDebugInformation = false;
         }
-        else if (DeploymentSection.RetailInternal) {
+        else if (DeploymentSection.RetailInternal)
+        {
             // If we're in retail deployment mode, always turn off debug (DevDiv 36396)
             _compilerType.CompilerParameters.IncludeDebugInformation = false;
         }
-        else if (_compConfig.AssemblyPostProcessorTypeInternal != null) {
+        else if (_compConfig.AssemblyPostProcessorTypeInternal != null)
+        {
             // If an IAssemblyPostProcessor is registered always compile as debug
             _compilerType.CompilerParameters.IncludeDebugInformation = true;
         }
@@ -206,7 +227,8 @@ public class AssemblyBuilder {
     /// <devdoc>
     ///     Adds an assembly that will be referenced during compilation.
     /// </devdoc>
-    public void AddAssemblyReference(Assembly a) {
+    public void AddAssemblyReference(Assembly a)
+    {
         if (_additionalReferencedAssemblies == null)
             _additionalReferencedAssemblies = new AssemblySet();
         _additionalReferencedAssemblies.Add(a);
@@ -216,7 +238,8 @@ public class AssemblyBuilder {
     /// Adds an assembly that will be referenced during compilation. Also adds the
     /// assembly the the ReferencedAssemblies list in the CodeCompileUnit.
     /// </devdoc>
-    internal void AddAssemblyReference(Assembly a, CodeCompileUnit ccu) {
+    internal void AddAssemblyReference(Assembly a, CodeCompileUnit ccu)
+    {
         AddAssemblyReference(a);
         Util.AddAssemblyToStringCollection(a, ccu.ReferencedAssemblies);
     }
@@ -225,12 +248,14 @@ public class AssemblyBuilder {
     ///     Creates a new source file that will be added to the compilation. See the public overload
     ///     method for detail.
     /// </devdoc>
-    internal virtual TextWriter CreateCodeFile(BuildProvider buildProvider, out string filename) {
+    internal virtual TextWriter CreateCodeFile(BuildProvider buildProvider, out string filename)
+    {
 
         string generatedFilePath = GetTempFilePhysicalPathWithAssert(_codeProvider.FileExtension);
         filename = generatedFilePath;
 
-        if (buildProvider != null) {
+        if (buildProvider != null)
+        {
             if (_buildProviderToSourceFileMap == null)
                 _buildProviderToSourceFileMap = new Hashtable();
             _buildProviderToSourceFileMap[buildProvider] = generatedFilePath;
@@ -243,7 +268,8 @@ public class AssemblyBuilder {
     }
 
     [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
-    private StreamWriter CreateCodeFileWithAssert(string generatedFilePath) {
+    private StreamWriter CreateCodeFileWithAssert(string generatedFilePath)
+    {
         Stream temp = new FileStream(generatedFilePath, FileMode.Create, FileAccess.Write, FileShare.Read);
         return new StreamWriter(temp, Encoding.UTF8);
     }
@@ -255,7 +281,8 @@ public class AssemblyBuilder {
     ///     The build provider should close the TextWriter when it is done writing to it.
     ///     The build provider should pass itself as a parameter to this method.
     /// </devdoc>
-    public TextWriter CreateCodeFile(BuildProvider buildProvider) {
+    public TextWriter CreateCodeFile(BuildProvider buildProvider)
+    {
         // Ignore the unused filename param.
         string filename;
 
@@ -264,8 +291,10 @@ public class AssemblyBuilder {
 
 
     // Indicates whether the assemblyBuilder has reached its capacity limit.
-    internal bool IsBatchFull {
-        get {
+    internal bool IsBatchFull
+    {
+        get
+        {
             return (_sourceFiles.Count >= _maxBatchSize) ||
                 (_totalFileLength >= _maxBatchGeneratedFileSize);
         }
@@ -277,7 +306,8 @@ public class AssemblyBuilder {
     ///     alternative to CreateSourceFile, by providers who are CodeDOM aware.
     ///     The build provider should pass itself as a parameter to this method.
     /// </devdoc>
-    public void AddCodeCompileUnit(BuildProvider buildProvider, CodeCompileUnit compileUnit) {
+    public void AddCodeCompileUnit(BuildProvider buildProvider, CodeCompileUnit compileUnit)
+    {
 
         // Add a checksum pragma to the compile unit if appropriate
         AddChecksumPragma(buildProvider, compileUnit);
@@ -292,26 +322,31 @@ public class AssemblyBuilder {
         String filename;
 
         // Revert impersonation when generating source code in the codegen dir (VSWhidbey 176576)
-        using (new ProcessImpersonationContext()) {
+        using (new ProcessImpersonationContext())
+        {
             TextWriter writer = CreateCodeFile(buildProvider, out filename);
 
-            try {
+            try
+            {
                 _codeProvider.GenerateCodeFromCompileUnit(compileUnit, writer, null /*CodeGeneratorOptions*/);
             }
-            finally {
+            finally
+            {
                 writer.Flush();
                 writer.Close();
             }
         }
 
-        if (filename != null) {
+        if (filename != null)
+        {
             _totalFileLength += GetFileLengthWithAssert(filename);
         }
     }
 
     // Assert to be able to get the length of the file in the CodeGen dir
     [FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.Read)]
-    private long GetFileLengthWithAssert(string filename) {
+    private long GetFileLengthWithAssert(string filename)
+    {
         FileInfo info = new FileInfo(filename);
         return info.Length;
     }
@@ -320,10 +355,12 @@ public class AssemblyBuilder {
     ///     Tell the host about a type that is being generated.  This allows the host
     ///     To generate a fast object factory for it.
     /// </devdoc>
-    public void GenerateTypeFactory(string typeName) {
+    public void GenerateTypeFactory(string typeName)
+    {
 
         // Create the object factory generator on demand
-        if (_objectFactoryGenerator == null) {
+        if (_objectFactoryGenerator == null)
+        {
             _objectFactoryGenerator = new ObjectFactoryCodeDomTreeGenerator(OutputAssemblyName);
         }
 
@@ -331,9 +368,11 @@ public class AssemblyBuilder {
         _objectFactoryGenerator.AddFactoryMethod(typeName);
     }
 
-    internal void GenerateTypeFactory(string typeName, CodeCompileUnit ccu) {
+    internal void GenerateTypeFactory(string typeName, CodeCompileUnit ccu)
+    {
         // Create the object factory generator on demand
-        if (_objectFactoryGenerator == null) {
+        if (_objectFactoryGenerator == null)
+        {
             _objectFactoryGenerator = new ObjectFactoryCodeDomTreeGenerator(OutputAssemblyName);
         }
 
@@ -347,10 +386,12 @@ public class AssemblyBuilder {
     ///     The build provider should close the Stream when it is done writing to it.
     ///     The build provider should pass itself as a parameter to this method.
     /// </devdoc>
-        public Stream CreateEmbeddedResource(BuildProvider buildProvider, string name) {
+    public Stream CreateEmbeddedResource(BuildProvider buildProvider, string name)
+    {
 
         // Make sure it's just a valid simple file name
-        if (!Util.IsValidFileName(name)) {
+        if (!Util.IsValidFileName(name))
+        {
             throw new ArgumentException(null, name);
         }
 
@@ -372,10 +413,12 @@ public class AssemblyBuilder {
     }
 
     [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
-    private void CreateTempResourceDirectoryIfNecessary() {
+    private void CreateTempResourceDirectoryIfNecessary()
+    {
         // Create the temp resource directory if needed
         string resourceDir = BuildManager.CodegenResourceDir;
-        if (!FileUtil.DirectoryExists(resourceDir)) {
+        if (!FileUtil.DirectoryExists(resourceDir))
+        {
             Directory.CreateDirectory(resourceDir);
         }
     }
@@ -383,18 +426,23 @@ public class AssemblyBuilder {
     /// <devdoc>
     ///     Returns a CodeDomProvider that the build provider can use to generate a CodeCompileUnit.
     /// </devdoc>
-    public W.CodeDomProvider CodeDomProvider { 
+    public W.CodeDomProvider CodeDomProvider
+    {
         get { return _codeProvider; }
     }
 
     private string _tempFilePhysicalPathPrefix;
-    private string TempFilePhysicalPathPrefix {
-        get {
-            if (_tempFilePhysicalPathPrefix == null) {
+    private string TempFilePhysicalPathPrefix
+    {
+        get
+        {
+            if (_tempFilePhysicalPathPrefix == null)
+            {
                 _tempFilePhysicalPathPrefix = Path.Combine(_tempFiles.TempDir, OutputAssemblyName) + ".";
 
                 // Append the culture name to avoid naming conflicts
-                if (CultureName != null) {
+                if (CultureName != null)
+                {
                     _tempFilePhysicalPathPrefix += CultureName + "_";
                 }
             }
@@ -411,14 +459,17 @@ public class AssemblyBuilder {
     ///     The file is automatically deleted after the compilation, so the
     ///     build provider does not need to explicitly delete it.
     /// </devdoc>
-    public string GetTempFilePhysicalPath(string extension) {
+    public string GetTempFilePhysicalPath(string extension)
+    {
 
         // Do the right thing depending on whether the extension include the starting '.'
         string tempPath;
-        if (!String.IsNullOrEmpty(extension) && extension[0] == '.') {
+        if (!String.IsNullOrEmpty(extension) && extension[0] == '.')
+        {
             tempPath = TempFilePhysicalPathPrefix + ((_fileCount++) + extension);
         }
-        else {
+        else
+        {
             tempPath = TempFilePhysicalPathPrefix + ((_fileCount++) + "." + extension);
         }
 
@@ -432,11 +483,13 @@ public class AssemblyBuilder {
     // End of public contract
 
     [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
-    internal string GetTempFilePhysicalPathWithAssert(string extension) {
+    internal string GetTempFilePhysicalPathWithAssert(string extension)
+    {
         return GetTempFilePhysicalPath(extension);
     }
 
-    private void AddCompileWithBuildProvider(VirtualPath virtualPath, BuildProvider owningBuildProvider) {
+    private void AddCompileWithBuildProvider(VirtualPath virtualPath, BuildProvider owningBuildProvider)
+    {
 
         BuildProvider buildProvider = BuildManager.CreateBuildProvider(virtualPath,
             _compConfig, _initialReferencedAssemblies, true /*failIfUnknown*/);
@@ -452,7 +505,8 @@ public class AssemblyBuilder {
         AddBuildProvider(buildProvider);
     }
 
-    internal virtual void AddBuildProvider(BuildProvider buildProvider) {
+    internal virtual void AddBuildProvider(BuildProvider buildProvider)
+    {
 
         // By default, use the build provider itself as the key
         object hashtableKey = buildProvider;
@@ -461,13 +515,15 @@ public class AssemblyBuilder {
 
         // If the buildProvider is a folderLevel build provider, use the build provider itself
         // so that multiple build providers can work on the same path.
-        if (_compConfig.FolderLevelBuildProviders != null) {
+        if (_compConfig.FolderLevelBuildProviders != null)
+        {
             Type t = buildProvider.GetType();
             isFolderLevel = _compConfig.FolderLevelBuildProviders.IsFolderLevelBuildProvider(t);
         }
 
         // Keep track of the build provider's virtual path, if any
-        if (buildProvider.VirtualPath != null && !isFolderLevel) {
+        if (buildProvider.VirtualPath != null && !isFolderLevel)
+        {
 
             // It has a virtual path, so use that as the key
             hashtableKey = buildProvider.VirtualPath;
@@ -483,18 +539,22 @@ public class AssemblyBuilder {
         // Ask the provider to generate the code
         // If it throws an Xml exception, extra the relevant info and turn it
         // into our own ParseException
-        try {
+        try
+        {
             buildProvider.GenerateCode(this);
         }
-        catch (XmlException e) {
+        catch (XmlException e)
+        {
             throw new HttpParseException(e.Message, null /*innerException*/,
                 buildProvider.VirtualPath, null /*sourceCode*/, e.LineNumber);
         }
-        catch (XmlSchemaException e) {
+        catch (XmlSchemaException e)
+        {
             throw new HttpParseException(e.Message, null /*innerException*/,
                 buildProvider.VirtualPath, null /*sourceCode*/, e.LineNumber);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             throw new HttpParseException(e.Message, e,
                 buildProvider.VirtualPath, null /*sourceCode*/, 1);
         }
@@ -502,10 +562,13 @@ public class AssemblyBuilder {
         // Handle any 'compileWith' dependencies, i.e. files that must be compiled
         // within the same assembly as the current file
         InternalBuildProvider internalBuildProvider = buildProvider as InternalBuildProvider;
-        if (internalBuildProvider != null) {
+        if (internalBuildProvider != null)
+        {
             ICollection compileWith = internalBuildProvider.GetCompileWithDependencies();
-            if (compileWith != null) {
-                foreach (VirtualPath virtualPath in compileWith) {
+            if (compileWith != null)
+            {
+                foreach (VirtualPath virtualPath in compileWith)
+                {
 
                     // If we already have it, ignore it
                     if (_buildProviders.ContainsKey(virtualPath.VirtualPathString))
@@ -519,20 +582,22 @@ public class AssemblyBuilder {
 
     }
 
-    private void AddAssemblyCultureAttribute() {
+    private void AddAssemblyCultureAttribute()
+    {
 
         if (CultureName == null) return;
 
         CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
             new CodeTypeReference(typeof(System.Reflection.AssemblyCultureAttribute)),
             new CodeAttributeArgument[] {
-                    new CodeAttributeArgument(new CodePrimitiveExpression(CultureName))});
+                new CodeAttributeArgument(new CodePrimitiveExpression(CultureName))});
 
         AddAssemblyAttribute(declaration);
     }
 
 
-    private void AddAspNetGeneratedCodeAttribute() {
+    private void AddAspNetGeneratedCodeAttribute()
+    {
 
         CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
             new CodeTypeReference(typeof(GeneratedCodeAttribute)));
@@ -542,8 +607,10 @@ public class AssemblyBuilder {
         AddAssemblyAttribute(declaration);
     }
 
-    private void AddAllowPartiallyTrustedCallersAttribute() {
-        if (BuildManager.CompileWithAllowPartiallyTrustedCallersAttribute) {
+    private void AddAllowPartiallyTrustedCallersAttribute()
+    {
+        if (BuildManager.CompileWithAllowPartiallyTrustedCallersAttribute)
+        {
             CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
                 new CodeTypeReference(typeof(AllowPartiallyTrustedCallersAttribute)));
 
@@ -551,18 +618,22 @@ public class AssemblyBuilder {
         }
     }
 
-    private void AddAssemblyKeyFileAttribute() {
-        if (!String.IsNullOrEmpty(BuildManager.StrongNameKeyFile)) {
+    private void AddAssemblyKeyFileAttribute()
+    {
+        if (!String.IsNullOrEmpty(BuildManager.StrongNameKeyFile))
+        {
             CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
-                new CodeTypeReference(typeof(AssemblyKeyFileAttribute)), 
+                new CodeTypeReference(typeof(AssemblyKeyFileAttribute)),
                 new CodeAttributeArgument(new CodePrimitiveExpression(BuildManager.StrongNameKeyFile)));
 
             AddAssemblyAttribute(declaration);
         }
     }
 
-    private void AddAssemblyKeyContainerAttribute() {
-        if (!String.IsNullOrEmpty(BuildManager.StrongNameKeyContainer)) {
+    private void AddAssemblyKeyContainerAttribute()
+    {
+        if (!String.IsNullOrEmpty(BuildManager.StrongNameKeyContainer))
+        {
             CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
                 new CodeTypeReference(typeof(AssemblyKeyNameAttribute)),
                 new CodeAttributeArgument(new CodePrimitiveExpression(BuildManager.StrongNameKeyContainer)));
@@ -571,8 +642,10 @@ public class AssemblyBuilder {
         }
     }
 
-    private void AddAssemblyDelaySignAttribute() {
-        if (BuildManager.CompileWithDelaySignAttribute) {
+    private void AddAssemblyDelaySignAttribute()
+    {
+        if (BuildManager.CompileWithDelaySignAttribute)
+        {
             CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
                 new CodeTypeReference(typeof(AssemblyDelaySignAttribute)),
                 new CodeAttributeArgument(new CodePrimitiveExpression(true)));
@@ -581,10 +654,12 @@ public class AssemblyBuilder {
         }
     }
 
-    private void AddSecurityRulesAttribute() {
+    private void AddSecurityRulesAttribute()
+    {
         // Skip applying the attribute if targeting 2.0/3.5, since the attribute
         // is only available in 4.0 and above.
-        if (MultiTargetingUtil.IsTargetFramework20 || MultiTargetingUtil.IsTargetFramework35) {
+        if (MultiTargetingUtil.IsTargetFramework20 || MultiTargetingUtil.IsTargetFramework35)
+        {
             return;
         }
 
@@ -592,14 +667,16 @@ public class AssemblyBuilder {
         CodeAttributeDeclaration declaration;
         Type attrType = typeof(SecurityRulesAttribute);
         Type enumType = typeof(SecurityRuleSet);
-        if (trustSection.LegacyCasModel) {
+        if (trustSection.LegacyCasModel)
+        {
             SecurityRuleSet set = SecurityRuleSet.Level1;
             string fieldName = Enum.GetName(enumType, set);
             CodeFieldReferenceExpression field = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumType), fieldName);
             declaration = new CodeAttributeDeclaration(new CodeTypeReference(attrType), new CodeAttributeArgument(field));
             AddAssemblyAttribute(declaration);
         }
-        else {
+        else
+        {
             SecurityRuleSet set = SecurityRuleSet.Level2;
             string fieldName = Enum.GetName(enumType, set);
             CodeFieldReferenceExpression field = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumType), fieldName);
@@ -607,9 +684,11 @@ public class AssemblyBuilder {
             AddAssemblyAttribute(declaration);
         }
     }
-    
-    private void AddTargetFrameworkAttribute() {
-        if (MultiTargetingUtil.TargetFrameworkVersion.Major >= 4) {
+
+    private void AddTargetFrameworkAttribute()
+    {
+        if (MultiTargetingUtil.TargetFrameworkVersion.Major >= 4)
+        {
             CodeAttributeDeclaration declaration = new CodeAttributeDeclaration(
                 new CodeTypeReference(typeof(System.Runtime.Versioning.TargetFrameworkAttribute)),
                 new CodeAttributeArgument(new CodePrimitiveExpression(BuildManager.TargetFramework.FullName)));
@@ -619,7 +698,8 @@ public class AssemblyBuilder {
     }
 
     // Add an assembly level attribute to the assembly
-    private void AddAssemblyAttribute(CodeAttributeDeclaration declaration) {
+    private void AddAssemblyAttribute(CodeAttributeDeclaration declaration)
+    {
 
         if (_miscCodeCompileUnit == null)
             _miscCodeCompileUnit = new CodeCompileUnit();
@@ -627,7 +707,8 @@ public class AssemblyBuilder {
         _miscCodeCompileUnit.AssemblyCustomAttributes.Add(declaration);
     }
 
-    private void GenerateMiscCodeCompileUnit() {
+    private void GenerateMiscCodeCompileUnit()
+    {
 
         // If there aren't any, return
         if (_miscCodeCompileUnit == null)
@@ -637,7 +718,8 @@ public class AssemblyBuilder {
     }
 
     // Add a checksum pragma.  This is used for improved debugging experience.
-    private void AddChecksumPragma(BuildProvider buildProvider, CodeCompileUnit compileUnit) {
+    private void AddChecksumPragma(BuildProvider buildProvider, CodeCompileUnit compileUnit)
+    {
 
         // If we can't get a virtual path, do nothing
         if (buildProvider == null || buildProvider.VirtualPath == null)
@@ -657,21 +739,26 @@ public class AssemblyBuilder {
             return;
 
         string hashAlgorithm = BinaryCompatibility.Current.TargetsAtLeastFramework472 ? "SHA256" : "SHA1";
-        CodeChecksumPragma pragma = new CodeChecksumPragma() {
+        CodeChecksumPragma pragma = new CodeChecksumPragma()
+        {
             ChecksumAlgorithmId = (BinaryCompatibility.Current.TargetsAtLeastFramework472 ? s_codeChecksumSha256Id : s_codeChecksumSha1Id)
         };
 
-        if (_compConfig.UrlLinePragmas) {
+        if (_compConfig.UrlLinePragmas)
+        {
             pragma.FileName = ErrorFormatter.MakeHttpLinePragma(buildProvider.VirtualPathObject.VirtualPathString);
         }
-        else {
+        else
+        {
             pragma.FileName = physicalPath;
         }
 
-            // Generate a SHA1 hash from the contents of the file
+        // Generate a SHA1 hash from the contents of the file
 
-        using (Stream stream = new FileStream(physicalPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-            using (HashAlgorithm ha = (HashAlgorithm)CryptoConfig.CreateFromName(hashAlgorithm)) {
+        using (Stream stream = new FileStream(physicalPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+        {
+            using (HashAlgorithm ha = (HashAlgorithm)CryptoConfig.CreateFromName(hashAlgorithm))
+            {
                 pragma.ChecksumData = ha.ComputeHash(stream);
             }
         }
@@ -680,18 +767,21 @@ public class AssemblyBuilder {
         compileUnit.StartDirectives.Add(pragma);
     }
 
-    internal CompilerParameters GetCompilerParameters() {
+    internal CompilerParameters GetCompilerParameters()
+    {
         CompilerParameters compilParams = _compilerType.CompilerParameters;
 
         string dir = _tempFiles.TempDir;
 
         // If a culture is set, modify the assembly name and location based on it
-        if (CultureName != null) {
+        if (CultureName != null)
+        {
             dir = Path.Combine(dir, CultureName);
             Directory.CreateDirectory(dir);
             compilParams.OutputAssembly = Path.Combine(dir, OutputAssemblyName + ".resources.dll");
         }
-        else {
+        else
+        {
             compilParams.OutputAssembly = Path.Combine(dir, OutputAssemblyName + ".dll");
         }
 
@@ -702,21 +792,25 @@ public class AssemblyBuilder {
         compilParams.TempFiles = _tempFiles;
 
         // Create the string resource file (shared by all the pages we're compiling)
-        if (_stringResourceBuilder != null && _stringResourceBuilder.HasStrings) {
+        if (_stringResourceBuilder != null && _stringResourceBuilder.HasStrings)
+        {
             string resFileName = _tempFiles.AddExtension("res");
             _stringResourceBuilder.CreateResourceFile(resFileName);
             compilParams.Win32Resource = resFileName;
         }
 
         // Add all the embedded resources to the compilParams
-        if (_embeddedResourceFiles != null) {
+        if (_embeddedResourceFiles != null)
+        {
             foreach (string aname in _embeddedResourceFiles)
                 compilParams.EmbeddedResources.Add(aname);
         }
 
         // Merge the two sets of assemblies
-        if (_additionalReferencedAssemblies != null) {
-            foreach (Assembly assembly in _additionalReferencedAssemblies) {
+        if (_additionalReferencedAssemblies != null)
+        {
+            foreach (Assembly assembly in _additionalReferencedAssemblies)
+            {
                 _initialReferencedAssemblies.Add(assembly);
             }
         }
@@ -732,27 +826,33 @@ public class AssemblyBuilder {
 
     static string s_vbImportsString;
 
-    private static void AddVBGlobalNamespaceImports(CompilerParameters compilParams) {
+    private static void AddVBGlobalNamespaceImports(CompilerParameters compilParams)
+    {
         // Put together the VB import string on demand
-        if (s_vbImportsString == null) {
+        if (s_vbImportsString == null)
+        {
             PagesSection pagesConfig = MTConfigUtil.GetPagesAppConfig();
-            if (pagesConfig.Namespaces == null) {
+            if (pagesConfig.Namespaces == null)
+            {
                 s_vbImportsString = String.Empty;
             }
-            else {
+            else
+            {
                 StringBuilder sb = new StringBuilder();
                 sb.Append("/imports:");
 
                 bool nextItemNeedsComma = false;
 
                 // Auto-import Microsoft.VisualBasic is needed
-                if (pagesConfig.Namespaces.AutoImportVBNamespace) {
+                if (pagesConfig.Namespaces.AutoImportVBNamespace)
+                {
                     sb.Append("Microsoft.VisualBasic");
                     nextItemNeedsComma = true;
                 }
 
                 // Add all the namespaces from the config <namespaces> section
-                foreach (NamespaceInfo entry in pagesConfig.Namespaces) {
+                foreach (NamespaceInfo entry in pagesConfig.Namespaces)
+                {
 
                     // If there was a previous entry, we need a comma separator
                     if (nextItemNeedsComma)
@@ -768,7 +868,8 @@ public class AssemblyBuilder {
         }
 
         // Prepend it to the compilerOptions
-        if (s_vbImportsString.Length > 0) {
+        if (s_vbImportsString.Length > 0)
+        {
             if (compilParams.CompilerOptions == null)
                 compilParams.CompilerOptions = s_vbImportsString;
             else
@@ -779,7 +880,8 @@ public class AssemblyBuilder {
     // Command line string for My.* support
     private const string MySupport = @"/define:_MYTYPE=\""Empty\""";
 
-    private static void AddVBMyFlags(CompilerParameters compilParams) {
+    private static void AddVBMyFlags(CompilerParameters compilParams)
+    {
 
         // Prepend it to the compilerOptions
         if (compilParams.CompilerOptions == null)
@@ -790,13 +892,15 @@ public class AssemblyBuilder {
 
 
     [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands", Justification = "Warnings was about use of CompilerParameters.CoreAssemblyFileName which was not set by user supplied string - so okay.")]
-    internal static void FixUpCompilerParameters(CompilationSection compilationSection, Type codeDomProviderType, CompilerParameters compilParams) {
+    internal static void FixUpCompilerParameters(CompilationSection compilationSection, Type codeDomProviderType, CompilerParameters compilParams)
+    {
         // The mscorlib reference is special cased, and needs to be passed via the CoreAssemblyFileName property.
-        if (BuildManagerHost.InClientBuildManager && !MultiTargetingUtil.IsTargetFramework20 && !MultiTargetingUtil.IsTargetFramework35) {
-                string coreAssemblyFile = compilParams.ReferencedAssemblies
-                    .OfType<string>()
-                    .FirstOrDefault(name => name.EndsWith("mscorlib.dll") || name.EndsWith("System.Private.CoreLib.dll"));
-		    //AssemblyResolver.GetPathToReferenceAssembly(typeof(string).Assembly, out coreAssemblyFile);
+        if (BuildManagerHost.InClientBuildManager && !MultiTargetingUtil.IsTargetFramework20 && !MultiTargetingUtil.IsTargetFramework35)
+        {
+            string coreAssemblyFile = compilParams.ReferencedAssemblies
+                .OfType<string>()
+                .FirstOrDefault(name => name.EndsWith("mscorlib.dll") || name.EndsWith("System.Private.CoreLib.dll"));
+            //AssemblyResolver.GetPathToReferenceAssembly(typeof(string).Assembly, out coreAssemblyFile);
             compilParams.CoreAssemblyFileName = coreAssemblyFile;
         }
 
@@ -810,11 +914,13 @@ public class AssemblyBuilder {
         // Also ignore warning that complains about assemblyKeyName and delaysign
         // Also ignore warning about assuming assembly versions matching (CS1701, DevDiv 137847, warning about System.Web.Extensions v1.0 matching v3.5)
         if (codeDomProviderType == typeof(Microsoft.CSharp.CSharpCodeProvider) ||
-            codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider)) {
+            codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider))
+        {
             List<string> noWarnStrings = new List<string>(5);
             noWarnStrings.AddRange(new string[] { "1659", "1699", "1701" });
 
-            if (disableObsoleteWarnings) {
+            if (disableObsoleteWarnings)
+            {
                 noWarnStrings.Add("612"); // [Obsolete] without message
                 noWarnStrings.Add("618"); // [Obsolete("with message")]
             }
@@ -822,7 +928,8 @@ public class AssemblyBuilder {
             CodeDomUtility.PrependCompilerOption(compilParams, "/nowarn:" + String.Join(";", noWarnStrings));
         }
         else if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider) ||
-                codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider)) {
+                codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider))
+        {
             List<string> noWarnStrings = new List<string>(3);
 
             // If VB, add all the imported namespaces on the command line (DevDiv 21499).
@@ -835,16 +942,19 @@ public class AssemblyBuilder {
 
             // Ignore vb warning that complains about assemblyKeyName (Dev10 662544)
             // but only for target 3.5 and above (715329)
-            if (MultiTargetingUtil.TargetFrameworkVersion >= MultiTargetingUtil.Version35) {
+            if (MultiTargetingUtil.TargetFrameworkVersion >= MultiTargetingUtil.Version35)
+            {
                 noWarnStrings.Add("41008");
             }
 
-            if (disableObsoleteWarnings) {
+            if (disableObsoleteWarnings)
+            {
                 noWarnStrings.Add("40000"); // [Obsolete("with message")]
                 noWarnStrings.Add("40008"); // [Obsolete] without message
             }
 
-            if (noWarnStrings.Count > 0) {
+            if (noWarnStrings.Count > 0)
+            {
                 CodeDomUtility.PrependCompilerOption(compilParams, "/nowarn:" + String.Join(",", noWarnStrings));
             }
         }
@@ -853,7 +963,8 @@ public class AssemblyBuilder {
         FixTreatWarningsAsErrors(codeDomProviderType, compilParams);
 
         // Add CodeAnalysis symbol if required by client.
-        if (BuildManager.PrecompilingWithCodeAnalysisSymbol) {
+        if (BuildManager.PrecompilingWithCodeAnalysisSymbol)
+        {
             CodeDomUtility.PrependCompilerOption(compilParams, "/define:CODE_ANALYSIS");
         }
     }
@@ -865,12 +976,13 @@ public class AssemblyBuilder {
     // /warnaserror+.
     // So, whenever the user wants /warnaserror[+|-|numberlist], we explicitly set TreatWarningsAsErrors to false,
     // so that the /warnaserror+ is not emitted, and the user can specify exactly what is desired.
-    internal static void FixTreatWarningsAsErrors(Type codeDomProviderType, CompilerParameters compilParams) {
+    internal static void FixTreatWarningsAsErrors(Type codeDomProviderType, CompilerParameters compilParams)
+    {
         // Only do so for C# and VB.
-        if (codeDomProviderType != typeof(Microsoft.CSharp.CSharpCodeProvider) && 
+        if (codeDomProviderType != typeof(Microsoft.CSharp.CSharpCodeProvider) &&
             codeDomProviderType != typeof(Microsoft.VisualBasic.VBCodeProvider) &&
-			codeDomProviderType != typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider) &&
-			codeDomProviderType != typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider))
+            codeDomProviderType != typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider) &&
+            codeDomProviderType != typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider))
             return;
 
         if (compilParams.CompilerOptions != null && CultureInfo.InvariantCulture.CompareInfo.IndexOf(compilParams.CompilerOptions, "/warnaserror", CompareOptions.IgnoreCase) >= 0)
@@ -881,15 +993,16 @@ public class AssemblyBuilder {
     // Check for OptionInfer and WarnAsError. This is the workaround as use of compilerOptions is not allowed in partial trust.
     // Devdiv 130325
     // 
-    private static void ProcessProviderOptions(Type codeDomProviderType, CompilerParameters compilParams) {
+    private static void ProcessProviderOptions(Type codeDomProviderType, CompilerParameters compilParams)
+    {
         IDictionary<string, string> providerOptions = CompilationUtil.GetProviderOptions(codeDomProviderType);
         if (providerOptions == null) return;
 
         // For C# and VB, check for WarnAsError
         if (codeDomProviderType == typeof(Microsoft.VisualBasic.VBCodeProvider) ||
             codeDomProviderType == typeof(Microsoft.CSharp.CSharpCodeProvider) ||
-			codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider) ||
-			codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider))
+            codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.VBCodeProvider) ||
+            codeDomProviderType == typeof(WebFormsForCore.CodeDom.Compiler.CSharpCodeProvider))
             ProcessBooleanProviderOption("WarnAsError", "/warnaserror+", "/warnaserror-", providerOptions, compilParams);
 
         // Only process OptionInfer for v3.5 compiler (or above)
@@ -904,7 +1017,8 @@ public class AssemblyBuilder {
     }
 
     private static void ProcessBooleanProviderOption(string providerOptionName, string trueCompilerOption, string falseCompilerOption,
-        IDictionary<string, string> providerOptions, CompilerParameters compilParams) {
+        IDictionary<string, string> providerOptions, CompilerParameters compilParams)
+    {
 
         if (providerOptions == null || compilParams == null) return;
         Debug.Assert(providerOptionName != null, "providerOptionName should not be null");
@@ -918,28 +1032,32 @@ public class AssemblyBuilder {
 
         bool value;
 
-        if (Boolean.TryParse(providerOptionValue, out value)) {
+        if (Boolean.TryParse(providerOptionValue, out value))
+        {
             // If the value is boolean, insert the compiler options
             if (value)
                 CodeDomUtility.AppendCompilerOption(compilParams, trueCompilerOption);
             else
                 CodeDomUtility.AppendCompilerOption(compilParams, falseCompilerOption);
         }
-        else {
+        else
+        {
             // If the value is not boolean, throw an exception
             throw new System.Configuration.ConfigurationErrorsException(SR.GetString(SR.Value_must_be_boolean, CompilationUtil.CodeDomProviderOptionPath + providerOptionName));
         }
     }
 
 
-    internal CompilerResults Compile() {
+    internal CompilerResults Compile()
+    {
 
         // First, check if there is something to compile
         if (_sourceFiles.Count == 0 && _embeddedResourceFiles == null)
             return null;
 
         // if we have some fast object factories to generate, get the CodeCompileUnit
-        if (_objectFactoryGenerator != null) {
+        if (_objectFactoryGenerator != null)
+        {
             _miscCodeCompileUnit = _objectFactoryGenerator.CodeCompileUnit;
         }
 
@@ -963,7 +1081,7 @@ public class AssemblyBuilder {
         AddAssemblyKeyContainerAttribute();
 
         AddSecurityRulesAttribute();
-        
+
         AddTargetFrameworkAttribute();
 
         // Generate a source file for the misc top level items if needed
@@ -979,36 +1097,45 @@ public class AssemblyBuilder {
 
         // Raise Web Event
         WebBaseEvent.RaiseSystemEvent(this, WebEventCodes.ApplicationCompilationStart);
-        
+
         HttpContext context = HttpContext.Current;
 
-        if (context != null) {
+        if (context != null)
+        {
             if (EtwTrace.IsTraceEnabled(EtwTraceLevel.Verbose, EtwTraceFlags.Infrastructure)) EtwTrace.Trace(EtwTraceType.ETW_TYPE_COMPILE_ENTER, context.WorkerRequest);
         }
 
         CompilerResults results = null;
 
-        try {
-            try {
+        try
+        {
+            try
+            {
                 // Revert impersonation when compiling source code in the codegen dir (VSWhidbey 176576)
-                using (new ProcessImpersonationContext()) {
+                using (new ProcessImpersonationContext())
+                {
                     results = _codeProvider.CompileAssemblyFromFile(compilParams, files);
                 }
             }
-            finally {
-                if (EtwTrace.IsTraceEnabled(EtwTraceLevel.Verbose, EtwTraceFlags.Infrastructure) && context != null) {
+            finally
+            {
+                if (EtwTrace.IsTraceEnabled(EtwTraceLevel.Verbose, EtwTraceFlags.Infrastructure) && context != null)
+                {
 
                     string fileNames = null;
-                    if (_buildProviders.Count < 20) {
+                    if (_buildProviders.Count < 20)
+                    {
                         IDictionaryEnumerator e = _buildProviders.GetEnumerator();
-                        while(e.MoveNext()) {
+                        while (e.MoveNext())
+                        {
                             if (fileNames != null)
                                 fileNames += ",";
                             fileNames += e.Key;
                         }
                     }
-                    else {
-                        fileNames = String.Format(CultureInfo.InstalledUICulture, SR.Resources.GetString(SR.Etw_Batch_Compilation, CultureInfo.InstalledUICulture), new object[1] {_buildProviders.Count});
+                    else
+                    {
+                        fileNames = String.Format(CultureInfo.InstalledUICulture, SR.Resources.GetString(SR.Etw_Batch_Compilation, CultureInfo.InstalledUICulture), new object[1] { _buildProviders.Count });
                     }
 
                     string status;
@@ -1025,8 +1152,10 @@ public class AssemblyBuilder {
 
         // If an IAssemblyPostProcessor is registered, call it
         Type postProcessorType = _compConfig.AssemblyPostProcessorTypeInternal;
-        if (postProcessorType != null) {
-            using (IAssemblyPostProcessor postProcessor = (IAssemblyPostProcessor) HttpRuntime.FastCreatePublicInstance(postProcessorType)) {
+        if (postProcessorType != null)
+        {
+            using (IAssemblyPostProcessor postProcessor = (IAssemblyPostProcessor)HttpRuntime.FastCreatePublicInstance(postProcessorType))
+            {
                 postProcessor.PostProcessAssembly(results.PathToAssembly);
             }
         }
@@ -1034,7 +1163,8 @@ public class AssemblyBuilder {
         // Raise Web Event
         WebBaseEvent.RaiseSystemEvent(this, WebEventCodes.ApplicationCompilationEnd);
 
-        if (results != null) {
+        if (results != null)
+        {
 
             // Invalidate an invalid assembly to trigger recompilation
             InvalidateInvalidAssembly(results, compilParams);
@@ -1042,22 +1172,27 @@ public class AssemblyBuilder {
             // Fix up with line pragmas to account for the http case, and for some special conditions
             FixUpLinePragmas(results);
 
-            if (results.Errors.HasErrors) {
+            if (results.Errors.HasErrors)
+            {
                 // Give all the BuildProviders a chance to look at the compile errors, and possibly tweak them
-                foreach (BuildProvider buildProvider in BuildProviders) {
+                foreach (BuildProvider buildProvider in BuildProviders)
+                {
                     buildProvider.ProcessCompileErrors(results);
                 }
             }
 
             // If there is a CBM callback, inform it of the errors/warnings
-            if (BuildManager.CBMCallback != null) {
-                foreach (CompilerError error in results.Errors) {
+            if (BuildManager.CBMCallback != null)
+            {
+                foreach (CompilerError error in results.Errors)
+                {
                     BuildManager.CBMCallback.ReportCompilerError(error);
                 }
             }
 
             // If there are errors, increment the relevant perf counters and throw
-            if (results.NativeCompilerReturnValue != 0 || results.Errors.HasErrors) {
+            if (results.NativeCompilerReturnValue != 0 || results.Errors.HasErrors)
+            {
 
                 // Increment the compilation error and total error counters
                 PerfCounters.IncrementCounter(AppPerfCounter.ERRORS_COMPILING);
@@ -1065,12 +1200,22 @@ public class AssemblyBuilder {
 
                 throw new HttpCompileException(results, GetErrorSourceFileContents(results));
             }
+            else
+            {
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                if (alc != AssemblyLoadContext.Default)
+                {
+                    // Avoid Assembly.LoadFile if we're not in the default AssemblyLoadContext
+                    results.CompiledAssembly = alc.LoadFromAssemblyPath(results.PathToAssembly);
+                }
+            }
         }
 
         return results;
     }
 
-    private void InvalidateInvalidAssembly(CompilerResults results, CompilerParameters compilParams) {
+    private void InvalidateInvalidAssembly(CompilerResults results, CompilerParameters compilParams)
+    {
         // VSWhidbey 610291
         // If target assembly gets locked, we invalidate the assembly, so that it does
         // not get used, and the next compilation will use a new assembly name.
@@ -1079,13 +1224,16 @@ public class AssemblyBuilder {
         if (results == null || !results.Errors.HasErrors)
             return;
 
-        foreach (CompilerError error in results.Errors) {
+        foreach (CompilerError error in results.Errors)
+        {
             if (error.IsWarning) continue;
 
-            if (StringUtil.EqualsIgnoreCase(error.ErrorNumber, "CS0016")){
+            if (StringUtil.EqualsIgnoreCase(error.ErrorNumber, "CS0016"))
+            {
 
                 // Also invalidate the base assembly if this is a localized resource assembly 
-                if (CultureName != null) {
+                if (CultureName != null)
+                {
                     string dir = _tempFiles.TempDir;
                     string baseAssemblyFile = Path.Combine(dir, OutputAssemblyName + ".dll");
                     DiskBuildResultCache.TryDeleteFile(new FileInfo(baseAssemblyFile));
@@ -1101,19 +1249,22 @@ public class AssemblyBuilder {
      * Fix up all the source files in the errors in case they are HTTP (VS compiler scenario).
      * Also, fix the error in case the base class was incorrect in the code beside model
      */
-    private void FixUpLinePragmas(CompilerResults results) {
+    private void FixUpLinePragmas(CompilerResults results)
+    {
 
         CompilerError badBaseClassError = null;
 
         // Go through the errors backwards so we can delete them as needed
-        for (int i=results.Errors.Count-1; i>=0; i--) {
+        for (int i = results.Errors.Count - 1; i >= 0; i--)
+        {
             CompilerError error = results.Errors[i];
 
             string physicalPath = ErrorFormatter.ResolveHttpFileName(error.FileName);
 
             // Only replace it by the physical path if it actually exists, which may not
             // be the case when using a VirtualPathProvider
-            if (File.Exists(physicalPath)) {
+            if (File.Exists(physicalPath))
+            {
                 error.FileName = physicalPath;
 
                 // If it is our special marker line number, remember it and remove it.
@@ -1123,12 +1274,14 @@ public class AssemblyBuilder {
                 // the marker, due to an additional line taken by the DebuggerNonUserCodeAttribute. (DevDiv 175681)
                 if (error.Line == TemplateControlCodeDomTreeGenerator.badBaseClassLineMarker ||
                     (error.Line == TemplateControlCodeDomTreeGenerator.badBaseClassLineMarker + 1 &&
-                     error.ErrorText != null && error.ErrorText.IndexOf("FrameworkInitialize", StringComparison.OrdinalIgnoreCase) >= 0)) {
+                     error.ErrorText != null && error.ErrorText.IndexOf("FrameworkInitialize", StringComparison.OrdinalIgnoreCase) >= 0))
+                {
                     badBaseClassError = error;
                     results.Errors.RemoveAt(i);
                 }
                 else if (error.Line > TemplateControlCodeDomTreeGenerator.badBaseClassLineMarker &&
-                    error.Line < TemplateControlCodeDomTreeGenerator.badBaseClassLineMarker + 50) {
+                    error.Line < TemplateControlCodeDomTreeGenerator.badBaseClassLineMarker + 50)
+                {
 
                     // Also, if within range of it, remove it altogether
                     results.Errors.RemoveAt(i);
@@ -1140,7 +1293,8 @@ public class AssemblyBuilder {
         // the class in the code beside file doesn't match the 'inherits' in the aspx/ascx,
         // or is missing the based type (or has the wrong base type).  In that case, change
         // the error message to make the problem explicit to the user (VSWhidbey 376977/468830)
-        if (badBaseClassError != null) {
+        if (badBaseClassError != null)
+        {
 
             // Read the content of the code beside file
             string codeFileContent = Util.StringFromFile(badBaseClassError.FileName);
@@ -1151,11 +1305,13 @@ public class AssemblyBuilder {
             int classOffset = CultureInfo.InvariantCulture.CompareInfo.IndexOf(codeFileContent,
                 "partial class", CompareOptions.IgnoreCase);
 
-            if (classOffset >= 0) {
+            if (classOffset >= 0)
+            {
                 // We found it, so figure out the line number from it
                 badBaseClassError.Line = Util.LineCount(codeFileContent, 0, classOffset) + 1;
             }
-            else {
+            else
+            {
                 // Otherwise, just use 1.  It won't point to the right line, but at least the error
                 // message is helpful
                 badBaseClassError.Line = 1;
@@ -1177,7 +1333,8 @@ public class AssemblyBuilder {
      * all the sources will be gone by the time we get here.  I filed VSWhidbey 103673,
      * to get a solution to this from BCL.
      */
-    private string GetErrorSourceFileContents(CompilerResults results) {
+    private string GetErrorSourceFileContents(CompilerResults results)
+    {
 
         if (!results.Errors.HasErrors)
             return null;
@@ -1190,7 +1347,8 @@ public class AssemblyBuilder {
         // Attempt to locate the correct build provider
         BuildProvider buildProvider = GetBuildProviderFromLinePragma(linePragma);
 
-        if (buildProvider != null) {
+        if (buildProvider != null)
+        {
             // Return the generated file for this build provider
             return GetGeneratedSourceFromBuildProvider(buildProvider);
         }
@@ -1200,14 +1358,16 @@ public class AssemblyBuilder {
         return Util.StringFromFileIfExists(linePragma);
     }
 
-    internal string GetGeneratedSourceFromBuildProvider(BuildProvider buildProvider) {
+    internal string GetGeneratedSourceFromBuildProvider(BuildProvider buildProvider)
+    {
 
         // Return the generated file content for this build provider
-        string generatedFilePath = (string) _buildProviderToSourceFileMap[buildProvider];
+        string generatedFilePath = (string)_buildProviderToSourceFileMap[buildProvider];
         return Util.StringFromFileIfExists(generatedFilePath);
     }
 
-    internal BuildProvider GetBuildProviderFromLinePragma(string linePragma) {
+    internal BuildProvider GetBuildProviderFromLinePragma(string linePragma)
+    {
         BuildProvider buildProvider = GetBuildProviderFromLinePragmaInternal(linePragma);
 
         // If it's a CompileWith provider, return the main provider instead
@@ -1218,7 +1378,8 @@ public class AssemblyBuilder {
         return buildProvider;
     }
 
-    private BuildProvider GetBuildProviderFromLinePragmaInternal(string linePragma) {
+    private BuildProvider GetBuildProviderFromLinePragmaInternal(string linePragma)
+    {
 
         // If we didn't keep track of any generated files, we can't do much
         if (_buildProviderToSourceFileMap == null)
@@ -1228,15 +1389,18 @@ public class AssemblyBuilder {
         string virtualPath = ErrorFormatter.GetVirtualPathFromHttpLinePragma(linePragma);
 
         // First, look for the pragma case
-        foreach (BuildProvider buildProvider in BuildProviders) {
+        foreach (BuildProvider buildProvider in BuildProviders)
+        {
 
             // If the build provider can't give us a virtual path, skip it
             if (buildProvider.VirtualPath == null)
                 continue;
 
             // If we got a virtual path, use it to locate the correct BuildProvider
-            if (virtualPath != null) {
-                if (StringUtil.EqualsIgnoreCase(virtualPath, buildProvider.VirtualPath)) {
+            if (virtualPath != null)
+            {
+                if (StringUtil.EqualsIgnoreCase(virtualPath, buildProvider.VirtualPath))
+                {
                     return buildProvider;
                 }
 
@@ -1247,7 +1411,8 @@ public class AssemblyBuilder {
 
             string physicalPath = HostingEnvironment.MapPathInternal(buildProvider.VirtualPath);
 
-            if (StringUtil.EqualsIgnoreCase(linePragma, physicalPath)) {
+            if (StringUtil.EqualsIgnoreCase(linePragma, physicalPath))
+            {
                 return buildProvider;
             }
         }
@@ -1261,21 +1426,25 @@ public class AssemblyBuilder {
  * ClientBuildManager.GetCodeDirectoryInformation
  * It is instantiated via CompilerType.CreateAssemblyBuilder.
  */
-internal class CbmCodeGeneratorBuildProviderHost: AssemblyBuilder {
+internal class CbmCodeGeneratorBuildProviderHost : AssemblyBuilder
+{
 
     private string _generatedFilesDir;
 
     internal CbmCodeGeneratorBuildProviderHost(CompilationSection compConfig,
         ICollection referencedAssemblies, CompilerType compilerType,
         string generatedFilesDir, string outputAssemblyName)
-        : base(compConfig, referencedAssemblies, compilerType, outputAssemblyName) {
+        : base(compConfig, referencedAssemblies, compilerType, outputAssemblyName)
+    {
 
         // Wipe out any existing directory, and recreate it
         // This is where we will put generated source files
-        if (Directory.Exists(generatedFilesDir)) {
+        if (Directory.Exists(generatedFilesDir))
+        {
 
             // Delete all the files in the directory
-            foreach (FileData fileData in FileEnumerator.Create(generatedFilesDir)) {
+            foreach (FileData fileData in FileEnumerator.Create(generatedFilesDir))
+            {
 
                 // It should only contain files
                 Debug.Assert(!fileData.IsDirectory);
@@ -1284,7 +1453,7 @@ internal class CbmCodeGeneratorBuildProviderHost: AssemblyBuilder {
                 Debug.Trace("CbmCodeGeneratorBuildProviderHost", "Deleting " + fileData.FullName);
                 File.Delete(fileData.FullName);
             }
-            
+
         }
 
         // Create it to make sure it exists
@@ -1293,7 +1462,8 @@ internal class CbmCodeGeneratorBuildProviderHost: AssemblyBuilder {
         _generatedFilesDir = generatedFilesDir;
     }
 
-    internal override TextWriter CreateCodeFile(BuildProvider buildProvider, out string filename) {
+    internal override TextWriter CreateCodeFile(BuildProvider buildProvider, out string filename)
+    {
 
         // use GetCacheKeyFromVirtualPath to get a file name that looks like
         // the original file, but is guaranteed unique across different virtual dirs.
@@ -1314,7 +1484,8 @@ internal class CbmCodeGeneratorBuildProviderHost: AssemblyBuilder {
         return new StreamWriter(temp, Encoding.UTF8);
     }
 
-    internal override void AddBuildProvider(BuildProvider buildProvider) {
+    internal override void AddBuildProvider(BuildProvider buildProvider)
+    {
 
         // Skip source files, since their code generation is an identity transform
         if (buildProvider is SourceFileBuildProvider)
@@ -1322,6 +1493,4 @@ internal class CbmCodeGeneratorBuildProviderHost: AssemblyBuilder {
 
         base.AddBuildProvider(buildProvider);
     }
-}
-
 }

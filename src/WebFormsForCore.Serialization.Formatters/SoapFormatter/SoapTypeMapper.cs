@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable disable
+
 using System;
 using System.Reflection;
 using System.Collections;
@@ -38,6 +40,7 @@ using System.Xml.Schema;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Globalization;
 using System.Text;
+using System.Runtime.Loader;
 
 namespace System.Runtime.Serialization.Formatters.Soap {
 
@@ -205,11 +208,41 @@ namespace System.Runtime.Serialization.Formatters.Soap {
 			{
 				string assemblyQualifiedName = (string)xmlNodeToTypeTable [GetKey (xmlName, xmlNamespace)];
 				if(assemblyQualifiedName != null)
-					type = Type.GetType(assemblyQualifiedName);
-				else
-				{					
-					type = Type.GetType(typeName);
-					if(type == null) 
+				{
+					//type = Type.GetType(assemblyQualifiedName);
+					var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+					type = Type.GetType(assemblyQualifiedName,
+                        assemblyName => {
+                            try
+                            {
+                                return alc.LoadFromAssemblyName(assemblyName);
+                            }
+                            catch (FileNotFoundException)
+                            {
+                                return null;
+                            }
+                        },
+                        (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase),
+						false);
+                }
+                else
+				{
+                    //type = Type.GetType(typeName);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    type = Type.GetType(typeName,
+                        assemblyName => {
+                            try
+                            {
+                                return alc.LoadFromAssemblyName(assemblyName);
+                            }
+                            catch (FileNotFoundException)
+                            {
+                                return null;
+                            }
+                        },
+                        (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase),
+                        false);
+                    if (type == null) 
 					{ 
 						if(assemblyName == null || assemblyName == String.Empty)
 							throw new SerializationException(

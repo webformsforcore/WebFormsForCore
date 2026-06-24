@@ -12,7 +12,9 @@ namespace System.Web.UI {
     using System.ComponentModel;
     using System.ComponentModel.Design;
     using System.Drawing.Design;
+    using System.Linq;
     using System.Reflection;
+    using System.Runtime.Loader;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using System.Web.Util;
@@ -166,6 +168,7 @@ namespace System.Web.UI {
 
                 Clear();
 
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
                 for (int i = 0; i < states.Length; i++) {
                     object o;
 
@@ -183,7 +186,9 @@ namespace System.Web.UI {
                         }
                         else {
                             string typeName = (string)typedObjectTypeNames[typeIndex - GetKnownTypeCount()];
-                            Type type = Type.GetType(typeName);
+                            Type type = Type.GetType(typeName,
+                                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
 
                             o = Activator.CreateInstance(type);
                         }
@@ -261,7 +266,10 @@ namespace System.Web.UI {
                             }
                             else {
                                 string typeName = (string)typedObjectTypeNames[typeIndex - GetKnownTypeCount()];
-                                Type type = Type.GetType(typeName);
+                                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                                Type type = Type.GetType(typeName,
+                                    assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
 
                                 o = Activator.CreateInstance(type);
                             }

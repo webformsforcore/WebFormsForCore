@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 
 namespace WebFormsForCore.Compilers
 {
@@ -40,18 +41,31 @@ namespace WebFormsForCore.Compilers
 				//var buildServerConnectionType = assembly.GetType("Microsoft.CodeAnalysis.CommandLine.BuildServerConnection");
 				var tempPath = Path.GetTempPath(); //buildServerConnectionType.GetMethod("GetTempPath", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { workingDirectory }) as string;
 
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+
 #if NET8_0
-				var loader = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.DefaultAnalyzerAssemblyLoader, Microsoft.CodeAnalysis"), true);
+                var loader = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.DefaultAnalyzerAssemblyLoader, Microsoft.CodeAnalysis",
+					assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase)), true);
 #else
-				var loader = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.AnalyzerAssemblyLoader, Microsoft.CodeAnalysis"), true);
+                var loader = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.AnalyzerAssemblyLoader, Microsoft.CodeAnalysis",
+					assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase)), true);
 #endif
-                var buildPaths = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.BuildPaths, Microsoft.CodeAnalysis"),
+                var buildPaths = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.BuildPaths, Microsoft.CodeAnalysis",
+                   assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                   (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase), false),
+                       BindingFlags.NonPublic | BindingFlags.Instance,
+                       null,
+                       new object[] { clientPath, workingDirectory, sdkPath, tempPath },
+                       null);
+                /*var buildPaths = Activator.CreateInstance(Type.GetType("Microsoft.CodeAnalysis.BuildPaths, Microsoft.CodeAnalysis"),
 						BindingFlags.NonPublic | BindingFlags.Instance,
 						null,
 						new object[] { clientPath, workingDirectory, sdkPath, tempPath },
-						null);
+						null);*/
 
-				if (file.Equals("csc.dll", StringComparison.OrdinalIgnoreCase)) {
+                if (file.Equals("csc.dll", StringComparison.OrdinalIgnoreCase)) {
 					var cscType = assembly.GetType("Microsoft.CodeAnalysis.CSharp.CommandLine.Csc");
 					exitCode = (int)cscType.GetMethod("Run", BindingFlags.NonPublic | BindingFlags.Static)
 						.Invoke(null, new object[] {

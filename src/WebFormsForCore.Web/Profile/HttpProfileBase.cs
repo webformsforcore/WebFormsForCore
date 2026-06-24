@@ -26,6 +26,8 @@ namespace System.Web.Profile {
     using System.Web.Hosting;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Linq;
+    using System.Runtime.Loader;
     using System.Security;
 
     public class ProfileBase : SettingsBase {
@@ -244,7 +246,11 @@ namespace System.Web.Profile {
                 if (inheritsType.Length < 1)
                     return defaultType;
 
-                Type t = Type.GetType(inheritsType, false, true);
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                Type t = Type.GetType(inheritsType,
+                    assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                    false, true);
                 if (t == null)
                     return inheritsType;
                 if (!typeof(ProfileBase).IsAssignableFrom(t))
@@ -266,7 +272,11 @@ namespace System.Web.Profile {
                 if (inheritsType == null || inheritsType.Length < 1)
                     return false;
 
-                Type t = Type.GetType(inheritsType, false, true);
+                var alc = AssemblyLoadContext.GetLoadContext (Assembly.GetExecutingAssembly());
+                Type t = Type.GetType(inheritsType,
+                    assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                    false, true);
                 if (t == null || t != typeof(ProfileBase))
                     return true;
                 else
@@ -622,7 +632,11 @@ namespace System.Web.Profile {
         }
 
         static private Type GetPropType(string typeName) {
-            return Type.GetType(typeName, true, true);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            return Type.GetType(typeName,
+                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                true, true);
         }
 
         /////////////////////////////////////////////////////////////////////////////

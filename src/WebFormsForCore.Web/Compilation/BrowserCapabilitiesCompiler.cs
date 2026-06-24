@@ -23,6 +23,7 @@ namespace System.Web.Compilation {
     using System.Web.Util;
     using System.Web.UI;
     using System.Xml;
+    using System.Runtime.Loader;
 
     static class BrowserCapabilitiesCompiler {
 
@@ -54,7 +55,9 @@ namespace System.Web.Compilation {
                     } else {
                         version = "2.0.0.0";
                     }
-                    assembly = Assembly.Load("ASP.BrowserCapsFactory, Version=" + version + ", Culture=neutral, PublicKeyToken=" + publicKeyToken);
+                    //assembly = Assembly.Load("ASP.BrowserCapsFactory, Version=" + version + ", Culture=neutral, PublicKeyToken=" + publicKeyToken);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    assembly = alc.LoadFromAssemblyName(new AssemblyName("ASP.BrowserCapsFactory, Version=" + version + ", Culture=neutral, PublicKeyToken=" + publicKeyToken));
                     AspBrowserCapsFactoryAssembly = assembly;
                 }
                 catch (FileNotFoundException) {

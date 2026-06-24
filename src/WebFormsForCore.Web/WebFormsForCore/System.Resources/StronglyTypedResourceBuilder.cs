@@ -16,6 +16,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Web;
+using System.Runtime.Loader;
+using System.Linq;
 
 namespace System.Resources.Tools;
 
@@ -166,7 +168,10 @@ public static class StronglyTypedResourceBuilder
 				}
 
 				string valueTypeName = resXDataNode.GetValueTypeName((AssemblyName[])null);
-				Type type = Type.GetType(valueTypeName);
+				var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+				Type type = Type.GetType(valueTypeName,
+	                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
 				string valueAsString = resXDataNode.GetValue((AssemblyName[])null).ToString();
 				value = new ResourceData(type, valueAsString);
 			}

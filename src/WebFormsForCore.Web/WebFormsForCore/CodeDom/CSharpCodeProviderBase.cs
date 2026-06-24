@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Linq;
+
 #if NETCOREAPP
 using W = WebFormsForCore.CodeDom.Compiler;
+using System.Runtime.Loader;
 #else
 using W = System.CodeDom.Compiler;
 #endif
@@ -23,11 +26,45 @@ public class CSharpCodeProviderBase : W.CodeDomProvider
 #else
 	const string CodeDomAssembly  = "System"; 
 #endif
+#if NETCOREAPP
+	private Type Type
+	{
+		get
+		{
+			var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+			return Type.GetType($"Microsoft.CSharp.CSharpCodeGenerator, {CodeDomAssembly}",
+				assemblyName => alc.LoadFromAssemblyName(assemblyName),
+				(asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
+		}
+    }
+    private Type typeAttributeConverterType
+	{
+		get
+        {
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            return Type.GetType($"Microsoft.CSharp.CSharpTypeAttributeConverter, {CodeDomAssembly}",
+                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
+		}
+	}
+	private Type memberAttributeConverterType
+	{
+		get
+        {
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            return Type.GetType($"Microsoft.CSharp.CSharpMemberAttributeConverter, {CodeDomAssembly}",
+                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase));
+        }
+    }
+
+#else
 	private Type Type => Type.GetType($"Microsoft.CSharp.CSharpCodeGenerator, {CodeDomAssembly}");
 	private Type typeAttributeConverterType => Type.GetType($"Microsoft.CSharp.CSharpTypeAttributeConverter, {CodeDomAssembly}");
 	private Type memberAttributeConverterType => Type.GetType($"Microsoft.CSharp.CSharpMemberAttributeConverter, {CodeDomAssembly}");
+#endif
 
-	private readonly ICodeGenerator _generator;
+    private readonly ICodeGenerator _generator;
 
 	//
 	// Summary:

@@ -27,7 +27,7 @@ BuildResult
 
 **********************************/
 
-namespace System.Web.Compilation {
+namespace System.Web.Compilation;
 
 using System;
 using System.IO;
@@ -42,7 +42,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 #else
 using WebFormsForCore.Serialization.Formatters.Binary;
 #endif
-    using System.Security;
+using System.Security;
 using System.Security.Permissions;
 using System.Threading;
 using System.Web.Caching;
@@ -51,9 +51,11 @@ using System.Web.Util;
 using System.Web.UI;
 using System.Web.Configuration;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Loader;
 
-    internal enum BuildResultTypeCode {
-    Invalid=-1,
+internal enum BuildResultTypeCode
+{
+    Invalid = -1,
     BuildResultCompiledAssembly = 1,
     BuildResultCompiledType = 2,
     BuildResultCompiledTemplateType = 3,
@@ -64,27 +66,30 @@ using System.Diagnostics.CodeAnalysis;
     BuildResultResourceAssembly = 9,
 }
 
-internal abstract class BuildResult {
+internal abstract class BuildResult
+{
 
     // const masks into the BitVector32
     // The 16 lower bits come from the BuildProviderResultFlags enumeration
     // and should not be used here.  They are set from calling
     // BuildProvider.GetResultFlags.
-    protected const int usesCacheDependency         = 0x00010000;
-    protected const int usesExistingAssembly        = 0x00020000;
-    private const int noMemoryCache                 = 0x00040000;
-    protected const int hasAppOrSessionObjects      = 0x00080000;
-    protected const int dependenciesHashComputed    = 0x00100000;
+    protected const int usesCacheDependency = 0x00010000;
+    protected const int usesExistingAssembly = 0x00020000;
+    private const int noMemoryCache = 0x00040000;
+    protected const int hasAppOrSessionObjects = 0x00080000;
+    protected const int dependenciesHashComputed = 0x00100000;
 #pragma warning disable 0649
     protected SimpleBitVector32 _flags;
 #pragma warning restore 0649
 
     internal static BuildResult CreateBuildResultFromCode(BuildResultTypeCode code,
-        VirtualPath virtualPath) {
+        VirtualPath virtualPath)
+    {
 
         BuildResult ret = null;
 
-        switch (code) {
+        switch (code)
+        {
             case BuildResultTypeCode.BuildResultCompiledAssembly:
                 ret = new BuildResultCompiledAssembly();
                 break;
@@ -133,13 +138,15 @@ internal abstract class BuildResult {
 
     internal virtual BuildResultTypeCode GetCode() { return BuildResultTypeCode.Invalid; }
 
-    internal int Flags {
+    internal int Flags
+    {
         get { return _flags.IntegerValue; }
         set { _flags.IntegerValue = value; }
     }
 
     private VirtualPath _virtualPath;
-    internal VirtualPath VirtualPath {
+    internal VirtualPath VirtualPath
+    {
         get { return _virtualPath; }
         set { _virtualPath = value; }
     }
@@ -147,44 +154,53 @@ internal abstract class BuildResult {
     // Are the BuildResult's VirtualPathDependencies being monitored by a CacheDependency.
     // If so, then we don't need to check validity after finding the BuildResult in the
     // memory cache (since it would have been kicked out if it was invalid).
-    internal bool UsesCacheDependency {
+    internal bool UsesCacheDependency
+    {
         get { return _flags[usesCacheDependency]; }
         set { _flags[usesCacheDependency] = value; }
     }
 
     // Does the appdomain need to be shut down when this item becomes invalid?
-    internal bool ShutdownAppDomainOnChange {
+    internal bool ShutdownAppDomainOnChange
+    {
         get { return _flags[(int)BuildProviderResultFlags.ShutdownAppDomainOnChange]; }
     }
 
     // The list of files (virtual paths) it depends on (for caching purpose)
     private ArrayList _virtualPathDependencies;
-    internal ICollection VirtualPathDependencies {
+    internal ICollection VirtualPathDependencies
+    {
         get { return _virtualPathDependencies; }
     }
 
     // Hash code based on all the source file dependencies
     private string _virtualPathDependenciesHash;
-    internal string VirtualPathDependenciesHash {
-        get {
+    internal string VirtualPathDependenciesHash
+    {
+        get
+        {
             EnsureVirtualPathDependenciesHashComputed();
 
             return _virtualPathDependenciesHash;
         }
 
-        set {
+        set
+        {
             Debug.Assert(_virtualPathDependenciesHash == null);
             _virtualPathDependenciesHash = value;
         }
     }
 
-    internal bool DependenciesHashComputed {
+    internal bool DependenciesHashComputed
+    {
         get { return _flags[dependenciesHashComputed]; }
     }
 
-    internal void EnsureVirtualPathDependenciesHashComputed() {
+    internal void EnsureVirtualPathDependenciesHashComputed()
+    {
 
-        if (!DependenciesHashComputed) {
+        if (!DependenciesHashComputed)
+        {
 
             // We shouldn't already have a hash
             Debug.Assert(_virtualPathDependenciesHash == null);
@@ -207,7 +223,8 @@ internal abstract class BuildResult {
     private const int UpdateInterval = 2;   // 2 seconds
 
 
-    internal void SetVirtualPathDependencies(ArrayList sourceDependencies) {
+    internal void SetVirtualPathDependencies(ArrayList sourceDependencies)
+    {
 
         Debug.Assert(_virtualPathDependencies == null);
         Debug.Assert(sourceDependencies != null);
@@ -215,15 +232,18 @@ internal abstract class BuildResult {
         _virtualPathDependencies = sourceDependencies;
     }
 
-    internal void AddVirtualPathDependencies(ICollection sourceDependencies) {
+    internal void AddVirtualPathDependencies(ICollection sourceDependencies)
+    {
 
         if (sourceDependencies == null)
             return;
 
-        if (_virtualPathDependencies == null) {
+        if (_virtualPathDependencies == null)
+        {
             _virtualPathDependencies = new ArrayList(sourceDependencies);
         }
-        else {
+        else
+        {
             _virtualPathDependencies.AddRange(sourceDependencies);
         }
     }
@@ -244,7 +264,8 @@ internal abstract class BuildResult {
      * Should the result be cached to memory.  Usually yes, but for things like top level
      * assemblies, we only cache them to disk.
      */
-    internal bool CacheToMemory {
+    internal bool CacheToMemory
+    {
         get { return !_flags[noMemoryCache]; }
         set { _flags[noMemoryCache] = !value; }
     }
@@ -252,8 +273,10 @@ internal abstract class BuildResult {
     /*
      * Time the build result should expire from the memory cache
      */
-    internal virtual DateTime MemoryCacheExpiration {
-        get {
+    internal virtual DateTime MemoryCacheExpiration
+    {
+        get
+        {
             return Cache.NoAbsoluteExpiration;
         }
     }
@@ -261,25 +284,32 @@ internal abstract class BuildResult {
     /*
      * Sliding expiration for the build result
      */
-    internal virtual TimeSpan MemoryCacheSlidingExpiration {
-        get {
+    internal virtual TimeSpan MemoryCacheSlidingExpiration
+    {
+        get
+        {
             return Cache.NoSlidingExpiration;
         }
     }
 
-    protected void ReadPreservedFlags(PreservationFileReader pfr) {
+    protected void ReadPreservedFlags(PreservationFileReader pfr)
+    {
         string s = pfr.GetAttribute("flags");
-        if ((s != null) && (s.Length != 0)) {
+        if ((s != null) && (s.Length != 0))
+        {
             Flags = Int32.Parse(s, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture);
         }
     }
 
-    internal virtual void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal virtual void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         ReadPreservedFlags(pfr);
     }
 
-    internal virtual void SetPreservedAttributes(PreservationFileWriter pfw) {
-        if (Flags != 0) {
+    internal virtual void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
+        if (Flags != 0)
+        {
             pfw.SetAttribute("flags", Flags.ToString("x", CultureInfo.InvariantCulture));
         }
     }
@@ -288,15 +318,17 @@ internal abstract class BuildResult {
      * Tell the BuildResult that its dependencies are not up to date, in order
      * to give it a chance to do some cleanup.
      */
-    internal virtual void RemoveOutOfDateResources(PreservationFileReader pfw) {}
+    internal virtual void RemoveOutOfDateResources(PreservationFileReader pfw) { }
 
     // Compute the current hash code of the preserved data.  Return 0 if the
     // hash code is not valid.
-    internal long ComputeHashCode(long hashCode) {
+    internal long ComputeHashCode(long hashCode)
+    {
         return ComputeHashCode(hashCode, 0);
     }
 
-    internal long ComputeHashCode(long hashCode1, long hashCode2) {
+    internal long ComputeHashCode(long hashCode1, long hashCode2)
+    {
         HashCodeCombiner hashCodeCombiner = new HashCodeCombiner();
 
         // If a hashcode was passed in, start with it
@@ -315,11 +347,13 @@ internal abstract class BuildResult {
      * the virtual path dependencies (which are handled separately by
      * VirtualPathDependenciesHash).
      */
-    protected virtual void ComputeHashCode(HashCodeCombiner hashCodeCombiner) {
+    protected virtual void ComputeHashCode(HashCodeCombiner hashCodeCombiner)
+    {
 
     }
 
-    internal virtual string ComputeSourceDependenciesHashCode(VirtualPath virtualPath) {
+    internal virtual string ComputeSourceDependenciesHashCode(VirtualPath virtualPath)
+    {
         // Return an empty string if there are no dependencies.  This is different from
         // null, which means 'don't cache'
         if (VirtualPathDependencies == null)
@@ -332,9 +366,11 @@ internal abstract class BuildResult {
         return virtualPath.GetFileHash(VirtualPathDependencies);
     }
 
-    internal bool IsUpToDate(VirtualPath virtualPath, bool ensureIsUpToDate) {
+    internal bool IsUpToDate(VirtualPath virtualPath, bool ensureIsUpToDate)
+    {
 
-        if (!ensureIsUpToDate) {
+        if (!ensureIsUpToDate)
+        {
             return true;
         }
 
@@ -347,31 +383,36 @@ internal abstract class BuildResult {
         // Don't check more than every two seconds
         DateTime now = DateTime.Now;
         // Due to bug 214038, CBM can be called multiple times in a very short time.
-        if (now < _nextUpToDateCheck && !BuildManagerHost.InClientBuildManager) {
+        if (now < _nextUpToDateCheck && !BuildManagerHost.InClientBuildManager)
+        {
             Debug.Trace("BuildResult", "IsUpToDate: true since called less than 2 seconds ago. "
                 + _nextUpToDateCheck + "," + now);
             return true;
         }
 
         // If we don't get the lock, just say it's up to date without checking
-        if (Interlocked.CompareExchange(ref _lock, 1, 0) != 0) {
+        if (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
+        {
             Debug.Trace("BuildResult", "IsUpToDate returning true because it didn't get the lock");
             return true;
         }
 
         string newHashCode;
 
-        try {
+        try
+        {
             newHashCode = ComputeSourceDependenciesHashCode(virtualPath);
         }
-        catch {
+        catch
+        {
             // Make sure to release the lock if something throws.
             Interlocked.Exchange(ref _lock, 0);
             throw;
         }
 
         // Check if we're up to date.  A null hash code means the cache should not be used.
-        if (newHashCode == null || newHashCode != _virtualPathDependenciesHash) {
+        if (newHashCode == null || newHashCode != _virtualPathDependenciesHash)
+        {
             Debug.Trace("BuildResult", "IsUpToDate: '" + VirtualPath + "' is out of date");
 
             // Set the lock to -1 to mark that we're not up to date
@@ -390,13 +431,15 @@ internal abstract class BuildResult {
 
 }
 
-internal class BuildResultCompileError: BuildResult {
+internal class BuildResultCompileError : BuildResult
+{
 
     // The exception in case we cached the result of a failed compilation
     private HttpCompileException _compileException;
     internal HttpCompileException CompileException { get { return _compileException; } }
 
-    internal BuildResultCompileError(VirtualPath virtualPath, HttpCompileException compileException) {
+    internal BuildResultCompileError(VirtualPath virtualPath, HttpCompileException compileException)
+    {
         VirtualPath = virtualPath;
         _compileException = compileException;
     }
@@ -406,8 +449,10 @@ internal class BuildResultCompileError: BuildResult {
      */
     internal override bool CacheToDisk { get { return false; } }
 
-    internal override DateTime MemoryCacheExpiration {
-        get {
+    internal override DateTime MemoryCacheExpiration
+    {
+        get
+        {
             // Only cache compile errors for 10 seconds.  This is to get us out of trouble
             // if the compilation fails due to some strange timing issue, and might succeed
             // on retry (VSWhidbey 483169)
@@ -416,21 +461,26 @@ internal class BuildResultCompileError: BuildResult {
     }
 }
 
-internal class BuildResultCustomString: BuildResultCompiledAssembly {
+internal class BuildResultCustomString : BuildResultCompiledAssembly
+{
 
     private string _customString;
 
-    internal BuildResultCustomString() {}
+    internal BuildResultCustomString() { }
 
-    internal BuildResultCustomString(Assembly a, string customString) : base(a) {
+    internal BuildResultCustomString(Assembly a, string customString) : base(a)
+    {
         Debug.Assert(customString != null);
         _customString = customString;
     }
 
-    internal override BuildResultTypeCode GetCode() {
-        return BuildResultTypeCode.BuildResultCustomString; }
+    internal override BuildResultTypeCode GetCode()
+    {
+        return BuildResultTypeCode.BuildResultCustomString;
+    }
 
-    internal override void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal override void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         base.GetPreservedAttributes(pfr);
 
         // Retrieve the custom string
@@ -438,22 +488,26 @@ internal class BuildResultCustomString: BuildResultCompiledAssembly {
         Debug.Assert(_customString != null);
     }
 
-    internal override void SetPreservedAttributes(PreservationFileWriter pfw) {
+    internal override void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
         base.SetPreservedAttributes(pfw);
 
         // Preserve the custom string
         pfw.SetAttribute("customString", _customString);
     }
 
-    internal string CustomString {
+    internal string CustomString
+    {
         get { return _customString; }
     }
 
 }
 
-internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
+internal abstract class BuildResultCompiledAssemblyBase : BuildResult
+{
 
-    internal bool UsesExistingAssembly {
+    internal bool UsesExistingAssembly
+    {
         get { return _flags[usesExistingAssembly]; }
         set { _flags[usesExistingAssembly] = value; }
     }
@@ -469,15 +523,19 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
 
     static private string s_codegenDir = null;
 
-    internal static Assembly GetPreservedAssembly(PreservationFileReader pfr) {
+    internal static Assembly GetPreservedAssembly(PreservationFileReader pfr)
+    {
         string assemblyName = pfr.GetAttribute("assembly");
 
         if (assemblyName == null)
             return null;
 
         // Try to load the assembly
-        try {
-            Assembly a = Assembly.Load(assemblyName);
+        try
+        {
+            //Assembly a = Assembly.Load(assemblyName);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Assembly a = alc.LoadFromAssemblyName(new AssemblyName(assemblyName));
 
             // VSWhidbey 564168
             // Do not load assemblies or assemblies with references that 
@@ -487,8 +545,9 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
             // underlying DLL was renamed (to .delete).  In that case, we should
             // not return the assembly, as we would be unable to compile with
             // a reference to it.
-            
-            if (AssemblyIsInvalid(a)) {
+
+            if (AssemblyIsInvalid(a))
+            {
                 // Throw some exception, since the caller doesn't expect null
                 throw new InvalidOperationException();
             }
@@ -499,7 +558,8 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
 
             return a;
         }
-        catch {
+        catch
+        {
             Debug.Trace("BuildResult", "GetPreservedAssembly: couldn't load assembly '" + assemblyName + "'; deleting associated files.");
 
             // Remove the assembly and all the associated files
@@ -513,13 +573,17 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
     // each referenced assembly exists and does not have a dot delete.
     // If any referenced assembly is removed or marked for deletion,
     // we invalidate the base assembly by throwing an InvalidOperationException
-    private static void CheckAssemblyIsValid(Assembly a, Hashtable checkedAssemblies) {
+    private static void CheckAssemblyIsValid(Assembly a, Hashtable checkedAssemblies)
+    {
 
         // Keep track of which assemblies we already checked so we can skip them
         checkedAssemblies.Add(a, null);
 
-        foreach (AssemblyName aName in a.GetReferencedAssemblies()) {
-            Assembly referencedAssembly = Assembly.Load(aName);
+        foreach (AssemblyName aName in a.GetReferencedAssemblies())
+        {
+            //Assembly referencedAssembly = Assembly.Load(aName);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Assembly referencedAssembly = alc.LoadFromAssemblyName(aName);
 
             // If it is in the GAC, skip checking it
             if (referencedAssembly.GlobalAssemblyCache)
@@ -531,7 +595,8 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
                 continue;
 
             // If we have already checked an assembly, don't check it again
-            if (!checkedAssemblies.Contains(referencedAssembly)) {
+            if (!checkedAssemblies.Contains(referencedAssembly))
+            {
                 if (AssemblyIsInvalid(referencedAssembly))
                     throw new InvalidOperationException();
 
@@ -541,12 +606,14 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
         }
     }
 
-        [SuppressMessage("Microsoft.Security.Xml", "CA3003 ReviewCodeForFileCanonicalizationVulnerabilities", Justification = "Developer-controlled contents are implicitly trusted.")]
-        internal static bool AssemblyIsInCodegenDir(Assembly a) {
+    [SuppressMessage("Microsoft.Security.Xml", "CA3003 ReviewCodeForFileCanonicalizationVulnerabilities", Justification = "Developer-controlled contents are implicitly trusted.")]
+    internal static bool AssemblyIsInCodegenDir(Assembly a)
+    {
         string path = Util.GetAssemblyCodeBase(a);
         FileInfo f = new FileInfo(path);
         string assemblyDir = FileUtil.RemoveTrailingDirectoryBackSlash(f.Directory.FullName);
-        if (s_codegenDir == null) {
+        if (s_codegenDir == null)
+        {
             s_codegenDir = FileUtil.RemoveTrailingDirectoryBackSlash(HttpRuntime.CodegenDir);
         }
 
@@ -554,11 +621,12 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
         // Shadow-copied assemblies are in a deeper directory (eg myapp\zzz\yyy\assembly\dl3\xxxx)
         if (string.Equals(assemblyDir, s_codegenDir, StringComparison.OrdinalIgnoreCase))
             return true;
-        
+
         return false;
     }
 
-    private static bool AssemblyIsInvalid(Assembly a) {
+    private static bool AssemblyIsInvalid(Assembly a)
+    {
         // If the file does not exist, or if it has a .delete file,
         // then it should not be used
         string path = Util.GetAssemblyCodeBase(a);
@@ -566,16 +634,20 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
     }
 
 
-    internal override void SetPreservedAttributes(PreservationFileWriter pfw) {
+    internal override void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
         base.SetPreservedAttributes(pfw);
 
-        if (HasResultAssembly) {
+        if (HasResultAssembly)
+        {
             string assemblyName;
-            if (IsGacAssembly) {
+            if (IsGacAssembly)
+            {
                 // If it's in the GAC, store the full name (VSWhidbey 384416)
                 assemblyName = ResultAssembly.FullName;
             }
-            else {
+            else
+            {
                 // Otherwise, store the short name, to avoid uselessly growing the preservation file
                 assemblyName = ShortAssemblyName;
             }
@@ -587,7 +659,8 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
      * Tell the BuildResult that its dependencies are not up to date, in order
      * to give it a chance to do some cleanup.
      */
-    internal override void RemoveOutOfDateResources(PreservationFileReader pfr) {
+    internal override void RemoveOutOfDateResources(PreservationFileReader pfr)
+    {
 
         // If the preservation file is pointing to an assembly that was not built
         // for this result, do not attempt to clean it up (see VSWhidbey 74094)
@@ -597,12 +670,14 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
 
         // Remove the assembly and all the associated files
         string assemblyName = pfr.GetAttribute("assembly");
-        if (assemblyName != null) {
+        if (assemblyName != null)
+        {
             pfr.DiskCache.RemoveAssemblyAndRelatedFiles(assemblyName);
         }
     }
 
-    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner) {
+    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner)
+    {
 
         base.ComputeHashCode(hashCodeCombiner);
 
@@ -614,24 +689,28 @@ internal abstract class BuildResultCompiledAssemblyBase: BuildResult {
     }
 }
 
-internal class BuildResultCompiledAssembly: BuildResultCompiledAssemblyBase {
+internal class BuildResultCompiledAssembly : BuildResultCompiledAssemblyBase
+{
 
     private Assembly _assembly;
 
-    internal BuildResultCompiledAssembly() {}
+    internal BuildResultCompiledAssembly() { }
 
-    internal BuildResultCompiledAssembly(Assembly a) {
+    internal BuildResultCompiledAssembly(Assembly a)
+    {
         _assembly = a;
     }
 
     internal override BuildResultTypeCode GetCode() { return BuildResultTypeCode.BuildResultCompiledAssembly; }
 
-    internal override Assembly ResultAssembly {
+    internal override Assembly ResultAssembly
+    {
         get { return _assembly; }
         set { _assembly = value; }
     }
 
-    internal override void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal override void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         base.GetPreservedAttributes(pfr);
 
         ResultAssembly = GetPreservedAssembly(pfr);
@@ -643,15 +722,17 @@ internal class BuildResultCompiledAssembly: BuildResultCompiledAssemblyBase {
  * the main code assembly.  Specifically, it adds support for the AppInitialize method
  * and for VB's My.*
  */
-internal class BuildResultMainCodeAssembly: BuildResultCompiledAssembly {
+internal class BuildResultMainCodeAssembly : BuildResultCompiledAssembly
+{
 
     private const string appInitializeMethodName = "AppInitialize";
 
     private MethodInfo _appInitializeMethod;
 
-    internal BuildResultMainCodeAssembly() {}
+    internal BuildResultMainCodeAssembly() { }
 
-    internal BuildResultMainCodeAssembly(Assembly a) : base(a) {
+    internal BuildResultMainCodeAssembly(Assembly a) : base(a)
+    {
 
         // Look for an AppInitialize static method in the assembly
         FindAppInitializeMethod();
@@ -659,12 +740,14 @@ internal class BuildResultMainCodeAssembly: BuildResultCompiledAssembly {
 
     internal override BuildResultTypeCode GetCode() { return BuildResultTypeCode.BuildResultMainCodeAssembly; }
 
-    internal override void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal override void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         base.GetPreservedAttributes(pfr);
 
         // Does the assembly have an AppInitialize method?
         string appInitializeClass = pfr.GetAttribute("appInitializeClass");
-        if (appInitializeClass != null) {
+        if (appInitializeClass != null)
+        {
 
             // Get the Type that contains the method
             Type appInitializeType = ResultAssembly.GetType(appInitializeClass);
@@ -676,30 +759,36 @@ internal class BuildResultMainCodeAssembly: BuildResultCompiledAssembly {
         }
     }
 
-    internal override void SetPreservedAttributes(PreservationFileWriter pfw) {
+    internal override void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
 
         base.SetPreservedAttributes(pfw);
 
         // If there is an AppInitialize method, save the class name that it's in
-        if (_appInitializeMethod != null) {
+        if (_appInitializeMethod != null)
+        {
             pfw.SetAttribute("appInitializeClass", _appInitializeMethod.ReflectedType.FullName);
         }
     }
 
-    private void FindAppInitializeMethod() {
+    private void FindAppInitializeMethod()
+    {
 
         Debug.Assert(_appInitializeMethod == null);
 
         // Look in all the public types in the assembly
-        foreach (Type t in ResultAssembly.GetExportedTypes()) {
+        foreach (Type t in ResultAssembly.GetExportedTypes())
+        {
 
             // Look for an AppInitialize method
             MethodInfo tmpAppInitializeMethod = FindAppInitializeMethod(t);
 
-            if (tmpAppInitializeMethod != null) {
+            if (tmpAppInitializeMethod != null)
+            {
 
                 // Make sure we didn't already have one
-                if (_appInitializeMethod != null) {
+                if (_appInitializeMethod != null)
+                {
                     throw new HttpException(SR.GetString(SR.Duplicate_appinitialize, _appInitializeMethod.ReflectedType.FullName, t.FullName));
                 }
 
@@ -709,10 +798,11 @@ internal class BuildResultMainCodeAssembly: BuildResultCompiledAssembly {
         }
     }
 
-    private MethodInfo FindAppInitializeMethod(Type t) {
+    private MethodInfo FindAppInitializeMethod(Type t)
+    {
 
         return t.GetMethod(appInitializeMethodName,
-            BindingFlags.Public | BindingFlags.Static| BindingFlags.IgnoreCase,
+            BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase,
             null /*Binder*/,
             new Type[0], // Method with no parameters
             null
@@ -720,10 +810,14 @@ internal class BuildResultMainCodeAssembly: BuildResultCompiledAssembly {
     }
 
     // Call the AppInitialize method if there is one
-    internal void CallAppInitializeMethod() {
-        if (_appInitializeMethod != null) {
-            using (new ApplicationImpersonationContext()) {
-                using (HostingEnvironment.SetCultures()) {
+    internal void CallAppInitializeMethod()
+    {
+        if (_appInitializeMethod != null)
+        {
+            using (new ApplicationImpersonationContext())
+            {
+                using (HostingEnvironment.SetCultures())
+                {
                     _appInitializeMethod.Invoke(null, null);
                 }
             }
@@ -735,14 +829,16 @@ internal class BuildResultMainCodeAssembly: BuildResultCompiledAssembly {
  * Same as BuildResultCompiledAssembly, but with some special behavior specific to
  * resources directory (both global and local)
  */
-internal class BuildResultResourceAssembly : BuildResultCompiledAssembly {
+internal class BuildResultResourceAssembly : BuildResultCompiledAssembly
+{
     internal BuildResultResourceAssembly() { }
 
     internal BuildResultResourceAssembly(Assembly a) : base(a) { }
 
     internal override BuildResultTypeCode GetCode() { return BuildResultTypeCode.BuildResultResourceAssembly; }
 
-    internal override string ComputeSourceDependenciesHashCode(VirtualPath virtualPath) {
+    internal override string ComputeSourceDependenciesHashCode(VirtualPath virtualPath)
+    {
 
         // If no virtual path was passed in, use the one from the BuildResult
         if (virtualPath == null)
@@ -760,21 +856,25 @@ internal class BuildResultResourceAssembly : BuildResultCompiledAssembly {
     // In addition to the standard BuildResult hash code (which drives recompilation of the main
     // resources assembly), we need an additional one so we know when to rebuild satellites.
     private string _resourcesDependenciesHash;
-    internal string ResourcesDependenciesHash {
-        get {
+    internal string ResourcesDependenciesHash
+    {
+        get
+        {
             EnsureResourcesDependenciesHashComputed();
 
             return _resourcesDependenciesHash;
         }
 
-        set {
+        set
+        {
             Debug.Assert(_resourcesDependenciesHash == null);
             _resourcesDependenciesHash = value;
             Debug.Assert(_resourcesDependenciesHash != null);
         }
     }
 
-    private void EnsureResourcesDependenciesHashComputed() {
+    private void EnsureResourcesDependenciesHashComputed()
+    {
         if (_resourcesDependenciesHash != null)
             return;
 
@@ -783,13 +883,15 @@ internal class BuildResultResourceAssembly : BuildResultCompiledAssembly {
         _resourcesDependenciesHash = HashCodeCombiner.GetDirectoryHash(VirtualPath);
     }
 
-    internal override void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal override void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         base.GetPreservedAttributes(pfr);
 
         ResourcesDependenciesHash = pfr.GetAttribute("resHash");
     }
 
-    internal override void SetPreservedAttributes(PreservationFileWriter pfw) {
+    internal override void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
         base.SetPreservedAttributes(pfw);
 
         pfw.SetAttribute("resHash", ResourcesDependenciesHash);
@@ -797,63 +899,79 @@ internal class BuildResultResourceAssembly : BuildResultCompiledAssembly {
 
 }
 
-internal class BuildResultCompiledType : BuildResultCompiledAssemblyBase, ITypedWebObjectFactory {
+internal class BuildResultCompiledType : BuildResultCompiledAssemblyBase, ITypedWebObjectFactory
+{
 
     // The delegate for fast object instantiation
     private InstantiateObject _instObj;
     private bool _triedToGetInstObj;
 
-    internal BuildResultCompiledType() {}
+    internal BuildResultCompiledType() { }
 
-    internal BuildResultCompiledType(Type t) {
+    internal BuildResultCompiledType(Type t)
+    {
         _builtType = t;
     }
 
     internal override BuildResultTypeCode GetCode() { return BuildResultTypeCode.BuildResultCompiledType; }
 
-    internal override Assembly ResultAssembly {
+    internal override Assembly ResultAssembly
+    {
         get { return _builtType.Assembly; }
         set { Debug.Assert(false); }
     }
 
     internal override bool HasResultAssembly { get { return _builtType != null; } }
 
-    protected override bool IsGacAssembly {
-        get {
-            if (IsDelayLoadType) {
+    protected override bool IsGacAssembly
+    {
+        get
+        {
+            if (IsDelayLoadType)
+            {
                 return false;
             }
-            else {
+            else
+            {
                 return base.IsGacAssembly;
             }
         }
     }
 
-    protected override string ShortAssemblyName {
-        get {
+    protected override string ShortAssemblyName
+    {
+        get
+        {
             var delayLoadType = ResultType as DelayLoadType;
-            if (delayLoadType != null) {
+            if (delayLoadType != null)
+            {
                 return delayLoadType.AssemblyName;
             }
-            else {
+            else
+            {
                 return base.ShortAssemblyName;
             }
         }
     }
 
     private Type _builtType;
-    internal Type ResultType {
+    internal Type ResultType
+    {
         get { return _builtType; }
         set { _builtType = value; }
     }
 
-    private string FullResultTypeName {
-        get {
+    private string FullResultTypeName
+    {
+        get
+        {
             var delayLoadType = ResultType as DelayLoadType;
-            if (delayLoadType != null) {
+            if (delayLoadType != null)
+            {
                 return delayLoadType.TypeName;
             }
-            else {
+            else
+            {
                 return ResultType.FullName;
             }
         }
@@ -861,28 +979,34 @@ internal class BuildResultCompiledType : BuildResultCompiledAssemblyBase, ITyped
 
     internal bool IsDelayLoadType { get { return ResultType is DelayLoadType; } }
 
-    static internal bool UsesDelayLoadType(BuildResult result) {
+    static internal bool UsesDelayLoadType(BuildResult result)
+    {
         BuildResultCompiledType buildResultCompiledType = result as BuildResultCompiledType;
-        if (buildResultCompiledType != null) {
+        if (buildResultCompiledType != null)
+        {
             return buildResultCompiledType.IsDelayLoadType;
         }
-        else {
+        else
+        {
             return false;
         }
     }
 
     // IWebObjectFactory.CreateInstance
-    public object CreateInstance() {
+    public object CreateInstance()
+    {
 
         // Get the fast object creation delegate on demand
-        if (!_triedToGetInstObj) {
+        if (!_triedToGetInstObj)
+        {
             _instObj = ObjectFactoryCodeDomTreeGenerator.GetFastObjectCreationDelegate(ResultType);
             _triedToGetInstObj = true;
         }
 
         // If the fast factory is not available, just call CreateInstance
         // 
-        if (_instObj == null) {
+        if (_instObj == null)
+        {
             return HttpRuntime.CreatePublicInstanceByWebObjectActivator(ResultType);
         }
 
@@ -891,30 +1015,35 @@ internal class BuildResultCompiledType : BuildResultCompiledAssemblyBase, ITyped
     }
 
     // ITypedWebObjectFactory.CreateInstance
-    public virtual Type InstantiatedType {
+    public virtual Type InstantiatedType
+    {
         get { return ResultType; }
     }
 
-    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner) {
+    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner)
+    {
 
         base.ComputeHashCode(hashCodeCombiner);
 
         // Make pages have a dependency on the main local resources assembly, so that they
         // get recompiled when it changes (but not when satellites change). VSWhidbey 277357
-        if (VirtualPath != null) {
+        if (VirtualPath != null)
+        {
 
             // Remove the file name to get its directory
             VirtualPath virtualDir = VirtualPath.Parent;
 
             Assembly localResAssembly = BuildManager.GetLocalResourcesAssembly(virtualDir);
 
-            if (localResAssembly != null) {
+            if (localResAssembly != null)
+            {
                 hashCodeCombiner.AddFile(localResAssembly.Location);
             }
         }
     }
 
-    internal override void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal override void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         base.GetPreservedAttributes(pfr);
 
         // Get the assembly and type
@@ -924,7 +1053,8 @@ internal class BuildResultCompiledType : BuildResultCompiledAssemblyBase, ITyped
         ResultType = a.GetType(typeName, true /*throwOnError*/);
     }
 
-    internal override void SetPreservedAttributes(PreservationFileWriter pfw) {
+    internal override void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
         base.SetPreservedAttributes(pfw);
         pfw.SetAttribute("type", FullResultTypeName);
     }
@@ -933,15 +1063,17 @@ internal class BuildResultCompiledType : BuildResultCompiledAssemblyBase, ITyped
 /*
  * Used for pages, user controls, and master pages
  */
-internal class BuildResultCompiledTemplateType: BuildResultCompiledType {
+internal class BuildResultCompiledTemplateType : BuildResultCompiledType
+{
 
-    public BuildResultCompiledTemplateType() {}
+    public BuildResultCompiledTemplateType() { }
 
-    public BuildResultCompiledTemplateType(Type t) : base(t) {}
+    public BuildResultCompiledTemplateType(Type t) : base(t) { }
 
     internal override BuildResultTypeCode GetCode() { return BuildResultTypeCode.BuildResultCompiledTemplateType; }
 
-    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner) {
+    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner)
+    {
 
         base.ComputeHashCode(hashCodeCombiner);
 
@@ -955,7 +1087,8 @@ internal class BuildResultCompiledTemplateType: BuildResultCompiledType {
 /*
  * Used for global.asax
  */
-internal class BuildResultCompiledGlobalAsaxType : BuildResultCompiledType {
+internal class BuildResultCompiledGlobalAsaxType : BuildResultCompiledType
+{
 
     public BuildResultCompiledGlobalAsaxType() { }
 
@@ -964,19 +1097,22 @@ internal class BuildResultCompiledGlobalAsaxType : BuildResultCompiledType {
     internal override BuildResultTypeCode GetCode() { return BuildResultTypeCode.BuildResultCompiledGlobalAsaxType; }
 
     // Does global.asax contain <object> tags with application or session scope
-    internal bool HasAppOrSessionObjects {
+    internal bool HasAppOrSessionObjects
+    {
         get { return _flags[hasAppOrSessionObjects]; }
         set { _flags[hasAppOrSessionObjects] = value; }
     }
 }
 
-internal abstract class BuildResultNoCompileTemplateControl : BuildResult, ITypedWebObjectFactory {
+internal abstract class BuildResultNoCompileTemplateControl : BuildResult, ITypedWebObjectFactory
+{
 
     protected Type _baseType;
     protected RootBuilder _rootBuilder;
     protected bool _initialized;
 
-    internal BuildResultNoCompileTemplateControl(Type baseType, TemplateParser parser) {
+    internal BuildResultNoCompileTemplateControl(Type baseType, TemplateParser parser)
+    {
         _baseType = baseType;
         _rootBuilder = parser.RootBuilder;
 
@@ -984,7 +1120,8 @@ internal abstract class BuildResultNoCompileTemplateControl : BuildResult, IType
         _rootBuilder.PrepareNoCompilePageSupport();
     }
 
-    internal override BuildResultTypeCode GetCode() {
+    internal override BuildResultTypeCode GetCode()
+    {
         Debug.Assert(false, "BuildResultNoCompileTemplateControl");
         return BuildResultTypeCode.Invalid;
     }
@@ -997,23 +1134,27 @@ internal abstract class BuildResultNoCompileTemplateControl : BuildResult, IType
     /*
      * Give a 5 minute sliding expiration to no-compile pages
      */
-    internal override TimeSpan MemoryCacheSlidingExpiration {
-        get {
+    internal override TimeSpan MemoryCacheSlidingExpiration
+    {
+        get
+        {
             return TimeSpan.FromMinutes(5);
         }
     }
 
     // Note that since this is a no-compile control, this is not really the 'base' type,
     // but is in fact the Type we directly instantiate.
-    internal Type BaseType {
+    internal Type BaseType
+    {
         get { return _baseType; }
     }
 
     // IWebObjectFactory.CreateInstance
-    public virtual object CreateInstance() {
+    public virtual object CreateInstance()
+    {
 
         // Create the object that the aspx/ascx 'inherits' from
-        TemplateControl templateControl = (TemplateControl) HttpRuntime.FastCreatePublicInstance(_baseType);
+        TemplateControl templateControl = (TemplateControl)HttpRuntime.FastCreatePublicInstance(_baseType);
 
         // Set the virtual path and TemplateSourceDirectory in the control
         templateControl.TemplateControlVirtualPath = VirtualPath;
@@ -1026,11 +1167,13 @@ internal abstract class BuildResultNoCompileTemplateControl : BuildResult, IType
     }
 
     // ITypedWebObjectFactory.CreateInstance
-    public virtual Type InstantiatedType {
+    public virtual Type InstantiatedType
+    {
         get { return _baseType; }
     }
 
-    internal virtual void FrameworkInitialize(TemplateControl templateControl) {
+    internal virtual void FrameworkInitialize(TemplateControl templateControl)
+    {
 
         HttpContext context = HttpContext.Current;
 
@@ -1039,23 +1182,28 @@ internal abstract class BuildResultNoCompileTemplateControl : BuildResult, IType
         TemplateControl savedTemplateControl = context.TemplateControl;
         context.TemplateControl = templateControl;
 
-        try {
+        try
+        {
             // Create the control tree
 
             // DevDiv Bug 59351
             // Lock during the first time we initialize the control builder with the object,
             // to prevent concurrency issues.
-            if (!_initialized) {
-                lock (this) {
+            if (!_initialized)
+            {
+                lock (this)
+                {
                     _rootBuilder.InitObject(templateControl);
                 }
                 _initialized = true;
             }
-            else {
+            else
+            {
                 _rootBuilder.InitObject(templateControl);
             }
         }
-        finally {
+        finally
+        {
             // Restore the previous template control
             if (savedTemplateControl != null)
                 context.TemplateControl = savedTemplateControl;
@@ -1063,7 +1211,8 @@ internal abstract class BuildResultNoCompileTemplateControl : BuildResult, IType
     }
 }
 
-internal class BuildResultNoCompilePage: BuildResultNoCompileTemplateControl {
+internal class BuildResultNoCompilePage : BuildResultNoCompileTemplateControl
+{
 
     private TraceEnable _traceEnabled;
     private TraceMode _traceMode;
@@ -1075,9 +1224,10 @@ internal class BuildResultNoCompilePage: BuildResultNoCompileTemplateControl {
     private string _stylesheetTheme;
 
     internal BuildResultNoCompilePage(Type baseType, TemplateParser parser)
-        : base(baseType, parser) {
+        : base(baseType, parser)
+    {
 
-        PageParser pageParser = (PageParser) parser;
+        PageParser pageParser = (PageParser)parser;
 
         //
         // Keep track of relevant info from the parser
@@ -1086,18 +1236,22 @@ internal class BuildResultNoCompilePage: BuildResultNoCompileTemplateControl {
         _traceEnabled = pageParser.TraceEnabled;
         _traceMode = pageParser.TraceMode;
 
-        if (pageParser.OutputCacheParameters != null) {
+        if (pageParser.OutputCacheParameters != null)
+        {
             _outputCacheData = pageParser.OutputCacheParameters;
 
             // If we're not supposed to cache it, clear out the field
-            if (_outputCacheData.Duration == 0 || _outputCacheData.Location == OutputCacheLocation.None) {
+            if (_outputCacheData.Duration == 0 || _outputCacheData.Location == OutputCacheLocation.None)
+            {
                 _outputCacheData = null;
             }
-            else {
+            else
+            {
                 // Since we're going to be output caching, remember all the dependencies
                 _fileDependencies = new string[pageParser.SourceDependencies.Count];
                 int i = 0;
-                foreach (string dependency in pageParser.SourceDependencies) {
+                foreach (string dependency in pageParser.SourceDependencies)
+                {
                     _fileDependencies[i++] = dependency;
                 }
                 Debug.Assert(i == pageParser.SourceDependencies.Count);
@@ -1108,7 +1262,8 @@ internal class BuildResultNoCompilePage: BuildResultNoCompileTemplateControl {
         _stylesheetTheme = pageParser.StyleSheetTheme;
     }
 
-    internal override void FrameworkInitialize(TemplateControl templateControl) {
+    internal override void FrameworkInitialize(TemplateControl templateControl)
+    {
         Page page = (Page)templateControl;
         page.StyleSheetTheme = _stylesheetTheme;
 
@@ -1121,15 +1276,18 @@ internal class BuildResultNoCompilePage: BuildResultNoCompileTemplateControl {
         if (_traceMode != TraceMode.Default)
             page.TraceModeValue = _traceMode;
 
-        if (_outputCacheData != null) {
+        if (_outputCacheData != null)
+        {
             page.AddWrappedFileDependencies(_fileDependencies);
             page.InitOutputCache(_outputCacheData);
         }
 
-        if (_validateRequest) {
+        if (_validateRequest)
+        {
             page.Request.ValidateInput();
         }
-        else if(MultiTargetingUtil.TargetFrameworkVersion >= VersionUtil.Framework45) {
+        else if (MultiTargetingUtil.TargetFrameworkVersion >= VersionUtil.Framework45)
+        {
             // Only set the ValidateRequestMode property if we are targetting 4.5 or higher
             // as earlier versions did not have it.
             page.ValidateRequestMode = ValidateRequestMode.Disabled;
@@ -1137,19 +1295,22 @@ internal class BuildResultNoCompilePage: BuildResultNoCompileTemplateControl {
     }
 }
 
-internal class BuildResultNoCompileUserControl: BuildResultNoCompileTemplateControl {
+internal class BuildResultNoCompileUserControl : BuildResultNoCompileTemplateControl
+{
 
     private PartialCachingAttribute _cachingAttribute;
 
     internal BuildResultNoCompileUserControl(Type baseType, TemplateParser parser)
-        : base(baseType, parser) {
+        : base(baseType, parser)
+    {
 
-        UserControlParser ucParser = (UserControlParser) parser;
+        UserControlParser ucParser = (UserControlParser)parser;
         OutputCacheParameters cacheSettings = ucParser.OutputCacheParameters;
 
         // If the user control has an OutputCache directive, create
         // a PartialCachingAttribute with the information about it.
-        if (cacheSettings != null && cacheSettings.Duration > 0) {
+        if (cacheSettings != null && cacheSettings.Duration > 0)
+        {
             _cachingAttribute = new PartialCachingAttribute(
                 cacheSettings.Duration,
                 cacheSettings.VaryByParam,
@@ -1161,27 +1322,32 @@ internal class BuildResultNoCompileUserControl: BuildResultNoCompileTemplateCont
         }
     }
 
-    internal PartialCachingAttribute CachingAttribute {
+    internal PartialCachingAttribute CachingAttribute
+    {
         get { return _cachingAttribute; }
     }
 }
 
-internal class BuildResultNoCompileMasterPage: BuildResultNoCompileUserControl {
+internal class BuildResultNoCompileMasterPage : BuildResultNoCompileUserControl
+{
 
     private ICollection _placeHolderList;
 
     internal BuildResultNoCompileMasterPage(Type baseType, TemplateParser parser)
-        : base(baseType, parser) {
+        : base(baseType, parser)
+    {
         _placeHolderList = ((MasterPageParser)parser).PlaceHolderList;
     }
 
     // IWebObjectFactory.CreateInstance
-    public override object CreateInstance() {
+    public override object CreateInstance()
+    {
 
         // Create the master page object that the master 'inherits' from
-        MasterPage masterPage = (MasterPage) base.CreateInstance();
+        MasterPage masterPage = (MasterPage)base.CreateInstance();
 
-        foreach(string placeHolderID in _placeHolderList) {
+        foreach (string placeHolderID in _placeHolderList)
+        {
             masterPage.ContentPlaceHolders.Add(placeHolderID.ToLower(CultureInfo.InvariantCulture));
         }
 
@@ -1194,7 +1360,8 @@ internal class BuildResultNoCompileMasterPage: BuildResultNoCompileUserControl {
 * when cached on disk, it uses BinaryFormatter to serialize the codecompileunit
 * and other compile params.
 */
-internal class BuildResultCodeCompileUnit : BuildResult {
+internal class BuildResultCodeCompileUnit : BuildResult
+{
     private Type _codeDomProviderType;
     private CodeCompileUnit _codeCompileUnit;
     private CompilerParameters _compilerParameters;
@@ -1203,12 +1370,14 @@ internal class BuildResultCodeCompileUnit : BuildResult {
 
     private const string fileNameAttribute = "CCUpreservationFileName";
 
-    internal BuildResultCodeCompileUnit() {
+    internal BuildResultCodeCompileUnit()
+    {
     }
 
     internal BuildResultCodeCompileUnit(
         Type codeDomProviderType, CodeCompileUnit codeCompileUnit,
-        CompilerParameters compilerParameters, IDictionary linePragmasTable) {
+        CompilerParameters compilerParameters, IDictionary linePragmasTable)
+    {
 
         _codeDomProviderType = codeDomProviderType;
         _codeCompileUnit = codeCompileUnit;
@@ -1216,33 +1385,40 @@ internal class BuildResultCodeCompileUnit : BuildResult {
         _linePragmasTable = linePragmasTable;
     }
 
-    internal Type CodeDomProviderType {
+    internal Type CodeDomProviderType
+    {
         get { return _codeDomProviderType; }
     }
 
-    internal CodeCompileUnit CodeCompileUnit {
+    internal CodeCompileUnit CodeCompileUnit
+    {
         get { return _codeCompileUnit; }
     }
 
-    internal CompilerParameters CompilerParameters {
+    internal CompilerParameters CompilerParameters
+    {
         get { return _compilerParameters; }
     }
 
-    internal IDictionary LinePragmasTable {
+    internal IDictionary LinePragmasTable
+    {
         get { return _linePragmasTable; }
     }
 
     internal override bool CacheToDisk { get { return true; } }
 
-    internal override BuildResultTypeCode GetCode() {
+    internal override BuildResultTypeCode GetCode()
+    {
         return BuildResultTypeCode.BuildResultCodeCompileUnit;
     }
 
-    private string GetPreservationFileName() {
+    private string GetPreservationFileName()
+    {
         return _cacheKey + ".ccu";
     }
 
-    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner) {
+    protected override void ComputeHashCode(HashCodeCombiner hashCodeCombiner)
+    {
 
         base.ComputeHashCode(hashCodeCombiner);
 
@@ -1255,7 +1431,8 @@ internal class BuildResultCodeCompileUnit : BuildResult {
         hashCodeCombiner.AddObject(Util.GetRecompilationHash(pagesConfig));
     }
 
-    internal override void GetPreservedAttributes(PreservationFileReader pfr) {
+    internal override void GetPreservedAttributes(PreservationFileReader pfr)
+    {
         base.GetPreservedAttributes(pfr);
 
         String _ccuPreservationFileName = pfr.GetAttribute(fileNameAttribute);
@@ -1263,7 +1440,8 @@ internal class BuildResultCodeCompileUnit : BuildResult {
 
         Debug.Assert(FileUtil.FileExists(_ccuPreservationFileName), _ccuPreservationFileName);
 
-        using (FileStream stream = File.Open(_ccuPreservationFileName, FileMode.Open)) {
+        using (FileStream stream = File.Open(_ccuPreservationFileName, FileMode.Open))
+        {
             BinaryFormatter formatter = new BinaryFormatter();
 
             _codeCompileUnit = formatter.Deserialize(stream) as CodeCompileUnit;
@@ -1273,46 +1451,52 @@ internal class BuildResultCodeCompileUnit : BuildResult {
         }
     }
 
-    internal void SetCacheKey(string cacheKey) {
+    internal void SetCacheKey(string cacheKey)
+    {
         _cacheKey = cacheKey;
     }
 
-    internal override void SetPreservedAttributes(PreservationFileWriter pfw) {
+    internal override void SetPreservedAttributes(PreservationFileWriter pfw)
+    {
         base.SetPreservedAttributes(pfw);
         string preservationFileName = GetPreservationFileName();
 
         pfw.SetAttribute(fileNameAttribute, preservationFileName);
         preservationFileName = Path.Combine(HttpRuntime.CodegenDirInternal, preservationFileName);
 
-        using (FileStream stream = File.Open(preservationFileName, FileMode.Create)) {
+        using (FileStream stream = File.Open(preservationFileName, FileMode.Create))
+        {
             BinaryFormatter formatter = new BinaryFormatter();
 
-            if (_codeCompileUnit != null) {
+            if (_codeCompileUnit != null)
+            {
                 formatter.Serialize(stream, _codeCompileUnit);
             }
-            else {
+            else
+            {
                 formatter.Serialize(stream, new object());
             }
 
             formatter.Serialize(stream, _codeDomProviderType);
             formatter.Serialize(stream, _compilerParameters);
 
-            if (_linePragmasTable != null) {
+            if (_linePragmasTable != null)
+            {
                 formatter.Serialize(stream, _linePragmasTable);
             }
-            else {
+            else
+            {
                 formatter.Serialize(stream, new object());
             }
         }
     }
 
-    internal override void RemoveOutOfDateResources(PreservationFileReader pfr) {
+    internal override void RemoveOutOfDateResources(PreservationFileReader pfr)
+    {
         // Remove the out-of-date .ccu file
         String ccuPreservationFileName = pfr.GetAttribute(fileNameAttribute);
         ccuPreservationFileName = Path.Combine(HttpRuntime.CodegenDirInternal, ccuPreservationFileName);
 
         File.Delete(ccuPreservationFileName);
     }
-}
-
 }

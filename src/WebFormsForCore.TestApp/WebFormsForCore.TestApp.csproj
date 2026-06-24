@@ -88,14 +88,6 @@
         <Content Remove="bin_dotnet\**\*.*" />
         <None Remove="bin_dotnet\**\*.*" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <Content Remove="App_Data\machine.config" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Include="App_Data\machine.config" />
-    </ItemGroup>
 
     <ItemGroup>
         <!--<PackageReference Include="AjaxControlToolkit" Version="20.1.0" />-->
@@ -135,6 +127,10 @@
       <Content Update="WebFormsForCore.TestApp.deps.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="App_Data\" />
     </ItemGroup>
 
     <Target Name="AddRuntimeDependenciesToContent" Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'" BeforeTargets="GetCopyToOutputDirectoryItems" DependsOnTargets="GenerateBuildDependencyFile;GenerateBuildRuntimeConfigurationFiles">

@@ -12,6 +12,7 @@ namespace System.Web.Configuration {
     using System.Configuration;
     using System.IO;
     using System.Threading;
+    using System.Linq;
     using System.Web;
     using System.Web.Caching;
     using System.Web.Hosting;
@@ -26,6 +27,7 @@ namespace System.Web.Configuration {
     using Debug = System.Web.Util.Debug;
     using UnicodeEncoding = System.Text.UnicodeEncoding;
     using UrlPath = System.Web.Util.UrlPath;
+    using System.Runtime.Loader;
 
     internal class HttpConfigurationSystem : IInternalConfigSystem {
         private const string InternalConfigSettingsFactoryTypeString = "System.Configuration.Internal.InternalConfigSettingsFactory, " + AssemblyRef.SystemConfiguration;
@@ -88,8 +90,12 @@ namespace System.Web.Configuration {
                         }
 
                         s_configMapPath = configMapPath;
-
-                        Type typeConfigSystem = Type.GetType(ConfigSystemTypeString, true);
+                        //Type typeConfigSystem = Type.GetType(ConfigSystemTypeString, true);
+                        var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                        Type typeConfigSystem = Type.GetType(ConfigSystemTypeString,
+                            assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                            true);
                         s_configSystem = (IConfigSystem) Activator.CreateInstance(typeConfigSystem, true);
                         s_configSystem.Init(
                                 typeof(WebConfigurationHost),               // The config host we'll create and use
@@ -116,7 +122,11 @@ namespace System.Web.Configuration {
                         // ConfigurationManager.SetConfigurationSystem, which is an internal static method
                         // in System.Configuration.dll.  If we want to call that here, we have to use
                         // reflection and that's what we want to avoid.
-                        Type typeFactory = Type.GetType(InternalConfigSettingsFactoryTypeString, true);
+                        //Type typeFactory = Type.GetType(InternalConfigSettingsFactoryTypeString, true);
+                        Type typeFactory = Type.GetType(InternalConfigSettingsFactoryTypeString,
+                            assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                            true);
                         s_configSettingsFactory = (IInternalConfigSettingsFactory) Activator.CreateInstance(typeFactory, true);
                         s_configSettingsFactory.SetConfigurationSystem(configSystem, initComplete);
 

@@ -157,7 +157,9 @@ namespace System.Web.Compilation
 
 			Debug.Trace("BuildManagerHost", "ResolveAssembly: found");
 
-			return Assembly.LoadFrom(assemblyLocation);
+			//return Assembly.LoadFrom(assemblyLocation);
+			var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+			return alc.LoadFromAssemblyPath(assemblyLocation);
 		}
 
 		/*
@@ -186,7 +188,7 @@ namespace System.Web.Compilation
 
 		private void OnAppDomainShutdown(object o, BuildManagerHostUnloadEventArgs args)
 		{
-			_client.OnAppDomainShutdown(args.Reason);
+			_client?.OnAppDomainShutdown(args.Reason);
 		}
 
 		internal void CompileApplicationDependencies()

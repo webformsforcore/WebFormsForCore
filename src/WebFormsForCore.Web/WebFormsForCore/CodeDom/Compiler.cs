@@ -14,6 +14,8 @@ using System.Security.Permissions;
 using System.Security.Principal;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
+
 
 #if WebFormsForCore && NETCOREAPP
 using W = WebFormsForCore.CodeDom.Compiler;
@@ -438,12 +440,14 @@ namespace WebFormsForCore.CodeDom.Compiler
 #if NETFRAMEWORK
                 results.CompiledAssembly = Assembly.Load(assemblyBuff, symbolsBuff, options.Evidence);
 #else
-				results.CompiledAssembly = Assembly.Load(assemblyBuff, symbolsBuff);
+				//results.CompiledAssembly = Assembly.Load(assemblyBuff, symbolsBuff);
+				var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+				results.CompiledAssembly = alc.LoadFromStream(new MemoryStream(assemblyBuff), new MemoryStream(symbolsBuff));
 #endif
 #pragma warning restore 618
 
-			}
-			finally
+            }
+            finally
 			{
 				SecurityPermission.RevertAssert();
 			}

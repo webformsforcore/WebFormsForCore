@@ -25,11 +25,12 @@ namespace System.Web.Configuration {
     using System.Security.Permissions;
 #if NETCOREAPP
 	using W = WebFormsForCore.CodeDom.Compiler;
+    using System.Runtime.Loader;
 #else
 	using W = System.CodeDom.Compiler;
 #endif
 
-	/*
+    /*
         <!-- compilation Attributes:
           tempDirectory="directory"
           debug="[true|false]"      // Default: false
@@ -100,7 +101,7 @@ namespace System.Web.Configuration {
         </compilation>
 */
 
-	public sealed class CompilationSection : ConfigurationSection {
+    public sealed class CompilationSection : ConfigurationSection {
         private const string tempDirectoryAttributeName = "tempDirectory";
         private const string assemblyPostProcessorTypeAttributeName = "assemblyPostProcessorType";
         private const string controlBuilderInterceptorTypeAttributeName = "controlBuilderInterceptorType";
@@ -709,7 +710,9 @@ namespace System.Web.Configuration {
         }
 
         internal static Assembly LoadAndRecordAssembly(AssemblyName name) {
-            Assembly a = Assembly.Load(name);
+            //Assembly a = Assembly.Load(name);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Assembly a = alc.LoadFromAssemblyName(name);
             RecordAssembly(name.FullName, a);
             return a;
         }
@@ -729,7 +732,9 @@ namespace System.Web.Configuration {
 
             try {
                 // First, try to just load the assembly
-                Assembly a = Assembly.Load(assemblyName);
+                //Assembly a = Assembly.Load(assemblyName);
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                Assembly a = alc.LoadFromAssemblyName(new AssemblyName(assemblyName));
                 // Record the original assembly name that was used to load this assembly.
                 RecordAssembly(assemblyName, a);
                 return a;
@@ -777,9 +782,11 @@ namespace System.Web.Configuration {
 			// Load the assembly and add it to the dictionary.
 			try
 			{
-				retAssembly = System.Reflection.Assembly.Load(assemblyName);
-			}
-			catch (Exception e)
+                //retAssembly = System.Reflection.Assembly.Load(assemblyName);
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                retAssembly = alc.LoadFromAssemblyName(new AssemblyName(assemblyName));
+            }
+            catch (Exception e)
 			{
 
 				// Check if this assembly came from the '*' directive
@@ -861,18 +868,20 @@ namespace System.Web.Configuration {
 			// Load the assembly and add it to the dictionary.
 			try
 			{
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
                 try
                 {
-                    retAssembly = System.Reflection.Assembly.Load(assemblyName);
+                    //retAssembly = System.Reflection.Assembly.Load(assemblyName);
+                    retAssembly = alc.LoadFromAssemblyName(new AssemblyName(assemblyName));
                 }
                 catch (FileNotFoundException ex)
                 {
-                    retAssembly = System.Reflection.Assembly.LoadFrom(assemblyFile);
+                    //retAssembly = System.Reflection.Assembly.LoadFrom(assemblyFile);
+                    retAssembly = alc.LoadFromAssemblyPath(assemblyFile);
                 }
-			}
+            }
 			catch (Exception e)
 			{
-
 				// Check if this assembly came from the '*' directive
 				bool ignoreException = false;
 

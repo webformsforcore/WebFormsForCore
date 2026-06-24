@@ -10,15 +10,17 @@ namespace System.Web.Configuration {
     using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
     using System.Reflection;
+    using System.Runtime.Loader;
     using System.Security;
+    using System.Security.Permissions;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Web.Caching;
     using System.Web.Compilation;
     using System.Web.Hosting;
-    using System.Security.Permissions;
 
     public abstract class HttpCapabilitiesProvider {
         public abstract HttpBrowserCapabilities GetBrowserCapabilities(HttpRequest request);
@@ -84,7 +86,11 @@ namespace System.Web.Configuration {
             get {
                 if (_browserCapabilitiesProvider == null) {
                     if (BrowserCapabilitiesProviderType != null) {
-                        Type t = System.Type.GetType(BrowserCapabilitiesProviderType, true, true);
+                        var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                        Type t = System.Type.GetType(BrowserCapabilitiesProviderType,
+                            assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                            true, true);
                         _browserCapabilitiesProvider = (HttpCapabilitiesProvider)Activator.CreateInstance(t);
                     }
                 }

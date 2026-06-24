@@ -1530,10 +1530,12 @@ namespace System.Web.UI
 
 			foreach (AssemblyName aname in refs)
 			{
-				Assembly referencedAssembly = Assembly.Load(aname);
+				//Assembly referencedAssembly = Assembly.Load(aname);
+				var alc = System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+				Assembly referencedAssembly = alc.LoadFromAssemblyName(aname);
 
-				// Ignore mscorlib
-				if (referencedAssembly == typeof(string).Assembly)
+                // Ignore mscorlib
+                if (referencedAssembly == typeof(string).Assembly)
 					continue;
 
 				referencedAssemblies.Add(referencedAssembly);

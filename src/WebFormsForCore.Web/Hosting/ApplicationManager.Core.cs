@@ -980,6 +980,8 @@ namespace System.Web.Hosting {
             }
         }
 
+        private AssemblyLoadContext CurrentLoadContext => AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands", Justification = "We carefully control the callers.")]
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)", Justification = "Sets parameter to default(bool) on conversion failure, which is semantic we need.")]
         private HostingEnvironment CreateAssemblyLoadContextWithHostingEnvironment(
@@ -1059,7 +1061,7 @@ namespace System.Web.Hosting {
                 AppDomain.CurrentDomain.SetData(_configBuildersIgnoreLoadFailuresSwitch, true);
 #else
                 SetLoadContextData(_configBuildersIgnoreLoadFailuresSwitch, true);
-				SetApplicationData(bindings, appDomainAdditionalData, AssemblyLoadContext.Default, AppDomain.CurrentDomain);
+				SetApplicationData(bindings, appDomainAdditionalData, CurrentLoadContext, AppDomain.CurrentDomain);
 #endif
 				uncTokenConfig = appHost.GetConfigToken();
                 if (uncTokenConfig != IntPtr.Zero) {
@@ -1140,7 +1142,7 @@ namespace System.Web.Hosting {
                             appContext = new AssemblyLoadContext(domainId, true);
                             System.Diagnostics.Debug.WriteLine($"Created AssemblyLoadContext {domainId}");
                         }
-                        else appContext = AssemblyLoadContext.Default;
+                        else appContext = CurrentLoadContext;
 #endif
                         SetApplicationData(bindings, appDomainAdditionalData, appContext, appDomain);
 
@@ -1365,7 +1367,7 @@ setup,
                     appDomain = AppDomain.CurrentDomain;
 #if NETCOREAPP
                     if (newLoadContext) appContext = new AssemblyLoadContext(domainId, true); 
-                    else appContext = AssemblyLoadContext.Default;
+                    else appContext = CurrentLoadContext;
 #endif
 
 #endif
@@ -1830,8 +1832,12 @@ setup,
                     }
 
                     if (!String.IsNullOrEmpty(HttpRuntime.HostSecurityPolicyResolverType) && hostSecurityPolicyResolver == null) {
+                        var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
                         hostSecurityPolicyResolver = Activator.CreateInstance(
-                            Type.GetType(HttpRuntime.HostSecurityPolicyResolverType)) as HostSecurityPolicyResolver;
+                            Type.GetType(HttpRuntime.HostSecurityPolicyResolverType,
+                                assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase)
+                                )) as HostSecurityPolicyResolver;
                     }
 
                     if (hostSecurityPolicyResolver != null) {

@@ -7,7 +7,7 @@
 /************************************************************************************************************/
 
 
-namespace System.Web.Compilation {
+namespace System.Web.Compilation;
 
 using System;
 using System.Security.Permissions;
@@ -25,11 +25,14 @@ using System.Web.UI;
 public class ClientBuildManagerCallback : MarshalByRefObject {
 
     // This includes both errors and warnings
-    public virtual void ReportCompilerError(CompilerError error) {}
+    public Action<string, int, int, string, string> OnCompilerError = null;
+    public virtual void ReportCompilerError(CompilerError error) { OnCompilerError?.Invoke(error.FileName, error.Line, error.Column, error.ErrorNumber, error.ErrorText); }
 
-    public virtual void ReportParseError(ParserError error) {}
+    public Action<string, int, string> OnParseError = null;
+    public virtual void ReportParseError(ParserError error) { OnParseError?.Invoke(error.VirtualPath, error.Line, error.ErrorText); }
 
-    public virtual void ReportProgress(string message) {}
+    public Action<string> OnProgress = null;
+    public virtual void ReportProgress(string message) { OnProgress?.Invoke(message); }
 
     // DevDiv 180798. The default lease is 5 minutes, so we return null to allow compilation
     // calls to exceed 5 minutes. In doing so, we need to call RemotingService.Disconnect 
@@ -38,7 +41,3 @@ public class ClientBuildManagerCallback : MarshalByRefObject {
         return null;
     }
 }
-
-}
-
-

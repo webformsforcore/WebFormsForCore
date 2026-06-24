@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
-using Mono.Cecil.Pdb;
+//using Mono.Cecil.Pdb;
 using System.Runtime.InteropServices;
 
 #nullable enable
@@ -177,12 +177,12 @@ namespace WebFormsForCore.Build
 
 							var pdbFile = Path.ChangeExtension(assemblyFileName, ".pdb");
 							bool withSymbols = File.Exists(pdbFile);
-							var symReader = new PdbReaderProvider();
-							var symWriter = new PdbWriterProvider();
+							//var symReader = new PdbReaderProvider();
+							//var symWriter = new PdbWriterProvider();
 							var mem = new MemoryStream();
 							var readerParameters = new ReaderParameters() { ReadWrite = true, InMemory = true, ReadSymbols = withSymbols };
 							
-							if (withSymbols)
+							/*if (withSymbols)
 							{
 								using (var pdbStream = new FileStream(pdbFile, FileMode.Open, FileAccess.Read))
 									pdbStream.CopyTo(mem);
@@ -190,7 +190,7 @@ namespace WebFormsForCore.Build
 								mem.Seek(0, SeekOrigin.Begin);
 								readerParameters.SymbolReaderProvider = symReader;
 								readerParameters.SymbolStream = mem;
-							}
+							}*/
 
 							using (var assembly = AssemblyDefinition.ReadAssembly(assemblyFileName, readerParameters))
 							{
@@ -200,18 +200,18 @@ namespace WebFormsForCore.Build
 								//File.Delete(assemblyFileName);
 								//File.Delete(pdbFile);
 								var writerParameters = new WriterParameters() { DeterministicMvid = true, WriteSymbols = withSymbols };
-								Stream? pdbWriteStream = null;
+								//Stream? pdbWriteStream = null;
 								
-								if (withSymbols)
+								/*if (withSymbols)
 								{
 									pdbWriteStream = new FileStream(pdbFile, FileMode.Create, FileAccess.ReadWrite);
 									writerParameters.SymbolWriterProvider = symWriter;
 									writerParameters.SymbolStream = pdbWriteStream;									
-								}
+								}*/
 								
 								assembly.Write(assemblyFileName, writerParameters);
 								
-								pdbWriteStream?.Close();
+								//pdbWriteStream?.Close();
 
 								success = true;
 							}

@@ -6,6 +6,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.Loader;
 
 namespace System.Web.Compilation {
     internal class DelayLoadType : Type {
@@ -27,7 +28,9 @@ namespace System.Web.Compilation {
         public Type Type {
             get {
                 if (_type == null) {
-                    Assembly a = Assembly.Load(_assemblyName);
+                    //Assembly a = Assembly.Load(_assemblyName);
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    Assembly a = alc.LoadFromAssemblyName(new AssemblyName(_assemblyName));
                     _type = a.GetType(_typeName);
                 }
 

@@ -19,11 +19,12 @@ using System.Web.Util;
 using System.Web.UI;
 #if NETCOREAPP
 	using W = WebFormsForCore.CodeDom.Compiler;
+    using System.Runtime.Loader;
 #else
 	using W = System.CodeDom.Compiler;
 #endif
 
-	internal abstract class BaseTemplateBuildProvider: InternalBuildProvider {
+    internal abstract class BaseTemplateBuildProvider: InternalBuildProvider {
 
     private TemplateParser _parser;
     internal TemplateParser Parser { get { return _parser; } }

@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 
@@ -1030,9 +1031,11 @@ namespace WebFormsForCore.Serialization.Formatters.Binary
 
         private static Assembly? ResolveSimpleAssemblyName(AssemblyName assemblyName)
         {
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
             try
             {
-                return Assembly.Load(assemblyName);
+                //return Assembly.Load(assemblyName);
+                return alc.LoadFromAssemblyName(assemblyName);
             }
             catch { }
 
@@ -1040,7 +1043,8 @@ namespace WebFormsForCore.Serialization.Formatters.Binary
             {
                 try
                 {
-                    return Assembly.Load(assemblyName.Name!);
+                    //return Assembly.Load(assemblyName.Name!);
+                    return alc.LoadFromAssemblyName(new AssemblyName(assemblyName.Name!));
                 }
                 catch { }
             }
@@ -1064,6 +1068,7 @@ namespace WebFormsForCore.Serialization.Formatters.Binary
 
             if (type == null)
             {
+                //type = Type.GetType(typeName, ResolveSimpleAssemblyName, new TopLevelAssemblyTypeResolver(assm).ResolveType, throwOnError: false);
                 type = Type.GetType(typeName, ResolveSimpleAssemblyName, new TopLevelAssemblyTypeResolver(assm).ResolveType, throwOnError: false);
             }
         }

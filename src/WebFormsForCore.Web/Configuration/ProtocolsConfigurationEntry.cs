@@ -19,7 +19,8 @@ namespace System.Web.Configuration {
     using System.Web.Security;
     using System.Web.Util;
     using System.Xml;
-
+    using System.Runtime.Loader;
+    using System.Linq;
     internal class ProtocolsConfigurationEntry {
 
         private String _id;
@@ -57,8 +58,14 @@ namespace System.Web.Configuration {
             // check process protocol handler
 
             Type processHandlerType;
-            try {
-                 processHandlerType = Type.GetType(_processHandlerTypeName, true /*throwOnError*/);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            try
+            {
+                //processHandlerType = Type.GetType(_processHandlerTypeName, true /*throwOnError*/);
+                processHandlerType = Type.GetType(_processHandlerTypeName,
+                    assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                     true /*throwOnError*/);
             }
             catch (Exception e) {
                 throw new ConfigurationErrorsException(e.Message, e, _configFileName, _configFileLine);
@@ -69,7 +76,11 @@ namespace System.Web.Configuration {
 
             Type appDomainHandlerType;
             try {
-                 appDomainHandlerType = Type.GetType(_appDomainHandlerTypeName, true /*throwOnError*/);
+                //appDomainHandlerType = Type.GetType(_appDomainHandlerTypeName, true /*throwOnError*/);
+                appDomainHandlerType = Type.GetType(_appDomainHandlerTypeName,
+                    assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                    true /*throwOnError*/);
             }
             catch (Exception e) {
                 throw new ConfigurationErrorsException(e.Message, e, _configFileName, _configFileLine);

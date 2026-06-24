@@ -20,6 +20,9 @@ namespace System.Web.Security {
     using  System.Web.Util;
     using  System.Collections.Specialized;
     using System.Web.Compilation;
+    using System.Runtime.Loader;
+    using System.Linq;
+    using System.Reflection;
 
 
     /// <devdoc>
@@ -532,8 +535,12 @@ namespace System.Web.Security {
                     ProvidersHelper.InstantiateProviders(settings.Providers, s_Providers, typeof(RoleProvider));
                 }
                 else {
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
                     foreach (ProviderSettings ps in settings.Providers) {
-                        Type t = Type.GetType(ps.Type, true, true);
+                        Type t = Type.GetType(ps.Type,
+                            assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                            true, true);
                         if (!typeof(RoleProvider).IsAssignableFrom(t))
                             throw new ArgumentException(SR.GetString(SR.Provider_must_implement_type, typeof(RoleProvider).ToString()));
                         RoleProvider provider = (RoleProvider)Activator.CreateInstance(t);

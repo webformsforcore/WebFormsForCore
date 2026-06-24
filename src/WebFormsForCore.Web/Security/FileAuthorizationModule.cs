@@ -27,6 +27,9 @@ namespace System.Web.Security {
     using System.Web.Hosting;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Loader;
+    using System.Reflection;
+    using System.Linq;
 
 
 
@@ -75,7 +78,21 @@ namespace System.Web.Security {
                     int len = modulesSection.Modules.Count;
                     for (int iter = 0; iter < len; iter++) {
                         HttpModuleAction module = modulesSection.Modules[iter];
-                        if (Type.GetType(module.Type, false) == typeof(FileAuthorizationModule)) {
+                        var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                        //if (Type.GetType(module.Type, false) == typeof(FileAuthorizationModule)) {
+                        if (Type.GetType(module.Type,
+                            assemblyName => {
+                                try
+                                {
+                                    return alc.LoadFromAssemblyName(assemblyName);
+                                }
+                                catch (FileNotFoundException)
+                                {
+                                    return null;
+                                }
+                            },
+                            (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
+                            false) == typeof(FileAuthorizationModule)) {
                             s_Enabled = true;
                             break;
                         }

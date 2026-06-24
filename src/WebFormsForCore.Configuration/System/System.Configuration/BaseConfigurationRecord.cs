@@ -6,22 +6,24 @@
 
 
 namespace System.Configuration {
-    using System.Configuration.Internal;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Configuration;
+    using System.Configuration.Internal;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Runtime.InteropServices;
-    using System.Security.Permissions;
+    using System.Runtime.Loader;
+    using System.Runtime.Versioning;
     using System.Security;
+    using System.Security.Permissions;
     using System.Text;
     using System.Threading;
     using System.Xml;
-    using System.Runtime.Versioning;
+    using System.Xml.Linq;
 
     //
     // This object represents the configuration for a request path, and is cached per-path.
@@ -2526,8 +2528,22 @@ namespace System.Configuration {
 
                             // Disallow names starting with "config" unless it is the special configBuilders section.
                             if (StringUtil.StartsWith(tagName, "config")) {
-                                Type sectionType = Type.GetType(typeName);
-                                if (!StringUtil.Equals(tagName, RESERVED_SECTION_CONFIGURATION_BUILDERS) || sectionType != ConfigurationBuildersSectionType) {
+                                    //Type sectionType = Type.GetType(typeName);
+                                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                                    Type sectionType = Type.GetType(typeName,
+								        assemblyName => {
+									        try
+									        {
+										        return alc.LoadFromAssemblyName(assemblyName);
+									        }
+									        catch (FileNotFoundException)
+									        {
+										        return null;
+									        }
+								        },
+                                        (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase),
+                                        false);
+                                    if (!StringUtil.Equals(tagName, RESERVED_SECTION_CONFIGURATION_BUILDERS) || sectionType != ConfigurationBuildersSectionType) {
                                     throw new ConfigurationErrorsException(SR.GetString(SR.Config_tag_name_cannot_begin_with_config), xmlUtil);
                                 }
                             }
@@ -4358,7 +4374,26 @@ namespace System.Configuration {
         //
         const string ConfigurationBuildersSectionTypeName = "System.Configuration.ConfigurationBuildersSection, " + AssemblyRef.SystemConfiguration;
         internal const string RESERVED_SECTION_CONFIGURATION_BUILDERS = "configBuilders";
-        Type ConfigurationBuildersSectionType = Type.GetType(ConfigurationBuildersSectionTypeName);
+        //Type ConfigurationBuildersSectionType = Type.GetType(ConfigurationBuildersSectionTypeName);
+        Type ConfigurationBuildersSectionType
+        {
+            get
+            {
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                return Type.GetType(ConfigurationBuildersSectionTypeName,
+                    assemblyName => {
+                        try
+                        {
+                            return alc.LoadFromAssemblyName(assemblyName);
+                        } catch {
+                            return null;
+                        }
+                    },
+                    (assembly, name, ignoreCase) => assembly?.GetType(name, false, ignoreCase),
+                    false);
+            }
+        }
+
         const string ProtectedConfigurationSectionTypeName = "System.Configuration.ProtectedConfigurationSection, " + AssemblyRef.SystemConfiguration;
         internal const string RESERVED_SECTION_PROTECTED_CONFIGURATION       = "configProtectedData";
         internal const string Microsoft_CONFIGURATION_SECTION = ConfigurationStringConstants.WinformsApplicationConfigurationSectionName;

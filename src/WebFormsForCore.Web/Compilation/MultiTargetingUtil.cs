@@ -104,6 +104,10 @@ namespace System.Web.Compilation {
             }
         }
 
+        internal static void ResetTargetFrameworkName()
+        {
+            s_targetFrameworkName = null;
+        }
 		/// <summary>
 		/// Finds out what the known framework names and also the latest one
 		/// </summary>
@@ -205,7 +209,7 @@ namespace System.Web.Compilation {
         /// <summary>
         /// Checks what is the target framework version and initializes the targetFrameworkName
         /// </summary>
-        private static void InitializeTargetFrameworkName() {
+        internal static void InitializeTargetFrameworkName() {
             string targetFrameworkMoniker = ClientBuildManagerTargetFramework ?? ConfigTargetFrameworkMoniker;
 
             // Check if web.config exists, and if not, assume 4.0

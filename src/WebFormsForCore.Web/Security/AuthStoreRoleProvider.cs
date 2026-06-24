@@ -5,29 +5,31 @@
 //------------------------------------------------------------------------------
 namespace System.Web.Security
 {
-    using System.Web;
-    using System.Web.Configuration;
-    using System.Web.Util;
-    using System.Security;
-    using System.Security.Principal;
-    using System.Security.Permissions;
-    using System.Globalization;
-    using System.Runtime.Serialization;
     using System.Collections;
     using System.Collections.Specialized;
+    using System.Configuration;
+    using System.Configuration.Provider;
     using System.Data;
+    using System.Data.OleDb;
     using System.Data.SqlClient;
     using System.Data.SqlTypes;
-    using System.Text;
-    using System.Configuration.Provider;
-    using System.Configuration;
-    using System.Data.OleDb;
-    using System.Reflection;
-    using System.Web.Hosting;
-    using System.Threading;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Runtime.Loader;
+    using System.Runtime.Serialization;
+    using System.Security;
+    using System.Security.Permissions;
+    using System.Security.Principal;
+    using System.Text;
+    using System.Threading;
+    using System.Web;
+    using System.Web.Configuration;
+    using System.Web.Hosting;
+    using System.Web.Util;
 
     /// <devdoc>
     ///    <para>[To be supplied.]</para>
@@ -575,15 +577,40 @@ namespace System.Web.Security
                         Type typeAzAuthorizationStoreClass = null;
                         try {
                             _NewAuthInterface = true;
-                            typeAzAuthorizationStoreClass = Type.GetType("Microsoft.Interop.Security.AzRoles.AzAuthorizationStoreClass, Microsoft.Interop.Security.AzRoles, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35", 
+                            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                            typeAzAuthorizationStoreClass = Type.GetType("Microsoft.Interop.Security.AzRoles.AzAuthorizationStoreClass, Microsoft.Interop.Security.AzRoles, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35",
+                                assemblyName => {
+                                    try
+                                    {
+                                        return alc.LoadFromAssemblyName(assemblyName);
+                                    }
+                                    catch (FileNotFoundException)
+                                    {
+                                        return null;
+                                    }
+                                },
+                                (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
                                                                          false /*throwOnError*/);
                             if (typeAzAuthorizationStoreClass == null)
-                                typeAzAuthorizationStoreClass = Type.GetType("Microsoft.Interop.Security.AzRoles.AzAuthorizationStoreClass, Microsoft.Interop.Security.AzRoles, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35", 
+                                typeAzAuthorizationStoreClass = Type.GetType("Microsoft.Interop.Security.AzRoles.AzAuthorizationStoreClass, Microsoft.Interop.Security.AzRoles, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35",
+                                    assemblyName => {
+                                        try
+                                        {
+                                            return alc.LoadFromAssemblyName(assemblyName);
+                                        }
+                                        catch (FileNotFoundException)
+                                        {
+                                            return null;
+                                        }
+                                    },
+                                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, false, ignoreCase),
                                                                          false /*throwOnError*/);
                             if (typeAzAuthorizationStoreClass == null) {
                                 _NewAuthInterface = false;
-                                typeAzAuthorizationStoreClass = Type.GetType("Microsoft.Interop.Security.AzRoles.AzAuthorizationStoreClass, Microsoft.Interop.Security.AzRoles, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35", 
-                                                                         true /*throwOnError*/);
+                                typeAzAuthorizationStoreClass = Type.GetType("Microsoft.Interop.Security.AzRoles.AzAuthorizationStoreClass, Microsoft.Interop.Security.AzRoles, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35",
+                                    assemblyName => alc.LoadFromAssemblyName(assemblyName),
+                                    (asm, typeName, ignoreCase) => asm?.GetType(typeName, true, ignoreCase),
+                                                                        true /*throwOnError*/);
                             } 
                         } 
                         catch (FileNotFoundException e) {

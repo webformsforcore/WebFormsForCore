@@ -6,6 +6,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using System.Text.RegularExpressions;
 #if NETCOREAPP
@@ -146,8 +147,10 @@ internal class CSharpCompiler : Compiler
 		string systemRuntimeAssemblyPath = null;
 		try
 		{
-			var systemRuntimeAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-			systemRuntimeAssemblyPath = systemRuntimeAssembly.Location;
+			//var systemRuntimeAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+			var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+			var systemRuntimeAssembly = alc.LoadFromAssemblyName(new AssemblyName("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
+            systemRuntimeAssemblyPath = systemRuntimeAssembly.Location;
 		}
 		catch
 		{

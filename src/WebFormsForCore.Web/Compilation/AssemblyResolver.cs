@@ -16,6 +16,7 @@ using Microsoft.Build.Utilities;
 
 using FrameworkName=System.Runtime.Versioning.FrameworkName;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Loader;
 
 namespace System.Web.Compilation {
 
@@ -276,7 +277,9 @@ namespace System.Web.Compilation {
         private static void CheckOutOfRangeDependencies(string assemblyName) {
 
             string dependencies = null;
-            Assembly assembly = Assembly.Load(assemblyName);
+            //Assembly assembly = Assembly.Load(assemblyName);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Assembly assembly = alc.LoadFromAssemblyName(new AssemblyName(assemblyName));
             AssemblyName aName = new AssemblyName(assemblyName);
 
             // If the loaded assembly has a different version than the specified assembly,

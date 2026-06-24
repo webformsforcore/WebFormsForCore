@@ -25,7 +25,9 @@ namespace System.Web.Caching {
 
         internal MemCache(CacheCommon cacheCommon) : base(cacheCommon) {
             // config initialization is done by Init.
-            Assembly asm = Assembly.Load("System.Runtime.Caching, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL");
+            //Assembly asm = Assembly.Load("System.Runtime.Caching, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL");
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+            Assembly asm = alc.LoadFromAssemblyName("System.Runtime.Caching, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL");
             Type t = asm.GetType("System.Runtime.Caching.MemoryCache", true, false);
             _cacheInternal = HttpRuntime.CreateNonPublicInstance(t, new object[] {"asp_icache", null, true}) as MemoryCache;
             _cachePublic = HttpRuntime.CreateNonPublicInstance(t, new object[] {"asp_pcache", null, true}) as MemoryCache;

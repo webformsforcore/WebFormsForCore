@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
@@ -134,7 +135,9 @@ namespace WebFormsForCore.CodeDom.Compiler {
             // Bug 913691: Explicitly add System.Runtime as a reference.
             string systemRuntimeAssemblyPath = null;
             try {
-                var systemRuntimeAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                //var systemRuntimeAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                var systemRuntimeAssembly = alc.LoadFromAssemblyName(new AssemblyName("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
                 systemRuntimeAssemblyPath = systemRuntimeAssembly.Location;
             }
             catch {
@@ -150,8 +153,10 @@ namespace WebFormsForCore.CodeDom.Compiler {
 			string visualBasicAssemblyPath = null;
 			try
 			{
-				var visualBasicAssembly = Assembly.Load("Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-				visualBasicAssemblyPath = visualBasicAssembly.Location;
+                //var visualBasicAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                var visualBasicAssembly = alc.LoadFromAssemblyName(new AssemblyName("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
+                visualBasicAssemblyPath = visualBasicAssembly.Location;
 			}
 			catch
 			{
@@ -167,8 +172,10 @@ namespace WebFormsForCore.CodeDom.Compiler {
 			string systemAssemblyPath = null;
 			try
 			{
-				var systemAssembly = Assembly.Load("System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-				systemAssemblyPath = systemAssembly.Location;
+                //var systemAssembly = Assembly.Load("System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                var systemAssembly = alc.LoadFromAssemblyName(new AssemblyName("System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
+                systemAssemblyPath = systemAssembly.Location;
 			}
 			catch
 			{
