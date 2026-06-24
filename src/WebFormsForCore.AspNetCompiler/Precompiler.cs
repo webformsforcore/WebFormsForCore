@@ -81,7 +81,7 @@ public class Precompiler
     private static int maxLineLength = 80 /*0x50*/;
     private const int leftMargin = 14;
     private static readonly char[] invalidVirtualPathChars = new char[2] { '*', '?' };
-
+    public static bool Silent = false;
     public static int Main(string[] args)
     {
         Precompiler._excludedVirtualPaths = new List<string>();
@@ -180,8 +180,10 @@ public class Precompiler
 
     static bool firstPass = false;
     static int pass = 0;
+    static int reentrant = 0;
     public static int Precompile(string sourceVirtualDir, string sourcePhysicalDir, string targetDir, PrecompileParameter parameter, bool forceCleanBuild = false)
     {
+        if (Interlocked.Increment(ref reentrant) == 0) HasErrors = false;
         var binFolders = parameter.BinFolder?.Split(new char[] { ',', ';' }, StringSplitOptions.TrimEntries) ?? new string[] { null };
         var targetFrameworks = parameter.TargetFramework?.Split(new char[] { ',', ';' }, StringSplitOptions.TrimEntries) ?? new string[] { null };
         if (binFolders.Length <= 1 && targetFrameworks.Length <= 1)
@@ -212,15 +214,17 @@ public class Precompiler
                     parameter.PrecompilationFlags, parameter.ExcludedVirtualPaths,
                     parameter.BinFolder, parameter.TargetFramework,
                     forceCleanBuild });
-                return 0;
+                return HasErrors ? -1 : 0;
             }
             catch (Exception ex)
             {
+                DumpErrors(ex);
                 return -1;
             }
             finally
             {
                 alc.Unload();
+                Interlocked.Decrement(ref reentrant);
             }
         }
         else
@@ -228,6 +232,7 @@ public class Precompiler
             if (binFolders.Length != targetFrameworks.Length)
             {
                 Console.WriteLine(CompilerResources.unequalBinAndFramework);
+                Interlocked.Decrement(ref reentrant);
                 return -401;
             }
 
@@ -258,7 +263,9 @@ public class Precompiler
                 }
             }
         }
-        return 0;
+
+        Interlocked.Decrement(ref reentrant);
+        return HasErrors ? -1 : 0;
     }
 
     public static int PrecompileInternal(string sourceVirtualDir, string sourcePhysicalDir, string targetDir,
@@ -289,7 +296,7 @@ public class Precompiler
         manager.PrecompileApplication(new CBMCallback(), forceCleanBuild);
 
         AssemblyLoaderNetCore.Dispose();
-        return 0;
+        return HasErrors ? -1 : 0;
     }
 
     private static void SetThreadUICulture()
@@ -651,7 +658,7 @@ public class Precompiler
         }
     }
 
-    private static void DumpErrors(Exception exception)
+    public static void DumpErrors(Exception exception)
     {
         Exception formattableException = Precompiler.GetFormattableException(exception);
         if (formattableException != null)
@@ -677,7 +684,7 @@ public class Precompiler
         }
     }
 
-    private static Exception GetFormattableException(Exception e)
+    public static Exception GetFormattableException(Exception e)
     {
         switch (e.GetType().Name)
         {
@@ -696,19 +703,24 @@ public class Precompiler
 		Precompiler.DumpError(error.FileName, error.Line, error.IsWarning, error.ErrorNumber, error.ErrorText);
 	}
 
+    public static Action<Exception> OnException { get; set; } = null;
     private static void DumpExceptionStack(Exception e)
     {
-        Exception innerException = e.InnerException;
-        if (innerException != null)
-            Precompiler.DumpExceptionStack(innerException);
-        string str = $"[{e.GetType().Name}]";
-        if (e.Message != null && e.Message.Length > 0)
-            str = $"{str}: {e.Message}";
-        Console.WriteLine();
-        Console.WriteLine(str);
-        if (e.StackTrace == null)
-            return;
-        Console.WriteLine(e.StackTrace);
+        if (OnException != null) OnException.Invoke(e);
+        else if (!Silent)
+        {
+            Exception innerException = e.InnerException;
+            if (innerException != null)
+                Precompiler.DumpExceptionStack(innerException);
+            string str = $"[{e.GetType().Name}]";
+            if (e.Message != null && e.Message.Length > 0)
+                str = $"{str}: {e.Message}";
+            Console.WriteLine();
+            Console.WriteLine(str);
+            if (e.StackTrace == null)
+                return;
+            Console.WriteLine(e.StackTrace);
+        }
     }
 
     private static void DumpError(string errorNumber, string message)
@@ -716,6 +728,8 @@ public class Precompiler
         Precompiler.DumpError((string)null, 0, false, errorNumber, message);
     }
 
+    public static Action<string, int, bool, string, string> OnError { get; set; } = null;
+    public static bool HasErrors { get; set; } = false;
     private static void DumpError(
       string filename,
       int line,
@@ -723,17 +737,22 @@ public class Precompiler
       string errorNumber,
       string message)
     {
-        if (filename != null)
+        HasErrors = true;
+        if (OnError != null) OnError?.Invoke(filename, line, warning, errorNumber, message);
+        else if (!Silent)
         {
-            Console.Write(filename);
-            Console.Write($"({line.ToString()}): ");
+            if (filename != null)
+            {
+                Console.Write(filename);
+                Console.Write($"({line.ToString()}): ");
+            }
+            if (warning)
+                Console.Write("warning ");
+            else
+                Console.Write("error ");
+            Console.Write(errorNumber + ": ");
+            Console.WriteLine(message);
         }
-        if (warning)
-            Console.Write("warning ");
-        else
-            Console.Write("error ");
-        Console.Write(errorNumber + ": ");
-        Console.WriteLine(message);
     }
 
 	private class CBMCallback : ClientBuildManagerCallback

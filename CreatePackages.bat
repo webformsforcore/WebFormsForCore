@@ -40,5 +40,8 @@ cd ..\AjaxControlToolkit.HtmlEditor.Sanitizer
 dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%PackageVersion%
 cd ..\AjaxControlToolkit.StaticResources
 dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%PackageVersion%
+cd ..\..\WebFormsForCore.AspNetCompiler
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%PackageVersion%
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%PackageVersion% -p:PackAsTool=false
 
 cd ..\..\..

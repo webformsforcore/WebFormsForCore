@@ -21,8 +21,9 @@ namespace WebFormsForCore.Build
 		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNet10 => Environment.Version.Major >= 10;
+        public bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-		public ITaskItem[]? Assemblies { get; set; }
+        public ITaskItem[]? Assemblies { get; set; }
 		public ITaskItem? Source { get; set; }
 		public ITaskItem? Key { get; set; }
 		public string? PublicKey { get; set; }
@@ -124,7 +125,7 @@ namespace WebFormsForCore.Build
                     var net = IsNet10 ? "net10.0" : "net8.0";
                     dll = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(dll)!)!, net, "WebFormsForCore.Build.NetCore.dll");
 
-                    var startInfo = new ProcessStartInfo("dotnet.exe", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
+                    var startInfo = new ProcessStartInfo($"dotnet{(IsWindows ? ".exe" : "")}", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
 						$"\"{Source?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;

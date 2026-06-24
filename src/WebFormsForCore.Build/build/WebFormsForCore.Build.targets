@@ -17,6 +17,8 @@
         TaskName="WebFormsForCore.Build.CreateAspDesignerFiles" />
     <UsingTask AssemblyFile="$(WebFormsForCoreTasksLib)"
         TaskName="WebFormsForCore.Build.AssemblyStrip" />
+    <UsingTask AssemblyFile="$(WebFormsForCoreTasksLib)"
+         TaskName="WebFormsForCore.Build.AspNetCoreCompiler" />
 
     <ItemGroup>
         <AspNetDocuments Include="**\*.aspx" />

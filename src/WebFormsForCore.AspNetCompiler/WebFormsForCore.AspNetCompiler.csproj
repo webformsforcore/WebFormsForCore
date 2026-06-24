@@ -13,7 +13,8 @@
         <IsPackable>true</IsPackable>
         <PackAsTool Condition="$(PackAsTool) == ''">true</PackAsTool>
         <ToolCommandName>aspnetcore_compiler</ToolCommandName>
-        <PackageId>WebFormsForCore.AspNetCompiler</PackageId>
+        <PackageId Condition="$(PackAsTool) == 'true'">WebFormsForCore.AspNetCompiler</PackageId>
+        <PackageId Condition="$(PackAsTool) != 'true'">WebFormsForCore.AspNetCompiler.Library</PackageId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <Title>WebFormsForCore AspNetCompiler</Title>
         <Authors>simonegli8</Authors>
@@ -70,15 +71,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="AssemblyLoaderNetCore.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Update="Properties\launchSettings.json">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </None>
-        <None Include="AssemblyLoaderNetCore.cs" />
         <None Include="README.md" PackagePath="\" Pack="True" />
     </ItemGroup>
 

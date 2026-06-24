@@ -28,7 +28,7 @@
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeBuildOutput>false</IncludeBuildOutput>
-        <IncludeSymbols>false</IncludeSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <Version>1.6.0</Version>
         <AssemblyVersion>10.0.24.0</AssemblyVersion>
@@ -129,6 +129,10 @@
         <PackageReference Include="WebFormsForCore.Web" Version="1.6.0" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
+        <PackageReference Include="WebFormsForCore.AspNetCompiler.Library" Version="1.6.0" />
+    </ItemGroup>
+    
     <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
         <Compile Remove="Redesigner\**\*.cs" />
     </ItemGroup>
