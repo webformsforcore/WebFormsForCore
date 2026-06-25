@@ -14,6 +14,8 @@ namespace WebFormsForCore.Build;
 
 public class AssemblyResolver: DefaultAssemblyResolver {
 
+	public const bool SearchGAC = true;
+
 	readonly List<string> directories = new List<string>();
 	
 	public new void AddSearchDirectory(string directory)
@@ -34,6 +36,20 @@ public class AssemblyResolver: DefaultAssemblyResolver {
 		var assembly = SearchDirectory(name, directories, parameters);
 		if (assembly != null)
 			return assembly;
+
+		if (SearchGAC)
+		{
+			var gacdir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+				"Microsoft.NET", "assembly");
+			var gacFolders = new[] { Path.Combine(gacdir, "GAC_MSIL"), Path.Combine(gacdir, "GAC_64") };
+            string token = string.Concat(name.PublicKeyToken.Select(b => b.ToString("x2")));
+			var file = gacFolders
+				.Select(dir => Path.Combine(dir, name.Name, $"v4.0_{name.Version.ToString(4)}__{token}",
+					$"{name.Name}.dll"))
+				.Where(file => File.Exists(file))
+				.FirstOrDefault();
+			if (file != null) return AssemblyDefinition.ReadAssembly(file);
+		}
 
 		throw new AssemblyResolutionException(name);
 	}

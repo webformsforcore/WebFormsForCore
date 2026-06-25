@@ -40,5 +40,5 @@ This task supports the same attributes as the `AspNetCompiler` task and also the
 
 # Multi targeting
 If you have a project targeting .NET Framework and .NET Core at the same time, you can precompile it by 
-specifying the comma or semicolon separated bin directories like `-b bin;bin_dotnet` and the corresponding 
-target frameworks like `-t net48;net10.0`.
+specifying the comma or semicolon separated bin directories like `-b bin,bin_dotnet` and the corresponding 
+target frameworks like `-t net48,net10.0`.

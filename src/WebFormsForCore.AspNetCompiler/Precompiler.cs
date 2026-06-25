@@ -258,8 +258,9 @@ public class Precompiler
                 if (i >= 1)
                 {
                     var targetBin = Path.Combine(targetDir, binFolders[i]);
-                    CopyDirectory(Path.Combine(tempTargetDir, binFolders[i]), targetBin, true);
-                    Directory.Delete(tempTargetDir, true);
+                    var tempTargetBin = Path.Combine(tempTargetDir, binFolders[i]);
+                    if (Directory.Exists(tempTargetBin)) CopyDirectory(tempTargetBin, targetBin, true);
+                    if (Directory.Exists(tempTargetDir)) Directory.Delete(tempTargetDir, true);
                 }
             }
         }
