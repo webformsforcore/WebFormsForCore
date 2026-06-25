@@ -2,7 +2,7 @@
   "profiles": {
     "Windows": {
       "commandName": "Project",
-      "commandLineArgs": "-v / -p C:\\GitHub\\Test\\WebApplication1 -b bin;bin_dotnet -f -t net48;net10.0 C:\\GitHub\\Test\\publish",
+      "commandLineArgs": "-v / -p C:\\GitHub\\Test\\WebApplication1 -b bin,bin_dotnet -f -t net48,net10.0 C:\\GitHub\\Test\\publish",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

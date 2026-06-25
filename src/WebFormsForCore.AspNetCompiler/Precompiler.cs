@@ -178,7 +178,6 @@ public class Precompiler
         }
     }
 
-    static bool firstPass = false;
     static int pass = 0;
     static int reentrant = 0;
     public static int Precompile(string sourceVirtualDir, string sourcePhysicalDir, string targetDir, PrecompileParameter parameter, bool forceCleanBuild = false)
@@ -294,6 +293,7 @@ public class Precompiler
         //  Regex.IsMatch(targetFramework, "^(net)?[234][0-9.]+$", RegexOptions.Singleline);
 
         using var manager = new ClientBuildManager(sourceVirtualDir, sourcePhysicalDir, targetDir, par);
+        AssemblyLoaderNetCore.AdditionalPaths.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         manager.PrecompileApplication(new CBMCallback(), forceCleanBuild);
 
         AssemblyLoaderNetCore.Dispose();
@@ -664,6 +664,17 @@ public class Precompiler
         Exception formattableException = Precompiler.GetFormattableException(exception);
         if (formattableException != null)
             exception = formattableException;
+        else
+        {
+            var name = exception.GetType().Name;
+            while (name != "HttpCompileException" && name != "HttpParseException" &&
+                name != "ConfigurationException" && exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+                name = exception.GetType().Name;
+            }
+        }
+
         switch (exception.GetType().Name)
         {
             case "HttpCompileException":
@@ -700,9 +711,9 @@ public class Precompiler
     }
 
     private static void DumpCompileError(CompilerError error)
-	{
-		Precompiler.DumpError(error.FileName, error.Line, error.IsWarning, error.ErrorNumber, error.ErrorText);
-	}
+    {
+        Precompiler.DumpError(error.FileName, error.Line, error.IsWarning, error.ErrorNumber, error.ErrorText);
+    }
 
     public static Action<Exception> OnException { get; set; } = null;
     private static void DumpExceptionStack(Exception e)
@@ -756,17 +767,17 @@ public class Precompiler
         }
     }
 
-	private class CBMCallback : ClientBuildManagerCallback
+    private class CBMCallback : ClientBuildManagerCallback
     {
         public override void ReportCompilerError(CompilerError error)
-		{
-			Precompiler.DumpCompileError(error);
-		}
+        {
+            Precompiler.DumpCompileError(error);
+        }
 
         public override void ReportParseError(ParserError error)
-		{
-			Precompiler.DumpError(error.VirtualPath, error.Line, false, "ASPPARSE", error.ErrorText);
-		}
+        {
+            Precompiler.DumpError(error.VirtualPath, error.Line, false, "ASPPARSE", error.ErrorText);
+        }
         public override void ReportProgress(string message) { }
         public override object InitializeLifetimeService() => (object)null;
 

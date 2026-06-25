@@ -38,7 +38,7 @@ public class AspNetCoreCompiler : Task
     public bool Clean { get; set; }
     public bool Updateable { get; set; }
     public bool FixedNames { get; set; }
-    public bool ShowErrorStack { get; set; } = false;
+    public bool ShowErrorStack { get; set; } = true;
     public ITaskItem KeyFile { get; set; }
     public ITaskItem KeyContainer { get; set; }
     public bool DelaySing { get; set; } = false;
@@ -68,6 +68,16 @@ public class AspNetCoreCompiler : Task
         Exception formattableException = GetFormattableException(exception);
         if (formattableException != null)
             exception = formattableException;
+        else
+        {
+            var name = exception.GetType().Name;
+            while (name != "HttpCompileException" && name != "HttpParseException" &&
+                name != "ConfigurationException" && exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+                name = exception.GetType().Name;
+            }
+        }
         switch (exception.GetType().Name)
         {
             case "HttpCompileException":
@@ -110,7 +120,7 @@ public class AspNetCoreCompiler : Task
         string str = $"[{e.GetType().Name}]";
         if (e.Message != null && e.Message.Length > 0)
             str = $"{str}: {e.Message}";
-        if (Log != null && !LogToConsole) Log.LogWarning(str + Environment.NewLine + e.StackTrace);
+        if (Log != null && !LogToConsole) Log.LogError(str + Environment.NewLine + e.StackTrace);
         else
         {
             Console.Error.WriteLine();

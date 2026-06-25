@@ -37,7 +37,7 @@ public class AssemblyResolver: DefaultAssemblyResolver {
 		if (assembly != null)
 			return assembly;
 
-		if (SearchGAC)
+		if (SearchGAC && name.Name == "mscorlib")
 		{
 			var gacdir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
 				"Microsoft.NET", "assembly");

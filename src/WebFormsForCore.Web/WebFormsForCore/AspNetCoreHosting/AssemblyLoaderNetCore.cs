@@ -43,15 +43,14 @@ namespace System.Web.Hosting
 		}
 		
 		static string exepath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-		static string[] extensions = new string[] { exepath };
+		public static List<string> AdditionalPaths = new List<string>();
 		static string tempPath = null;
 		public static string TempPath {
 			get => tempPath;
 			set
 			{
 				tempPath = value;
-				extensions = new string[] { exepath, tempPath };
-				paths = null;
+ 				paths = null;
 			}
 		}
 
@@ -60,7 +59,7 @@ namespace System.Web.Hosting
 			ProbingPaths
 				.Replace('\\', Path.DirectorySeparatorChar)
 				.Split(';')
-				.Concat(extensions)
+				.Concat(new[] { exepath, tempPath })
 				.ToArray();
 		public static bool UseNetFXGAC = false;
 
@@ -68,10 +67,13 @@ namespace System.Web.Hosting
 		{
             //Debugger.Break();
             Debug.WriteLine($"Resolving {name.Name} in {context.Name}");
-            //Console.WriteLine($"Resolving {name.Name} in {context.Name}");
+			//Console.WriteLine($"Resolving {name.Name} in {context.Name}");
 
-			var paths = Paths;
-			if (UseNetFXGAC)
+			var paths = Paths
+				.Concat(AdditionalPaths)
+				.Where(p => !string.IsNullOrEmpty(p));
+
+            if (UseNetFXGAC)
 			{
 				var winAssemblyDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
 					"Microsoft.NET", "assembly");
@@ -85,10 +87,9 @@ namespace System.Web.Hosting
 				var gacNative = OSInfo.Is64 ? "GAC_64" : "GAC_32";
 				paths = paths
 					.Concat(new[] { Path.Combine(winAssemblyDir, "GAC_MSIL", subdir),
-						Path.Combine(winAssemblyDir, gacNative, subdir) })
-					.ToArray();
+						Path.Combine(winAssemblyDir, gacNative, subdir) });
 			}
-			var assembly = paths
+			var files = paths
 				.Select(p =>
 				{
 					var relativename = Path.Combine(p, $"{name.Name}.dll");
@@ -99,7 +100,8 @@ namespace System.Web.Hosting
 						Name = relativename
 					};
 				})
-				.Where(p => File.Exists(p.FullName))
+				.Where(p => File.Exists(p.FullName));
+			var assembly = files
 				.Select(p => context.LoadFromAssemblyPath(p.FullName))
 				.Where(assembly => assembly != null &&
 					(name.Version == null || assembly.GetName().Version >= name.Version))

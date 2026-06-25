@@ -39,7 +39,8 @@ public class AssemblyStripper
 			{
 				var aname = baseType.Module.Assembly.Name.Name;
 				if (aname == "System.Drawing" ||
-					aname == "System.Drawing.Common")
+					aname == "System.Drawing.Common" ||
+					aname == "System.Design")
 					throw new AssemblyResolutionException(baseType.Module.Assembly.Name);
 			}
 		} catch (AssemblyResolutionException ex)
