@@ -132,8 +132,9 @@ public class AspNetCoreCompiler : Task
             StrongNameKeyContainer = KeyContainer?.ItemSpec
         };
         par.ExcludedVirtualPaths.AddRange(ExcludeVirtualPaths
-            .Select(item => !string.IsNullOrEmpty(item?.ItemSpec) ? Path.GetFullPath(item.ItemSpec) : null)
-            .Where(path => !string.IsNullOrEmpty(path)));
+            ?.Select(item => !string.IsNullOrEmpty(item?.ItemSpec) ? Path.GetFullPath(item.ItemSpec) : null)
+            .Where(path => !string.IsNullOrEmpty(path))
+            ?? Enumerable.Empty<string>());
         par.PrecompilationFlags = default;
         if (Clean) par.PrecompilationFlags |= PrecompileFlags.Clean;
         if (Force) par.PrecompilationFlags |= PrecompileFlags.OverwriteTarget;
@@ -217,7 +218,7 @@ public class AspNetCoreCompiler : Task
             p.Start();
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
-            p.WaitForExit(30000);
+            p.WaitForExit(60000);
             return !hasErrors;
         } else
         {

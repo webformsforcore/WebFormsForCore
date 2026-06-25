@@ -34,7 +34,7 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <PackageOutputPath>..\..\nupkg</PackageOutputPath>
         <WarningsAsErrors>CS4014</WarningsAsErrors>
-
+        <DebufType>embedded</DebufType>
     </PropertyGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0' OR $(TargetFramework) == 'net10.0'">

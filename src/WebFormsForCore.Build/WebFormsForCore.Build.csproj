@@ -29,11 +29,9 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IncludeSymbols>true</IncludeSymbols>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <Version>1.6.0</Version>
         <AssemblyVersion>10.0.24.0</AssemblyVersion>
         <AssemblyFileVersion>10.0.24.0</AssemblyFileVersion>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -42,6 +40,10 @@
         <AssemblySearchPath_UseCandidateAssemblyFiles>false</AssemblySearchPath_UseCandidateAssemblyFiles>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
+        <DebugType>embedded</DebugType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework) == 'net48'">
@@ -97,16 +99,15 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
 		<PackageReference Include="System.Linq" Version="4.3.0" GeneratePathProperty="true" />
-	</ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300" PrivateAssets="All" />
+    </ItemGroup>
 	
 	<Target Name="CopyPackageAssembly" AfterTargets="Build" Condition="'$(TargetFramework)' == 'netstandard2.0'">
 		<ItemGroup>
 			<PkgAssembly Include="$(PkgSystem_Linq)\lib\netstandard1.6\System.Linq.dll" />
 		</ItemGroup>
 
-		<Copy
-		  SourceFiles="@(PkgAssembly)"
-		  DestinationFolder="$(OutputPath)" />
+		<Copy SourceFiles="@(PkgAssembly)" DestinationFolder="$(OutputPath)" />
 	</Target>
 	
     <ItemGroup Condition="$(TargetFramework) == 'net48'">
