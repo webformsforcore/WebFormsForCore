@@ -42,8 +42,8 @@
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <DebugType>embedded</DebugType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
+        <!--<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>-->
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework) == 'net48'">
