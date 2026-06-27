@@ -104,11 +104,12 @@ assemblies after build, that would otherwise cause the types load to fail. This 
 packages you can use third party libraries that reference System.Web. You might still encounter issues, since the
 third party libraries will be compiled against .NET Framework and not .NET Core.
 
-The Build package also provides a MSBuild Task `AspNetCoreCompiler` similar to the standard `AspNetCompiler`
+The Build package also provides an MSBuild Task `AspNetCoreCompiler` similar to the standard `AspNetCompiler`
 Task that wraps the .NET Framework `aspnet_compiler.exe`. In addition to the attributes of `AspNetCormpiler`,
 `AspNetCoreCompiler` supports the attribute `BinFolder` and `TargetFramework`. You can also specify a comma
 separated list of BinFolder's and TargetFramework's, if you project is dual running on .NET Framework and
-.NET Core with specific bin folders.
+.NET Core with specific bin folders. You can also use this aspnetcore_compiler.exe form the command line by installing the dotnet
+      tool `dotnet tool install -g WebFormsForCore.AspNetCompiler`.
 
 Finally configure ASP.NET Core to use WebForms in the initialization code Program.cs like so:
 ```
