@@ -64,7 +64,7 @@ internal static class AssemblyRef
 	internal const string SystemConfiguration = "System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
 	//internal const string SystemConfiguration = "WebFormsForCore.Configuration";
-	internal const string SystemConfiguration = "System.Configuration.ConfigurationManager, Version=10.5.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51";
+	internal const string SystemConfiguration = "System.Configuration.ConfigurationManager, Version=13.5.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51";
 #endif
 
 	internal const string SystemConfigurationInstall = "System.Configuration.Install, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
