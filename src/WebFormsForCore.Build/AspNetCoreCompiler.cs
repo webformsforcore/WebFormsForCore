@@ -177,8 +177,6 @@ public class AspNetCoreCompiler : Task
     }
     public override bool Execute()
     {
-        Debugger.Launch();
-
         if (!IsNet10)
         {
             //LogMessage($"Starting dotnet...");

@@ -664,8 +664,6 @@ namespace System.Web.Compilation
         {
             Debug.Trace("CBM", "Unload");
 
-            AssemblyLoaderNetCore.Dispose();
-
             BuildManagerHost host = _host;
             if (host != null)
             {

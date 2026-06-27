@@ -31,8 +31,7 @@ namespace System.Web.Hosting
 
 		public static void Dispose()
 		{
-            var assembly = Assembly.GetExecutingAssembly();
-            var alc = AssemblyLoadContext.GetLoadContext(assembly);
+            var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
             alc.Resolving -= Resolve;
         }
 
