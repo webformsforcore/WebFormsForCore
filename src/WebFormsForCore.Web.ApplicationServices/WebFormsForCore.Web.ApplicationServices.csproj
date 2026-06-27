@@ -25,8 +25,8 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
         <Version>1.6.0</Version>
-        <AssemblyVersion>10.0.24.0</AssemblyVersion>
-        <FileVersion>10.0.24.0</FileVersion>
+        <AssemblyVersion>10.0.25.0</AssemblyVersion>
+        <FileVersion>10.0.25.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
