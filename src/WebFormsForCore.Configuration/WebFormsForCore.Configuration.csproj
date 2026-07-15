@@ -33,7 +33,7 @@
         <EmbedUntrackedSources>false</EmbedUntrackedSources>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-        <RestoreSources>$(RestoreSources);../../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
+        <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

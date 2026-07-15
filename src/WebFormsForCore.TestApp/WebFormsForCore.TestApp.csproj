@@ -151,7 +151,7 @@
     </Target>
 
     <Target Name="CopyWebConfig" AfterTargets="Build">
-        <Copy SourceFiles="Core.Web.Config" DestinationFiles="bin_dotnet\Web.config" />
+        <Copy SourceFiles="Core.Web.config" DestinationFiles="bin_dotnet\Web.config" />
     </Target>
 
     <Target Name="CopyjQuery" AfterTargets="Build">
