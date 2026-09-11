@@ -137,7 +137,38 @@ public class Program
 Usually this will cause WebFormsForCore to handle all WebForms requests, like aspx pages etc.
 Requests not specific to WebForms will be handled by ASP.NET Core. If you want all requests to
 be handled by WebForms, for example if your application uses routing and friendly urls, you might
-want to call ```app.UseWebForms(opt => opt.HandleAllRequestsWithWebForms())``` 
+want to call 
+```
+app.UseWebForms(opt => opt.HandleAllRequestsWithWebForms())
+```
+
+### Session State
+WebFormsForCore supports an WebForms SessionStateProvider using the ASP.NET Core Session
+State. To use it, add the following to your Web.config:
+```
+<system.web>
+    <sessionState mode="Custom" customProvider="AspNetCoreSession">
+        <providers>
+            <add name="AspNetCoreSession" type="System.Web.SessionState.AspNetCoreSessionProvider, System.Web" />
+        </providers>
+    </sessionState>
+</system.web>
+```
+and initialize the ASP.NET Core Session in your Program.cs like so:
+```
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
+var app = builder.Build();
+
+app.UseSession();
+
+app.UseWebForms();
+
+app.Run();
+```
 
 ## Conflicts with Existing Packages
 Currently there might be some conflicts with the packages System.Web.dll, System.Drawing.dll &
