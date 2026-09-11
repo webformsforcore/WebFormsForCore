@@ -45,4 +45,4 @@ cd ..\..\WebFormsForCore.AspNetCompiler
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion% -p:PackAsTool=false
 
-cd ..\..\..
+cd ..\..
