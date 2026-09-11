@@ -153,9 +153,9 @@ builder.Services.AddSession();
 
 var app = builder.Build();
 
-app.UseAspNetCoreSessionProvider();
-eSession();
+app.UseSession();
 
+app.UseAspNetCoreSessionProvider();
 app.UseWebForms();
 
 app.Run();
