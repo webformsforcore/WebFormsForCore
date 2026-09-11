@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <LangVersion>11</LangVersion>
@@ -81,6 +81,18 @@
         <PackageReference Include="System.Text.Json" Version="10.0.0" />
         <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
         <PackageReference Include="System.ServiceModel.Primitives" Version="10.0.652802" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="11.0.0" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0">
+            <Aliases>NET</Aliases>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+        <PackageReference Include="System.Text.Json" Version="11.0.0" />
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+        <PackageReference Include="System.ServiceModel.Primitives" Version="11.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net48'">

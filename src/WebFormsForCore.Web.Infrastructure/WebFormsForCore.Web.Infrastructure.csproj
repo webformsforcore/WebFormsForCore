@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <LangVersion>13</LangVersion>
@@ -59,6 +59,10 @@
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" Aliases="NET" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0" Aliases="NET" />
+    </ItemGroup>
+    
     <ItemGroup>
         <None Include="..\..\README.md">
             <Pack>True</Pack>

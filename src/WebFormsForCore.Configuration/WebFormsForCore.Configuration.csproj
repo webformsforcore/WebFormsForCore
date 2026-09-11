@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <LangVersion>11</LangVersion>
+        <LangVersion>14</LangVersion>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_CONFIGURATION;TRACE;RETAIL;WIN32</DefineConstants>
         <DefineConstants>$(DefineConstants);WebFormsForCore</DefineConstants>
@@ -25,8 +25,8 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
         <Version>1.6.1</Version>
-        <AssemblyVersion>13.5.0.0</AssemblyVersion>
-        <FileVersion>13.5.0.0</FileVersion>
+        <AssemblyVersion>14.5.0.0</AssemblyVersion>
+        <FileVersion>14.5.0.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -53,18 +53,26 @@
         <PackageReference Include="System.CodeDom" Version="8.0.0" />
         <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
         <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.3" />
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.4" />
         <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
         <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.6" />
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
         <PackageReference Include="System.CodeDom" Version="10.0.0" />
         <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
         <PackageReference Include="System.Security.Permissions" Version="10.0.0" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+        <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="11.0.0" />
+        <PackageReference Include="System.CodeDom" Version="11.0.0" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+        <PackageReference Include="System.Security.Permissions" Version="11.0.0" />
+    </ItemGroup>
+    
     <ItemGroup>
         <Compile Remove="System\Configuration\TypeUtil.cs" />
         <Compile Remove="System\System.Configuration\ConfigurationException.cs" />
