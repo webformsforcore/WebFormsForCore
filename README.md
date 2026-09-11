@@ -143,7 +143,7 @@ app.UseWebForms(opt => opt.HandleAllRequestsWithWebForms())
 ```
 
 ### Session State
-WebFormsForCore supports an WebForms SessionStateProvider using the ASP.NET Core Session
+WebFormsForCore supports a WebForms SessionStateProvider using the ASP.NET Core Session
 State. To use it, add the following to your Web.config:
 ```
 <system.web>
