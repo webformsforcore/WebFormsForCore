@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Core = Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using System.Web.SessionState;
 using System.Runtime.Loader;
 
 namespace Microsoft.AspNetCore.Builder
@@ -153,8 +155,28 @@ namespace Microsoft.AspNetCore.Builder
 			AssemblyLoaderNetCore.Init();
 			if (optionsBuilder == null) optionsBuilder = options => { };
 			return builder.UseMiddleware<WebFormsMiddleware>(optionsBuilder);
-		}
-	}
+        }
+        public static IApplicationBuilder UseAspNetCoreSessionProvider(this IApplicationBuilder builder)
+        {
+            AssemblyLoaderNetCore.Init();
+
+            // Equivalent to a web.config entry of:
+            // <sessionState mode="Custom" customProvider="AspNetCoreSession">
+            //     <providers>
+            //         <add name="AspNetCoreSession" type="System.Web.SessionState.AspNetCoreSessionProvider, System.Web" />
+            //     </providers>
+            // </sessionState>
+            SessionStateModule.ProviderOverride = () =>
+            {
+                var provider = new AspNetCoreSessionProvider();
+                provider.Initialize("AspNetCoreSession", new NameValueCollection());
+                return provider;
+            };
+
+			return builder;
+        }
+
+    }
 }
 
 #endif
