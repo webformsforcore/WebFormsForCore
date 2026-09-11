@@ -30,8 +30,8 @@
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IncludeSymbols>true</IncludeSymbols>
         <Version>1.6.1</Version>
-        <AssemblyVersion>10.0.26.0</AssemblyVersion>
-        <AssemblyFileVersion>10.0.26.0</AssemblyFileVersion>
+        <AssemblyVersion>10.0.27.0</AssemblyVersion>
+        <AssemblyFileVersion>10.0.27.0</AssemblyFileVersion>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <RestoreSources>$(RestoreSources);../../nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>

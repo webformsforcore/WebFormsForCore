@@ -331,8 +331,13 @@ namespace System.Web.SessionState {
             return iManager;
         }
 
+        // Lets a host (e.g. the ASP.NET Core hosting layer) register a session-state store
+        // programmatically instead of requiring a <sessionState mode="Custom"> web.config entry.
+        // When set, it takes precedence over whatever <sessionState> config specifies.
+        public static Func<SessionStateStoreProviderBase> ProviderOverride { get; set; }
+
         void InitModuleFromConfig(HttpApplication app, SessionStateSection config) {
-            if (config.Mode == SessionStateMode.Off) {
+            if (ProviderOverride == null && config.Mode == SessionStateMode.Off) {
                 return;
             }
 
@@ -344,6 +349,12 @@ namespace System.Web.SessionState {
             app.EndRequest += new EventHandler(this.OnEndRequest);
 
             _partitionResolver = InitPartitionResolver(config);
+
+            if (ProviderOverride != null) {
+                _store = ProviderOverride();
+                _idManager = InitSessionIDManager(config);
+                return;
+            }
 
             switch (config.Mode) {
                 case SessionStateMode.InProc:
