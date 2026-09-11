@@ -98,7 +98,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
 		<PackageReference Include="System.Linq" Version="4.3.0" GeneratePathProperty="true" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
     </ItemGroup>
 	
 	<Target Name="CopyPackageAssembly" AfterTargets="Build" Condition="'$(TargetFramework)' == 'netstandard2.0'">
