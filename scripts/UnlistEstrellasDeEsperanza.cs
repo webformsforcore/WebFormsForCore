@@ -9,6 +9,7 @@ public class Program {
     const string Packages = "Web, Web.Services, Web.RegularExpressions, Build, Web.ApplicationServices, Web.Extensions, " +
         "Serialization.Formatters, Configuration, Drawing, Compilers, Web.Mobile, Web.Infrastructure, WebGrease, Web.Optimization, " +
         "AjaxControlToolkit, Web.Optimization.WebForms, AjaxControlToolkit.StaticResources, AjaxControlToolkit.HtmlEditor.Sanitizer";
+    const int Delay = 15000;
 
     const string StartVersion = "1.3.17";
 
@@ -38,7 +39,7 @@ public class Program {
                 var body = await response.Content.ReadAsStringAsync();
                 if (!string.IsNullOrWhiteSpace(body)) Console.WriteLine(body);
                 
-                Thread.Sleep(15000);
+                Thread.Sleep(Delay);
             }
         }
 
