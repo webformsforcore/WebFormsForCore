@@ -11,7 +11,7 @@ public class Program {
         "AjaxControlToolkit, Web.Optimization.WebForms, AjaxControlToolkit.StaticResources, AjaxControlToolkit.HtmlEditor.Sanitizer";
     const int Delay = 15000;
 
-    const string StartVersion = "1.3.17";
+    const int StartN = 0;
     static int TotalPackages = (Versions.Count(ch => ch == ',') + 1) * (Packages.Count(ch => ch == ',') + 1); 
 
     public static async Task Main(string[] args) {
@@ -21,15 +21,18 @@ public class Program {
         client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", apiKey);
 
         bool success = true;
-        var startVersion = new Version(StartVersion);
         int n = 0;
-        foreach (var version in Versions.Split(',', StringSplitOptions.TrimEntries))
+        foreach (var package in Packages.Split(',')
+          .Select(p => "EstrellasDeEsperanza.WebFormsForCore." + p.Trim()))
         {
-            if (Version.TryParse(version, out Version? ver) && ver > startVersion) continue;
-
-            foreach (var package in Packages.Split(',')
-                .Select(p => "EstrellasDeEsperanza.WebFormsForCore." + p.Trim()))
+            foreach (var version in Versions.Split(',', StringSplitOptions.TrimEntries))
             {
+                if (n < StartN)
+                {
+                    n++;
+                    continue;
+                }
+
                 var url = $"https://www.nuget.org/api/v2/package/{package}/{version}";
 
                 Console.WriteLine($"DELETE {url}");
@@ -42,7 +45,7 @@ public class Program {
                 if (!string.IsNullOrWhiteSpace(body)) Console.WriteLine(body);
 
                 n++;
-                Console.WriteLine($"{(n * 100) / TotalPackages} %");
+                Console.WriteLine($"{(n * 100) / TotalPackages} %; n = {n}");
 
                 Thread.Sleep(Delay);
             }
