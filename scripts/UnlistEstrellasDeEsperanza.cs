@@ -12,6 +12,7 @@ public class Program {
     const int Delay = 15000;
 
     const string StartVersion = "1.3.17";
+    static int TotalPackages = (Versions.Count(ch => ch == ',') + 1) * (Packages.Count(ch => ch == ',') + 1); 
 
     public static async Task Main(string[] args) {
         var apiKey = File.ReadAllText(@"..\..\..\..\NugetApiKey.txt").Trim();
@@ -21,6 +22,7 @@ public class Program {
 
         bool success = true;
         var startVersion = new Version(StartVersion);
+        int n = 0;
         foreach (var version in Versions.Split(',', StringSplitOptions.TrimEntries))
         {
             if (Version.TryParse(version, out Version? ver) && ver > startVersion) continue;
@@ -38,7 +40,10 @@ public class Program {
                 }
                 var body = await response.Content.ReadAsStringAsync();
                 if (!string.IsNullOrWhiteSpace(body)) Console.WriteLine(body);
-                
+
+                n++;
+                Console.WriteLine($"{(n * 100) / TotalPackages} %");
+
                 Thread.Sleep(Delay);
             }
         }
