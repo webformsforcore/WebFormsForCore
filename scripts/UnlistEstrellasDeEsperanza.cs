@@ -5,10 +5,10 @@
 public class Program {
     const string Versions = "1.5.2, 1.5.1, 1.5.0, 1.4.9, 1.4.8, 1.4.7, 1.4.6, 1.4.5, 1.4.4, 1.4.2, 1.4.1, 1.4.0, " +
        "1.3.16, 1.3.15, 1.3.14, 1.3.13, 1.3.12, 1.3.11, 1.3.10, 1.3.9, 1.3.8, 1.3.7, 1.3.6, 1.3.5, 1.3.4, 1.3.3, 1.3.2, 1.3.1, 1.3.0, " +
-       "1.2.9, 1.2.8, 1.2.7, 1.2.6, 1.2.5, 1.2.4, 1.2.2, 1.2.1, 1.2.0, 1.1.3, 1.1.1-beta, 1.1.0-beta, 1.0.0";
+       "1.2.9, 1.2.8, 1.2.7, 1.2.6, 1.2.4, 1.2.2, 1.2.1, 1.2.0, 1.1.3, 1.1.1-beta, 1.1.0-beta, 1.0.0";
     const string Packages = "Web, Web.Services, Web.RegularExpressions, Build, Web.ApplicationServices, Web.Extensions, " +
-        "Serialization.Formatters, Configuration, Drawing, Compilers, Web.Mobile, Web.Infrastructure, WebGrease, Web.Optimization, " +
-        "AjaxControlToolkit, Web.Optimization.WebForms, AjaxControlToolkit.StaticResources, AjaxControlToolkit.HtmlEditor.Sanitizer";
+       "Serialization.Formatters, Configuration, Drawing, Compilers, Web.Mobile, Web.Infrastructure, WebGrease, Web.Optimization, " +
+       "AjaxControlToolkit, Web.Optimization.WebForms, AjaxControlToolkit.StaticResources, AjaxControlToolkit.HtmlEditor.Sanitizer";
     const int Delay = 15000;
 
     const int StartN = 0;
