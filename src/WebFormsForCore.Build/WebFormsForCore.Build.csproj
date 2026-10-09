@@ -126,7 +126,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0' OR $(TargetFramework) == 'net10.0' OR $(TargetFramework) == 'net11.0'">
-        <PackageReference Include="WebFormsForCore.Web" Version="1.6.8" />
+        <PackageReference Include="WebFormsForCore.Web" Version="1.6.7" />
+        <!-- Web depends on Compilers transitively; its lib folder contains native DLLs (DiaSymReader) that must not be passed to csc as references -->
+        <PackageReference Include="WebFormsForCore.Compilers" Version="1.6.8" ExcludeAssets="compile" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net10.0' OR $(TargetFramework) == 'net11.0'">
