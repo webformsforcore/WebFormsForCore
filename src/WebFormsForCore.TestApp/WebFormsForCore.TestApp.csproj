@@ -53,7 +53,7 @@
         <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
         <ProjectReference Include="..\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj" />-->
         <PackageReference Include="WebFormsForCore.Web" Version="1.6.7" />
-        <PackageReference Include="WebFormsForCore.Compilers" Version="1.6.7" />
+        <PackageReference Include="WebFormsForCore.Compilers" Version="1.6.7" ExcludeAssets="compile" />
         <PackageReference Include="WebFormsForCore.Web.Services" Version="1.6.7" />
         <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.6.7" />
         <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.6.7" />
