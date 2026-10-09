@@ -1494,6 +1494,17 @@ namespace System.Web.UI
 
 			Debug.Assert(!String.IsNullOrEmpty(assemblyPath));
 
+#if NETCOREAPP
+				// When targeting .NET Framework, never reference implementation assemblies of the host (.NET Core) runtime,
+				// use the facades of the target framework instead, or skip the assembly if there is none.
+				if (System.Web.Hosting.AssemblyLoaderNetCore.UseNetFXGAC && AssemblyResolver.IsInRuntimeDirectory(assemblyPath))
+				{
+					assemblyPath = AssemblyResolver.FindTargetFrameworkFacade(assembly.GetName().Name);
+					if (assemblyPath == null)
+						return;
+				}
+#endif
+
 			// Unless it's already in the list, add it
 			if (!toList.Contains(assemblyPath))
 			{

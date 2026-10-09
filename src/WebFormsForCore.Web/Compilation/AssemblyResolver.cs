@@ -508,6 +508,33 @@ namespace System.Web.Compilation {
             return ReferenceAssemblyType.NonFrameworkAssembly;
         }
 
+#if NETCOREAPP
+        /// <summary>
+        /// True if the path is inside the directory of the running .NET runtime. Assemblies from there are
+        /// implementation assemblies of the host runtime and can't be referenced when targeting .NET Framework.
+        /// </summary>
+        internal static bool IsInRuntimeDirectory(string path) {
+            if (string.IsNullOrEmpty(path)) return false;
+            var runtimeDir = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            return !string.IsNullOrEmpty(runtimeDir) &&
+                string.Equals(Path.GetDirectoryName(path), runtimeDir, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Finds a facade assembly (e.g. netstandard.dll or System.Runtime.dll) for the .NET Framework target.
+        /// Returns null if the target framework has no such assembly.
+        /// </summary>
+        internal static string FindTargetFrameworkFacade(string simpleName) {
+            foreach (string dir in TargetFrameworkReferenceAssemblyPaths) {
+                foreach (string d in new[] { dir, Path.Combine(dir, "Facades") }) {
+                    string file = Path.Combine(d, simpleName + ".dll");
+                    if (File.Exists(file)) return file;
+                }
+            }
+            return null;
+        }
+#endif
+
         private static IList<string> GetPathToReferenceAssemblies(FrameworkName frameworkName){
             return ToolLocationHelper.GetPathToReferenceAssemblies(frameworkName);
         }

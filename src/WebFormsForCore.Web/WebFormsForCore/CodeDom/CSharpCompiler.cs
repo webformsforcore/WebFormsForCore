@@ -157,6 +157,12 @@ internal class CSharpCompiler : Compiler
 			// swallow any exceptions if we cannot find the assembly
 		}
 
+		// When targeting .NET Framework, use its System.Runtime facade instead of the host runtime's
+		if (System.Web.Hosting.AssemblyLoaderNetCore.UseNetFXGAC && System.Web.Compilation.AssemblyResolver.IsInRuntimeDirectory(systemRuntimeAssemblyPath))
+		{
+			systemRuntimeAssemblyPath = System.Web.Compilation.AssemblyResolver.FindTargetFrameworkFacade("System.Runtime");
+		}
+
 		if (systemRuntimeAssemblyPath != null)
 		{
 			allArgsBuilder.Append(string.Format("/R:\"{0}\" ", systemRuntimeAssemblyPath));
