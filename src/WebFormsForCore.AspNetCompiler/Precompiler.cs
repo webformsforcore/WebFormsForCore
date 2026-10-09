@@ -102,7 +102,7 @@ public class Precompiler
         }
         if (!flag)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3); 
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             Console.WriteLine(string.Format((IFormatProvider)CultureInfo.CurrentCulture, CompilerResources.brand_text, new object[1]
             {
         (object) version
@@ -214,6 +214,8 @@ public class Precompiler
 
             var precompileType = selfAssembly.GetType("System.Web.Compilation.Precompiler");
             var precompileMethod = precompileType.GetMethod("PrecompileInternal");
+            CopyEventStatic(typeof(Precompiler), precompileType, "OnError");
+            CopyEventStatic(typeof(Precompiler), precompileType, "OnException");
 
             try
             {
@@ -259,7 +261,7 @@ public class Precompiler
 
                 var tempTargetDir = targetDir;
                 if (i >= 1) tempTargetDir = Path.Combine(targetDir, binFolders[i], "_AspNetCompiler");
-                if (!string.IsNullOrEmpty(tempTargetDir))Directory.CreateDirectory(tempTargetDir);
+                if (!string.IsNullOrEmpty(tempTargetDir)) Directory.CreateDirectory(tempTargetDir);
 
                 Precompile(sourceVirtualDir, sourcePhysicalDir, tempTargetDir, par, i >= 1);
 
@@ -303,6 +305,7 @@ public class Precompiler
 
         using var manager = new ClientBuildManager(sourceVirtualDir, sourcePhysicalDir, targetDir, par);
         AssemblyLoaderNetCore.AdditionalPaths.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
         manager.PrecompileApplication(new CBMCallback(), forceCleanBuild);
 
         AssemblyLoaderNetCore.Dispose();
@@ -774,6 +777,31 @@ public class Precompiler
             Console.Write(errorNumber + ": ");
             Console.WriteLine(message);
         }
+    }
+    static void CopyEventStatic(Type source, Type dest, string eventName)
+    {
+        var field = source.GetProperty(eventName, BindingFlags.Static | BindingFlags.Public);
+        var destField = dest.GetProperty(eventName, BindingFlags.Static | BindingFlags.Public);
+
+        if (field is null)
+            throw new InvalidOperationException(
+                $"No backing field found for event '{eventName}'.");
+
+        if (!typeof(Delegate).IsAssignableFrom(field.PropertyType))
+            throw new InvalidOperationException(
+                $"'{eventName}' is not backed by a delegate field.");
+
+        if (destField is null)
+            throw new InvalidOperationException(
+                $"No backing field found for event '{eventName}'.");
+
+        if (!typeof(Delegate).IsAssignableFrom(destField.PropertyType))
+            throw new InvalidOperationException(
+                $"'{eventName}' is not backed by a delegate field.");
+
+        // var existing = (Delegate?)destField.GetValue(null);
+        var handlers = (Delegate?)field.GetValue(null);
+        destField.SetValue(null, handlers); // Delegate.Combine(existing, handlers));
     }
 
     private class CBMCallback : ClientBuildManagerCallback

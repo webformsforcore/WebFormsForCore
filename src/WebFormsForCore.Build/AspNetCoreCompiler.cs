@@ -168,8 +168,6 @@ public class AspNetCoreCompiler : Task
         var sourcePath = VirtualPath?.ItemSpec;
         if (string.IsNullOrEmpty(sourcePath)) sourcePath = MetabasePath?.ItemSpec;
 
-        Debugger.Launch();
-
         Precompiler.Precompile(sourcePath, physicalPath, targetPath, par, Force);
 
         Precompiler.OnException -= LogErrors;
@@ -234,11 +232,12 @@ public class AspNetCoreCompiler : Task
                     } else LogMessage(args.Data);
                 }
             };
+
             p.EnableRaisingEvents = true;
             p.Start();
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
-            p.WaitForExit(60000);
+            p.WaitForExit(5*60000);
             return !hasErrors;
         } else
         {
