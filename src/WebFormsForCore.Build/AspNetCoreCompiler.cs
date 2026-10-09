@@ -177,7 +177,14 @@ public class AspNetCoreCompiler : Task
     }
     public override bool Execute()
     {
-        if (!IsNet10)
+        // Only the net10.0 build contains the precompiler (see ExecuteCore), all other builds
+        // (e.g. netstandard2.0, which MSBuild loads) have to run it in a separate dotnet process.
+#if NET10_0_OR_GREATER
+        const bool canRunInProcess = true;
+#else
+        const bool canRunInProcess = false;
+#endif
+        if (!IsNet10 || !canRunInProcess)
         {
             //LogMessage($"Starting dotnet...");
             var dll = Assembly.GetExecutingAssembly().Location;

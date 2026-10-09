@@ -533,6 +533,17 @@ namespace System.Web.Compilation {
             }
             return null;
         }
+
+        /// <summary>
+        /// When compiling for .NET Framework, maps a path inside the host runtime directory to the matching
+        /// assembly of the target framework (or null if there is none). Any other path is returned unchanged.
+        /// </summary>
+        internal static string MapToTargetFramework(string path, string simpleName) {
+            if (path != null && System.Web.Hosting.AssemblyLoaderNetCore.UseNetFXGAC && IsInRuntimeDirectory(path)) {
+                return FindTargetFrameworkFacade(simpleName);
+            }
+            return path;
+        }
 #endif
 
         private static IList<string> GetPathToReferenceAssemblies(FrameworkName frameworkName){

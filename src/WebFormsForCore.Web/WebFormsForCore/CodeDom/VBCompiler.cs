@@ -122,6 +122,14 @@ namespace WebFormsForCore.CodeDom.Compiler {
                 }
             }
 
+            // Like in the C# compiler, fall back to the core library of the running runtime. This is not done when
+            // targeting .NET Framework, where mscorlib.dll is already in the references.
+            if (String.IsNullOrWhiteSpace(coreAssemblyFileName) &&
+                !System.Web.Hosting.AssemblyLoaderNetCore.UseNetFXGAC &&
+                !System.Linq.Enumerable.Any(System.Linq.Enumerable.Cast<string>(parameters.ReferencedAssemblies), s => Path.GetFileName(s).Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase))) {
+                coreAssemblyFileName = typeof(object).Assembly.Location;
+            }
+
             if (!String.IsNullOrWhiteSpace(coreAssemblyFileName)) {
 
                 string asmblFilePath = coreAssemblyFileName.Trim();
@@ -144,6 +152,9 @@ namespace WebFormsForCore.CodeDom.Compiler {
                 // swallow any exceptions if we cannot find the assembly
             }
 
+            // When targeting .NET Framework, use its System.Runtime facade instead of the host runtime's
+            systemRuntimeAssemblyPath = System.Web.Compilation.AssemblyResolver.MapToTargetFramework(systemRuntimeAssemblyPath, "System.Runtime");
+
             if (systemRuntimeAssemblyPath != null && !parameters.ReferencedAssemblies.Contains(systemRuntimeAssemblyPath))
             {
                 parameters.ReferencedAssemblies.Add(systemRuntimeAssemblyPath);
@@ -153,10 +164,13 @@ namespace WebFormsForCore.CodeDom.Compiler {
 			string visualBasicAssemblyPath = null;
 			try
 			{
-                //var visualBasicAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-                var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
-                var visualBasicAssembly = alc.LoadFromAssemblyName(new AssemblyName("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
-                visualBasicAssemblyPath = visualBasicAssembly.Location;
+                // When targeting .NET Framework, VB implies Microsoft.VisualBasic, like in the original compiler
+                if (!System.Web.Hosting.AssemblyLoaderNetCore.UseNetFXGAC)
+                {
+                    var alc = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    var visualBasicAssembly = alc.LoadFromAssemblyName(new AssemblyName("Microsoft.VisualBasic"));
+                    visualBasicAssemblyPath = visualBasicAssembly.Location;
+                }
 			}
 			catch
 			{
@@ -182,6 +196,8 @@ namespace WebFormsForCore.CodeDom.Compiler {
 				// swallow any exceptions if we cannot find the assembly
 			}
 
+			systemAssemblyPath = System.Web.Compilation.AssemblyResolver.MapToTargetFramework(systemAssemblyPath, "System");
+
 			if (systemAssemblyPath != null && !parameters.ReferencedAssemblies.Contains(systemAssemblyPath))
 			{
 				parameters.ReferencedAssemblies.Add(systemAssemblyPath);
@@ -197,6 +213,11 @@ namespace WebFormsForCore.CodeDom.Compiler {
 #else
                 if (string.Compare(fileName, "Microsoft.VisualBasic.dll", StringComparison.OrdinalIgnoreCase) == 0)
                 {
+                    // When targeting .NET Framework, Visual Basic implies Microsoft.VisualBasic (as in the .NET Framework build),
+                    // there is no Microsoft.VisualBasic.Core.dll to go with it.
+                    if (System.Web.Hosting.AssemblyLoaderNetCore.UseNetFXGAC)
+                        continue;
+
                     allArgsBuilder.Append("/vbruntime:");
                     allArgsBuilder.Append("\"");
                     allArgsBuilder.Append(s);
