@@ -201,6 +201,14 @@ public class Precompiler
             //    Regex.IsMatch(targetFrameworks[0], "^(net)?[234][0-9.]+$", RegexOptions.Singleline);
             alc.LoadFromAssemblyPath(selfconfigdll);
             alc.LoadFromAssemblyPath(selfwebdll);
+            // Load the other System.Web.* assemblies into the same context as System.Web.dll. Otherwise they are
+            // resolved in the default context, which loads a second copy of System.Web.dll, and types like
+            // System.Web.UI.Control get a different identity (breaking e.g. ExtenderControl overrides).
+            foreach (var dll in Directory.GetFiles(selfpath, "System.Web.*.dll"))
+            {
+                try { alc.LoadFromAssemblyPath(dll); }
+                catch (Exception) { }
+            }
             var selfAssembly = alc.LoadFromAssemblyPath(self);
 
             var precompileType = selfAssembly.GetType("System.Web.Compilation.Precompiler");
