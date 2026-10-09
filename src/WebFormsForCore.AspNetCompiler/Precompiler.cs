@@ -102,9 +102,10 @@ public class Precompiler
         }
         if (!flag)
         {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3); 
             Console.WriteLine(string.Format((IFormatProvider)CultureInfo.CurrentCulture, CompilerResources.brand_text, new object[1]
             {
-        (object) "10.0.8"
+        (object) version
             }));
             Console.WriteLine(CompilerResources.header_text);
             Console.WriteLine(CompilerResources.copyright);
