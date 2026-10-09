@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,6 +19,7 @@ namespace WebFormsForCore.Build;
 
 public class AspNetCoreCompiler : Task
 {
+    const int TimeoutSeconds = 15 * 60;
     public ITaskItem VirtualPath { get; set; }
     public ITaskItem PhysicalPath { get; set; }
     public ITaskItem TargetPath { get; set; }
@@ -237,7 +239,7 @@ public class AspNetCoreCompiler : Task
             p.Start();
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
-            p.WaitForExit(5*60000);
+            p.WaitForExit(TimeoutSeconds * 1000);
             return !hasErrors;
         } else
         {
