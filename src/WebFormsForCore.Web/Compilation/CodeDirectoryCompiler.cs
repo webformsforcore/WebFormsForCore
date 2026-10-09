@@ -193,8 +193,10 @@ namespace System.Web.Compilation
 
 				// If there is already a loaded module with the same path, try to wait for it to be unloaded.
 				// Otherwise, we would end up loading this old assembly instead of the new one (VSWhidbey 554697)
+				// On .NET Core, AssemblyBuilder already loaded the new assembly into the current load context
+				// (results.CompiledAssembly), so it would always find its own assembly here and time out.
 				DateTime waitLimit = DateTime.UtcNow.AddMilliseconds(3000);
-				for (; ; )
+				for (; results.CompiledAssembly == null; )
 				{
 
 					if (OSInfo.IsWindows)

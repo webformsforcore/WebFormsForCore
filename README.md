@@ -12,7 +12,7 @@ also our motivation of creating WebFormsForCore.
 
 ## Support
 If you need support porting your project to .NET Core & WebFormsForCore, we provide support for
-40$ per hour. Please contact us via the LiveChat button on this page or via [WhatsApp](https://wa.me/41775080285).
+40$ per hour. Please contact us via the [LiveChat button on our webpage](https://webformsforcore.github.io/) or via [WhatsApp](https://wa.me/41775080285).
 There is also a tutorial on Youtube on [how to convert a sample WebForms application to WebFormsForCore](https://youtu.be/wgg-FziIfNg). 
 
 ## Source Code
