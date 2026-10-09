@@ -11,8 +11,8 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
-    <File Path="CreatePackages.bat" />
     <File Path="NugetApiKey.txt" />
+    <File Path="pack.bat" />
     <File Path="PushToNuget.bat" />
     <File Path="README.md" />
     <File Path="src/VersionInfo.cs" />
