@@ -3,7 +3,7 @@
     "Windows": {
       "commandName": "Project",
       "workingDirectory": "C:\\GitHub\\WebHostingCP\\HostPanelPro\\Sources\\HostPanelPro.WebPortal",
-      "commandLineArgs": "-v / -p . -b bin,bin_dotnet -f -t net48,net10.0 C:\\GitHub\\Test\\publish",
+      "commandLineArgs": "-f -v / -p . -b bin,bin_dotnet -t net48,net10.0 C:\\GitHub\\Test\\publish",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
