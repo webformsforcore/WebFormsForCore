@@ -165,9 +165,12 @@ public class AspNetCoreCompiler : Task
         if (!string.IsNullOrEmpty(physicalPath)) physicalPath = Path.GetFullPath(physicalPath);
         else physicalPath = null;
 
+        var sourcePath = VirtualPath?.ItemSpec;
+        if (string.IsNullOrEmpty(sourcePath)) sourcePath = MetabasePath?.ItemSpec;
+
         Debugger.Launch();
 
-        Precompiler.Precompile(VirtualPath?.ItemSpec, physicalPath, targetPath, par, Force);
+        Precompiler.Precompile(sourcePath, physicalPath, targetPath, par, Force);
 
         Precompiler.OnException -= LogErrors;
         Precompiler.OnError -= LogError;

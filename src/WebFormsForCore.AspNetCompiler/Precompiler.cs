@@ -259,7 +259,7 @@ public class Precompiler
 
                 var tempTargetDir = targetDir;
                 if (i >= 1) tempTargetDir = Path.Combine(targetDir, binFolders[i], "_AspNetCompiler");
-                Directory.CreateDirectory(tempTargetDir);
+                if (!string.IsNullOrEmpty(tempTargetDir))Directory.CreateDirectory(tempTargetDir);
 
                 Precompile(sourceVirtualDir, sourcePhysicalDir, tempTargetDir, par, i >= 1);
 
