@@ -86,6 +86,7 @@ corresponding packages also, like `WebFormsForCore.Web.Extensions` or
 - `AjaxControlToolkit`: `WebFormsForCore.AjaxControlToolkit`
 - `AjaxControlToolkit.HtmlEditor.Sanitizer`: `WebFormsForCore.AjaxControlToolkit.HtmlEditor.Sanitizer`
 - `AjaxControlToolkit.StaticResources`: `WebFormsForCore.AjaxControlToolkit.StaticResources`
+- All of the `BundleTransformer.*`packages: `WebFormsForCore.BundleTransformer.*`
 
 System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is 
 missing.
