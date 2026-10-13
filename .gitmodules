@@ -28,3 +28,7 @@
 [submodule "www"]
 	path = www
 	url = https://github.com/webformsforcore/webformsforcore.github.io
+[submodule "src/BundleTransformer"]
+	path = src/BundleTransformer
+	url = https://github.com/simonegli8/BundleTransformer
+	branch = WebFormsForCore
