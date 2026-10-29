@@ -86,6 +86,10 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(TargetFramework) == 'net48' OR $(TargetFramework) == 'netstandard2.0'">
+        <PackageReference Include="System.Threading" Version="4.3.0" />
+    </ItemGroup>
+    
     <Target Name="CopyPackageAssembly" AfterTargets="Build" Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <ItemGroup>
             <PkgAssembly Include="$(PkgSystem_Linq)\lib\netstandard1.6\System.Linq.dll" />
@@ -130,21 +134,24 @@
         <None Include="build\WebFormsForCore.Build.targets" PackagePath="build\net8.0" Pack="True" />
         <None Include="build\WebFormsForCore.Build.props" PackagePath="build\net10.0" Pack="True" />
         <None Include="build\WebFormsForCore.Build.targets" PackagePath="build\net10.0" Pack="True" />
+        <None Include="build\WebFormsForCore.Build.props" PackagePath="build\net11.0" Pack="True" />
+        <None Include="build\WebFormsForCore.Build.targets" PackagePath="build\net11.0" Pack="True" />
         <None Include="build\WebFormsForCore.Build.props" PackagePath="build\net48" Pack="True" />
         <None Include="build\WebFormsForCore.Build.targets" PackagePath="build\net48" Pack="True" />
         <None Include="build\WebFormsForCore.Build.props" PackagePath="build\netstandard2.0" Pack="True" />
         <None Include="build\WebFormsForCore.Build.targets" PackagePath="build\netstandard2.0" Pack="True" />
         <None Include="lib\net8.0\_._" PackagePath="lib\net8.0" Pack="True" />
         <None Include="lib\net10.0\_._" PackagePath="lib\net10.0" Pack="True" />
+        <None Include="lib\net11.0\_._" PackagePath="lib\net11.0" Pack="True" />
         <None Include="lib\net48\_._" PackagePath="lib\net48" Pack="True" />
         <None Include="lib\netstandard2.0\_._" PackagePath="lib\netstandard2.0" Pack="True" />
     </ItemGroup>
     <ItemGroup Condition="$(Packaging) == 'True'">
-        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\**\*.*" PackagePath="build\net8.0\%(RecursiveDir)" Pack="True" Link="lib\net8.0\%(RecursiveDir)\%(Filename).%(Extension)" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net10.0\**\*.*" PackagePath="build\net10.0\%(RecursiveDir)" Pack="True" Link="lib\net10.0\%(RecursiveDir)\%(Filename).%(Extension)" />
-        <None Include="..\..\lib\WebFormsForCore.Build\net48\**\*.*" PackagePath="build\net48\%(RecursiveDir)" Pack="True" Link="lib\net48\%(RecursiveDir)\%(Filename).%(Extension)" />
-        <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\**\*.*" PackagePath="build\netstandard2.0\%(RecursiveDir)" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />
-        <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\*.*" PackagePath="build\netstandard2.0\%(RecursiveDir)" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net8.0\**\*.*" PackagePath="build\net8.0" Pack="True" Link="lib\net8.0\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net10.0\**\*.*" PackagePath="build\net10.0" Pack="True" Link="lib\net10.0\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net11.0\**\*.*" PackagePath="build\net11.0" Pack="True" Link="lib\net11.0\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\net48\**\*.*" PackagePath="build\net48" Pack="True" Link="lib\net48\%(RecursiveDir)\%(Filename).%(Extension)" />
+        <None Include="..\..\lib\WebFormsForCore.Build\netstandard2.0\**\*.*" PackagePath="build\netstandard2.0" Pack="True" Link="lib\netstandard2.0\%(RecursiveDir)\%(Filename).%(Extension)" />
     </ItemGroup>
 
 </Project>

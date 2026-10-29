@@ -15,4 +15,6 @@ using System.Security;
 [assembly: AssemblyProduct("WebFormsForCore")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyDelaySign(false)]
+#if !NETFRAMEWORK
 [assembly: DefaultDllImportSearchPaths(DllImportSearchPath.System32 | DllImportSearchPath.AssemblyDirectory)]
+#endif

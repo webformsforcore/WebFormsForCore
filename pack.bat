@@ -8,7 +8,7 @@ cd  src
 cd WebFormsForCore.Compilers
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
 cd ..\WebFormsForCore.Build
-dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration%;Packaging=True -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
+dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Packaging=True -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
 cd ..\WebFormsForCore.Configuration
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
 cd ..\WebFormsForCore.Drawing
