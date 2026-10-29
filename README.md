@@ -1,7 +1,7 @@
 # WebFormsForCore 
 ## WebForms for ASP.NET Core
 WebFormsForCore is an OpenSource library to run WebForms apps on ASP.NET Core. This library provides a port
-of the System.Web libraries of .NET Framework to .NET 10. With this library,
+of the System.Web libraries of .NET Framework to .NET 11. With this library,
 you can run WebForms websites directly in ASP.NET Core, also on Linux. With this
 library it becomes easy to migrate your existing WebForms application to run
 on ASP.NET Core also.
@@ -31,9 +31,9 @@ project. Conversion can be done easiest by using a converter like the migrate-20
 tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory
 of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. If
 the converter complains about an unsupported project type, remove the `<ProjectTypeGuid>` property from
-the project first. After conversion change the target framework of your project to `net10.0`. You
+the project first. After conversion change the target framework of your project to `net11.0`. You
 might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
-Change the OutputPath for `net10.0` to `bin_dotnet`:
+Change the OutputPath for `net11.0` to `bin_dotnet`:
 ```
 <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -62,10 +62,10 @@ Change the OutputPath for `net10.0` to `bin_dotnet`:
 
 We change the output path to `bin_dotnet` and set `AppendTargetFrameworkToOutputPath` and `AppendRuntimeIdentifierToOutputPath` to `false`, since WebFormsForCore can only work, if the OutputPath is a direct subfolder of the project, as in classic ASP.NET.
 
-Then, for `net10.0`, import the WebFormsForCore packages like so:
+Then, for `net11.0`, import the WebFormsForCore packages like so:
 ```
-<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageReference Include="WebFormsForCore.Web" Version="1.6.8" />
+<ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <PackageReference Include="WebFormsForCore.Web" Version="1.7.0-rc3" />
 </ItemGroup>
 ```
 Remove the old `Reference` references or put them in a condition only for `net48`.
@@ -94,7 +94,7 @@ missing.
 If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
 SDK project, you also need to import the package `WebFormsForCore.Build` like so:
 ```
-<PackageReference Include="WebFormsForCore.Build" Version="1.6.8" ExcludeAssets="runtime" />
+<PackageReference Include="WebFormsForCore.Build" Version="1.7.0-rc3" ExcludeAssets="runtime" />
 ```
 If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#,
 not for VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't
