@@ -1,0 +1,21 @@
+<Project>
+    <PropertyGroup>
+        <netlib>11.0.0-rc.3.26522.148</netlib>
+        <netlatest>net11.0</netlatest>
+
+        <LangVersion>14</LangVersion>
+        <Version>1.7.0-rc3</Version>
+        <AssemblyVersion>11.0.0.0</AssemblyVersion>
+        <AssemblyFileVersion>11.0.0.0</AssemblyFileVersion>
+        <FileVersion>11.0.0.0</FileVersion>
+        <Authors>Simon Egli</Authors>
+        <Company>Estrellas de Esperanza</Company>
+        <Copyright>Estrellas de Esperanza</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+</Project>

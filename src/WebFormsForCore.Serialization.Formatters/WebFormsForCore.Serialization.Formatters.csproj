@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>12</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <DefineConstants>$(DefineConstants);Legacy;WebFormsForCore</DefineConstants>
@@ -15,24 +14,12 @@
 
         <PackageId>WebFormsForCore.Serialization.Formatters</PackageId>
         <Title>WebFormsForCore.Serialization.Formatters</Title>
-        <Authors>simonegli8</Authors>
-        <Company>Estrellas de Esperanza</Company>
         <Product>WebFormsForCore.Serialization.Formatters</Product>
         <Description>A port of ASP.NET WebForms to .NET 10</Description>
-        <Copyright>Estrellas de Esperanza</Copyright>
-        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
-        <Version>1.6.8</Version>
-        <AssemblyVersion>10.0.33.0</AssemblyVersion>
-        <FileVersion>10.0.33.0</FileVersion>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>false</EmbedUntrackedSources>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>

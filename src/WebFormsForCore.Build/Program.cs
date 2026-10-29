@@ -25,7 +25,8 @@ namespace WebFormsForCore.Build
 					task.PublicKey = args[2];
 					task.PublicKeyToken = args[3];
 					task.Key = new TaskItem(args[4]);
-					task.Source = new TaskItem(args[4]);
+					task.Source = new TaskItem(args[5]);
+					task.TargetFramework = new TaskItem(args[6]);
 					return task.Execute() ? 0 : -1;
 				case "createdesignerfiles":
 					var task2 = new CreateAspDesignerFiles();

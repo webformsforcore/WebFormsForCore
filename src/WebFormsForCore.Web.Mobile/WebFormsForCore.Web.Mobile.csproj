@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <LangVersion>14</LangVersion>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
         <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_WEB;OBJECTSTATEFORMATTER;CONFIGPATHUTILITY_SYSTEMWEB;SAFESERIALIZATIONMANAGER;TRACE;RETAIL;WIN32</DefineConstants>
@@ -14,23 +13,12 @@
 
         <PackageId>WebFormsForCore.Web.Mobile</PackageId>
         <Title>WebFormsForCore.Web.Mobile</Title>
-        <Authors>simonegli8</Authors>
-        <Company>Estrellas de Esperanza</Company>
         <Product>WebFormsForCore.Web.Mobile</Product>
         <Description>A port of ASP.NET WebForms to .NET 10</Description>
-        <Copyright>Estrellas de Esperanza</Copyright>
-        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
-        <AssemblyVersion>10.0.33.0</AssemblyVersion>
-        <FileVersion>10.0.33.0</FileVersion>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>false</EmbedUntrackedSources>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
@@ -48,6 +36,10 @@
 
     <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" Alias="NET" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0-rc.3.26522.148" Alias="NET" />
     </ItemGroup>
 
     <Import Project="..\..\lib\WebFormsForCore.Build\netstandard2.0\FakeStrongName.targets" />
@@ -92,7 +84,7 @@
     <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
         <ItemGroup>
             <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
-            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'(?i)system\.configuration\.configurationmanager\\[.0-9]+\\'))" />
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'(?i)system\.configuration\.configurationmanager\\'))" />
             <!-- Do not import System.Web from dotnet -->
             <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
             <!-- Do not import System.Drawing from dotnet -->

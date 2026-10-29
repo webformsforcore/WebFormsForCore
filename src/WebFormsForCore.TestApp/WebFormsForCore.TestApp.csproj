@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFrameworks>net48;net10.0</TargetFrameworks>
+        <TargetFrameworks>net48;net11.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <LangVersion>14</LangVersion>
         <OutputType>Exe</OutputType>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -52,17 +51,17 @@
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
         <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
         <ProjectReference Include="..\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj" />-->
-        <PackageReference Include="WebFormsForCore.Web" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Compilers" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Web.Services" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Web.Optimization" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.WebGrease" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.6.8" />
-        <PackageReference Include="WebFormsForCore.Build" Version="1.6.8" ExcludeAssets="runtime" />
+        <PackageReference Include="WebFormsForCore.Web" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Compilers" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Web.Services" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.WebGrease" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Build" Version="1.7.0-rc3" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
@@ -149,7 +148,7 @@
                 <Aliases>Core</Aliases>
             </ReferencePath>
             <!-- Do not import System.Web -->
-            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'(?i)system\.configuration\.configurationmanager\\'))" />
         </ItemGroup>
     </Target>
 

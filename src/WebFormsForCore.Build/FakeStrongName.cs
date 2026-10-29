@@ -20,12 +20,15 @@ namespace WebFormsForCore.Build
 		public static bool IsCore => !(IsNetFX || IsNetNative);
 		public static bool IsNetFX => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
 		public static bool IsNetNative => RuntimeInformation.FrameworkDescription.StartsWith(".NET Native", StringComparison.OrdinalIgnoreCase);
-		public static bool IsNet10 => Environment.Version.Major >= 10;
+        public static bool IsNet10 => Environment.Version.Major == 10;
+        public static bool IsNet11 => Environment.Version.Major >= 11;
+        public string RuntimeFramework => IsNetFX ? "net48" : (IsNet11 ? "net11.0" : (IsNet10 ? "net10.0" : "net8.0"));
         public bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         public ITaskItem[]? Assemblies { get; set; }
 		public ITaskItem? Source { get; set; }
 		public ITaskItem? Key { get; set; }
+		public ITaskItem? TargetFramework { get; set; }
 		public string? PublicKey { get; set; }
 		public string? PublicKeyToken { get; set; }
 		public bool LogToConsole { get; set; } = false;
@@ -111,7 +114,7 @@ namespace WebFormsForCore.Build
 
 			try
 			{
-				if (!IsCore)
+				if (!IsCore || IsCore && RuntimeFramework != (TargetFramework?.ItemSpec ?? "net11.0"))
 				{
 					//LogMessage($"Starting dotnet...");
 					string[] a = new string[Assemblies.Length];
@@ -122,12 +125,12 @@ namespace WebFormsForCore.Build
 					var assemblies = string.Join(";", a);
 
                     var dll = Assembly.GetExecutingAssembly().Location;
-                    var net = IsNet10 ? "net10.0" : "net8.0";
+                    var net = TargetFramework?.ItemSpec ?? (IsNet11 ? "net11.0" : (IsNet10 ? "net10.0" : "net8.0"));
                     dll = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(dll)!)!, net, "WebFormsForCore.Build.NetCore.dll");
 
                     var startInfo = new ProcessStartInfo($"dotnet{(IsWindows ? ".exe" : "")}", $"\"{dll}\" fakestrongname \"{assemblies}\" " +
 						$"\"{PublicKey ?? ""}\" \"{PublicKeyToken ?? ""}\" \"{Key?.ItemSpec ?? ""}\" " +
-						$"\"{Source?.ItemSpec ?? ""}\"");
+						$"\"{Source?.ItemSpec ?? ""}\" \"{TargetFramework?.ItemSpec ?? ""}\"");
 					startInfo.CreateNoWindow = true;
 					startInfo.UseShellExecute = false;
 					startInfo.RedirectStandardError = true;
@@ -182,7 +185,7 @@ namespace WebFormsForCore.Build
 							//var symWriter = new PdbWriterProvider();
 							var mem = new MemoryStream();
 							var readerParameters = new ReaderParameters() { ReadWrite = true, InMemory = true, ReadSymbols = withSymbols };
-							
+
 							/*if (withSymbols)
 							{
 								using (var pdbStream = new FileStream(pdbFile, FileMode.Open, FileAccess.Read))

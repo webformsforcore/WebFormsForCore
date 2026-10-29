@@ -1,35 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <DebugType>portable</DebugType>
         <AssemblyName>WebFormsForCore.Compilers</AssemblyName>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
-        <CompilerToolsVersion>10.0.100.0</CompilerToolsVersion>
         
         <PackageId>WebFormsForCore.Compilers</PackageId>
         <Title>WebFormsForCore.Compilers</Title>
-        <Authors>simonegli8</Authors>
-        <Company>Estrellas de Esperanza</Company>
         <Product>WebFormsForCore.Compilers</Product>
         <Description>A port of ASP.NET WebForms to .NET 10</Description>
-        <Copyright>Estrellas de Esperanza</Copyright>
-        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
-        <Version>1.6.8</Version>
-        <AssemblyVersion>10.0.33.0</AssemblyVersion>
-        <FileVersion>10.0.33.0</FileVersion>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>false</EmbedUntrackedSources>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AssemblyOriginatorKeyFile>..\SigningKey\WebFormsForCore.snk</AssemblyOriginatorKeyFile>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
@@ -46,6 +32,12 @@
         <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.3.0" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="5.9.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.9.0" />
+    </ItemGroup>
+
     <ItemGroup>
         <Content Include="Roslyn.net8.0\**\*.*">
             <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
@@ -57,13 +49,225 @@
             <Pack>True</Pack>
             <PackagePath>lib\net10.0</PackagePath>
         </Content>
+        <Content Include="Roslyn.net11.0\**\*.*">
+            <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+            <Pack>True</Pack>
+            <PackagePath>lib\net11.0</PackagePath>
+        </Content>
     </ItemGroup>
+
     <ItemGroup>
         <None Include="..\..\README.md">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
         <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Roslyn.net11.0\csc.deps.json">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\csc.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\csc.runtimeconfig.json">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\cs\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\cs\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\de\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\de\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\es\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\es\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\fr\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\fr\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\it\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\it\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ja\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ja\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ko\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ko\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\Microsoft.CodeAnalysis.CSharp.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\Microsoft.CodeAnalysis.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\Microsoft.CodeAnalysis.VisualBasic.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\pl\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\pl\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\pt-BR\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\pt-BR\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ru\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\ru\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\tr\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\tr\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\vbc.deps.json">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\vbc.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\vbc.runtimeconfig.json">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\VBCSCompiler.deps.json">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\VBCSCompiler.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\VBCSCompiler.runtimeconfig.json">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
+      <Content Include="Roslyn.net11.0\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.resources.dll">
+        <PackagePath>lib\net10.0</PackagePath>
+        <Pack>True</Pack>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

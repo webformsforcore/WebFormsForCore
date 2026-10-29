@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <LangVersion>14</LangVersion>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefineConstants>$(DefineConstants);FEATURE_LEGACYSURFACEAREA;FEATURE_UTF32;FEATURE_UTF7;SYSTEM_WEB;OBJECTSTATEFORMATTER;CONFIGPATHUTILITY_SYSTEMWEB;SAFESERIALIZATIONMANAGER;TRACE;RETAIL;WIN32</DefineConstants>
@@ -15,24 +14,12 @@
 
         <PackageId>WebFormsForCore.Web</PackageId>
         <Title>WebFormsForCore.Web</Title>
-        <Authors>simonegli8</Authors>
-        <Company>Estrellas de Esperanza</Company>
         <Product>WebFormsForCore.Web</Product>
         <Description>A port of ASP.NET WebForms to .NET 10</Description>
-        <Copyright>Estrellas de Esperanza</Copyright>
-        <PackageProjectUrl>https://github.com/webformsforcore/WebFormsForCore</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/webformsforcore/WebFormsForCore</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
         <PackageTags>WebForms;porting WebForms;NET Core;NET 10</PackageTags>
-        <Version>1.6.8</Version>
-        <AssemblyVersion>10.0.33.0</AssemblyVersion>
-        <FileVersion>10.0.33.0</FileVersion>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <IncludeSymbols>true</IncludeSymbols>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>false</EmbedUntrackedSources>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
@@ -104,6 +91,7 @@
         <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
         <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
         <PackageReference Include="System.Drawing.Common" Version="8.0.0" Aliases="Common" />
         <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
     </ItemGroup>
@@ -118,10 +106,26 @@
         <PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.0" />
         <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.0" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
         <PackageReference Include="System.Drawing.Common" Version="10.0.0" Aliases="Common" />
         <PackageReference Include="System.Data.OleDb" Version="10.0.0" />
     </ItemGroup>
-        
+    
+    <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+        <PackageReference Include="Microsoft.Build.Framework" Version="15.9.30" />
+        <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.30" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0-rc.3.26522.148" Aliases="NET" />
+        <PackageReference Include="System.DirectoryServices" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.DirectoryServices.Protocols" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.Runtime.Caching" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.Drawing.Common" Version="11.0.0-rc.3.26522.148" Aliases="Common" />
+        <PackageReference Include="System.Data.OleDb" Version="11.0.0-rc.3.26522.148" />
+    </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\WebFormsForCore.Compilers\WebFormsForCore.Compilers.csproj" Condition="'$(TargetFramework)' != 'net48'" />
         <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" Condition="'$(TargetFramework)' != 'net48'" />
@@ -167,7 +171,7 @@
     <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
         <ItemGroup>
             <!-- Do not import System.Configuration.ConfigurationManager version 8 -->
-            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\8\.0\..\\'))" />
+            <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'(?i)system\.configuration\.configurationmanager\\'))" />
             <!-- Do not import System.Web from dotnet -->
             <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
             <!-- Do not import System.Drawing from dotnet -->
