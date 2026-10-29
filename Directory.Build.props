@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <netversion>10.0.13</netversion>
+        <netlatest>net10.0</netlatest>
+    </PropertyGroup>
+</Project>
