@@ -112,12 +112,20 @@ namespace System.Configuration {
                 // Determine file location
                 configFile = ElementInformation.Source;
 
+                string file = File;
+#if WebFormsForCore && NETCOREAPP
+                // Elsewhere than Windows a '\' in the path is part of the file name, and a missing file is skipped
+                // without an error, so its settings would silently be gone.
+                if (System.IO.Path.DirectorySeparatorChar != '\\') {
+                    file = file.Replace('\\', System.IO.Path.DirectorySeparatorChar);
+                }
+#endif
                 if (String.IsNullOrEmpty(configFile)) {
-                    sourceFileFullPath = File;
+                    sourceFileFullPath = file;
                 }
                 else {
                     configFileDirectory = System.IO.Path.GetDirectoryName(configFile);
-                    sourceFileFullPath = System.IO.Path.Combine(configFileDirectory, File);
+                    sourceFileFullPath = System.IO.Path.Combine(configFileDirectory, file);
                 }
 
                 if (System.IO.File.Exists(sourceFileFullPath)) {
