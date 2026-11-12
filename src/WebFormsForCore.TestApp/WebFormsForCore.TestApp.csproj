@@ -52,17 +52,17 @@
         <ProjectReference Include="..\WebFormsForCore.Web.Optimization\WebFormsForCore.Web.Optimization.csproj" />
         <ProjectReference Include="..\WebFormsForCore.WebGrease\WebFormsForCore.WebGrease.csproj" />
         <ProjectReference Include="..\WebFormsForCore.AjaxControlToolkit\AjaxControlToolkit\AjaxControlToolkit.csproj" />-->
-        <PackageReference Include="WebFormsForCore.Web" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Compilers" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Web.Services" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Web.Infrastructure" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Web.Extensions" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Web.Optimization" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.WebGrease" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.7.0-rc3" />
-        <PackageReference Include="WebFormsForCore.Build" Version="1.7.0-rc3" ExcludeAssets="runtime" />
+        <PackageReference Include="WebFormsForCore.Web" />
+        <PackageReference Include="WebFormsForCore.Compilers" />
+        <PackageReference Include="WebFormsForCore.Web.Services" />
+        <PackageReference Include="WebFormsForCore.Web.Infrastructure" />
+        <PackageReference Include="WebFormsForCore.Web.Extensions" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization" />
+        <PackageReference Include="WebFormsForCore.Web.Optimization.WebForms" />
+        <PackageReference Include="WebFormsForCore.WebGrease" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit" />
+        <PackageReference Include="WebFormsForCore.AjaxControlToolkit.StaticResources" />
+        <PackageReference Include="WebFormsForCore.Build" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
@@ -71,11 +71,11 @@
         <Reference Include="System.Web" />
         <Reference Include="System.Web.Services" />
         <Reference Include="System.Web.ApplicationServices" />
-        <PackageReference Include="AjaxControlToolkit" Version="20.1.0" />
-        <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
-        <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
-        <PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
-        <PackageReference Include="Microsoft.AspNet.Web.Optimization.WebForms" Version="1.1.3" />
+        <PackageReference Include="AjaxControlToolkit" />
+        <PackageReference Include="Antlr3.Runtime" />
+        <PackageReference Include="Microsoft.Web.Infrastructure" />
+        <PackageReference Include="Microsoft.AspNet.Web.Optimization" />
+        <PackageReference Include="Microsoft.AspNet.Web.Optimization.WebForms" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
@@ -91,18 +91,18 @@
 
     <ItemGroup>
         <!--<PackageReference Include="AjaxControlToolkit" Version="20.1.0" />-->
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="AspNet.ScriptManager.jQuery" Version="3.7.1" />
-        <PackageReference Include="bootstrap" Version="5.3.8" />
-        <PackageReference Include="jQuery" Version="3.7.1" GeneratePathProperty="true" />
-        <PackageReference Include="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
-        <PackageReference Include="Microsoft.AspNet.FriendlyUrls.Core" Version="1.0.2" />
-        <PackageReference Include="Microsoft.AspNet.ScriptManager.MSAjax" Version="5.0.0" />
-        <PackageReference Include="Microsoft.AspNet.ScriptManager.WebForms" Version="5.0.0" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="AspNet.ScriptManager.jQuery" />
+        <PackageReference Include="bootstrap" />
+        <PackageReference Include="jQuery" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.AspNet.FriendlyUrls" />
+        <PackageReference Include="Microsoft.AspNet.FriendlyUrls.Core" />
+        <PackageReference Include="Microsoft.AspNet.ScriptManager.MSAjax" />
+        <PackageReference Include="Microsoft.AspNet.ScriptManager.WebForms" />
         <!--<PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
         <PackageReference Include="Microsoft.AspNet.Web.Optimization.WebForms" Version="1.1.3" />
         <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="2.0.1" />-->
-        <PackageReference Include="Modernizr" Version="2.8.3" />
+        <PackageReference Include="Modernizr" />
     </ItemGroup>
 
    <ItemGroup>

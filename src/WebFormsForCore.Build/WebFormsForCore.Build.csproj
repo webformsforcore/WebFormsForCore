@@ -76,18 +76,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Build" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-        <PackageReference Include="Mono.Cecil" Version="0.11.6" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
-        <PackageReference Include="System.Linq" Version="4.3.0" GeneratePathProperty="true" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Build" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" />
+        <PackageReference Include="Microsoft.CSharp" />
+        <PackageReference Include="Mono.Cecil" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="System.Private.Uri" />
+        <PackageReference Include="System.Linq" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net48' OR $(TargetFramework) == 'netstandard2.0'">
-        <PackageReference Include="System.Threading" Version="4.3.0" />
+        <PackageReference Include="System.Threading" />
     </ItemGroup>
     
     <Target Name="CopyPackageAssembly" AfterTargets="Build" Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -115,13 +115,13 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0' OR $(TargetFramework) == 'net10.0' OR $(TargetFramework) == 'net11.0'">
-        <PackageReference Include="WebFormsForCore.Web" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.Web" />
         <!-- Web depends on Compilers transitively; its lib folder contains native DLLs (DiaSymReader) that must not be passed to csc as references -->
-        <PackageReference Include="WebFormsForCore.Compilers" Version="1.7.0-rc3" ExcludeAssets="compile" />
+        <PackageReference Include="WebFormsForCore.Compilers" ExcludeAssets="compile" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net10.0' OR $(TargetFramework) == 'net11.0'">
-        <PackageReference Include="WebFormsForCore.AspNetCompiler.Library" Version="1.7.0-rc3" />
+        <PackageReference Include="WebFormsForCore.AspNetCompiler.Library" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">

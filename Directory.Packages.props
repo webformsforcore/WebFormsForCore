@@ -1,0 +1,139 @@
+<Project>
+    <!--
+        Central package version management (NuGet CPM).
+        Projects reference packages without a Version; versions are defined here.
+        A project that really needs a different version can use VersionOverride.
+
+        The git submodules AjaxControlToolkit and BundleTransformer are separate repositories
+        that manage their own package versions, so central management is switched off for them.
+    -->
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <ManagePackageVersionsCentrally Condition="$(MSBuildProjectDirectory.Contains('WebFormsForCore.AjaxControlToolkit')) OR $(MSBuildProjectDirectory.Contains('BundleTransformer'))">false</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <!-- Packages with a single version for all target frameworks -->
+    <ItemGroup>
+        <PackageVersion Include="Antlr3.Runtime" Version="3.5.1" />
+        <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
+        <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+        <PackageVersion Include="CoreWCF.Http" Version="1.9.1" />
+        <PackageVersion Include="CoreWCF.Primitives" Version="1.9.1" />
+        <PackageVersion Include="ReportViewerCore.NETCore" Version="15.1.26" />
+
+        <PackageVersion Include="Microsoft.Build" Version="15.9.30" />
+        <PackageVersion Include="Microsoft.Build.Framework" Version="15.9.30" />
+        <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="15.9.30" />
+        <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
+        <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageVersion Include="Mono.Cecil" Version="0.11.6" />
+        <PackageVersion Include="System.Private.Uri" Version="4.3.2" />
+        <PackageVersion Include="System.Linq" Version="4.3.0" />
+        <PackageVersion Include="System.Threading" Version="4.3.0" />
+        <PackageVersion Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+    </ItemGroup>
+
+    <!-- Packages used by the .NET Framework 4.8 TestApp and the static web asset packages -->
+    <ItemGroup>
+        <PackageVersion Include="AjaxControlToolkit" Version="20.1.0" />
+        <PackageVersion Include="AspNet.ScriptManager.jQuery" Version="3.7.1" />
+        <PackageVersion Include="bootstrap" Version="5.3.8" />
+        <PackageVersion Include="jQuery" Version="3.7.1" />
+        <PackageVersion Include="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
+        <PackageVersion Include="Microsoft.AspNet.FriendlyUrls.Core" Version="1.0.2" />
+        <PackageVersion Include="Microsoft.AspNet.ScriptManager.MSAjax" Version="5.0.0" />
+        <PackageVersion Include="Microsoft.AspNet.ScriptManager.WebForms" Version="5.0.0" />
+        <PackageVersion Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
+        <PackageVersion Include="Microsoft.AspNet.Web.Optimization.WebForms" Version="1.1.3" />
+        <PackageVersion Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
+        <PackageVersion Include="Modernizr" Version="2.8.3" />
+    </ItemGroup>
+
+    <!-- The WebFormsForCore packages themselves (must match $(Version) in Directory.Build.props) -->
+    <ItemGroup>
+        <PackageVersion Include="WebFormsForCore.AjaxControlToolkit" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.AspNetCompiler.Library" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Build" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Compilers" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Configuration" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Drawing" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.ApplicationServices" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.Extensions" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.Infrastructure" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.Optimization" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.RegularExpressions" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.Web.Services" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.WebGrease" Version="1.7.0-rc3" />
+    </ItemGroup>
+
+    <!-- net8.0 -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.13.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.13.0" />
+        <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+        <PackageVersion Include="System.CodeDom" Version="8.0.0" />
+        <PackageVersion Include="System.Composition" Version="8.0.0" />
+        <PackageVersion Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
+        <PackageVersion Include="System.Data.OleDb" Version="8.0.0" />
+        <PackageVersion Include="System.DirectoryServices" Version="8.0.0" />
+        <PackageVersion Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
+        <PackageVersion Include="System.DirectoryServices.Protocols" Version="8.0.0" />
+        <PackageVersion Include="System.Drawing.Common" Version="8.0.0" />
+        <PackageVersion Include="System.Runtime.Caching" Version="8.0.0" />
+        <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
+        <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+        <PackageVersion Include="System.Security.Cryptography.Xml" Version="8.0.5" />
+        <PackageVersion Include="System.Security.Permissions" Version="8.0.0" />
+        <PackageVersion Include="System.ServiceModel.Primitives" Version="8.1.2" />
+    </ItemGroup>
+
+    <!-- net10.0 -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.3.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.3.0" />
+        <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.5" />
+        <PackageVersion Include="System.CodeDom" Version="10.0.0" />
+        <PackageVersion Include="System.Composition" Version="10.0.0" />
+        <PackageVersion Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
+        <PackageVersion Include="System.Data.OleDb" Version="10.0.0" />
+        <PackageVersion Include="System.DirectoryServices" Version="10.0.0" />
+        <PackageVersion Include="System.DirectoryServices.AccountManagement" Version="10.0.0" />
+        <PackageVersion Include="System.DirectoryServices.Protocols" Version="10.0.0" />
+        <PackageVersion Include="System.Drawing.Common" Version="10.0.0" />
+        <PackageVersion Include="System.Runtime.Caching" Version="10.0.0" />
+        <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
+        <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.0" />
+        <PackageVersion Include="System.Security.Cryptography.Xml" Version="10.0.13" />
+        <PackageVersion Include="System.Security.Permissions" Version="10.0.0" />
+        <PackageVersion Include="System.ServiceModel.Primitives" Version="10.1.0" />
+    </ItemGroup>
+
+    <!-- net11.0 (preview/RC: runtime libraries follow $(netlib) from Directory.Build.props) -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+        <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.9.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.9.0" />
+        <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(netlib)" />
+        <PackageVersion Include="System.CodeDom" Version="$(netlib)" />
+        <PackageVersion Include="System.Composition" Version="$(netlib)" />
+        <PackageVersion Include="System.Configuration.ConfigurationManager" Version="$(netlib)" />
+        <PackageVersion Include="System.Data.OleDb" Version="$(netlib)" />
+        <PackageVersion Include="System.DirectoryServices" Version="$(netlib)" />
+        <PackageVersion Include="System.DirectoryServices.AccountManagement" Version="$(netlib)" />
+        <PackageVersion Include="System.DirectoryServices.Protocols" Version="$(netlib)" />
+        <PackageVersion Include="System.Drawing.Common" Version="$(netlib)" />
+        <PackageVersion Include="System.Runtime.Caching" Version="$(netlib)" />
+        <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="$(netlib)" />
+        <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="$(netlib)" />
+        <PackageVersion Include="System.Security.Cryptography.Xml" Version="$(netlib)" />
+        <PackageVersion Include="System.Security.Permissions" Version="$(netlib)" />
+        <PackageVersion Include="System.ServiceModel.Primitives" Version="10.1.0" />
+    </ItemGroup>
+</Project>

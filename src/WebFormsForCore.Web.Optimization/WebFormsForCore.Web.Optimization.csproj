@@ -44,9 +44,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
+        <PackageReference Include="Antlr3.Runtime" />
         <!--<PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />-->
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="Newtonsoft.Json" />
     </ItemGroup>
 
     <ItemGroup>

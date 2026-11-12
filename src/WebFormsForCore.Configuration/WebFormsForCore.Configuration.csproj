@@ -37,27 +37,27 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="System.CodeDom" Version="8.0.0" />
-        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-        <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.5" />
+        <PackageReference Include="System.CodeDom" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" />
+        <PackageReference Include="System.Security.Permissions" />
+        <PackageReference Include="System.Security.Cryptography.Xml" />
         <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
         <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" />
-        <PackageReference Include="System.CodeDom" Version="10.0.0" />
-        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-        <PackageReference Include="System.Security.Permissions" Version="10.0.0" />
+        <PackageReference Include="System.Security.Cryptography.Xml" />
+        <PackageReference Include="System.CodeDom" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" />
+        <PackageReference Include="System.Security.Permissions" />
     </ItemGroup>
     
     <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
         <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.CodeDom" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-        <PackageReference Include="System.Security.Permissions" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="System.Security.Cryptography.Xml" />
+        <PackageReference Include="System.CodeDom" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" />
+        <PackageReference Include="System.Security.Permissions" />
     </ItemGroup>
 
     <ItemGroup>

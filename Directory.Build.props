@@ -1,10 +1,10 @@
 <Project>
     <PropertyGroup>
-        <netlib>11.0.0-rc.3.26522.148</netlib>
+        <netlib>11.0.0</netlib>
         <netlatest>net11.0</netlatest>
 
-        <LangVersion>14</LangVersion>
-        <Version>1.7.0-rc3</Version>
+        <LangVersion>15</LangVersion>
+        <Version>1.7.0</Version>
         <AssemblyVersion>11.0.0.0</AssemblyVersion>
         <AssemblyFileVersion>11.0.0.0</AssemblyFileVersion>
         <FileVersion>11.0.0.0</FileVersion>

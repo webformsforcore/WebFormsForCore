@@ -12,12 +12,14 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
     <File Path="NugetApiKey.txt" />
     <File Path="pack.bat" />
     <File Path="PushToNuget.bat" />
     <File Path="README.md" />
     <File Path="src/VersionInfo.cs" />
+    <File Path="src/WebFormsForCore.AjaxControlToolkit/Directory.Build.props" />
     <File Path="www/index.html" />
   </Folder>
   <Project Path="src/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/AjaxControlToolkit.HtmlEditor.Sanitizer.csproj" Id="4f19469b-3352-4d93-89e2-4b79fd7086a6">

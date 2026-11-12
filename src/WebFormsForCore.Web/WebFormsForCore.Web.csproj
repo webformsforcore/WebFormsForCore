@@ -76,54 +76,54 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" VersionOverride="7.1.0" />
         <!--<PackageReference Include="System.Net.Http" Version="4.3.4" />-->
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="Microsoft.Build.Framework" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" Aliases="NET" />
-        <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
-        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
-        <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
-        <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
-        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
-        <PackageReference Include="System.Drawing.Common" Version="8.0.0" Aliases="Common" />
-        <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Build.Framework" />
+        <PackageReference Include="Microsoft.Build.Tasks.Core" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Aliases="NET" />
+        <PackageReference Include="System.DirectoryServices" />
+        <PackageReference Include="System.DirectoryServices.AccountManagement" />
+        <PackageReference Include="System.DirectoryServices.Protocols" />
+        <PackageReference Include="System.Runtime.Caching" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" />
+        <PackageReference Include="System.Drawing.Common" Aliases="Common" />
+        <PackageReference Include="System.Data.OleDb" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-        <PackageReference Include="Microsoft.Build.Framework" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" Aliases="NET" />
-        <PackageReference Include="System.DirectoryServices" Version="10.0.0" />
-        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.0" />
-        <PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.0" />
-        <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
-        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
-        <PackageReference Include="System.Drawing.Common" Version="10.0.0" Aliases="Common" />
-        <PackageReference Include="System.Data.OleDb" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Build.Framework" />
+        <PackageReference Include="Microsoft.Build.Tasks.Core" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Aliases="NET" />
+        <PackageReference Include="System.DirectoryServices" />
+        <PackageReference Include="System.DirectoryServices.AccountManagement" />
+        <PackageReference Include="System.DirectoryServices.Protocols" />
+        <PackageReference Include="System.Runtime.Caching" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" />
+        <PackageReference Include="System.Drawing.Common" Aliases="Common" />
+        <PackageReference Include="System.Data.OleDb" />
     </ItemGroup>
     
     <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
-        <PackageReference Include="Microsoft.Build.Framework" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.30" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.30" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0-rc.3.26522.148" Aliases="NET" />
-        <PackageReference Include="System.DirectoryServices" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.DirectoryServices.Protocols" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.Runtime.Caching" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.3.26522.148" />
-        <PackageReference Include="System.Drawing.Common" Version="11.0.0-rc.3.26522.148" Aliases="Common" />
-        <PackageReference Include="System.Data.OleDb" Version="11.0.0-rc.3.26522.148" />
+        <PackageReference Include="Microsoft.Build.Framework" />
+        <PackageReference Include="Microsoft.Build.Tasks.Core" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Aliases="NET" />
+        <PackageReference Include="System.DirectoryServices" />
+        <PackageReference Include="System.DirectoryServices.AccountManagement" />
+        <PackageReference Include="System.DirectoryServices.Protocols" />
+        <PackageReference Include="System.Runtime.Caching" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" />
+        <PackageReference Include="System.Drawing.Common" Aliases="Common" />
+        <PackageReference Include="System.Data.OleDb" />
     </ItemGroup>
 
     <ItemGroup>

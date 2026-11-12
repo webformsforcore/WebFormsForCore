@@ -1,4 +1,4 @@
-SET PackageVersion=1.7.0-rc3
+SET PackageVersion=1.7.0
 SET FileVersion=11.0.0.0
 SET Configuration=Debug
 
