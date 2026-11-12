@@ -1,4 +1,4 @@
-SET /p ApiKey=<NugetApiKey.txt
+SET /p ApiKey=<nuget-api-key.txt
 
 cd nupkg
 

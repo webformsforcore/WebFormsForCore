@@ -14,9 +14,9 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="global.json" />
-    <File Path="NugetApiKey.txt" />
+    <File Path="nuget-api-key.txt" />
     <File Path="pack.bat" />
-    <File Path="PushToNuget.bat" />
+    <File Path="push-to-nuget.bat" />
     <File Path="README.md" />
     <File Path="src/VersionInfo.cs" />
     <File Path="src/WebFormsForCore.AjaxControlToolkit/Directory.Build.props" />
