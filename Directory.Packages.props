@@ -10,6 +10,7 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <ManagePackageVersionsCentrally Condition="$(MSBuildProjectDirectory.Contains('WebFormsForCore.AjaxControlToolkit')) OR $(MSBuildProjectDirectory.Contains('BundleTransformer'))">false</ManagePackageVersionsCentrally>
+        <WFFCVersion>1.7.0</WFFCVersion>
     </PropertyGroup>
 
     <!-- Packages with a single version for all target frameworks -->
@@ -53,22 +54,22 @@
 
     <!-- The WebFormsForCore packages themselves (must match $(Version) in Directory.Build.props) -->
     <ItemGroup>
-        <PackageVersion Include="WebFormsForCore.AjaxControlToolkit" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.AspNetCompiler.Library" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Build" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Compilers" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Configuration" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Drawing" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.ApplicationServices" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.Extensions" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.Infrastructure" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.Optimization" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.Optimization.WebForms" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.RegularExpressions" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.Web.Services" Version="1.7.0-rc3" />
-        <PackageVersion Include="WebFormsForCore.WebGrease" Version="1.7.0-rc3" />
+        <PackageVersion Include="WebFormsForCore.AjaxControlToolkit" Version="$(WWFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.AjaxControlToolkit.StaticResources" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.AspNetCompiler.Library" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Build" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Compilers" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Configuration" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Drawing" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.ApplicationServices" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.Extensions" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.Infrastructure" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.Optimization" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.Optimization.WebForms" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.RegularExpressions" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.Web.Services" Version="$(WFFCVersion)" />
+        <PackageVersion Include="WebFormsForCore.WebGrease" Version="$(WFFCVersion)" />
     </ItemGroup>
 
     <!-- net8.0 -->

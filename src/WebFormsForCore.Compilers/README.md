@@ -1,0 +1,1 @@
+The binaries in the Roslyn.net* folders are taken from the Microsoft.Net.Compilers.Toolset nuget packages
