@@ -33,7 +33,7 @@
   </Project>
   <Project Path="src/WebFormsForCore.AspNetCompiler/WebFormsForCore.AspNetCompiler.csproj" />
   <Project Path="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj">
-    <Build Solution="Debug|Any CPU" Project="false" />
+    <Build Solution="*|Any CPU" Project="false" />
   </Project>
   <Project Path="src/WebFormsForCore.Compilers/WebFormsForCore.Compilers.csproj" />
   <Project Path="src/WebFormsForCore.Configuration/WebFormsForCore.Configuration.csproj">
@@ -52,7 +52,7 @@
     <BuildDependency Project="src/WebFormsForCore.Build/WebFormsForCore.Build.csproj" />
   </Project>
   <Project Path="src/WebFormsForCore.Web.DataVisualization/WebFormsForCore.Web.DataVisualization.csproj" Id="2402ef45-9934-4979-a792-75642d95f657">
-    <Build Solution="Debug|Any CPU" Project="false" />
+    <Build Solution="*|Any CPU" Project="false" />
   </Project>
   <Project Path="src/WebFormsForCore.Web.DynamicData/WebFormsForCore.Web.DynamicData.csproj">
     <Build Project="false" />

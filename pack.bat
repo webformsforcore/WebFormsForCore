@@ -1,6 +1,6 @@
 SET PackageVersion=1.7.0
 SET FileVersion=11.0.0.0
-SET Configuration=Debug
+SET Configuration=Release
 
 REM msbuild /p:Configuration=%Configuration%
 

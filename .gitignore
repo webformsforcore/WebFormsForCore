@@ -211,7 +211,7 @@ PublishScripts/
 *.nupkg
 *.snupkg
 NugetApiKey.txt
-
+nuget-api-key.txt
 # Microsoft Azure Build Output
 csx/
 *.build.csdef
