@@ -94,6 +94,16 @@ namespace System.Configuration {
                 exeAssembly = Assembly.GetEntryAssembly();
                 if (exeAssembly != null) {
                     _hasEntryAssembly = true;
+#if WebFormsForCore && NETCOREAPP
+                    // CodeBase is file:///home/app/app.dll on Linux: the conversion below drops the leading '/'
+                    // and turns the separators into backslashes, which is no path there. Location is the plain path.
+                    if (!string.IsNullOrEmpty(exeAssembly.Location)) {
+                        applicationUri = Path.GetFullPath(exeAssembly.Location);
+                        applicationFilename = applicationUri;
+                    }
+                    else
+#endif
+                    {
                     applicationUri = exeAssembly.CodeBase;
 
                     bool isFile = false;
@@ -117,6 +127,7 @@ namespace System.Configuration {
                     }
                     else {
                         applicationUri = exeAssembly.EscapedCodeBase;
+                    }
                     }
                 }
                 else {
