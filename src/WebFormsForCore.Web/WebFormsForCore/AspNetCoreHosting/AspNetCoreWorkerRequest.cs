@@ -233,6 +233,10 @@ namespace System.Web.Hosting
 			{
 				return processUser;
 			}
+			if (str2 == "HTTPS")
+			{
+				return IsSecure() ? "on" : "off";
+			}
 			if (str2 != "ALLRAW")
 			{
 				if (str2 != "SERVERPROTOCOL")
@@ -310,6 +314,13 @@ namespace System.Web.Hosting
 		}
 
 		public override bool IsClientConnected() => true;
+		/// <summary>
+		/// True when the request came in over TLS. Also true behind a TLS-terminating reverse proxy when the
+		/// application enables ForwardedHeaders (X-Forwarded-Proto). Without this override the base class
+		/// returns false, so on an https site Request.IsSecureConnection was false, Request.Url had the
+		/// "http" scheme and SERVER_PORT_SECURE was 0.
+		/// </summary>
+		public override bool IsSecure() => Context.Request.IsHttps;
 		public override bool IsEntireEntityBodyIsPreloaded() => false;
 		public override string MapPath(string path)
 		{
