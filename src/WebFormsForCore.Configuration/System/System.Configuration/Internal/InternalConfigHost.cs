@@ -91,6 +91,13 @@ namespace System.Configuration.Internal {
             streamName = Path.GetFullPath(streamName);
             string dirStream = UrlPath.GetDirectoryOrRootName(streamName);
 
+#if WebFormsForCore && NETCOREAPP
+            // configSource may not hold '/' (NormalizeConfigSource), so a subfolder is written with '\'.
+            // Elsewhere than Windows that is part of the file name unless it is turned into the separator.
+            if (Path.DirectorySeparatorChar != '\\') {
+                configSource = configSource.Replace('\\', Path.DirectorySeparatorChar);
+            }
+#endif
             // combine with the new config source
             string result = Path.Combine(dirStream, configSource);
             result = Path.GetFullPath(result);
