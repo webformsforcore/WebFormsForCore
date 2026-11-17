@@ -25,6 +25,11 @@ namespace System.Configuration
       if (xmlNode != null && xmlNode.Value.Length != 0)
       {
         string path2 = xmlNode.Value;
+#if WebFormsForCore && NETCOREAPP
+        // Elsewhere than Windows a '\' in the path is part of the file name, and a missing file is skipped.
+        if (Path.DirectorySeparatorChar != '\\')
+          path2 = path2.Replace('\\', Path.DirectorySeparatorChar);
+#endif
         if (!(xmlNode is IConfigErrorInfo configErrorInfo))
           return (object) null;
         string str = Path.Combine(Path.GetDirectoryName(configErrorInfo.Filename), path2);
