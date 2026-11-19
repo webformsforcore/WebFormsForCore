@@ -100,7 +100,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebFormsForCore.Drawing\WebFormsForCore.Drawing.csproj" />
-      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.7.0" />-->
+      <!--<PackageReference Include="WebFormsForCore.Drawing" Version="1.7.1" />-->
     </ItemGroup>
 
     <ItemGroup>
