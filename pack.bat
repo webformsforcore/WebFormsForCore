@@ -42,6 +42,8 @@ dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration% -p
 cd ..\AjaxControlToolkit.StaticResources
 dotnet pack --include-symbols -o ..\..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
 cd ..\..\WebFormsForCore.AspNetCompiler
+REM The tool pack publishes first and publish only overwrites older files, so stale csc.dll/vbc.dll from earlier builds would be packed. Start clean.
+for /d %%D in (bin\%Configuration%\*) do if exist "%%D\publish" rmdir /s /q "%%D\publish"
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion%
 dotnet pack --include-symbols -o ..\..\nupkg --no-build -c %Configuration% -p:Version=%PackageVersion% -p:FileVersion=%FileVersion% -p:AssemblyVersion=%FileVersion% -p:PackAsTool=false
 
