@@ -76,7 +76,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Data.SqlClient" VersionOverride="7.1.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" />
         <!--<PackageReference Include="System.Net.Http" Version="4.3.4" />-->
         <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     </ItemGroup>
