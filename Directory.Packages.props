@@ -17,7 +17,7 @@
     <ItemGroup>
         <PackageVersion Include="Antlr3.Runtime" Version="3.5.1" />
         <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.200" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" />
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.2" />
         <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
         <PackageVersion Include="CoreWCF.Http" Version="1.9.1" />
