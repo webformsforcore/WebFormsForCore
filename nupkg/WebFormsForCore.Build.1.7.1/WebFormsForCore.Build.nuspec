@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>WebFormsForCore.Build</id>
+    <version>1.7.1</version>
+    <title>WebFormsForCore.Build</title>
+    <authors>Simon Egli</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/webformsforcore/WebFormsForCore</projectUrl>
+    <description>A port of ASP.NET WebForms to .NET 10</description>
+    <copyright>Estrellas de Esperanza</copyright>
+    <tags>WebForms porting WebForms NET Core NET 10</tags>
+    <repository type="git" url="https://github.com/webformsforcore/WebFormsForCore" branch="refs/heads/main" commit="28b64dbbeb770c70593597d0d6adadbe875f585e" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="Microsoft.Build" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Mono.Cecil" version="0.11.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.AspNetCompiler.Library" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Compilers" version="1.7.1" exclude="Compile,Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web" version="1.7.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net11.0">
+        <dependency id="Microsoft.Build" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Mono.Cecil" version="0.11.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.AspNetCompiler.Library" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Compilers" version="1.7.1" exclude="Compile,Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web" version="1.7.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.8">
+        <dependency id="Microsoft.Build" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CSharp" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="Mono.Cecil" version="0.11.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="System.Linq" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Private.Uri" version="4.3.2" exclude="Build,Analyzers" />
+        <dependency id="System.Threading" version="4.3.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.Build" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Mono.Cecil" version="0.11.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Compilers" version="1.7.1" exclude="Compile,Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web" version="1.7.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.Build" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CSharp" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="Mono.Cecil" version="0.11.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="System.Private.Uri" version="4.3.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>WebFormsForCore.Web</id>
+    <version>1.7.1</version>
+    <title>WebFormsForCore.Web</title>
+    <authors>Simon Egli</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/webformsforcore/WebFormsForCore</projectUrl>
+    <description>A port of ASP.NET WebForms to .NET 10</description>
+    <copyright>Estrellas de Esperanza</copyright>
+    <tags>WebForms porting WebForms NET Core NET 10</tags>
+    <repository type="git" url="https://github.com/webformsforcore/WebFormsForCore" branch="refs/heads/main" commit="28b64dbbeb770c70593597d0d6adadbe875f585e" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="WebFormsForCore.Compilers" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Configuration" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Drawing" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Serialization.Formatters" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web.ApplicationServices" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web.RegularExpressions" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Framework" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Tasks.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Data.SqlClient" version="7.1.0" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.OleDb" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices.AccountManagement" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices.Protocols" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Drawing.Common" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Runtime.Caching" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Cryptography.Pkcs" version="10.0.13" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Cryptography.ProtectedData" version="10.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net11.0">
+        <dependency id="WebFormsForCore.Compilers" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Configuration" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Drawing" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Serialization.Formatters" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web.ApplicationServices" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web.RegularExpressions" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Framework" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Tasks.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Data.SqlClient" version="7.1.0" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.OleDb" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices.AccountManagement" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices.Protocols" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Drawing.Common" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Runtime.Caching" version="11.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Cryptography.ProtectedData" version="11.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="WebFormsForCore.Compilers" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Configuration" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Drawing" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Serialization.Formatters" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web.ApplicationServices" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="WebFormsForCore.Web.RegularExpressions" version="1.7.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Framework" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Tasks.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.30" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Data.SqlClient" version="7.1.0" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="8.0.1" exclude="Build,Analyzers" />
+        <dependency id="System.Data.OleDb" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices.AccountManagement" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.DirectoryServices.Protocols" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Drawing.Common" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Runtime.Caching" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Cryptography.Pkcs" version="8.0.2" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Cryptography.ProtectedData" version="8.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net10.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+      <group targetFramework="net11.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+</package>

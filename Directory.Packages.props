@@ -34,6 +34,7 @@
         <PackageVersion Include="System.Linq" Version="4.3.0" />
         <PackageVersion Include="System.Threading" Version="4.3.0" />
         <PackageVersion Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+        <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
     </ItemGroup>
 
     <!-- Packages used by the .NET Framework 4.8 TestApp and the static web asset packages -->

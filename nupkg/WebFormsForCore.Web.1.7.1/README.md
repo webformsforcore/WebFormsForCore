@@ -1,0 +1,181 @@
+# WebFormsForCore 
+## WebForms for ASP.NET Core
+WebFormsForCore is an OpenSource library to run WebForms apps on ASP.NET Core. This library provides a port
+of the System.Web libraries of .NET Framework to .NET 11. With this library,
+you can run WebForms websites directly in ASP.NET Core, also on Linux. With this
+library it becomes easy to migrate your existing WebForms application to run
+on ASP.NET Core also.
+
+We successfully ported the FuseCP Control Panel, a huge WebForms code base, to ASP.NET Core & Linux
+with the aid of this library. The goal of running FuseCP on Linux without porting everything to Blazor was
+also our motivation of creating WebFormsForCore. 
+
+## Support
+If you need support porting your project to .NET Core & WebFormsForCore, we provide support for
+40$ per hour. Please contact us via the [LiveChat button on our webpage](https://webformsforcore.github.io/) or via [WhatsApp](https://wa.me/41775080285).
+There is also a tutorial on Youtube on [how to convert a sample WebForms application to WebFormsForCore](https://youtu.be/wgg-FziIfNg). 
+
+## Source Code
+You can find the source code of [WebFormsForCore on GitHub](https://github.com/webformsforcore/WebFormsForCore). It is 
+licensed under a MIT license. We welcome contributions, please have a look into the issues if you want to contribute.
+
+## Donating
+If you like WebFormsForCore, and it helped you save a lot of work, please consider to
+[sponsor us on GitHub](https://github.com/sponsors/webformsforcore)  or [donate to us with PayPal](https://www.paypal.com/donate/?hosted_button_id=KQCGG3NDJRR2S).
+
+## Usage
+If you have a WebForms project you want to convert to NET Core, proceed as follows:
+
+First convert your Project to a SDK Project. Please keep a backup of the old non SDK style
+project. Conversion can be done easiest by using a converter like the migrate-2019 tool. To install that
+tool, run `dotnet tool install --global Project2015To2017.Migrate2019.Tool`. Then go to the directory
+of your solution and run `dotnet migrate-2019 wizard` to convert your solution to an SDK project. If
+the converter complains about an unsupported project type, remove the `<ProjectTypeGuid>` property from
+the project first. After conversion change the target framework of your project to `net11.0`. You
+might also keep `net48`, in order to dual run your project with NET Framework & NET Core.
+Change the OutputPath for `net11.0` to `bin_dotnet`:
+```
+<PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(TargetFramework)' != 'net48'">
+    <OutputType>Exe</OutputType>
+    <OutputPath>bin_dotnet</OutputPath>
+    <StartupObject>Program</StartupObject>
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+</PropertyGroup>
+
+<ItemGroup>
+    <Content Remove="bin_dotnet\**\*.*" />
+    <Reference Remove="bin_dotnet\**\*.*" />
+    <None Remove="bin_dotnet\**\*.*" />
+    <Compile Remove="bin_dotnet\**\*.*" />
+</ItemGroup>
+``` 
+
+We change the output path to `bin_dotnet` and set `AppendTargetFrameworkToOutputPath` and `AppendRuntimeIdentifierToOutputPath` to `false`, since WebFormsForCore can only work, if the OutputPath is a direct subfolder of the project, as in classic ASP.NET.
+
+Then, for `net11.0`, import the WebFormsForCore packages like so:
+```
+<ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <PackageReference Include="WebFormsForCore.Web" Version="1.7.1" />
+</ItemGroup>
+```
+Remove the old `Reference` references or put them in a condition only for `net48`.
+
+If your project also needs `System.Web.Extensions` or `System.Web.Optimization` import the
+corresponding packages also, like `WebFormsForCore.Web.Extensions` or 
+`WebFormsForCore.Web.Optimization` etc. The following packages are available:
+- `System.Configuration`: `WebFormsForCore.Configuration`
+- `System.Web`: `WebFormsForCore.Web`
+- `System.Web.Services`: `WebFormsForCore.Web.Services`
+- `System.Web.Extensions`: `WebFormsForCore.Web.Extensions`
+- `System.Web.Optimization`: `WebFormsForCore.Web.Optimization`
+- `System.Web.Mobile`: `WebFormsForCore.Web.Mobile`
+- `Microsft.AspNet.Web.Optimization`: `WebFormsForCore.Web.Optimization`
+- `Microsoft.AspNet.Web.Optimization.WebForms`: `WebFormsForCore.Web.Optimization.WebForms`
+- `WebGrease`: `WebFormsForCore.WebGrease`
+- `System.Drawing`: `WebFormsForCore.Drawing`
+- `AjaxControlToolkit`: `WebFormsForCore.AjaxControlToolkit`
+- `AjaxControlToolkit.HtmlEditor.Sanitizer`: `WebFormsForCore.AjaxControlToolkit.HtmlEditor.Sanitizer`
+- `AjaxControlToolkit.StaticResources`: `WebFormsForCore.AjaxControlToolkit.StaticResources`
+- All of the `BundleTransformer.*`packages: `WebFormsForCore.BundleTransformer.*`
+
+System.Drawing only implements Attributes, so WebFormsForCore can run on Linux, where System.Drawing.Common.dll is 
+missing.
+
+If you want WebFormsForCore to automatically create the `*.designer.cs` files for you, as it was in the old non
+SDK project, you also need to import the package `WebFormsForCore.Build` like so:
+```
+<PackageReference Include="WebFormsForCore.Build" Version="1.7.1" ExcludeAssets="runtime" />
+```
+If you import this package, outdated `*.designer.cs` files will be created after build. This only works for C#,
+not for VisualBasic. Also, the visual designers in VisualStudio for web controls are not supported and won't
+work.
+
+Also, the Build package will strip incompatible designer attributes from classes in legacy .NET Framework
+assemblies after build, that would otherwise cause the types load to fail. This way, when you reference the Build
+packages you can use third party libraries that reference System.Web. You might still encounter issues, since the
+third party libraries will be compiled against .NET Framework and not .NET Core.
+
+The Build package also provides an MSBuild Task `AspNetCoreCompiler` similar to the standard `AspNetCompiler`
+Task that wraps the .NET Framework `aspnet_compiler.exe`. In addition to the attributes of `AspNetCormpiler`,
+`AspNetCoreCompiler` supports the attribute `BinFolder` and `TargetFramework`. You can also specify a comma
+separated list of BinFolder's and TargetFramework's, if you project is dual running on .NET Framework and
+.NET Core with specific bin folders. You can also use this aspnetcore_compiler.exe form the command line by
+installing the dotnet tool `dotnet tool install -g WebFormsForCore.AspNetCompiler`.
+
+Finally configure ASP.NET Core to use WebForms in the initialization code Program.cs like so:
+```
+#if NETCOREAPP
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+public class Program
+{
+
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        var app = builder.Build();
+        
+        app.UseWebForms();
+            
+        app.Run();
+    }
+}
+#endif
+```
+Usually this will cause WebFormsForCore to handle all WebForms requests, like aspx pages etc.
+Requests not specific to WebForms will be handled by ASP.NET Core. If you want all requests to
+be handled by WebForms, for example if your application uses routing and friendly urls, you might
+want to call 
+```
+app.UseWebForms(opt => opt.HandleAllRequestsWithWebForms())
+```
+
+### Session State
+WebFormsForCore supports a WebForms SessionStateProvider using the ASP.NET Core Session
+State. To use it, initialize the ASP.NET Core Session in your Program.cs like so:
+```
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
+var app = builder.Build();
+
+app.UseSession();
+
+app.UseWebForms(opt => opt.UseAspNetCoreSessionProvider());
+
+app.Run();
+```
+This will store the session state in process. You can also use different ASP.NET Core session providers, like Redis, to have
+a session state server.
+
+## Conflicts with Existing Packages
+Currently there might be some conflicts with the packages System.Web.dll, System.Drawing.dll &
+System.Configuration.ConfigurationManager.dll, since WebFormsForCore replaces those dll's. In order to prevent the import of the old dll's include the following in your csproj:
+
+```
+<Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+        <!-- Do not import System.Configuration.ConfigurationManage -->
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Configuration.ConfigurationManager' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'(?i)system\.configuration\.configurationmanager\\'))" />
+        <!-- Do not import System.Web -->
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Web' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+        <!-- Do not import System.Drawing -->
+        <ReferencePath Remove="%(Identity)" Condition="'%(FileName)' == 'System.Drawing' AND $([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity),'\\dotnet\\'))" />
+    </ItemGroup>
+</Target>
+```

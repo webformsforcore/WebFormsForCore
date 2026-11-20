@@ -44,6 +44,7 @@
         <ProjectReference Include="..\WebFormsForCore.Web.ApplicationServices\WebFormsForCore.Web.ApplicationServices.csproj" />
         <PackageReference Include="CoreWCF.Http" />
         <PackageReference Include="CoreWCF.Primitives" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
