@@ -152,9 +152,14 @@ namespace System.Web.Compilation {
                 Arguments = "--list-runtimes",
                 FileName = dotnetExe
             };
-            var process = Process.Start(startInfo);
-            process.WaitForExit();
-            var output = process.StandardOutput.ReadToEnd();
+            string output;
+            using (var process = Process.Start(startInfo))
+            {
+                // Read before waiting: once the redirected pipe is full the child blocks until the parent reads,
+                // so WaitForExit first would deadlock on long output.
+                output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+            }
             return Regex.Matches(output, @"^Microsoft\.AspNetCore\.App\s+([0-9.]+)", RegexOptions.Multiline)
                 .Select(m => new Version(m.Groups[1].Value))
                 .Select(v => $"NETCoreApp,Version=v{v.Major}.{v.Minor}")
