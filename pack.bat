@@ -1,4 +1,4 @@
-SET PackageVersion=1.7.1
+SET PackageVersion=1.7.2
 SET FileVersion=11.0.0.0
 SET Configuration=Release
 

@@ -6,22 +6,22 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "VBCSCompiler/5.9.0-1.26357.3": {
+      "VBCSCompiler/5.12.0-1.26502.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "5.9.0-1.26357.3",
-          "Microsoft.CodeAnalysis.Common": "5.9.0-1.26357.3",
-          "Microsoft.CodeAnalysis.VisualBasic": "5.9.0-1.26357.3",
-          "Microsoft.CodeAnalysis": "5.9.0.0"
+          "Microsoft.CodeAnalysis.CSharp": "5.12.0-1.26502.2",
+          "Microsoft.CodeAnalysis.Common": "5.12.0-1.26502.2",
+          "Microsoft.CodeAnalysis.VisualBasic": "5.12.0-1.26502.2",
+          "Microsoft.CodeAnalysis": "5.12.0.0"
         },
         "runtime": {
           "VBCSCompiler.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Common/5.9.0-1.26357.3": {
+      "Microsoft.CodeAnalysis.Common/5.12.0-1.26502.2": {
         "runtime": {
           "Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "5.9.0.0",
-            "fileVersion": "5.900.26.35703"
+            "assemblyVersion": "5.12.0.0",
+            "fileVersion": "5.1200.26.50202"
           }
         },
         "resources": {
@@ -66,14 +66,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/5.9.0-1.26357.3": {
+      "Microsoft.CodeAnalysis.CSharp/5.12.0-1.26502.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "5.9.0-1.26357.3"
+          "Microsoft.CodeAnalysis.Common": "5.12.0-1.26502.2"
         },
         "runtime": {
           "Microsoft.CodeAnalysis.CSharp.dll": {
-            "assemblyVersion": "5.9.0.0",
-            "fileVersion": "5.900.26.35703"
+            "assemblyVersion": "5.12.0.0",
+            "fileVersion": "5.1200.26.50202"
           }
         },
         "resources": {
@@ -118,14 +118,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.VisualBasic/5.9.0-1.26357.3": {
+      "Microsoft.CodeAnalysis.VisualBasic/5.12.0-1.26502.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "5.9.0-1.26357.3"
+          "Microsoft.CodeAnalysis.Common": "5.12.0-1.26502.2"
         },
         "runtime": {
           "Microsoft.CodeAnalysis.VisualBasic.dll": {
-            "assemblyVersion": "5.9.0.0",
-            "fileVersion": "5.900.26.35703"
+            "assemblyVersion": "5.12.0.0",
+            "fileVersion": "5.1200.26.50202"
           }
         },
         "resources": {
@@ -170,11 +170,11 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis/5.9.0.0": {
+      "Microsoft.CodeAnalysis/5.12.0.0": {
         "runtime": {
           "Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "5.9.0.0",
-            "fileVersion": "5.900.26.35703"
+            "assemblyVersion": "5.12.0.0",
+            "fileVersion": "5.1200.26.50202"
           }
         },
         "resources": {
@@ -222,27 +222,27 @@
     }
   },
   "libraries": {
-    "VBCSCompiler/5.9.0-1.26357.3": {
+    "VBCSCompiler/5.12.0-1.26502.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.CodeAnalysis.Common/5.9.0-1.26357.3": {
+    "Microsoft.CodeAnalysis.Common/5.12.0-1.26502.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.CodeAnalysis.CSharp/5.9.0-1.26357.3": {
+    "Microsoft.CodeAnalysis.CSharp/5.12.0-1.26502.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.CodeAnalysis.VisualBasic/5.9.0-1.26357.3": {
+    "Microsoft.CodeAnalysis.VisualBasic/5.12.0-1.26502.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.CodeAnalysis/5.9.0.0": {
+    "Microsoft.CodeAnalysis/5.12.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
