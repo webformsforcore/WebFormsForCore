@@ -10,7 +10,7 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <ManagePackageVersionsCentrally Condition="$(MSBuildProjectDirectory.Contains('WebFormsForCore.AjaxControlToolkit')) OR $(MSBuildProjectDirectory.Contains('BundleTransformer'))">false</ManagePackageVersionsCentrally>
-        <WFFCVersion>1.7.2</WFFCVersion>
+        <WFFCVersion>1.7.3</WFFCVersion>
     </PropertyGroup>
 
     <!-- Packages with a single version for all target frameworks -->
