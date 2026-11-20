@@ -21,8 +21,8 @@ task in your project file like so:
       MetabasePath="/"
       PhysicalPath="$(ProjectDir)"
       TargetPath="$(OutputPath)\Precompiled"
-      TargetFramework="net10.0"
-      TargetFrameworkMoniker="net10.0"
+      TargetFramework="net11.0"
+      TargetFrameworkMoniker="net11.0"
       BinFolder="bin"
       Updateable="true"
       Force="true"
@@ -41,4 +41,4 @@ This task supports the same attributes as the `AspNetCompiler` task and also the
 # Multi targeting
 If you have a project targeting .NET Framework and .NET Core at the same time, you can precompile it by 
 specifying the comma or semicolon separated bin directories like `-b bin,bin_dotnet` and the corresponding 
-target frameworks like `-t net48,net10.0`.
+target frameworks like `-t net48,net11.0`.

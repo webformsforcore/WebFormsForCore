@@ -7,7 +7,7 @@
         <DebugType>portable</DebugType>
         <AssemblyName>WebFormsForCore.Compilers</AssemblyName>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        
+
         <PackageId>WebFormsForCore.Compilers</PackageId>
         <Title>WebFormsForCore.Compilers</Title>
         <Product>WebFormsForCore.Compilers</Product>
@@ -25,7 +25,7 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
         <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" />
     </ItemGroup>
-    
+
     <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
         <PackageReference Include="Microsoft.CodeAnalysis" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
@@ -44,6 +44,21 @@
             <Pack>True</Pack>
             <PackagePath>lib\net8.0</PackagePath>
         </Content>
+        <Content Include="Roslyn.net10.0\**\*.*">
+            <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+            <Pack>False</Pack>
+            <PackagePath>lib\net10.0</PackagePath>
+        </Content>
+        <Content Include="Roslyn.net11.0\**\*.*">
+            <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+            <Pack>True</Pack>
+            <PackagePath>lib\net10.0</PackagePath>
+        </Content>
+        <Content Include="Roslyn.net11.0\**\*.*">
+            <!--<Link>Compilers\%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+            <Pack>True</Pack>
+            <PackagePath>lib\net11.0</PackagePath>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -55,9 +70,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Roslyn.net8.0\" />    
+        <Folder Include="Roslyn.net8.0\" />
+        <Folder Include="Roslyn.net10.0\" />
+        <Folder Include="Roslyn.net11.0\" />
     </ItemGroup>
-    
+
     <Target Name="CopyCompilersNoTools" BeforeTargets="ResolveReferences" Condition="$(TargetFramework) != 'net48'">
         <ItemGroup>
             <CompilerItems Include="Roslyn.$(TargetFramework)\**\*.*" />

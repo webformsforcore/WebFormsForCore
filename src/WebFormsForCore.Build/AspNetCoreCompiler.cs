@@ -182,7 +182,7 @@ public class AspNetCoreCompiler : Task
     }
     public override bool Execute()
     {
-        // Only the net10.0 build contains the precompiler (see ExecuteCore), all other builds
+        // Only the net10.0 & net11.0 build contains the precompiler (see ExecuteCore), all other builds
         // (e.g. netstandard2.0, which MSBuild loads) have to run it in a separate dotnet process.
 #if NET10_0_OR_GREATER
         const bool canRunInProcess = true;
