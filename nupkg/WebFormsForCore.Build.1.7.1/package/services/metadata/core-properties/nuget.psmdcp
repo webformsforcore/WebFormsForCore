@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<coreProperties xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.openxmlformats.org/package/2006/metadata/core-properties">
-  <dc:creator>Simon Egli</dc:creator>
-  <dc:description>A port of ASP.NET WebForms to .NET 10</dc:description>
-  <dc:identifier>WebFormsForCore.Build</dc:identifier>
-  <version>1.7.1</version>
-  <keywords>WebForms porting WebForms NET Core NET 10</keywords>
-  <lastModifiedBy>NuGet.Packaging, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35;.NET 10.0</lastModifiedBy>
-</coreProperties>
